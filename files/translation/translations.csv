@@ -75,7 +75,7 @@ ml_more_experience_tp,Kills grant $0 more experience,Убийство прино
 ml_heal_con,Heal,Лечение,,,,,,,,,,
 ml_heal_con_tp,Heal your for $0 hp,Лечит вас на $0 здоровья,,,,,,,,,,
 ml_permanent_concentrated_mana,Permanent concentrated mana,Вечная концентрированная мана,,,,,,,,,,
-ml_permanent_concentrated_mana_tp,Gives you reduced, but permanent concentrated mana,Даёт вам ослабленную, но вечную концентрированную ману,,,,,,,,,,
+ml_permanent_concentrated_mana_tp,"Gives you reduced, but permanent concentrated mana","Даёт вам ослабленную, но вечную концентрированную ману",,,,,,,,,,
 ml_projectile_damage_increase,More projectile damage,Больше урона снарядами,,,,,,,,,,
 ml_projectile_damage_increase_tp,Your projectiles deals more damage,Ваши снаряды наносят больше урона,,,,,,,,,,
 ml_elemental_damage_increase,More elemental damage,Больше элементального урона,,,,,,,,,,
