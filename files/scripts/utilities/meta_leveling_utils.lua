@@ -138,6 +138,7 @@ end
 ---@return number x, number y
 function utils:get_player_pos()
 	local x, y = EntityGetTransform(self:get_player_id())
+	if not x then return 0, 0 end
 	return x, y
 end
 
