@@ -286,8 +286,8 @@ local reward_list = {
 			local entity_id = EntityGetWithName("ml_permanent_light")
 			local comp_id = EntityGetFirstComponent(entity_id, "SpriteComponent")
 			if not comp_id then return end
-			ML.utils:multiply_value_in_component(comp_id, "special_scale_x", 2)
-			ML.utils:multiply_value_in_component(comp_id, "special_scale_y", 2)
+			ML.utils:add_value_to_component(comp_id, "special_scale_x", 2)
+			ML.utils:add_value_to_component(comp_id, "special_scale_y", 2)
 		end
 	},
 	{
@@ -304,7 +304,7 @@ local reward_list = {
 			local entity_id = EntityGetWithName("ml_permanent_light")
 			local comp_id = EntityGetFirstComponent(entity_id, "SpriteComponent")
 			if not comp_id then return end
-			ML.utils:add_value_to_component(comp_id, "alpha", 0.2)
+			ML.utils:add_value_to_component(comp_id, "alpha", 0.1)
 		end
 	},
 	{

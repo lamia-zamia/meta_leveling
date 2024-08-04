@@ -1,18 +1,20 @@
 <Entity name="ml_permanent_light">
-	<_Transform
-        scale.x="1" scale.y="1" >
+    <_Transform
+        scale.x="1" scale.y="1">
     </_Transform>
 
-    <SpriteComponent 
+    <SpriteComponent
         alpha="0.2"
-        image_file="data/particles/fog_of_war_hole_128.xml"
+        image_file="data/particles/fog_of_war_hole.png"
+        offset_x="16"
+        offset_y="16"
         smooth_filtering="1"
-        fog_of_war_hole="1" 
+        fog_of_war_hole="1"
         has_special_scale="1"
-        special_scale_x="1"
-        special_scale_y="1">
+        special_scale_x="2"
+        special_scale_y="2">
     </SpriteComponent>
 
-	<InheritTransformComponent>
-	</InheritTransformComponent>
+    <InheritTransformComponent>
+    </InheritTransformComponent>
 </Entity>
