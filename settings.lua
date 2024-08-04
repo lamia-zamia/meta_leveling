@@ -314,18 +314,6 @@ do -- Settings GUI
 		G.toggle_checkbox_boolean(gui, id, "session_exp_log", T.session_exp_log, false)
 		GuiLayoutEnd(gui)
 	end
-
-	-- function S.mod_setting_boolean_checkbox(_, gui, in_main_menu, im_id, setting)
-	-- 	local gui_id = im_id
-	-- 	local function id()
-	-- 		gui_id = gui_id + 1
-	-- 		return gui_id
-	-- 	end
-	-- 	GuiLayoutBeginHorizontal(gui, 0, 0, true, 0, 0)
-	-- 	GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
-	-- 	G.toggle_checkbox_boolean(gui, id, setting.id, "", setting.default)
-	-- 	GuiLayoutEnd(gui)
-	-- end
 end
 
 -- ###########################################
@@ -400,6 +388,7 @@ setmetatable(T, mt)
 -- ###########################################
 
 local function build_settings()
+	---@type mod_settings
 	local settings = {
 		{
 			category_id = "exp_bar_cat",
@@ -479,18 +468,21 @@ local function build_settings()
 			{
 				{
 					id = "session_exp_play_sound",
+					ui_name = T.session_exp_play_sound,
 					value_default = true,
 					scope = MOD_SETTING_SCOPE_RUNTIME,
 					hidden = true,
 				},
 				{
 					id = "session_exp_play_fx",
+					ui_name = T.session_exp_play_fx,
 					value_default = true,
 					scope = MOD_SETTING_SCOPE_RUNTIME,
 					hidden = true,
 				},
 				{
 					id = "session_exp_animate_bar",
+					ui_name = T.session_exp_animate_bar,
 					value_default = true,
 					scope = MOD_SETTING_SCOPE_RUNTIME,
 					hidden = true,
@@ -536,7 +528,7 @@ end
 -- ###########################################
 
 function ModSettingsUpdate(init_scope)
-	local old_version = mod_settings_get_version(mod_id)
+	-- local old_version = mod_settings_get_version(mod_id)
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
 	if current_language ~= current_language_last_frame then
 		mod_settings = build_settings()
@@ -554,4 +546,5 @@ function ModSettingsGui(gui, in_main_menu)
 	if U.offset == 0 then U.offset = U.calculate_elements_offset(gui, mod_settings) end
 end
 
+---@type mod_settings
 mod_settings = build_settings()
