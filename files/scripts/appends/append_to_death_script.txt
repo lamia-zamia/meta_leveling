@@ -1,5 +1,0 @@
-function death( damage_type_bit_field, damage_message, entity_thats_responsible, drop_items )
-	if EntityHasTag(entity_thats_responsible, "player_unit") then
-		local ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
-		ML:kill_reward(GetUpdatedEntityID())
-	end
