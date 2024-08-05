@@ -342,7 +342,7 @@ local reward_list = {
 		group_id = "more_experience",
 		ui_name = "$ml_more_experience",
 		description = "$ml_more_experience_tp",
-		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.xml",
 		var0 = "10%",
 		probability = 0.5,
 		max = 5,
@@ -355,7 +355,7 @@ local reward_list = {
 		group_id = "more_experience",
 		ui_name = "$ml_more_experience",
 		description = "$ml_more_experience_tp",
-		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.xml",
 		var0 = "25%",
 		probability = 0.3,
 		max = 4,
@@ -369,7 +369,7 @@ local reward_list = {
 		group_id = "more_experience",
 		ui_name = "$ml_more_experience",
 		description = "$ml_more_experience_tp",
-		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.xml",
 		var0 = "50%",
 		probability = 0.1,
 		limit_before = "more_experience2",
@@ -378,17 +378,80 @@ local reward_list = {
 		end
 	},
 	{
-		id = "more_experience4",
-		group_id = "more_experience",
+		id = "more_experience_con",
 		ui_name = "$ml_more_experience",
 		description = "$ml_more_experience_tp",
-		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_const.xml",
 		var0 = "1",
 		probability = 0.1,
 		max = 5,
-		min_level = 10,
+		min_level = 5,
 		fn = function()
 			ML.utils:add_to_global_number("EXP_CONST", 1)
+		end
+	},
+	{
+		id = "more_experience_trick1",
+		group_id = "more_experience_trick",
+		ui_name = "$ml_more_experience",
+		description = "$ml_more_experience_trick_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
+		var0 = "25%",
+		probability = 0.3,
+		max = 2,
+		fn = function()
+			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 0.25)
+		end
+	},
+	{
+		id = "more_experience_trick2",
+		group_id = "more_experience_trick",
+		ui_name = "$ml_more_experience",
+		description = "$ml_more_experience_trick_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
+		var0 = "50%",
+		probability = 0.2,
+		max = 3,
+		limit_before = "more_experience_trick1",
+		fn = function()
+			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 0.5)
+		end
+	},
+	{
+		id = "more_experience_trick3",
+		group_id = "more_experience_trick",
+		ui_name = "$ml_more_experience",
+		description = "$ml_more_experience_trick_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
+		var0 = "100%",
+		probability = 0.1,
+		limit_before = "more_experience_trick1",
+		fn = function()
+			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 1.0)
+		end
+	},
+	{
+		id = "more_experience_betray1",
+		group_id = "more_experience_betray",
+		ui_name = "$ml_more_more_experience_betray",
+		description = "$ml_more_more_experience_betray_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_betray.xml",
+		probability = 0.3,
+		max = 1,
+		fn = function()
+			ML.utils:add_to_global_number("EXP_MULTIPLIER_BETRAY", 0.25)
+		end
+	},
+	{
+		id = "more_experience_betray2",
+		group_id = "more_experience_betray",
+		ui_name = "$ml_more_experience",
+		description = "$ml_more_experience_trick_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_betray.xml",
+		probability = 0.1,
+		limit_before = "more_experience_betray1",
+		fn = function()
+			ML.utils:add_to_global_number("EXP_MULTIPLIER_BETRAY", 0.25)
 		end
 	},
 	{
