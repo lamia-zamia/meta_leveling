@@ -2,7 +2,7 @@ local transformations = {
 	{
 		id = "transformation_rat",
 		ui_name = "$ml_transformation_rat",
-		description = "ml_transformation_rat_tp",
+		description = "$ml_transformation_rat_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_ratty.xml",
 		probability = 0.02,
 		custom_check = function()
@@ -16,7 +16,7 @@ local transformations = {
 	{
 		id = "transformation_fungi",
 		ui_name = "$ml_transformation_fungi",
-		description = "ml_transformation_fungi_tp",
+		description = "$ml_transformation_fungi_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_fungi.xml",
 		probability = 0.02,
 		custom_check = function()
@@ -29,8 +29,8 @@ local transformations = {
 	},
 	{
 		id = "transformation_ghost",
-		ui_name = "ml_transformation_ghost",
-		description = "ml_transformation_ghost_tp",
+		ui_name = "$ml_transformation_ghost",
+		description = "$ml_transformation_ghost_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_ghost.xml",
 		probability = 0.02,
 		custom_check = function()
@@ -44,7 +44,7 @@ local transformations = {
 	{
 		id = "transformation_lukki",
 		ui_name = "$ml_transformation_lukki",
-		description = "ml_transformation_lukki_tp",
+		description = "$ml_transformation_lukki_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_lukki.xml",
 		probability = 0.02,
 		custom_check = function()
