@@ -433,7 +433,7 @@ local reward_list = {
 	{
 		id = "more_experience_betray1",
 		group_id = "more_experience_betray",
-		ui_name = "$ml_more_experience",
+		ui_name = "$ml_more_experience_betray",
 		description = "$ml_more_experience_betray_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_betray.xml",
 		probability = 0.3,
