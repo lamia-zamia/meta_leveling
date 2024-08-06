@@ -310,9 +310,9 @@ local reward_list = {
 	{
 		id = "peace_with_gods",
 		group_id = "gods",
-		ui_name = "ml_$ml_peace_with_gods",
+		ui_name = "$ml_peace_with_gods",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/peace_with_gods.xml",
-		description = "ml_$ml_peace_with_gods_tp",
+		description = "$ml_peace_with_gods_tp",
 		probability = 0.3,
 		custom_check = function()
 			return GlobalsGetValue("TEMPLE_SPAWN_GUARDIAN", "0") ~= "0"
@@ -325,9 +325,9 @@ local reward_list = {
 	{
 		id = "forgetful_gods",
 		group_id = "gods",
-		ui_name = "ml_$forgetful_gods",
+		ui_name = "$ml_forgetful_gods",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/peace_with_gods.xml",
-		description = "ml_$forgetful_gods_tp",
+		description = "$ml_forgetful_gods_tp",
 		probability = 0.3,
 		custom_check = function()
 			return GlobalsGetValue("STEVARI_DEATHS", "0") ~= "0"
