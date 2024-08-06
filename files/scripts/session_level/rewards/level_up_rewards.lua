@@ -433,8 +433,8 @@ local reward_list = {
 	{
 		id = "more_experience_betray1",
 		group_id = "more_experience_betray",
-		ui_name = "$ml_more_more_experience_betray",
-		description = "$ml_more_more_experience_betray_tp",
+		ui_name = "$ml_more_experience",
+		description = "$ml_more_experience_betray_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_betray.xml",
 		probability = 0.3,
 		max = 1,
@@ -445,8 +445,8 @@ local reward_list = {
 	{
 		id = "more_experience_betray2",
 		group_id = "more_experience_betray",
-		ui_name = "$ml_more_experience",
-		description = "$ml_more_experience_trick_tp",
+		ui_name = "$ml_more_more_experience_betray",
+		description = "$ml_more_more_experience_trick_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_betray.xml",
 		probability = 0.1,
 		limit_before = "more_experience_betray1",
