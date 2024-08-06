@@ -67,7 +67,7 @@ ml_wand_more_recharge,More mana charge,Больше регенерации ма�
 ml_wand_more_recharge_tp,The wand you are holding gains more mana recharge,Жезл у вас в руке получает больше регенерации маны,,,,,,,,,,
 ml_wand_more_capacity,More capacity,Больше объема,,,,,,,,,,
 ml_wand_more_capacity_tp,The wand you are holding gains more capacity,Жезл у вас в руке вмещает больше заклинаний,,,,,,,,,,
-ml_wand_more_capacity_tp_no_limit,The wand you are holding gains more capacity (noo limit!),Жезл у вас в руке вмещает больше заклинаний (без лимита!),,,,,,,,,,
+ml_wand_more_capacity_tp_no_limit,The wand you are holding gains more capacity (no limit!),Жезл у вас в руке вмещает больше заклинаний (без лимита!),,,,,,,,,,
 ml_wand_no_shuffle,No shuffle,Без случайностей,,,,,,,,,,
 ml_wand_no_shuffle_tp,The wand you are holding will become non-shuffle,Жезл у вас в руке теряет случайный порядок,,,,,,,,,,
 ml_wand_more_recharge_and_mana,Capable wand,Способный жезл,,,,,,,,,,
