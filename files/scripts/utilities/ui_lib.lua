@@ -332,10 +332,12 @@ function ui_class:TextGray(x, y, text)
 end
 
 ---@param text string
+---@param font? string
 ---@param x number
 ---@param y number
-function ui_class:Text(x, y, text)
-	GuiText(self.gui, x, y, text)
+function ui_class:Text(x, y, text, font)
+	font = font or ""
+	GuiText(self.gui, x, y, text, 1, font)
 end
 
 ---draw text at 0
@@ -444,11 +446,13 @@ end
 ---@param y number
 ---@param text string
 ---@param longest number longest string length
+---@param font? string
 ---@param pixel? boolean font is pixel font
-function ui_class:TextCentered(x, y, text, longest, pixel)
+function ui_class:TextCentered(x, y, text, longest, font, pixel)
+	font = font or ""
 	pixel = pixel or false
 	local x_offset = (longest / 2) - (self:GetTextDimension(text, pixel) / 2)
-	GuiText(self.gui, x + x_offset, y, text, 1, "", pixel)
+	GuiText(self.gui, x + x_offset, y, text, 1, font, pixel)
 end
 
 ---for debugging
