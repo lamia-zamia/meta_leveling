@@ -62,7 +62,7 @@ end
 
 function LU:CloseRewardUI()
 	ML:level_up()
-	GameRemoveFlagRun("META_LEVELING_LEVELUP_FX_PLAYED")
+	GameRemoveFlagRun(ML.const.flags.fx_played)
 	GamePlaySound("ui", "ui/button_click", 0, 0)
 	if ML.exp.percentage < 1 then
 		GameRemoveFlagRun(ML.const.flags.leveling_up)
