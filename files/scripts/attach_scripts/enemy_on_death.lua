@@ -1,5 +1,5 @@
 ---@type meta_leveling
-local ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
+ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
 local waters = dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua")
 local T = GameTextGetTranslatedOrNot
 
@@ -29,14 +29,14 @@ end
 ---@param entity_thats_responsible entity_id
 function death(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
-	local exp = ML:convert_max_hp_to_exp(died_entity)
+	local exp = ML.exp:convert_max_hp_to_exp(died_entity)
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
 
 	-- ######################### player kills ##########################
 	if EntityHasTag(entity_thats_responsible, "player_unit") then
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": " .. exp
-		ML:add_exp(exp)
+		ML.exp:add(exp)
 	else
 		if not_visible(died_entity) then return end
 		local responsible_name = EntityGetName(entity_thats_responsible)
@@ -46,7 +46,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 			if multiplier == 0 then return end
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
 				.. T(responsible_name) .. ", " .. T("$ml_gained_xp") .. ": " .. exp * multiplier
-			ML:add_exp(exp * multiplier)
+			ML.exp:add(exp * multiplier)
 		else -- ######################### trick kills ##########################
 			local cause = T(damage_message)
 			local multiplier = 0.5 + ML.utils:get_global_number("EXP_MULTIPLIER_TRICK", 0)
@@ -55,7 +55,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
 				.. cause .. ", " .. T("$ml_gained_xp") .. ": " .. exp * multiplier
-			ML:add_exp(exp * multiplier)
+			ML.exp:add(exp * multiplier)
 		end
 	end
 	if message and ML.utils:get_mod_setting_boolean("session_exp_log") then GamePrint(message) end

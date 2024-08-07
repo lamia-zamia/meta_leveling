@@ -1,5 +1,5 @@
 ---@type meta_leveling
-local ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
+ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
 
 local wand_id = ML.player:get_hold_wand()
 if not wand_id then return end

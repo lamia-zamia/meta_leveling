@@ -1,5 +1,5 @@
 ---@type meta_leveling
-local ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
+ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
 local elemental = {
 	"electricity", "fire", "ice", "radioactive", "poison", "curse", "holy"
 }

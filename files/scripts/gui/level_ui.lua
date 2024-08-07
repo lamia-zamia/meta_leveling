@@ -64,7 +64,7 @@ function LU:CloseRewardUI()
 	ML:level_up()
 	GameRemoveFlagRun("META_LEVELING_LEVELUP_FX_PLAYED")
 	GamePlaySound("ui", "ui/button_click", 0, 0)
-	if ML:get_exp_percentage() < 1 then
+	if ML.exp.percentage < 1 then
 		GameRemoveFlagRun(ML.const.flags.leveling_up)
 		ML:toggle_ui()
 	end
@@ -230,7 +230,7 @@ function LU:DrawMenuButtons()
 		x = x + prev.w + 10
 		return x
 	end
-	if ML:get_exp_percentage() >= 1 then
+	if ML.exp.percentage >= 1 then
 		self:Text(x, y, self:Locale("$ml_level_up"))
 		self:MakeButtonFromPrev(self:Locale("$ml_level_up_tp"), self.OpenLevelUpMenu, self.v.ui_9p_button_important,
 			self.v.ui_9p_button_hl)
@@ -262,7 +262,7 @@ end
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local section = 10
-	local experience = self:Locale("$ml_experience") .. ": " .. ML:get_exp() .. " / " .. ML:get_next_exp()
+	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp.current .. " / " .. ML.exp.next
 	local level = self:Locale("$ml_level") .. ": " .. ML:get_level()
 	self.y = self.y + self.v.sprite_offset
 	self:Draw9Piece(self.x, self.y, 1000, self.v.width, section, self.v.ui_9piece)

@@ -7,7 +7,6 @@ EB.anim_dir = 1
 EB.anim_max_a = 0.75
 EB.current_health = 100
 EB.health_length = 42
-EB.multi = 0.0001
 EB.sound_played = {}
 EB.drawning = false
 EB.play_sound = true
@@ -27,15 +26,15 @@ function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
 	self:SetZ(1)
 	self:BarColor(1)
 	if vertical then
-		self:Image(x, y + scale_y, self.c.px, 1, scale_x, -(scale_y * self.multi))
+		self:Image(x, y + scale_y, self.c.px, 1, scale_x, -(scale_y * ML.exp.percentage))
 	else
-		self:Image(x, y, self.c.px, 1, scale_x * self.multi, scale_y)
+		self:Image(x, y, self.c.px, 1, scale_x * ML.exp.percentage, scale_y)
 	end
 end
 
 function EB:ToolTipUI()
 	local level = self:Locale("$ml_level") .. ": " .. ML:get_level()
-	local experience = self:Locale("$ml_experience") .. ": " .. ML:get_exp() .. " / " .. ML:get_next_exp()
+	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp.current .. " / " .. ML.exp.next
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local longest = self:GetLongestText({ level, experience, tooltip }, "exp_bar_tooltip. " .. experience, true)
 	self.tp:TextCentered(0, 0, level, longest, "", true)
@@ -52,7 +51,7 @@ function EB:AnimateBarAlpha()
 end
 
 function EB:AnimateBar(x, y, width, height)
-	if self.multi >= 1 and self.animate_bar then
+	if ML.exp.percentage >= 1 and self.animate_bar then
 		self:BarColor(0.9)
 		self:Image(x, y, self.c.px, EB:AnimateBarAlpha(), width, height)
 	end
@@ -61,7 +60,7 @@ end
 function EB:AddToolTip(x, y, width, height)
 	self:ForceFocusable()
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
-	self:AddTooltipClickable(0, 0, self.ToolTipUI, ML.toggle_ui, ML:get_exp())
+	self:AddTooltipClickable(0, 0, self.ToolTipUI, ML.toggle_ui, ML.exp.current)
 end
 
 function EB:GetPlayerDamageComponent()
@@ -173,8 +172,7 @@ function EB:UpdatePlayerStatus()
 		self:SetPlayerHealthLength()
 	end
 	self.drawning = self:CheckForAir()
-	self.multi = ML:get_exp_percentage()
-	if self.multi >= 1 and not self.sound_played[ML:get_level()] then
+	if ML.exp.percentage >= 1 and not self.sound_played[ML:get_level()] then
 		self:LevelUpFX()
 	end
 end
