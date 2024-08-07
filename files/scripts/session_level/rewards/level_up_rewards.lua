@@ -11,7 +11,7 @@ local reward_list = {
 		var0 = 10,
 		sound = ML.const.sounds.heart,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "max_hp", 0.4)
 		end
@@ -28,7 +28,7 @@ local reward_list = {
 		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health1",
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "max_hp", 1)
 		end
@@ -44,7 +44,7 @@ local reward_list = {
 		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health2",
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "max_hp", 2)
 		end
@@ -61,7 +61,7 @@ local reward_list = {
 		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health2",
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:multiply_value_in_component(component_id, "max_hp", 1.1)
 		end
@@ -77,7 +77,7 @@ local reward_list = {
 		sound = ML.const.sounds.heart,
 		limit_before = "extra_health_perc1",
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:multiply_value_in_component(component_id, "max_hp", 1.25)
 		end
@@ -93,7 +93,7 @@ local reward_list = {
 		var0 = 25,
 		sound = ML.const.sounds.heart,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "hp", 1)
 		end
@@ -110,7 +110,7 @@ local reward_list = {
 		limit_before = "heal_con1",
 		sound = ML.const.sounds.heart,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "hp", 2)
 		end
@@ -126,7 +126,7 @@ local reward_list = {
 		limit_before = "heal_con2",
 		sound = ML.const.sounds.heart,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "hp", 4)
 		end
@@ -143,7 +143,7 @@ local reward_list = {
 		min_level = 10,
 		sound = ML.const.sounds.heart,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
 			ML.utils:add_value_to_component(component_id, "hp", value * 0.1)
@@ -160,7 +160,7 @@ local reward_list = {
 		limit_before = "heal_perc1",
 		sound = ML.const.sounds.heart,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
 			ML.utils:add_value_to_component(component_id, "hp", value * 0.25)
@@ -205,7 +205,7 @@ local reward_list = {
 		var0 = 200,
 		sound = ML.const.sounds.shop_item,
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("WalletComponent")
+			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "money", 200)
 		end
@@ -222,7 +222,7 @@ local reward_list = {
 		sound = ML.const.sounds.shop_item,
 		limit_before = "add_gold1",
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("WalletComponent")
+			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "money", 1000)
 		end
@@ -238,7 +238,7 @@ local reward_list = {
 		sound = ML.const.sounds.shop_item,
 		limit_before = "add_gold2",
 		fn = function()
-			local component_id = ML.utils:get_player_component_by_name("WalletComponent")
+			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "money", 5000)
 		end

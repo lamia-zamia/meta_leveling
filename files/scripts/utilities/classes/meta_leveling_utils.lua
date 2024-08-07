@@ -41,14 +41,6 @@ function utils:weighted_random(pool)
 	end
 end
 
----returns player's component id of name
----@param name string
----@return component_id?
-function utils:get_player_component_by_name(name)
-	if not ML.player.id then return nil end
-	return EntityGetFirstComponent(ML.player.id, name)
-end
-
 ---add value to value_name of component
 ---@param component component_id
 ---@param value_name string
@@ -123,17 +115,6 @@ end
 
 function utils:random_seed()
 	SetRandomSeed(ML.player.x, ML.player.y + GameGetFrameNum())
-end
-
----get specific LuaComponent id
----@param value LuaComponent
-function utils:get_lua_component(value, file)
-	if not ML.player.id then return end
-	local components = EntityGetComponentIncludingDisabled(ML.player.id, "LuaComponent") or {}
-	for _, component in ipairs(components) do
-		if ComponentGetValue2(component, value) == file then return component end
-	end
-	return nil
 end
 
 function utils:load_entity_to_player(file)

@@ -36,8 +36,7 @@ function ML:level_up()
 end
 
 function ML:UpdateCommonParameters()
-	self.player:validate()
-	self.player.x, self.player.y = self.player:get_pos()
+	self.player:update()
 	self.exp:update()
 end
 
