@@ -33,19 +33,21 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
 
-	if EntityHasTag(entity_thats_responsible, "player_unit") then -- killed by player
+	-- ######################### player kills ##########################
+	if EntityHasTag(entity_thats_responsible, "player_unit") then
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": " .. exp
 		ML:add_exp(exp)
 	else
 		if not_visible(died_entity) then return end
 		local responsible_name = EntityGetName(entity_thats_responsible)
-		if responsible_name then -- killed by someone else
+		-- ######################### killed by someone ##########################
+		if responsible_name then
 			local multiplier = ML.utils:get_global_number("EXP_MULTIPLIER_BETRAY", 0)
 			if multiplier == 0 then return end
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
 				.. T(responsible_name) .. ", " .. T("$ml_gained_xp") .. ": " .. exp * multiplier
 			ML:add_exp(exp * multiplier)
-		else               -- environmental kills
+		else -- ######################### trick kills ##########################
 			local cause = T(damage_message)
 			local multiplier = 0.5 + ML.utils:get_global_number("EXP_MULTIPLIER_TRICK", 0)
 			if damage_message == "$damage_water" then multiplier = multiplier + 0.5 end

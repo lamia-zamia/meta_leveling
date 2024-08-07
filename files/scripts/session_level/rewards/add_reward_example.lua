@@ -1,17 +1,19 @@
+---@type ml_single_reward
 local reward = {
 	id = "spell_refresh",
 	ui_name = "$item_spell_refresh",
 	description = "$streamingeventdesc_spell_refresh",
 	ui_icon = "mods/meta_leveling/files/gfx/rewards/spell_refresh.xml",
-	sound = ML.utils.sounds.refresh,
+	sound = ML.const.sounds.refresh,
 	probability = 0.6,
 	fn = function()
-		GameRegenItemActionsInPlayer(ML.utils:get_player_id())
+		GameRegenItemActionsInPlayer(ML.player.id)
 	end
 }
 
-ML.rewards:add_reward(reward)
+ML.rewards_deck:add_reward(reward)
 
+---@type ml_reward_definition_list
 local rewards = {
 	{
 		id = "spawn_chest1",
@@ -25,7 +27,6 @@ local rewards = {
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
-			pos_x, pos_y = ML.utils:get_player_pos()
 			if (rnd >= 1999) then
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
 			else
@@ -89,4 +90,4 @@ local rewards = {
 	-- data/entities/items/pickup/utility_box.xml
 }
 
-ML.rewards:add_rewards(rewards)
+ML.rewards_deck:add_rewards(rewards)

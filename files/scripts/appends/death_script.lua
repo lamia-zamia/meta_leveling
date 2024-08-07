@@ -1,4 +1,4 @@
-local nxml = dofile_once("mods/meta_leveling/files/lib/nxml.lua")
+local nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua")
 local bases = dofile_once("mods/meta_leveling/files/scripts/compatibility/killable_entities.lua")
 local on_death = nxml.new_element("LuaComponent", {
 	execute_every_n_frame= "-1",

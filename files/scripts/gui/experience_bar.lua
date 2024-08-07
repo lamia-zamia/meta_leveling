@@ -1,4 +1,4 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/ui_lib.lua")
+local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_lib.lua")
 ---@class experience_bar:UI_class
 local EB = UI_class:new()
 EB.anim_a = 0
@@ -38,9 +38,9 @@ function EB:ToolTipUI()
 	local experience = self:Locale("$ml_experience") .. ": " .. ML:get_exp() .. " / " .. ML:get_next_exp()
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local longest = self:GetLongestText({ level, experience, tooltip }, "exp_bar_tooltip. " .. experience, true)
-	self.tp:TextCentered(0, 0, level, longest, true)
-	self.tp:TextCentered(0, 0, experience, longest, true)
-	self.tp:TextCentered(0, 0, tooltip, longest, true)
+	self.tp:TextCentered(0, 0, level, longest, "", true)
+	self.tp:TextCentered(0, 0, experience, longest, "", true)
+	self.tp:TextCentered(0, 0, tooltip, longest, "", true)
 end
 
 function EB:AnimateBarAlpha()
@@ -160,11 +160,10 @@ end
 
 function EB:LevelUpFX()
 	self.sound_played[ML:get_level()] = true
-	if GameHasFlagRun("META_LEVELING_LEVELUP_FX_PLAYED") then return end
-	GameAddFlagRun("META_LEVELING_LEVELUP_FX_PLAYED")
-	local pos_x, pos_y = ML.utils:get_player_pos()
-	if self.play_sound then GamePlaySound(ML.utils.sound_banks.event_cues, "event_cues/wand/create", pos_x, pos_y) end
-	if self.play_fx then EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", pos_x, pos_y) end
+	if GameHasFlagRun(ML.const.flags.fx_played) then return end
+	GameAddFlagRun(ML.const.flags.fx_played)
+	if self.play_sound then GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x, ML.player.y) end
+	if self.play_fx then EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x, ML.player.y) end
 end
 
 function EB:UpdatePlayerStatus()

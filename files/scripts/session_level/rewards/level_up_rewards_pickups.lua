@@ -1,3 +1,4 @@
+---@type ml_reward_definition_list
 local potion_reward = {
 	{
 		id = "random_potion_complete",
@@ -169,4 +170,4 @@ local potion_reward = {
 	},
 }
 -- data/entities/items/pickup/broken_wand.xml
-ML.rewards:add_rewards(potion_reward)
+ML.rewards_deck:add_rewards(potion_reward)

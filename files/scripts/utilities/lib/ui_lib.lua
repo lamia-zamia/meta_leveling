@@ -521,7 +521,9 @@ function ui_class:Add9PieceBackGround(z, sprite, highlight)
 end
 
 ---@class PreviousInfo
----@field hovered boolean
+---@field lc boolean left click
+---@field rc boolean right click
+---@field hovered boolean hovered
 ---@field x number
 ---@field y number
 ---@field w number
@@ -531,8 +533,10 @@ end
 ---@return PreviousInfo return hover, x, y, w, h
 ---@nodiscard
 function ui_class:GetPrevious()
-	local _, _, prev_hovered, x, y, width, height = GuiGetPreviousWidgetInfo(self.gui)
+	local lc, rc, prev_hovered, x, y, width, height = GuiGetPreviousWidgetInfo(self.gui)
 	local table = {
+		lc = lc,
+		rc = rc,
 		hovered = prev_hovered,
 		x = x,
 		y = y,

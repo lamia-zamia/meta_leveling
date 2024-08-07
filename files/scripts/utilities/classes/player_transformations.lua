@@ -5,16 +5,14 @@ local rat = {
 }
 
 function rat:transform()
-	local player = ML.utils:get_player_id()
-	if not player then return end
-	local x, y = ML.utils:get_player_pos()
+	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold + 1))
 
-	local child_id = EntityLoad("data/entities/verlet_chains/tail/verlet_tail.xml", x, y)
+	local child_id = EntityLoad("data/entities/verlet_chains/tail/verlet_tail.xml", ML.player.x, ML.player.y)
 	EntityAddTag(child_id, "perk_entity")
-	EntityAddChild(player, child_id)
+	EntityAddChild(ML.player.id, child_id)
 
-	local component = EntityGetFirstComponentIncludingDisabled(player, "CharacterPlatformingComponent")
+	local component = EntityGetFirstComponentIncludingDisabled(ML.player.id, "CharacterPlatformingComponent")
 	if (component ~= nil) then
 		local run_speed = ComponentGetValue2(component, "run_velocity") * 1.15
 		local vel_x = math.abs(ComponentGetValue2(component, "velocity_max_x")) * 1.15
@@ -35,14 +33,13 @@ local fungi = {
 }
 
 function fungi:transform()
-	local player = ML.utils:get_player_id()
-	if not player then return end
+	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold + 1))
 
-	EntitySetComponentsWithTagEnabled(player, "player_hat", true)
-	EntitySetComponentsWithTagEnabled(player, "player_hat2_shadow", false)
+	EntitySetComponentsWithTagEnabled(ML.player.id, "player_hat", true)
+	EntitySetComponentsWithTagEnabled(ML.player.id, "player_hat2_shadow", false)
 
-	local damagemodel = EntityGetFirstComponentIncludingDisabled(player, "DamageModelComponent")
+	local damagemodel = EntityGetFirstComponentIncludingDisabled(ML.player.id, "DamageModelComponent")
 	if (damagemodel ~= nil) then
 		local explosion_resistance = ComponentObjectGetValue2(damagemodel, "damage_multipliers", "explosion")
 		explosion_resistance = explosion_resistance * 0.9
@@ -57,20 +54,18 @@ local ghost = {
 }
 
 function ghost:transform()
-	local player = ML.utils:get_player_id()
-	if not player then return end
-	local x, y = ML.utils:get_player_pos()
+	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold + 1))
 
-	local child_id = EntityLoad("data/entities/misc/perks/ghostly_ghost.xml", x, y)
-	local child_id2 = EntityLoad("data/entities/misc/perks/tiny_ghost_extra.xml", x, y)
+	local child_id = EntityLoad("data/entities/misc/perks/ghostly_ghost.xml", ML.player.x, ML.player.y)
+	local child_id2 = EntityLoad("data/entities/misc/perks/tiny_ghost_extra.xml", ML.player.x, ML.player.y)
 	EntityAddTag(child_id, "perk_entity")
 	EntityAddTag(child_id2, "perk_entity")
-	EntityAddChild(player, child_id)
-	EntityAddChild(player, child_id2)
+	EntityAddChild(ML.player.id, child_id)
+	EntityAddChild(ML.player.id, child_id2)
 
 
-	local component = EntityGetFirstComponentIncludingDisabled(player, "CharacterDataComponent")
+	local component = EntityGetFirstComponentIncludingDisabled(ML.player.id, "CharacterDataComponent")
 	if (component ~= nil) then
 		local fly_time = ComponentGetValue2(component, "fly_recharge_spd") * 1.15
 		ComponentSetValue2(component, "fly_recharge_spd", fly_time)
@@ -84,18 +79,17 @@ local lukki = {
 }
 
 function lukki:transform()
-	local player = ML.utils:get_player_id()
-	if not player then return end
+	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold + 1))
 
-	EntitySetComponentsWithTagEnabled(player, "lukki_enable", true)
+	EntitySetComponentsWithTagEnabled(ML.player.id, "lukki_enable", true)
 
-	local comp = EntityGetFirstComponent(player, "SpriteComponent", "lukki_disable")
+	local comp = EntityGetFirstComponent(ML.player.id, "SpriteComponent", "lukki_disable")
 	if (comp ~= nil) then
 		ComponentSetValue2(comp, "alpha", 0.0)
 	end
 
-	local component = EntityGetFirstComponentIncludingDisabled(player, "CharacterPlatformingComponent")
+	local component = EntityGetFirstComponentIncludingDisabled(ML.player.id, "CharacterPlatformingComponent")
 	if (component ~= nil) then
 		local run_speed = ComponentGetValue2(component, "run_velocity") * 1.1
 		local vel_x = math.abs(ComponentGetValue2(component, "velocity_max_x")) * 1.1
@@ -125,20 +119,18 @@ end
 
 function angel:transform()
 	local halo_level = tonumber(GlobalsGetValue(self.value, "0"))
-	local player = ML.utils:get_player_id()
-	if not player then return end
-	local x, y = ML.utils:get_player_pos()
+	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold + 10))
 
-	child_id = EntityLoad("data/entities/misc/perks/player_halo_light.xml", x, y)
+	child_id = EntityLoad("data/entities/misc/perks/player_halo_light.xml", ML.player.x, ML.player.y)
 	if child_id ~= nil then
-		EntityAddChild(player, child_id)
+		EntityAddChild(ML.player.id, child_id)
 	end
 
 	if halo_level < -2 then
 		self:remove()
 	else
-		local damagemodel = EntityGetFirstComponentIncludingDisabled(player, "DamageModelComponent")
+		local damagemodel = EntityGetFirstComponentIncludingDisabled(ML.player.id, "DamageModelComponent")
 		if (damagemodel ~= nil) then
 			local fire_resistance = ComponentObjectGetValue2(damagemodel, "damage_multipliers", "fire") * 0.9
 			ComponentObjectSetValue2(damagemodel, "damage_multipliers", "fire", fire_resistance)
@@ -165,20 +157,18 @@ end
 
 function demon:transform()
 	local halo_level = tonumber(GlobalsGetValue(self.value, "0"))
-	local player = ML.utils:get_player_id()
-	if not player then return end
-	local x, y = ML.utils:get_player_pos()
+	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold - 10))
 
-	child_id = EntityLoad("data/entities/misc/perks/player_halo_dark.xml", x, y)
+	child_id = EntityLoad("data/entities/misc/perks/player_halo_dark.xml", ML.player.x, ML.player.y)
 	if child_id ~= nil then
-		EntityAddChild(player, child_id)
+		EntityAddChild(ML.player.id, child_id)
 	end
 
 	if halo_level > 2 then
 		self:remove()
 	else
-		local damagemodel = EntityGetFirstComponentIncludingDisabled(player, "DamageModelComponent")
+		local damagemodel = EntityGetFirstComponentIncludingDisabled(ML.player.id, "DamageModelComponent")
 		if (damagemodel ~= nil) then
 			local fire_resistance = ComponentObjectGetValue2(damagemodel, "damage_multipliers", "fire") * 0.9
 			ComponentObjectSetValue2(damagemodel, "damage_multipliers", "fire", fire_resistance)
@@ -189,6 +179,7 @@ function demon:transform()
 	end
 end
 
+---@class ml_transformations
 local transformations = {
 	rat = rat,
 	fungi = fungi,

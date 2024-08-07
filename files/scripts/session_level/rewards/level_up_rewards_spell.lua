@@ -1,5 +1,5 @@
+---@type ml_reward_definition_list
 local reward_spell = {
-	
 	{
 		id = "random_spell1",
 		group_id = "random_spell",
@@ -7,11 +7,11 @@ local reward_spell = {
 		description = "$ml_random_spell_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_spell.xml",
 		var0 = "$ml_spell_low",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_spell(Random(0, 3))
+			local action_id = ML.rewards:get_random_spell(Random(0, 3))
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -22,12 +22,12 @@ local reward_spell = {
 		description = "$ml_random_spell_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_spell.xml",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_spell(Random(2, 6))
+			local action_id = ML.rewards:get_random_spell(Random(2, 6))
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -37,13 +37,13 @@ local reward_spell = {
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
 		var0 = "$ml_spell_high",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_spell.xml",
 		probability = 0.1,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_spell(Random(5, 10))
+			local action_id = ML.rewards:get_random_spell(Random(5, 10))
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -53,12 +53,12 @@ local reward_spell = {
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		var0 = "$ml_spell_low",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_projectile.xml",
 		probability = 0.4,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(0, 3), 0)
+			local action_id = ML.rewards:get_random_typed_spell(Random(0, 3), 0)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -68,13 +68,13 @@ local reward_spell = {
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_projectile.xml",
 		probability = 0.3,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(2, 6), 0)
+			local action_id = ML.rewards:get_random_typed_spell(Random(2, 6), 0)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -84,13 +84,13 @@ local reward_spell = {
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		var0 = "$ml_spell_high",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_projectile.xml",
 		probability = 0.2,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(5, 10), 0)
+			local action_id = ML.rewards:get_random_typed_spell(Random(5, 10), 0)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -100,12 +100,12 @@ local reward_spell = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		var0 = "$ml_spell_low",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_static_projectile.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(0, 3), 1)
+			local action_id = ML.rewards:get_random_typed_spell(Random(0, 3), 1)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -115,13 +115,13 @@ local reward_spell = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_static_projectile.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(2, 6), 1)
+			local action_id = ML.rewards:get_random_typed_spell(Random(2, 6), 1)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -131,13 +131,13 @@ local reward_spell = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		var0 = "$ml_spell_high",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_static_projectile.xml",
 		probability = 0.1,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(5, 10), 1)
+			local action_id = ML.rewards:get_random_typed_spell(Random(5, 10), 1)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -147,12 +147,12 @@ local reward_spell = {
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		var0 = "$ml_spell_low",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_modifier.xml",
 		probability = 0.4,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(0, 3), 2)
+			local action_id = ML.rewards:get_random_typed_spell(Random(0, 3), 2)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -162,13 +162,13 @@ local reward_spell = {
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_modifier.xml",
 		probability = 0.3,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(2, 6), 2)
+			local action_id = ML.rewards:get_random_typed_spell(Random(2, 6), 2)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -178,13 +178,13 @@ local reward_spell = {
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		var0 = "$ml_spell_high",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_modifier.xml",
 		probability = 0.2,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(5, 10), 2)
+			local action_id = ML.rewards:get_random_typed_spell(Random(5, 10), 2)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -192,12 +192,12 @@ local reward_spell = {
 		id = "random_passive_spell1",
 		ui_name = "$ml_passive_spell",
 		description = "$ml_passive_spell_tp",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_passive_spell.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(0, 3), 7)
+			local action_id = ML.rewards:get_random_typed_spell(Random(0, 3), 7)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -205,13 +205,13 @@ local reward_spell = {
 		id = "random_material_spell1",
 		ui_name = "$ml_material_spell",
 		description = "$ml_material_spell_tp",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_material_spell.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(1, 6), 4)
+			local action_id = ML.rewards:get_random_typed_spell(Random(1, 6), 4)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -221,12 +221,12 @@ local reward_spell = {
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		var0 = "$ml_spell_low",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_utility.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(0, 3), 6)
+			local action_id = ML.rewards:get_random_typed_spell(Random(0, 3), 6)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -236,13 +236,13 @@ local reward_spell = {
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_utility.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(2, 6), 6)
+			local action_id = ML.rewards:get_random_typed_spell(Random(2, 6), 6)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -252,13 +252,13 @@ local reward_spell = {
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		var0 = "$ml_spell_high",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_utility.xml",
 		probability = 0.1,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(5, 10), 6)
+			local action_id = ML.rewards:get_random_typed_spell(Random(5, 10), 6)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -268,13 +268,13 @@ local reward_spell = {
 		ui_name = "$ml_random_other",
 		description = "$ml_random_other_tp",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_other.xml",
 		probability = 0.1,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(2, 6), 5)
+			local action_id = ML.rewards:get_random_typed_spell(Random(2, 6), 5)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -284,13 +284,13 @@ local reward_spell = {
 		ui_name = "$ml_random_other",
 		description = "$ml_random_other_tp",
 		var0 = "$ml_spell_high",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_other.xml",
 		probability = 0.05,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(5, 10), 5)
+			local action_id = ML.rewards:get_random_typed_spell(Random(5, 10), 5)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -300,12 +300,12 @@ local reward_spell = {
 		ui_name = "$ml_random_draw_many",
 		description = "$ml_random_draw_many_tp",
 		var0 = "$ml_spell_low",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_multicast.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(0, 3), 3)
+			local action_id = ML.rewards:get_random_typed_spell(Random(0, 3), 3)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -315,13 +315,13 @@ local reward_spell = {
 		ui_name = "$ml_random_draw_many",
 		description = "$ml_random_draw_many_tp",
 		var0 = "$ml_spell_mid",
-		sound = ML.utils.sounds.chest,
+		sound = ML.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_multicast.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.utils:get_random_typed_spell(Random(3, 6), 3)
+			local action_id = ML.rewards:get_random_typed_spell(Random(3, 6), 3)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -396,4 +396,4 @@ local reward_spell = {
 	},
 }
 
-ML.rewards:add_rewards(reward_spell)
+ML.rewards_deck:add_rewards(reward_spell)

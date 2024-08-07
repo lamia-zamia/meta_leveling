@@ -1,3 +1,4 @@
+---@type ml_reward_definition_list
 local transformations = {
 	{
 		id = "transformation_rat",
@@ -6,11 +7,11 @@ local transformations = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_ratty.xml",
 		probability = 0.02,
 		custom_check = function()
-			return HasFlagPersistent(ML.utils.transformations.rat.flag) and
-				tonumber(GlobalsGetValue(ML.utils.transformations.rat.value, "0")) < 2
+			return HasFlagPersistent(ML.rewards.transformation.rat.flag) and
+				tonumber(GlobalsGetValue(ML.rewards.transformation.rat.value, "0")) < 2
 		end,
 		fn = function()
-			ML.utils.transformations.rat:transform()
+			ML.rewards.transformation.rat:transform()
 		end
 	},
 	{
@@ -20,11 +21,11 @@ local transformations = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_fungi.xml",
 		probability = 0.02,
 		custom_check = function()
-			return HasFlagPersistent(ML.utils.transformations.fungi.flag) and
-				tonumber(GlobalsGetValue(ML.utils.transformations.fungi.value, "0")) < 2
+			return HasFlagPersistent(ML.rewards.transformation.fungi.flag) and
+				tonumber(GlobalsGetValue(ML.rewards.transformation.fungi.value, "0")) < 2
 		end,
 		fn = function()
-			ML.utils.transformations.fungi:transform()
+			ML.rewards.transformation.fungi:transform()
 		end
 	},
 	{
@@ -34,11 +35,11 @@ local transformations = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_ghost.xml",
 		probability = 0.02,
 		custom_check = function()
-			return HasFlagPersistent(ML.utils.transformations.ghost.flag) and
-				tonumber(GlobalsGetValue(ML.utils.transformations.ghost.value, "0")) < 2
+			return HasFlagPersistent(ML.rewards.transformation.ghost.flag) and
+				tonumber(GlobalsGetValue(ML.rewards.transformation.ghost.value, "0")) < 2
 		end,
 		fn = function()
-			ML.utils.transformations.ghost:transform()
+			ML.rewards.transformation.ghost:transform()
 		end
 	},
 	{
@@ -48,11 +49,11 @@ local transformations = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_lukki.xml",
 		probability = 0.02,
 		custom_check = function()
-			return HasFlagPersistent(ML.utils.transformations.lukki.flag) and
-				tonumber(GlobalsGetValue(ML.utils.transformations.lukki.value, "0")) < 2
+			return HasFlagPersistent(ML.rewards.transformation.lukki.flag) and
+				tonumber(GlobalsGetValue(ML.rewards.transformation.lukki.value, "0")) < 2
 		end,
 		fn = function()
-			ML.utils.transformations.lukki:transform()
+			ML.rewards.transformation.lukki:transform()
 		end
 	},
 	{
@@ -62,11 +63,11 @@ local transformations = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_angel.xml",
 		probability = 0.02,
 		custom_check = function()
-			return HasFlagPersistent(ML.utils.transformations.angel.flag) and
-				tonumber(GlobalsGetValue(ML.utils.transformations.angel.value, "0")) < 2
+			return HasFlagPersistent(ML.rewards.transformation.angel.flag) and
+				tonumber(GlobalsGetValue(ML.rewards.transformation.angel.value, "0")) < 2
 		end,
 		fn = function()
-			ML.utils.transformations.angel:transform()
+			ML.rewards.transformation.angel:transform()
 		end
 	},
 	{
@@ -76,13 +77,13 @@ local transformations = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/transformation_demon.xml",
 		probability = 0.02,
 		custom_check = function()
-			return HasFlagPersistent(ML.utils.transformations.demon.flag) and
-				tonumber(GlobalsGetValue(ML.utils.transformations.demon.value, "0")) > -2
+			return HasFlagPersistent(ML.rewards.transformation.demon.flag) and
+				tonumber(GlobalsGetValue(ML.rewards.transformation.demon.value, "0")) > -2
 		end,
 		fn = function()
-			ML.utils.transformations.demon:transform()
+			ML.rewards.transformation.demon:transform()
 		end
 	},
 }
 
-ML.rewards:add_rewards(transformations)
+ML.rewards_deck:add_rewards(transformations)

@@ -1,5 +1,8 @@
 local const_increment = 3
 
+---Level curve for experience, level_curve[level] = experience
+---@class ml_level_curve:table
+---@field [number] number amount of experience needed
 local levels = {
 	[0] = 0,
 	[1] = const_increment

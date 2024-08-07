@@ -1,9 +1,9 @@
 ---@type UI_class
-local UI = dofile_once("mods/meta_leveling/files/scripts/utilities/ui_lib.lua")
+local UI = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_lib.lua")
 ---@type experience_bar
-local EB = dofile_once("mods/meta_leveling/files/scripts/session_level/experience_bar.lua")
+local EB = dofile_once("mods/meta_leveling/files/scripts/gui/experience_bar.lua")
 ---@type level_ui
-local LU = dofile_once("mods/meta_leveling/files/scripts/session_level/level_ui.lua")
+local LU = dofile_once("mods/meta_leveling/files/scripts/gui/level_ui.lua")
 
 ---@class ML_gui
 ---@field private UI UI_class

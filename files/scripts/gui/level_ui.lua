@@ -1,4 +1,4 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/ui_lib.lua")
+local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_lib.lua")
 ---@class level_ui:UI_class
 ---@field private v table
 local LU = UI_class:new()
@@ -14,7 +14,6 @@ local constants = {
 	height = 180,
 	width = 320,
 	sprite_offset = 20,
-	level_up_flag = "META_LEVELING_LEVELING_UP",
 	reward_box_size = 24,
 	reward_list = nil
 }
@@ -57,7 +56,7 @@ end
 ---@method
 function LU:OpenLevelUpMenu()
 	GamePlaySound("ui", "ui/button_click", 0, 0)
-	GameAddFlagRun(self.v.level_up_flag)
+	GameAddFlagRun(ML.const.flags.leveling_up)
 	self:AnimReset("rewards")
 end
 
@@ -66,7 +65,7 @@ function LU:CloseRewardUI()
 	GameRemoveFlagRun("META_LEVELING_LEVELUP_FX_PLAYED")
 	GamePlaySound("ui", "ui/button_click", 0, 0)
 	if ML:get_exp_percentage() < 1 then
-		GameRemoveFlagRun(self.v.level_up_flag)
+		GameRemoveFlagRun(ML.const.flags.leveling_up)
 		ML:toggle_ui()
 	end
 	self.v.reward_list = nil
@@ -77,19 +76,19 @@ end
 ---@private
 ---@method
 function LU:SkipReward()
-	ML.rewards:skip_reward()
+	ML.rewards_deck:skip_reward()
 	self:CloseRewardUI()
 end
 
 function LU:PickReward(reward)
-	ML.rewards:pick_reward(reward.id)
+	ML.rewards_deck:pick_reward(reward.id)
 	self:CloseRewardUI()
 end
 
 ---tooltip render for rewards
 ---@private
 ---@method
----@param reward single_reward
+---@param reward ml_single_reward
 function LU:RewardsTooltip(reward)
 	local texts = {
 		name = self:Locale(reward.ui_name),
@@ -109,13 +108,13 @@ end
 function LU:DrawPointSpenderRewards(x, y, data)
 	for i = 1, data.amount do
 		local x_offset = x + (data.width + data.width9_offset) * (i - 1)
-		local reward_icon = ML.rewards.reward_data[self.v.reward_list[i]].ui_icon
+		local reward_icon = ML.rewards_deck.reward_data[self.v.reward_list[i]].ui_icon
 		self:ForceFocusable()
 		self:Draw9Piece(x_offset, y, 999, data.width - data.width9_offset, data.height, self.v.ui_9p_reward,
 			self.v.ui_9p_reward_hl)
 		local tp_offset = (data.width - data.width9_offset) / 2
 		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward,
-			ML.rewards.reward_data[self.v.reward_list[i]])
+			ML.rewards_deck.reward_data[self.v.reward_list[i]])
 		if not self.v.reward_list then return end
 		self:Image(x_offset + (data.width - data.width9_offset - data.icon_size) / 2,
 			y + (data.height - data.icon_size) / 2, reward_icon)
@@ -127,7 +126,19 @@ end
 ---@method
 function LU:DrawPointSpender()
 	self:MenuAnimS("rewards")
-	if not self.v.reward_list then self.v.reward_list = ML.rewards:draw_reward() end
+	-- self:AddOptionForNext(2)
+	-- self:AddOptionForNext(1)
+	-- self:SetZ(200000)
+	-- self:Draw9Piece(-20, -20, 1999, 1000, 1000, self.v.ui_9piece)
+	-- -- self:Image(0, 0, self.c.empty, 1, self.dim.x, self.dim.y)
+	-- local prev = self:GetPrevious()
+	-- if prev.hovered then
+	-- 	-- ML:toggle_ui()
+	-- 	print("hovered")
+	-- end
+	-- self:TextCentered(0, 100, self:Locale("$ml_close_click_anywhere"), self.dim.x)
+
+	if not self.v.reward_list then self.v.reward_list = ML.rewards_deck:draw_reward() end
 	local data = {
 		amount = #self.v.reward_list,
 		width9_offset = 6,
@@ -153,7 +164,7 @@ function LU:DrawCurrentRewardsItems()
 	local count = 1
 	local max_per_row = 11
 
-	for _, group in pairs(ML.rewards.groups_data) do
+	for _, group in pairs(ML.rewards_deck.groups_data) do
 		if group.picked then
 			if count > max_per_row then
 				count = 1
@@ -164,10 +175,10 @@ function LU:DrawCurrentRewardsItems()
 				self.curent_rewards_height = self.curent_rewards_height + distance_between
 			end
 			local tooltip = ""
-			self:Image(x, y + self.scroll.y, ML.rewards.reward_data[group.rewards[1]].ui_icon)
+			self:Image(x, y + self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
 			self:Draw9Piece(self.x + x, self.y + y, 999, 16, 16, self.v.ui_9p_reward)
 			for _, reward_id in ipairs(group.rewards) do
-				local reward = ML.rewards.reward_data[reward_id]
+				local reward = ML.rewards_deck.reward_data[reward_id]
 				if reward.pick_count > 0 then
 					tooltip = tooltip .. reward.pick_count .. "x [" .. self:Locale(reward.ui_name) .. "] "
 						.. self:GameTextGet(reward.description, reward.var0, reward.var1, reward.var2) .. "\n"
@@ -241,7 +252,7 @@ function LU:DrawMenuButtons()
 end
 
 function LU:CloseMenu()
-	GamePlaySound("ui", "ui/button_click", 0, 0)
+	GamePlaySound(ML.const.sound_banks.ui, "ui/button_click", 0, 0)
 	ML:toggle_ui()
 end
 
@@ -289,7 +300,7 @@ end
 ---@private
 ---@method
 function LU:DrawLevelUI()
-	if GameHasFlagRun(self.v.level_up_flag) then
+	if GameHasFlagRun(ML.const.flags.leveling_up) then
 		self:DrawPointSpender()
 	else
 		self:DrawMainMenu()

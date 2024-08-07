@@ -1,5 +1,4 @@
----@class reward_definition_list
----@field [any] single_reward
+---@type ml_reward_definition_list
 local reward_list = {
 	{
 		id = "simple_extra_health1",
@@ -10,7 +9,7 @@ local reward_list = {
 		probability = 0.8,
 		max = 3,
 		var0 = 10,
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -26,7 +25,7 @@ local reward_list = {
 		probability = 0.5,
 		var0 = 25,
 		max = 5,
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health1",
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
@@ -42,7 +41,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
 		var0 = 50,
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health2",
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
@@ -59,7 +58,7 @@ local reward_list = {
 		probability = 0.3,
 		var0 = "10%",
 		max = 5,
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health2",
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
@@ -75,7 +74,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
 		var0 = "25%",
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		limit_before = "extra_health_perc1",
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
@@ -92,7 +91,7 @@ local reward_list = {
 		probability = 0.8,
 		max = 3,
 		var0 = 25,
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -109,7 +108,7 @@ local reward_list = {
 		max = 3,
 		var0 = 50,
 		limit_before = "heal_con1",
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -125,7 +124,7 @@ local reward_list = {
 		probability = 0.8,
 		var0 = 100,
 		limit_before = "heal_con2",
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -142,7 +141,7 @@ local reward_list = {
 		var0 = "10%",
 		max = 3,
 		min_level = 10,
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -159,7 +158,7 @@ local reward_list = {
 		probability = 0.8,
 		var0 = "25%",
 		limit_before = "heal_perc1",
-		sound = ML.utils.sounds.heart,
+		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -178,7 +177,7 @@ local reward_list = {
 		max = 4,
 		min_level = 5,
 		fn = function()
-			ML.utils:add_to_global_number("DRAW_AMOUNT", 1, 3)
+			ML.utils:add_to_global_number("DRAW_AMOUNT", 1)
 		end
 	},
 	{
@@ -204,7 +203,7 @@ local reward_list = {
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
 		var0 = 200,
-		sound = ML.utils.sounds.shop_item,
+		sound = ML.const.sounds.shop_item,
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("WalletComponent")
 			if not component_id then return end
@@ -220,7 +219,7 @@ local reward_list = {
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
 		var0 = 1000,
-		sound = ML.utils.sounds.shop_item,
+		sound = ML.const.sounds.shop_item,
 		limit_before = "add_gold1",
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("WalletComponent")
@@ -236,7 +235,7 @@ local reward_list = {
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		var0 = 5000,
-		sound = ML.utils.sounds.shop_item,
+		sound = ML.const.sounds.shop_item,
 		limit_before = "add_gold2",
 		fn = function()
 			local component_id = ML.utils:get_player_component_by_name("WalletComponent")
@@ -267,9 +266,8 @@ local reward_list = {
 		probability = 0.5,
 		max = 1,
 		fn = function()
-			local player_id = ML.utils:get_player_id()
 			local entity_id = EntityLoad("mods/meta_leveling/files/entities/permanent_light.xml")
-			EntityAddChild(player_id, entity_id)
+			EntityAddChild(ML.player.id, entity_id)
 		end
 	},
 	{
@@ -495,7 +493,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/permanent_concentrated_mana.xml",
 		probability = 0.2,
 		fn = function()
-			ML.utils:add_lua_component_if_none("script_source_file", ML.utils.files.mana_regen)
+			ML.player:add_lua_component_if_none("script_source_file", ML.const.files.mana_regen)
 			ML.utils:add_to_global_number("permanent_concentrated_mana", 0.25)
 		end
 	},
@@ -506,7 +504,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/projectile_damage.xml",
 		probability = 0.2,
 		fn = function()
-			ML.utils:add_lua_component_if_none("script_shot", ML.utils.files.shot_damage)
+			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
 			ML.utils:add_to_global_number("projectile_damage_increase", 0.1, 1)
 		end
 	},
@@ -517,7 +515,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/elemental_damage.xml",
 		probability = 0.2,
 		fn = function()
-			ML.utils:add_lua_component_if_none("script_shot", ML.utils.files.shot_damage)
+			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
 			ML.utils:add_to_global_number("elemental_damage_increase", 0.3, 1)
 		end
 	},
@@ -528,7 +526,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/drill_damage.xml",
 		probability = 0.1,
 		fn = function()
-			ML.utils:add_lua_component_if_none("script_shot", ML.utils.files.shot_damage)
+			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
 			ML.utils:add_to_global_number("drill_damage_increase", 0.4)
 		end
 	},
@@ -539,7 +537,7 @@ local reward_list = {
 		ui_icon = "data/ui_gfx/gun_actions/critical_hit.png",
 		probability = 0.1,
 		fn = function()
-			ML.utils:add_lua_component_if_none("script_shot", ML.utils.files.shot_damage)
+			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
 			ML.utils:add_to_global_number("crit_chance_increase", 15)
 		end
 	},
@@ -551,7 +549,7 @@ local reward_list = {
 		probability = 0.1,
 		max = 3,
 		fn = function()
-			ML.utils:add_lua_component_if_none("script_shot", ML.utils.files.shot_damage)
+			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
 			ML.utils:add_to_global_number("drill_destructibility_increase", 1)
 		end
 	},
@@ -562,7 +560,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/fungal_shift.xml",
 		probability = 0.1,
 		fn = function()
-			ML.utils:force_fungal_shift()
+			ML.rewards:force_fungal_shift()
 		end
 	},
 }

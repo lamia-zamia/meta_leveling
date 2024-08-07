@@ -5,10 +5,11 @@ dofile_once("mods/meta_leveling/files/scripts/mod_settings_virtual.lua")
 ---@type meta_leveling
 ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
 ---@type ML_gui
-local gui = dofile_once("mods/meta_leveling/files/scripts/utilities/gui.lua")
+local gui = dofile_once("mods/meta_leveling/files/scripts/gui/gui.lua")
 
 function OnWorldInitialized()
-	ML.rewards:GatherData()
+	ML.rewards_deck:GatherData()
+	ML.rewards:gather_action_info()
 end
 
 function OnPlayerSpawned()
@@ -16,6 +17,7 @@ function OnPlayerSpawned()
 end
 
 function OnWorldPostUpdate()
+	ML:UpdateCommonParameters()
 	gui:Draw()
 end
 

@@ -1,3 +1,4 @@
+---@type ml_reward_definition_list
 local rewards_perk = {
 	{
 		id = "EXTRA_PERK",
@@ -8,12 +9,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 5,
 		custom_check = function()
-			local pickup_count = ML.utils:get_perk_pickup_count("EXTRA_PERK")
+			local pickup_count = ML.rewards:get_perk_pickup_count("EXTRA_PERK")
 			if pickup_count < 5 then return true end
 			return false
 		end,
 		fn = function()
-			ML.utils:grant_perk("EXTRA_PERK")
+			ML.rewards:grant_perk("EXTRA_PERK")
 		end
 	},
 	{
@@ -25,12 +26,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 5,
 		custom_check = function()
-			local pickup_count = ML.utils:get_perk_pickup_count("PERKS_LOTTERY")
+			local pickup_count = ML.rewards:get_perk_pickup_count("PERKS_LOTTERY")
 			if pickup_count < 7 then return true end
 			return false
 		end,
 		fn = function()
-			ML.utils:grant_perk("PERKS_LOTTERY")
+			ML.rewards:grant_perk("PERKS_LOTTERY")
 		end
 	},
 	{
@@ -42,12 +43,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 30,
 		custom_check = function()
-			local pickup_count = ML.utils:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
+			local pickup_count = ML.rewards:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
 			if pickup_count < 1 then return true end
 			return false
 		end,
 		fn = function()
-			ML.utils:grant_perk("REMOVE_FOG_OF_WAR")
+			ML.rewards:grant_perk("REMOVE_FOG_OF_WAR")
 		end
 	},
 	{
@@ -59,12 +60,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 50,
 		custom_check = function()
-			local pickup_count = ML.utils:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
+			local pickup_count = ML.rewards:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
 			if pickup_count < 1 then return true end
 			return false
 		end,
 		fn = function()
-			ML.utils:grant_perk("EDIT_WANDS_EVERYWHERE")
+			ML.rewards:grant_perk("EDIT_WANDS_EVERYWHERE")
 		end
 	},
 	{
@@ -76,9 +77,9 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 20,
 		fn = function()
-			ML.utils:grant_perk("RESPAWN")
+			ML.rewards:grant_perk("RESPAWN")
 		end
 	},
 }
 
-ML.rewards:add_rewards(rewards_perk)
+ML.rewards_deck:add_rewards(rewards_perk)
