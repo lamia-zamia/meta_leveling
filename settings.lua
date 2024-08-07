@@ -3,7 +3,7 @@ dofile_once("data/scripts/lib/mod_settings.lua")
 local mod_id = "meta_leveling"
 mod_settings_version = 1
 local T = {}
-
+local D = {}
 -- ###########################################
 -- ############		Helpers		##############
 -- ###########################################
@@ -14,11 +14,27 @@ local U = {
 	offset = 0
 }
 do --helpers
+	---@param setting_name setting_id
+	---@param value setting_value
 	function U.set_setting(setting_name, value)
-		ModSettingSet(setting_name, value)
-		ModSettingSetNextValue(setting_name, value, false)
+		ModSettingSet("meta_leveling." .. setting_name, value)
+		ModSettingSetNextValue("meta_leveling." .. setting_name, value, false)
 	end
 
+	---@param setting_name setting_id
+	---@return setting_value?
+	function U.get_setting(setting_name)
+		return ModSettingGet("meta_leveling." .. setting_name)
+	end
+
+	---@param setting_name setting_id
+	---@return setting_value?
+	function U.get_setting_next(setting_name)
+		return ModSettingGetNextValue("meta_leveling." .. setting_name)
+	end
+
+	---@param id setting_id
+	---@return number?
 	function U.get_settings_cat_index(id)
 		for i, setting in ipairs(mod_settings) do
 			if setting.category_id and setting.category_id == id then
@@ -27,6 +43,9 @@ do --helpers
 		end
 	end
 
+	---@param table mod_settings
+	---@param setting_id setting_id
+	---@return number?
 	function U.get_setting_index(table, setting_id)
 		for i, setting in ipairs(table) do
 			if setting.id and setting.id == setting_id then
@@ -35,6 +54,9 @@ do --helpers
 		end
 	end
 
+	---@param cat_id mod_category_id
+	---@param set_id setting_id
+	---@return { cat: number, set: number }
 	function U.get_cat_and_setting_index(cat_id, set_id)
 		local cat_index = U.get_settings_cat_index(cat_id)
 		local set_index = U.get_setting_index(mod_settings[cat_index].settings, set_id)
@@ -44,6 +66,9 @@ do --helpers
 		}
 	end
 
+	---@param gui gui
+	---@param array mod_settings_global|mod_settings
+	---@return number
 	function U.calculate_elements_offset(gui, array)
 		local max_width = 10
 		for _, setting in ipairs(array) do
@@ -56,12 +81,14 @@ do --helpers
 				max_width = math.max(max_width, name_length)
 			end
 		end
-		return max_width
+		return max_width + 3
 	end
 
+	---@param value? string
+	---@return number
 	function U.get_thickness_limit(value)
 		local max = 4
-		local position = value or ModSettingGetNextValue("meta_leveling.exp_bar_position")
+		local position = value or U.get_setting_next("exp_bar_position")
 		if position == "under_health" then
 			max = 2
 		end
@@ -73,6 +100,16 @@ do --helpers
 		local index = U.get_cat_and_setting_index("exp_bar_cat", "exp_bar_thickness")
 		mod_settings[index.cat].settings[index.set].value_max = max
 	end
+
+	---@param all boolean reset all
+	function U.set_default(all)
+		all = all or false
+		for setting, value in pairs(D) do
+			if not U.get_setting(setting) or all then
+				U.set_setting(setting, value)
+			end
+		end
+	end
 end
 -- ###########################################
 -- ##########		GUI Helpers		##########
@@ -82,14 +119,22 @@ local G = {
 
 }
 do --gui helpers
+	---@param gui gui
+	---@param hovered boolean
 	function G.yellow_if_hovered(gui, hovered)
 		if hovered then GuiColorSetForNextWidget(gui, 1, 1, 0.7, 1) end
 	end
 
-	function G.display_fake_button(_, gui, in_main_menu, id, setting, text, value, set_value)
+	---@param gui gui
+	---@param id fun(): number
+	---@param setting_name setting_id
+	---@param text string
+	---@param value setting_value
+	---@param set_value setting_value
+	function G.display_fake_button(gui, id, setting_name, text, value, set_value)
 		local _, _, _, x, y, w = GuiGetPreviousWidgetInfo(gui)
 		local width, height = GuiGetTextDimensions(gui, text)
-		GuiImageNinePiece(gui, id, x + w, y, width, height, 0)
+		GuiImageNinePiece(gui, id(), x + w, y, width, height, 0)
 		local clicked, _, hovered = GuiGetPreviousWidgetInfo(gui)
 		if value == set_value then
 			GuiColorSetForNextWidget(gui, 0.7, 0.7, 0.7, 1)
@@ -97,8 +142,7 @@ do --gui helpers
 			G.yellow_if_hovered(gui, hovered)
 			if clicked then
 				GamePlaySound("ui", "ui/button_click", 0, 0)
-				ModSettingSetNextValue(mod_setting_get_id(mod_id, setting), set_value, false)
-				mod_setting_handle_change_callback(mod_id, gui, in_main_menu, setting, value, not value)
+				U.set_setting(setting_name, set_value)
 			end
 		end
 		GuiText(gui, 0, 0, text)
@@ -112,9 +156,9 @@ do --gui helpers
 	end
 
 	function G.draw_bar_color(gui, id, x, y, width, height)
-		local r = tonumber(ModSettingGetNextValue("meta_leveling.exp_bar_red")) or 1
-		local g = tonumber(ModSettingGetNextValue("meta_leveling.exp_bar_green")) or 1
-		local b = tonumber(ModSettingGetNextValue("meta_leveling.exp_bar_blue")) or 1
+		local r = tonumber(U.get_setting_next("exp_bar_red")) or D.exp_bar_red
+		local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
+		local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
 		GuiColorSetForNextWidget(gui, r, g, b, 1)
 		GuiZSetForNextWidget(gui, 3)
 		G.image_no_layout(gui, id, x, y, U.whitebox, 1, width, height)
@@ -134,6 +178,9 @@ do --gui helpers
 		GuiText(gui, 0, 0, " ")
 	end
 
+	---@param setting_name setting_id
+	---@param value setting_value
+	---@param default setting_value
 	function G.on_clicks(setting_name, value, default)
 		if InputIsMouseButtonJustDown(1) then
 			GamePlaySound("ui", "ui/button_click", 0, 0)
@@ -145,13 +192,14 @@ do --gui helpers
 		end
 	end
 
-	function G.toggle_checkbox_boolean(gui, id, setting, text, default)
-		default = default or false
-		local setting_name = tostring("meta_leveling." .. setting)
+	---@param gui gui
+	---@param id fun(): number
+	---@param setting_name setting_id
+	function G.toggle_checkbox_boolean(gui, id, setting_name)
+		local text = T[setting_name]
 		local _, _, _, prev_x, y, prev_w = GuiGetPreviousWidgetInfo(gui)
 		local x = prev_x + prev_w + 1
-		-- local x = U.offset
-		local value = ModSettingGet(setting_name)
+		local value = U.get_setting_next(setting_name)
 		local offset_w = GuiGetTextDimensions(gui, text) + 8
 
 		GuiZSetForNextWidget(gui, -1)
@@ -173,9 +221,61 @@ do --gui helpers
 			G.yellow_if_hovered(gui, hovered)
 		end
 		GuiText(gui, 0, 0, text)
-
+		G.tooltip(gui, setting_name)
 		if hovered then
-			G.on_clicks(setting_name, not value, default)
+			G.on_clicks(setting_name, not value, D[setting_name])
+		end
+	end
+
+	---@param gui gui
+	---@param id number
+	---@param setting mod_setting_number
+	---@return number, number
+	function G.mod_setting_number(gui, id, setting)
+		GuiLayoutBeginHorizontal(gui, 0, 0, false, 0, 0)
+		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
+		local w = GuiGetTextDimensions(gui, setting.ui_name)
+		local value = tonumber(ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))) or setting.value_default
+		local multiplier = setting.value_display_multiplier or 1
+		local value_new = GuiSlider(gui, id, U.offset - w, 0, "", value, setting
+			.value_min,
+			setting.value_max, setting.value_default, multiplier, " ", 64)
+		GuiColorSetForNextWidget(gui, 0.81, 0.81, 0.81, 1)
+		local format = setting.format or ""
+		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)) .. format)
+		GuiLayoutEnd(gui)
+		G.tooltip(gui, setting.id, setting.scope)
+		return value, value_new
+	end
+
+	---@param gui gui
+	---@param setting_name setting_id
+	---@param scope? mod_setting_scopes
+	function G.tooltip(gui, setting_name, scope)
+		local description = T[setting_name .. "_d"]
+		local value = U.get_setting_next(setting_name)
+		local value_now = U.get_setting(setting_name)
+
+		if value ~= value_now then
+			if scope == MOD_SETTING_SCOPE_RUNTIME_RESTART then
+				if description then
+					GuiTooltip(gui, description, "$menu_modsettings_changes_restart")
+				else
+					GuiTooltip(gui, "$menu_modsettings_changes_restart", "")
+				end
+				return
+			elseif scope == MOD_SETTING_SCOPE_NEW_GAME then
+				if description then
+					GuiTooltip(gui, description, "$menu_modsettings_changes_worldgen")
+				else
+					GuiTooltip(gui, "$menu_modsettings_changes_worldgen", "")
+				end
+				return
+			end
+		end
+
+		if description then
+			GuiTooltip(gui, description, "")
 		end
 	end
 end
@@ -187,46 +287,21 @@ local S = {
 
 }
 do -- Settings GUI
+	---@param setting mod_setting_number
 	function S.mod_setting_number_float(_, gui, in_main_menu, im_id, setting)
-		GuiLayoutBeginHorizontal(gui, 0, 0, false, 0, 0)
-		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
-		local w = GuiGetTextDimensions(gui, setting.ui_name)
-		local value = tonumber(ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))) or setting.value_default
-		local multiplier = setting.value_display_multiplier or 1
-		local value_new = GuiSlider(gui, im_id, U.offset - w, 0, "", value, setting
-			.value_min,
-			setting.value_max, setting.value_default, multiplier, " ", 64)
-		GuiColorSetForNextWidget(gui, 0.81, 0.81, 0.81, 1)
-		local format = setting.format or ""
-		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)) .. format)
-		GuiLayoutEnd(gui)
+		local value, value_new = G.mod_setting_number(gui, im_id, setting)
 		if value ~= value_new then
-			ModSettingSetNextValue(mod_setting_get_id(mod_id, setting), value_new, false)
-			mod_setting_handle_change_callback(mod_id, gui, in_main_menu, setting, value, value_new)
+			U.set_setting(setting.id, value_new)
 		end
-
-		mod_setting_tooltip(mod_id, gui, in_main_menu, setting)
 	end
 
+	---@param setting mod_setting_number
 	function S.mod_setting_number_integer(_, gui, in_main_menu, im_id, setting)
-		GuiLayoutBeginHorizontal(gui, 0, 0, false, 0, 0)
-		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
-		local w = GuiGetTextDimensions(gui, setting.ui_name)
-		local value = tonumber(ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))) or setting.value_default
-		local multiplier = setting.value_display_multiplier or 1
-		local value_new = GuiSlider(gui, im_id, U.offset - w, 0, "", value, setting
-			.value_min,
-			setting.value_max, setting.value_default, multiplier, " ", 64)
-		GuiColorSetForNextWidget(gui, 0.81, 0.81, 0.81, 1)
-		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)))
-		GuiLayoutEnd(gui)
+		local value, value_new = G.mod_setting_number(gui, im_id, setting)
 		value_new = math.floor(value_new + 0.5)
 		if value ~= value_new then
-			ModSettingSetNextValue(mod_setting_get_id(mod_id, setting), value_new, false)
-			mod_setting_handle_change_callback(mod_id, gui, in_main_menu, setting, value, value_new)
+			U.set_setting(setting.id, value_new)
 		end
-
-		mod_setting_tooltip(mod_id, gui, in_main_menu, setting)
 	end
 
 	function S.exp_bar_position(_, gui, in_main_menu, im_id, setting)
@@ -235,11 +310,12 @@ do -- Settings GUI
 			gui_id = gui_id + 1
 			return gui_id
 		end
-		local value = ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))
+		local value = U.get_setting_next(setting.id)
+		if not value then return end
 		GuiLayoutBeginHorizontal(gui, mod_setting_group_x_offset, 0, true)
 		GuiText(gui, 0, 0, setting.ui_name .. ": ")
 		for _, values in ipairs(setting.values) do
-			G.display_fake_button(mod_id, gui, in_main_menu, id(), setting, "[" .. values[2] .. "]", value, values[1])
+			G.display_fake_button(gui, id, setting.id, "[" .. values[2] .. "]", value, values[1])
 		end
 		GuiLayoutEnd(gui)
 	end
@@ -284,34 +360,19 @@ do -- Settings GUI
 		GuiText(gui, x, y_offset, " ")
 	end
 
-	function S.draw_level_up_setting(_, gui, in_main_menu, im_id, setting)
+	function S.mod_setting_better_boolean(_, gui, in_main_menu, im_id, setting)
 		local gui_id = im_id
 		local function id()
 			gui_id = gui_id + 1
 			return gui_id
 		end
-		GuiOptionsAddForNextWidget(gui, 14)
-		GuiText(gui, mod_setting_group_x_offset, 0, T.session_exp_on_level_up)
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
+		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 7, 0, "")
-		G.toggle_checkbox_boolean(gui, id, "session_exp_play_sound", T.session_exp_play_sound, true)
-		G.toggle_checkbox_boolean(gui, id, "session_exp_play_fx", T.session_exp_play_fx, true)
-		G.toggle_checkbox_boolean(gui, id, "session_exp_animate_bar", T.session_exp_animate_bar, true)
-		GuiLayoutEnd(gui)
-		-- GuiOptionsRemove(gui, 14)
-	end
-
-	function S.draw_on_kills(_, gui, in_main_menu, im_id, setting)
-		local gui_id = im_id
-		local function id()
-			gui_id = gui_id + 1
-			return gui_id
+		for _, setting_id in pairs(setting.checkboxes) do
+			G.toggle_checkbox_boolean(gui, id, setting_id)
 		end
-		GuiOptionsAddForNextWidget(gui, 14)
-		GuiText(gui, mod_setting_group_x_offset, 0, T.session_exp_on_kills)
-		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
-		GuiText(gui, 7, 0, "")
-		G.toggle_checkbox_boolean(gui, id, "session_exp_log", T.session_exp_log, false)
 		GuiLayoutEnd(gui)
 	end
 end
@@ -387,8 +448,22 @@ setmetatable(T, mt)
 -- #########		Settings		##########
 -- ###########################################
 
+---@class ml_settings_default
+D = {
+	exp_bar_position = "under_health",
+	exp_bar_thickness = 2,
+	exp_bar_red = 0,
+	exp_bar_green = 0.5,
+	exp_bar_blue = 0,
+	session_exp_play_sound = true,
+	session_exp_play_fx = true,
+	session_exp_animate_bar = true,
+	session_exp_log = false,
+	session_exp_multiplier = 1,
+}
+
 local function build_settings()
-	---@type mod_settings
+	---@type mod_settings_global
 	local settings = {
 		{
 			category_id = "exp_bar_cat",
@@ -406,7 +481,7 @@ local function build_settings()
 					id = "exp_bar_position",
 					ui_name = T.exp_bar_position,
 					ui_description = T.exp_bar_position_d,
-					value_default = "under_health",
+					value_default = D.exp_bar_position,
 					values = { { "under_health", T.under_health }, { "on_left", T.on_left }, { "on_right", T.on_right }, { "on_top", T.on_top } },
 					scope = MOD_SETTING_SCOPE_RUNTIME,
 					change_fn = U.set_thickness_limit,
@@ -416,7 +491,7 @@ local function build_settings()
 					id = "exp_bar_thickness",
 					ui_name = T.exp_bar_thickness,
 					ui_description = T.exp_bar_thickness_d,
-					value_default = 2,
+					value_default = D.exp_bar_thickness,
 					value_min = 1,
 					value_max = U.get_thickness_limit(),
 					scope = MOD_SETTING_SCOPE_RUNTIME,
@@ -426,7 +501,7 @@ local function build_settings()
 				{
 					id = "exp_bar_red",
 					ui_name = T.exp_bar_red,
-					value_default = 0,
+					value_default = D.exp_bar_red,
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
@@ -437,7 +512,7 @@ local function build_settings()
 				{
 					id = "exp_bar_green",
 					ui_name = T.exp_bar_green,
-					value_default = 0.5,
+					value_default = D.exp_bar_green,
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
@@ -448,7 +523,7 @@ local function build_settings()
 				{
 					id = "exp_bar_blue",
 					ui_name = T.exp_bar_blue,
-					value_default = 0,
+					value_default = D.exp_bar_blue,
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
@@ -467,47 +542,21 @@ local function build_settings()
 			settings =
 			{
 				{
-					id = "session_exp_play_sound",
-					ui_name = T.session_exp_play_sound,
-					value_default = true,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
-					hidden = true,
-				},
-				{
-					id = "session_exp_play_fx",
-					ui_name = T.session_exp_play_fx,
-					value_default = true,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
-					hidden = true,
-				},
-				{
-					id = "session_exp_animate_bar",
-					ui_name = T.session_exp_animate_bar,
-					value_default = true,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
-					hidden = true,
-				},
-				{
-					ui_fn = S.draw_level_up_setting,
-					ui_name = T.session_exp_on_level_up,
 					not_setting = true,
+					ui_fn = S.mod_setting_better_boolean,
+					ui_name = T.session_exp_on_level_up,
+					checkboxes = { "session_exp_play_sound", "session_exp_play_fx", "session_exp_animate_bar" },
 				},
 				{
-					id = "session_exp_log",
-					ui_name = T.session_exp_log,
-					value_default = false,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
-					hidden = true,
-				},
-				{
-					ui_fn = S.draw_on_kills,
+					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_kills,
 					not_setting = true,
+					checkboxes = { "session_exp_log" }
 				},
 				{
 					id = "session_exp_multiplier",
 					ui_name = T.session_exp_multiplier,
-					value_default = 1,
+					value_default = D.session_exp_multiplier,
 					value_min = 0.1,
 					value_max = 3,
 					scope = MOD_SETTING_SCOPE_RUNTIME,
@@ -529,6 +578,7 @@ end
 
 function ModSettingsUpdate(init_scope)
 	-- local old_version = mod_settings_get_version(mod_id)
+	U.set_default(false)
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
 	if current_language ~= current_language_last_frame then
 		mod_settings = build_settings()
@@ -542,9 +592,9 @@ function ModSettingsGuiCount()
 end
 
 function ModSettingsGui(gui, in_main_menu)
-	mod_settings_gui(mod_id, mod_settings, gui, in_main_menu)
 	if U.offset == 0 then U.offset = U.calculate_elements_offset(gui, mod_settings) end
+	mod_settings_gui(mod_id, mod_settings, gui, in_main_menu)
 end
 
----@type mod_settings
+---@type mod_settings_global
 mod_settings = build_settings()
