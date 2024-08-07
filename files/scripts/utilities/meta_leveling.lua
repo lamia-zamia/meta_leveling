@@ -14,7 +14,7 @@ local ML = {
 	level_curve = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/level_curve.lua"),
 	rewards_deck = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/rewards_deck.lua"),
 	rewards = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/rewards.lua"),
-	utils = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling_utils.lua"),
+	utils = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/meta_leveling_utils.lua"),
 	const = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/const.lua"),
 	exp = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/experience.lua"),
 	EZWand = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/EZWand.lua")
@@ -32,6 +32,7 @@ end
 
 function ML:level_up()
 	self.utils:set_global_number("CURRENT_LEVEL", self:get_level() + 1)
+	self.exp:update()
 end
 
 function ML:UpdateCommonParameters()
