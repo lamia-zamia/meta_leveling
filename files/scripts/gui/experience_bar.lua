@@ -1,6 +1,7 @@
 local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_lib.lua")
 ---@class experience_bar:UI_class
 local EB = UI_class:new()
+EB.FillerClipAmount = 0.95
 EB.anim_a = 0
 EB.anim_step = 0.01
 EB.anim_dir = 1
@@ -22,13 +23,20 @@ function EB:DrawBackGround(x, y, scale_x, scale_y)
 	self:Image(x, y, self.c.px, 0.85, scale_x, scale_y)
 end
 
+function EB:ClipFiller()
+	local percent = ML.exp.percentage
+	if percent < self.FillerClipAmount or percent == 1 then return ML.exp.percentage
+	else return self.FillerClipAmount end
+end
+
 function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
+	local multiplier = self:ClipFiller()
 	self:SetZ(1)
 	self:BarColor(1)
 	if vertical then
-		self:Image(x, y + scale_y, self.c.px, 1, scale_x, -(scale_y * ML.exp.percentage))
+		self:Image(x, y + scale_y, self.c.px, 1, scale_x, -(scale_y * multiplier))
 	else
-		self:Image(x, y, self.c.px, 1, scale_x * ML.exp.percentage, scale_y)
+		self:Image(x, y, self.c.px, 1, scale_x * multiplier, scale_y)
 	end
 end
 
