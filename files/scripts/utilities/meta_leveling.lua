@@ -7,7 +7,9 @@
 ---@field utils ML_utils
 ---@field const ml_const
 ---@field exp ml_experience
+---@field font ml_font
 ---@field EZWand any
+---@field nxml nxml
 local ML = {
 	gui = false,
 	player = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/player.lua"),
@@ -17,7 +19,9 @@ local ML = {
 	utils = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/meta_leveling_utils.lua"),
 	const = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/const.lua"),
 	exp = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/experience.lua"),
-	EZWand = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/EZWand.lua")
+	font = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/font.lua"),
+	EZWand = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/EZWand.lua"),
+	nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua")
 }
 
 function ML:toggle_ui()
@@ -38,6 +42,11 @@ end
 function ML:UpdateCommonParameters()
 	self.player:update()
 	self.exp:update()
+end
+
+function ML:StartUp()
+	self.rewards_deck:GatherData()
+	self.rewards:gather_action_info()
 end
 
 return ML

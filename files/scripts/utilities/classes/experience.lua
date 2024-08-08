@@ -17,12 +17,16 @@ function exp:get()
 	return self:floor(experience)
 end
 
----add exp
----@param value number
-function exp:add(value)
+function exp:apply_multiplier(value)
 	local multiplier = ML.utils:get_mod_setting_number("session_exp_multiplier", 1) +
 		ML.utils:get_global_number("EXP_MULTIPLIER", 0)
 	value = (value * multiplier) + ML.utils:get_global_number("EXP_CONST", 0)
+	return value
+end
+
+---add exp
+---@param value number
+function exp:add(value)
 	ML.utils:add_to_global_number("CURRENT_EXP", value)
 end
 

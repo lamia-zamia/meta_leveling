@@ -384,7 +384,7 @@ end
 local translations =
 {
 	["English"] = {
-		exp_bar_cat = "Experience", --cat
+		exp_bar_cat = "Experience bar", --cat
 		exp_bar_cat_d = "Settings for experience bar",
 		exp_bar_position = "Position",
 		exp_bar_position_d = "Position of experience bar",
@@ -404,6 +404,7 @@ local translations =
 		session_exp_play_fx = "Play FX",
 		session_exp_animate_bar = "Animate bar",
 		session_exp_on_kills = "On kills",
+		session_exp_popup = "Show experience",
 		session_exp_log = "Create log",
 		session_exp_multiplier = "EXP multiplier",
 		session_exp_ui_close = "Close UI on",
@@ -412,7 +413,7 @@ local translations =
 		session_exp_close_ui_on_pause = "Pause",
 	},
 	["русский"] = {
-		exp_bar_cat = "Опыт",
+		exp_bar_cat = "Полоса опыта",
 		exp_bar_cat_d = "Настройки для полоски опыта",
 		exp_bar_position = "Позиция",
 		exp_bar_position_d = "Позиция полоски опыта",
@@ -432,6 +433,7 @@ local translations =
 		session_exp_play_fx = "Эффекты",
 		session_exp_animate_bar = "Анимировать бар",
 		session_exp_on_kills = "При убийствах",
+		session_exp_popup = "Показывать опыт",
 		session_exp_log = "Логировать",
 		session_exp_multiplier = "Множитель опыта",
 		session_exp_ui_close = "Закрыть меню при",
@@ -470,7 +472,8 @@ D = {
 	session_exp_multiplier = 1,
 	session_exp_close_ui_on_shot = true,
 	session_exp_close_ui_on_damage = true,
-	session_exp_close_ui_on_pause = true
+	session_exp_close_ui_on_pause = true,
+	session_exp_popup = true,
 }
 
 local function build_settings()
@@ -562,8 +565,7 @@ local function build_settings()
 					not_setting = true,
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_kills,
-
-					checkboxes = { "session_exp_log" }
+					checkboxes = { "session_exp_popup", "session_exp_log" }
 				},
 				{
 					not_setting = true,

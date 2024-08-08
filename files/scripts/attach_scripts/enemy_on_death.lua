@@ -32,9 +32,10 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	local exp = ML.exp:convert_max_hp_to_exp(died_entity)
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
-
+	
 	-- ######################### player kills ##########################
 	if EntityHasTag(entity_thats_responsible, "player_unit") then
+		exp = ML.exp:apply_multiplier(exp)
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": " .. exp
 		ML.exp:add(exp)
 	else
@@ -44,19 +45,24 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 		if responsible_name then
 			local multiplier = ML.utils:get_global_number("EXP_MULTIPLIER_BETRAY", 0)
 			if multiplier == 0 then return end
+			exp = ML.exp:apply_multiplier(exp)
+			exp = exp * multiplier
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
-				.. T(responsible_name) .. ", " .. T("$ml_gained_xp") .. ": " .. exp * multiplier
-			ML.exp:add(exp * multiplier)
+				.. T(responsible_name) .. ", " .. T("$ml_gained_xp") .. ": " .. exp
+			ML.exp:add(exp)
 		else -- ######################### trick kills ##########################
+			exp = ML.exp:apply_multiplier(exp)
 			local cause = T(damage_message)
 			local multiplier = 0.5 + ML.utils:get_global_number("EXP_MULTIPLIER_TRICK", 0)
 			if damage_message == "$damage_water" then multiplier = multiplier + 0.5 end
 			if damage_type_bit_field == 32 and damage_done_by_water(damage_message) then multiplier = multiplier + 0.5 end
 
+			exp = exp * multiplier
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
-				.. cause .. ", " .. T("$ml_gained_xp") .. ": " .. exp * multiplier
-			ML.exp:add(exp * multiplier)
+				.. cause .. ", " .. T("$ml_gained_xp") .. ": " .. exp
+			ML.exp:add(exp)
 		end
 	end
+	if message and ML.utils:get_mod_setting_boolean("session_exp_popup") then ML.font:popup(died_entity, tostring(exp), exp) end
 	if message and ML.utils:get_mod_setting_boolean("session_exp_log") then GamePrint(message) end
 end
