@@ -18,6 +18,7 @@ local gui = {
 function gui:UpdateSettings()
 	self.UI:UpdateDimensions()
 	self.EB:GetSettings()
+	self.LU:GetSetting()
 end
 
 function gui:Draw()

@@ -23,4 +23,5 @@ end
 
 function OnPausedChanged()
 	gui:UpdateSettings()
+	if ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause") then ML.gui = false end
 end

@@ -105,7 +105,7 @@ do --helpers
 	function U.set_default(all)
 		all = all or false
 		for setting, value in pairs(D) do
-			if not U.get_setting(setting) or all then
+			if U.get_setting(setting) == nil or all then
 				U.set_setting(setting, value)
 			end
 		end
@@ -370,7 +370,7 @@ do -- Settings GUI
 		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 7, 0, "")
-		for _, setting_id in pairs(setting.checkboxes) do
+		for _, setting_id in ipairs(setting.checkboxes) do
 			G.toggle_checkbox_boolean(gui, id, setting_id)
 		end
 		GuiLayoutEnd(gui)
@@ -404,8 +404,12 @@ local translations =
 		session_exp_play_fx = "Play FX",
 		session_exp_animate_bar = "Animate bar",
 		session_exp_on_kills = "On kills",
-		session_exp_log = "Log into chat",
+		session_exp_log = "Create log",
 		session_exp_multiplier = "EXP multiplier",
+		session_exp_ui_close = "Close UI on",
+		session_exp_close_ui_on_shot = "Shot",
+		session_exp_close_ui_on_damage = "Receiving damage",
+		session_exp_close_ui_on_pause = "Pause",
 	},
 	["русский"] = {
 		exp_bar_cat = "Опыт",
@@ -428,8 +432,12 @@ local translations =
 		session_exp_play_fx = "Эффекты",
 		session_exp_animate_bar = "Анимировать бар",
 		session_exp_on_kills = "При убийствах",
-		session_exp_log = "Писать в чат",
+		session_exp_log = "Логировать",
 		session_exp_multiplier = "Множитель опыта",
+		session_exp_ui_close = "Закрыть меню при",
+		session_exp_close_ui_on_shot = "Выстреле",
+		session_exp_close_ui_on_damage = "Получении урона",
+		session_exp_close_ui_on_pause = "Паузе",
 	}
 }
 
@@ -460,6 +468,9 @@ D = {
 	session_exp_animate_bar = true,
 	session_exp_log = false,
 	session_exp_multiplier = 1,
+	session_exp_close_ui_on_shot = true,
+	session_exp_close_ui_on_damage = true,
+	session_exp_close_ui_on_pause = true
 }
 
 local function build_settings()
@@ -548,10 +559,17 @@ local function build_settings()
 					checkboxes = { "session_exp_play_sound", "session_exp_play_fx", "session_exp_animate_bar" },
 				},
 				{
+					not_setting = true,
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_kills,
-					not_setting = true,
+
 					checkboxes = { "session_exp_log" }
+				},
+				{
+					not_setting = true,
+					ui_fn = S.mod_setting_better_boolean,
+					ui_name = T.session_exp_ui_close,
+					checkboxes = { "session_exp_close_ui_on_pause", "session_exp_close_ui_on_shot", "session_exp_close_ui_on_damage" }
 				},
 				{
 					id = "session_exp_multiplier",
