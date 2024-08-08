@@ -8,7 +8,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.8,
 		max = 3,
-		var0 = 10,
+		var0 = 25,
 		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
@@ -23,7 +23,7 @@ local reward_list = {
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.5,
-		var0 = 25,
+		var0 = 50,
 		max = 5,
 		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health1",
@@ -40,7 +40,7 @@ local reward_list = {
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
-		var0 = 50,
+		var0 = 100,
 		sound = ML.const.sounds.heart,
 		limit_before = "simple_extra_health2",
 		fn = function()
@@ -90,7 +90,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = 0.8,
 		max = 3,
-		var0 = 25,
+		var0 = 75,
 		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
@@ -106,7 +106,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = 0.8,
 		max = 3,
-		var0 = 50,
+		var0 = 150,
 		limit_before = "heal_con1",
 		sound = ML.const.sounds.heart,
 		fn = function()
@@ -116,13 +116,13 @@ local reward_list = {
 		end
 	},
 	{
-		id = "heal_con2",
+		id = "heal_con3",
 		group_id = "heal",
 		ui_name = "$ml_heal_con",
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = 0.8,
-		var0 = 100,
+		var0 = 300,
 		limit_before = "heal_con2",
 		sound = ML.const.sounds.heart,
 		fn = function()
@@ -138,7 +138,7 @@ local reward_list = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = 0.8,
-		var0 = "10%",
+		var0 = "50 + 10%",
 		max = 3,
 		min_level = 10,
 		sound = ML.const.sounds.heart,
@@ -146,7 +146,7 @@ local reward_list = {
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
-			ML.utils:add_value_to_component(component_id, "hp", value * 0.1)
+			ML.utils:add_value_to_component(component_id, "hp", 50 + (value * 0.1))
 		end
 	},
 	{
@@ -156,14 +156,14 @@ local reward_list = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = 0.8,
-		var0 = "25%",
+		var0 = "100 + 25%",
 		limit_before = "heal_perc1",
 		sound = ML.const.sounds.heart,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
-			ML.utils:add_value_to_component(component_id, "hp", value * 0.25)
+			ML.utils:add_value_to_component(component_id, "hp", 100 + (value * 0.25))
 		end
 	},
 	{
@@ -208,7 +208,7 @@ local reward_list = {
 		probability = 0.8,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
-		var0 = 200,
+		var0 = 400,
 		sound = ML.const.sounds.shop_item,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
@@ -224,7 +224,7 @@ local reward_list = {
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
-		var0 = 1000,
+		var0 = 1600,
 		sound = ML.const.sounds.shop_item,
 		limit_before = "add_gold1",
 		fn = function()
