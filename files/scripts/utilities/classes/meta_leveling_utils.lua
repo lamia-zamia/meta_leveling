@@ -121,4 +121,10 @@ function utils:load_entity_to_player(file)
 	EntityLoad(file, ML.player.x, ML.player.y)
 end
 
+function utils:merge_tables(table1, table2)
+	for _, element in ipairs(table2) do
+		table1[#table1 + 1] = element
+	end
+end
+
 return utils
