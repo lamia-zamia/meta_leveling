@@ -178,6 +178,9 @@ local reward_list = {
 		min_level = 5,
 		fn = function()
 			ML.utils:add_to_global_number("DRAW_AMOUNT", 1)
+			for _=1, ML.utils:get_global_number("DRAW_AMOUNT", 0) do
+				ML:level_up()
+			end
 		end
 	},
 	{
@@ -192,6 +195,9 @@ local reward_list = {
 		limit_before = "extra_reward_choice1",
 		fn = function()
 			ML.utils:add_to_global_number("DRAW_AMOUNT", 2)
+			for _=1, ML.utils:get_global_number("DRAW_AMOUNT", 0) do
+				ML:level_up()
+			end
 		end
 	},
 	{
