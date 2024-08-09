@@ -328,10 +328,13 @@ local reward_spell = {
 	{
 		id = "teleport_bolt",
 		ui_name = "$action_teleport_projectile_short",
-		description = "$actiondesc_teleport_projectile_short",
+		description = "$ml_spell_static",
+		var0 = "$ml_a",
+		var1 = "$action_teleport_projectile_short",
 		ui_icon = "data/ui_gfx/gun_actions/teleport_projectile_short.png",
 		probability = 0.1,
 		max = 2,
+		sound = ML.const.sounds.chest,
 		fn = function()
 			ML.utils:spawn_spell("TELEPORT_PROJECTILE_SHORT")
 		end
@@ -339,10 +342,13 @@ local reward_spell = {
 	{
 		id = "spell_nolla",
 		ui_name = "$action_nolla",
-		description = "$actiondesc_nolla",
+		description = "$ml_spell_static",
+		var0 = "$ml_a",
+		var1 = "$action_nolla",
 		ui_icon = "data/ui_gfx/gun_actions/nolla.png",
 		probability = 0.1,
 		max = 2,
+		sound = ML.const.sounds.chest,
 		fn = function()
 			ML.utils:spawn_spell("NOLLA")
 		end
@@ -350,9 +356,12 @@ local reward_spell = {
 	{
 		id = "spell_add_mana",
 		ui_name = "$action_mana_reduce",
-		description = "$actiondesc_mana_reduce",
+		description = "$ml_spell_static",
+		var0 = "$ml_an",
+		var1 = "$action_mana_reduce",
 		ui_icon = "data/ui_gfx/gun_actions/mana.png",
 		probability = 0.05,
+		sound = ML.const.sounds.chest,
 		fn = function()
 			ML.utils:spawn_spell("MANA_REDUCE")
 		end
@@ -360,10 +369,13 @@ local reward_spell = {
 	{
 		id = "spell_BLOOD_MAGIC",
 		ui_name = "$action_blood_magic",
-		description = "$actiondesc_blood_magic",
+		description = "$ml_spell_static",
+		var0 = "$ml_a",
+		var1 = "$action_blood_magic",
 		ui_icon = "data/ui_gfx/gun_actions/blood_magic.png",
 		probability = 0.05,
 		min_level = 30,
+		sound = ML.const.sounds.chest,
 		fn = function()
 			ML.utils:spawn_spell("BLOOD_MAGIC")
 		end
@@ -371,11 +383,14 @@ local reward_spell = {
 	{
 		id = "spell_COV",
 		ui_name = "$action_regeneration_field",
-		description = "$actiondesc_regeneration_field",
+		description = "$ml_spell_static",
+		var0 = "$ml_a",
+		var1 = "$action_regeneration_field",
 		ui_icon = "data/ui_gfx/gun_actions/regeneration_field.png",
 		probability = 0.01,
 		min_level = 60,
 		max = 1,
+		sound = ML.const.sounds.chest,
 		fn = function()
 			ML.utils:spawn_spell("REGENERATION_FIELD")
 		end
@@ -388,6 +403,7 @@ local reward_spell = {
 		probability = 0.05,
 		max = 2,
 		min_level = 20,
+		sound = ML.const.sounds.chest,
 		fn = function()
 			local list = dofile_once("mods/meta_leveling/files/scripts/compatibility/heal_spell_list.lua")
 			local action = ML.utils:weighted_random(list)
