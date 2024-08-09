@@ -167,9 +167,12 @@ end
 function tooltip_class:GetOffsetX(x, w)
 	local min_offset = 38
 	local x_offset = 0
-	if x > self.dim.x * 0.75 then
+	if x > self.dim.x * 0.9 then
+		x_offset = self.dim.x - x - w - min_offset
+	elseif x > self.dim.x * 0.75 then
 		x_offset = x_offset - w
-		if (self.dim.x - x - w) < -min_offset then x_offset = self.dim.x - x - w - min_offset end
+		-- if (self.dim.x - x - w) < -min_offset then x_offset = self.dim.x - x - w - min_offset end
+		
 		-- if x_offset > -min_offset then x_offset = -min_offset end
 	else
 		-- if x <= 10 then
@@ -179,6 +182,7 @@ function tooltip_class:GetOffsetX(x, w)
 		-- end
 		-- x_offset = ReturnZeroOrMinus(screen_w - x - w )
 	end
+	print(x, w, x_offset)
 	return x_offset
 end
 
