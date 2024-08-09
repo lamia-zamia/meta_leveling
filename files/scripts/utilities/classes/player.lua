@@ -4,12 +4,20 @@
 ---@field y number
 ---@field mLastDamageFrame number last frame when received damage
 ---@field mButtonLastFrameFire number last frame when we shoot
+---@field max_hp number max hp
+---@field air_in_lungs number
+---@field air_in_lungs_max number
+---@field drowning boolean
 local player = {
 	id = nil,
 	x = 0,
 	y = 0,
 	mLastDamageFrame = -120,
 	mButtonLastFrameFire = -2,
+	max_hp = 4,
+	air_in_lungs = 5,
+	air_in_lungs_max = 5,
+	drowning = false,
 }
 
 ---checks player id and return false if player is not found
@@ -114,11 +122,12 @@ function player:get_damagemodel_value(field)
 	return ComponentGetValue2(component, field)
 end
 
----@return number
-function player:get_mLastDamageFrame()
-	local value = self:get_damagemodel_value("mLastDamageFrame")
+---@param field DamageModelComponent
+---@param default number
+function player:get_damagemodel_value_number(field, default)
+	local value = self:get_damagemodel_value(field)
 	if type(value) == "number" then return value
-	else return -120 end
+	else return default end
 end
 
 ---@param field ControlsComponent
@@ -139,8 +148,12 @@ end
 function player:update()
 	if self:validate() then
 		self.x, self.y = self:get_pos()
-		self.mLastDamageFrame = self:get_mLastDamageFrame()
+		self.mLastDamageFrame = self:get_damagemodel_value_number("mLastDamageFrame", -120)
 		self.mButtonLastFrameFire = self:get_mButtonLastFrameFire()
+		self.max_hp = self:get_damagemodel_value_number("max_hp", 4)
+		self.air_in_lungs_max = self:get_damagemodel_value_number("air_in_lungs_max", 5)
+		self.air_in_lungs = self:get_damagemodel_value_number("air_in_lungs", 5)
+		self.drowning = self.air_in_lungs ~= self.air_in_lungs_max
 	end
 end
 
