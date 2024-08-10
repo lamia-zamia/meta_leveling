@@ -20,22 +20,18 @@ local player = {
 	drowning = false,
 }
 
----checks player id and return false if player is not found
-function player:validate()
-	if not self.id then self.id = self:get_id() end
-	if self.id then return true
-	else return false end
-end
-
 ---returns player id
 ---@return entity_id? player_id
 function player:get_id()
-	local player_id = EntityGetWithTag("player_unit")[1]
-	if EntityGetIsAlive(player_id) then
-		return player_id
-	else
-		return nil
-	end
+	return EntityGetWithTag("player_unit")[1]
+end
+
+---checks player id and return false if player is not found
+---@return boolean
+function player:validate()
+	if not EntityGetIsAlive(self.id) then self.id = self:get_id() end
+	if EntityGetIsAlive(self.id) then return true
+	else return false end
 end
 
 ---returns player x, y
