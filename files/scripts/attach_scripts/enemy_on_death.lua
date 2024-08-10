@@ -31,6 +31,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	local died_entity = GetUpdatedEntityID()
 	local exp = ML.exp:convert_max_hp_to_exp(died_entity)
 	local message = nil
+	local died_name = T(EntityGetName(died_entity))
 	-- ######################### player kills ##########################
 	if ML.utils:entity_has_player_tag(entity_thats_responsible) then
 		exp = ML.exp:apply_multiplier(exp)
