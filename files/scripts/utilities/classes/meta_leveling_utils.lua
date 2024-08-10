@@ -127,4 +127,15 @@ function utils:merge_tables(table1, table2)
 	end
 end
 
+---@param entity entity_id
+---@return boolean
+function utils:entity_has_player_tag(entity)
+	local tags = EntityGetTags(entity)
+	if not tags then return false end
+	for _, tag in ipairs(ML.const.player_tags) do
+		if tags:find(tag) then return true end
+	end
+	return false
+end
+
 return utils

@@ -6,7 +6,6 @@ local on_death = ML.nxml.new_element("LuaComponent", {
 })
 
 for _, file in ipairs(entities) do
-	print(file)
 	local xml = ML.nxml.parse(ModTextFileGetContent(file))
 	xml:add_child(on_death)
 	ModTextFileSetContent(file, tostring(xml))
