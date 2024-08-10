@@ -13,7 +13,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "max_hp", 0.4)
+			ML.utils:add_value_to_component(component_id, "max_hp", 1)
 		end
 	},
 	{
@@ -30,7 +30,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "max_hp", 1)
+			ML.utils:add_value_to_component(component_id, "max_hp", 2)
 		end
 	},
 	{
@@ -46,7 +46,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "max_hp", 2)
+			ML.utils:add_value_to_component(component_id, "max_hp", 4)
 		end
 	},
 	{
@@ -95,7 +95,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "hp", 1)
+			ML.utils:add_value_to_component(component_id, "hp", 3)
 		end
 	},
 	{
@@ -112,7 +112,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "hp", 2)
+			ML.utils:add_value_to_component(component_id, "hp", 6)
 		end
 	},
 	{
@@ -128,7 +128,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "hp", 4)
+			ML.utils:add_value_to_component(component_id, "hp", 12)
 		end
 	},
 	{
@@ -146,7 +146,7 @@ local reward_list = {
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
-			ML.utils:add_value_to_component(component_id, "hp", 50 + (value * 0.1))
+			ML.utils:add_value_to_component(component_id, "hp", 2 + (value * 0.1))
 		end
 	},
 	{
@@ -163,7 +163,7 @@ local reward_list = {
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
-			ML.utils:add_value_to_component(component_id, "hp", 100 + (value * 0.25))
+			ML.utils:add_value_to_component(component_id, "hp", 4 + (value * 0.25))
 		end
 	},
 	{
