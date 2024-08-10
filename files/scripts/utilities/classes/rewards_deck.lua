@@ -45,7 +45,6 @@ local rewards_deck = {
 
 ---default function if function was not found
 ---@private
----@method
 function rewards_deck:function_not_found()
 	print("error!")
 end
@@ -65,7 +64,6 @@ function rewards_deck:add_rewards(table)
 end
 
 ---function to gather data from list
----@method
 function rewards_deck:GatherData()
 	self.reward_definition_list = dofile_once("mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards.lua")
 	dofile_once("mods/meta_leveling/files/scripts/session_level/rewards/rewards_append.lua")
@@ -118,7 +116,6 @@ end
 
 ---shuffle table
 ---@private
----@method
 function rewards_deck:shuffle()
 	local iterations = #self.list
 	local j
@@ -149,7 +146,6 @@ end
 
 ---gather list
 ---@private
----@method
 function rewards_deck:get_from_list()
 	self.distance = self:get_draw_amount() * 3
 	self.list = {}
@@ -161,7 +157,6 @@ end
 
 ---ensure rewards are not spawned too close to each other
 ---@private
----@method
 function rewards_deck:ensure_distance()
 	local temp_new = {}
 	local count = #self.list
@@ -183,7 +178,6 @@ end
 
 ---Generate reward list
 ---@private
----@method
 function rewards_deck:refresh_reward_order()
 	SetRandomSeed(1, 2)
 	self:get_from_list()
@@ -222,7 +216,6 @@ end
 
 ---set next draw index
 ---@private
----@method
 function rewards_deck:set_draw_index()
 	local index = self:get_draw_index()
 	for _ = 1, self:get_draw_amount() + 1 do
