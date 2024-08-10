@@ -55,7 +55,6 @@ tooltip_class.tooltip_z = -100
 ui_class.tp = tooltip_class
 
 ---update dimensions
----@method
 function ui_class:UpdateDimensions()
 	GuiStartFrame(self.gui)
 	self.dim.x, self.dim.y = GuiGetScreenDimensions(self.gui)
@@ -63,7 +62,6 @@ end
 
 ---reset gui id
 ---@protected
----@method
 function ui_class:id_reset()
 	self.gui_id = self.c.gui_id
 end

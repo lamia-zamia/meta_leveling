@@ -24,7 +24,6 @@ end
 
 ---toggle level up menu, adds flag to run so you can't close it
 ---@private
----@method
 function LU:OpenLevelUpMenu()
 	GamePlaySound("ui", "ui/button_click", 0, 0)
 	GameAddFlagRun(ML.const.flags.leveling_up)
@@ -45,7 +44,6 @@ end
 
 ---Skip button function
 ---@private
----@method
 function LU:SkipReward()
 	ML.rewards_deck:skip_reward()
 	self:CloseRewardUI()
@@ -58,7 +56,6 @@ end
 
 ---tooltip render for rewards
 ---@private
----@method
 ---@param reward ml_single_reward
 function LU:RewardsTooltip(reward)
 	local texts = {
@@ -72,7 +69,6 @@ end
 
 ---Draw rewards
 ---@private
----@method
 ---@param x number
 ---@param y number
 ---@param data table
@@ -94,7 +90,6 @@ end
 
 ---draw level up menu
 ---@private
----@method
 function LU:DrawPointSpender()
 	self:MenuAnimS("rewards")
 	if not self.data.reward_list then self.data.reward_list = ML.rewards_deck:draw_reward() end
@@ -216,7 +211,6 @@ end
 
 ---draw main window
 ---@private
----@method
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local section = 10
@@ -270,7 +264,6 @@ end
 
 ---main logic
 ---@private
----@method
 function LU:DrawLevelUI()
 	if GameHasFlagRun(ML.const.flags.leveling_up) then
 		self:DrawPointSpender()
