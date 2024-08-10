@@ -182,7 +182,6 @@ function tooltip_class:GetOffsetX(x, w)
 		-- end
 		-- x_offset = ReturnZeroOrMinus(screen_w - x - w )
 	end
-	print(x, w, x_offset)
 	return x_offset
 end
 
@@ -558,7 +557,7 @@ function ui_class:StartFrame(fn, bool)
 	local player = EntityGetWithTag("player_unit")[1]
 	if player then --if player is even alive
 		if self.gui ~= nil then GuiStartFrame(self.gui) end
-		if fn ~= nil and GameIsInventoryOpen() == false and bool then
+		if fn ~= nil and bool then
 			fn(self)
 		end
 	end

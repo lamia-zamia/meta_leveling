@@ -11,14 +11,14 @@ function EB:DrawBackGround(x, y, scale_x, scale_y)
 	self:Image(x, y, self.c.px, 0.85, scale_x, scale_y)
 end
 
-function EB:ClipFiller()
+function EB:ClampFiller()
 	local percent = ML.exp.percentage
 	if percent < self.const.filler_clamp or percent == 1 then return ML.exp.percentage
 	else return self.const.filler_clamp end
 end
 
 function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
-	local multiplier = self:ClipFiller()
+	local multiplier = self:ClampFiller()
 	self:SetZ(1)
 	self:BarColor(1)
 	if vertical then
@@ -200,7 +200,7 @@ function EB:DrawExpBar()
 end
 
 function EB:loop()
-	self:StartFrame(self.DrawExpBar, true)
+	self:StartFrame(self.DrawExpBar, not GameIsInventoryOpen())
 end
 
 return EB
