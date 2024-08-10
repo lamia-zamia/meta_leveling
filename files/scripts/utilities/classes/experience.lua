@@ -6,15 +6,19 @@ local exp = {
 }
 
 ---@private
+function exp:floor_number(value)
+	return tonumber(self:floor(value))
+end
+
 function exp:floor(value)
-	return tonumber(string.format("%.2f", value))
+	return (string.format("%.2f", value):gsub("%.?0+$", ""))
 end
 
 ---get current exp
 ---@return number
 function exp:get()
 	local experience = ML.utils:get_global_number("CURRENT_EXP", 0)
-	return self:floor(experience)
+	return self:floor_number(experience)
 end
 
 function exp:apply_multiplier(value)

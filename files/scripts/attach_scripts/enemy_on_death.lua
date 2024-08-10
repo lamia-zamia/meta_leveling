@@ -62,6 +62,6 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 			ML.exp:add(exp)
 		end
 	end
-	if message and ML.utils:get_mod_setting_boolean("session_exp_popup") then ML.font:popup(died_entity, tostring(exp), exp) end
+	if message and ML.utils:get_mod_setting_boolean("session_exp_popup") then ML.font:popup(died_entity, ML.exp:floor(exp), exp) end
 	if message and ML.utils:get_mod_setting_boolean("session_exp_log") then GamePrint(message) end
 end
