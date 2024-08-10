@@ -3,7 +3,7 @@ local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_
 ---@class EB.const.anim
 local anim_const = {
 	max_alpha = 0.75,
-	step = 0.1,
+	step = 0.01,
 }
 
 ---@class EB.const
