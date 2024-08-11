@@ -1,5 +1,23 @@
 ---@diagnostic disable: undefined-global
 
+---@class (exact) ml_single_reward
+---@field id string id of reward
+---@field ui_name string name to display in game
+---@field fn? function function to run on pick
+---@field group_id? string id of group if part of group
+---@field description? string description
+---@field ui_icon? string path to icon
+---@field probability? number|fun():number should be between 0 and 1
+---@field max? number max number of reward that you can pick
+---@field custom_check? function custom check to perform before adding to reward deck, should return boolean
+---@field limit_before? string don't spawn this reward before this reward was hit it's max
+---@field var0? any variable to replace $0 in name/description
+---@field var1? any variable to replace $1 in name/description
+---@field var2? any variable to replace $2 in name/description
+---@field sound? ml_sound see sounds
+---@field no_sound? boolean if set to true no sound will be played
+---@field min_level? number if set will not appear before this level
+
 ---@class (exact) ml_rewards_util
 ---@field locked_spells table list of locked spells
 ---@field spells_no_spawn table list of spells with 0 spawn rate

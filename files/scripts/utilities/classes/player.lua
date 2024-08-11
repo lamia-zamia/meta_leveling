@@ -5,6 +5,8 @@
 ---@field mLastDamageFrame number last frame when received damage
 ---@field mButtonLastFrameFire number last frame when we shoot
 ---@field max_hp number max hp
+---@field hp number
+---@field absent_hp_percent number
 ---@field air_in_lungs number
 ---@field air_in_lungs_max number
 ---@field drowning boolean
@@ -15,6 +17,8 @@ local player = {
 	mLastDamageFrame = -120,
 	mButtonLastFrameFire = -2,
 	max_hp = 4,
+	hp = 4,
+	absent_hp_percent = 0,
 	air_in_lungs = 5,
 	air_in_lungs_max = 5,
 	drowning = false,
@@ -147,6 +151,8 @@ function player:update()
 		self.mLastDamageFrame = self:get_damagemodel_value_number("mLastDamageFrame", -120)
 		self.mButtonLastFrameFire = self:get_mButtonLastFrameFire()
 		self.max_hp = self:get_damagemodel_value_number("max_hp", 4)
+		self.hp = self:get_damagemodel_value_number("hp", 4)
+		self.absent_hp_percent = 1 - self.hp / self.max_hp
 		self.air_in_lungs_max = self:get_damagemodel_value_number("air_in_lungs_max", 5)
 		self.air_in_lungs = self:get_damagemodel_value_number("air_in_lungs", 5)
 		self.drowning = self.air_in_lungs ~= self.air_in_lungs_max

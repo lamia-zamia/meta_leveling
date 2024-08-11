@@ -1,27 +1,27 @@
----@class (exact) ml_single_reward
----@field id string id of reward
----@field ui_name string name to display in game
----@field fn? function function to run on pick
----@field group_id? string id of group if part of group
----@field description? string description
----@field ui_icon? string path to icon
----@field probability? number should be between 0 and 1
----@field max? number max number of reward that you can pick
----@field custom_check? function custom check to perform before adding to reward deck, should return boolean
----@field limit_before? string don't spawn this reward before this reward was hit it's max
----@field var0? any variable to replace $0 in name/description
----@field var1? any variable to replace $1 in name/description
----@field var2? any variable to replace $2 in name/description
----@field sound? ml_sound see sounds
----@field no_sound? boolean if set to true no sound will be played
----@field min_level? number if set will not appear before this level
-
 ---@class ml_reward_definition_list
 ---@field [number] ml_single_reward
 
-
----@class reward_data:ml_single_reward
+---@class ml_single_reward_data
+---@field id string id of reward
+---@field ui_name string name to display in game
+---@field fn function function to run on pick
+---@field group_id string id of group if part of group
+---@field description string description
+---@field ui_icon string path to icon
+---@field probability number|fun():number should be between 0 and 1
+---@field max number max number of reward that you can pick
+---@field custom_check? function custom check to perform before adding to reward deck, should return boolean
+---@field limit_before? string don't spawn this reward before this reward was hit it's max
+---@field var0 any variable to replace $0 in name/description
+---@field var1 any variable to replace $1 in name/description
+---@field var2 any variable to replace $2 in name/description
+---@field sound ml_sound see sounds
+---@field no_sound boolean if set to true no sound will be played
+---@field min_level number if set will not appear before this level
 ---@field pick_count number
+
+---@class (exact) reward_data
+---@field [string] ml_single_reward_data
 local reward_data = {}
 
 ---@class (exact) rewards_deck
@@ -74,7 +74,7 @@ function rewards_deck:GatherData()
 			ui_name = reward.ui_name,
 			description = reward.description or reward.ui_name,
 			ui_icon = reward.ui_icon or self.default_icon,
-			probability = self:get_normalized_probability(reward.probability),
+			probability = self:set_probability(reward.probability),
 			max = reward.max or 1280,
 			var0 = reward.var0 or "",
 			var1 = reward.var1 or "",
@@ -105,13 +105,30 @@ end
 
 ---get normalized probability
 ---@private
+---@param probability number|fun():number
+---@return number|fun():number
+function rewards_deck:set_probability(probability)
+	probability = probability or 1
+	if type(probability) == "number" then return self:probability_normalize(probability) end
+	return probability
+end
+
+---normalize probability
 ---@param probability number
 ---@return number
-function rewards_deck:get_normalized_probability(probability)
-	probability = probability or 1
+function rewards_deck:probability_normalize(probability)
 	probability = math.min(self.max_probability, probability)
 	probability = math.max(probability, self.min_probability + 0.01)
 	return probability
+end
+
+---get normalized probability
+---@private
+---@param probability number
+---@return number
+function rewards_deck:get_probability(probability)
+	if type(probability) == "number" then return probability end
+	return self:probability_normalize(probability())
 end
 
 ---shuffle table
@@ -147,10 +164,10 @@ end
 ---gather list
 ---@private
 function rewards_deck:get_from_list()
-	self.distance = self:get_draw_amount() * 3
+	self.distance = self:get_draw_amount()
 	self.list = {}
 	for _, reward in pairs(self.reward_data) do
-		local probability = Randomf(self.min_probability, reward.probability)
+		local probability = Randomf(self.min_probability, self:get_probability(reward.probability))
 		if self:checks_before_add(reward) then self:add_to_list(reward.id, probability * 100) end
 	end
 end
