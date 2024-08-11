@@ -138,4 +138,20 @@ function utils:entity_has_player_tag(entity)
 	return false
 end
 
+---@param entity entity_id
+---@return string
+function utils:get_herd_id(entity)
+	local genome_comp = EntityGetFirstComponentIncludingDisabled(entity, "GenomeDataComponent")
+	if not genome_comp then return "" end
+	local herd_id = ComponentGetValue2(genome_comp, "herd_id")
+	if not herd_id then return "" end
+	return HerdIdToString(herd_id)
+end
+
+---@param entity entity_id
+---@return boolean
+function utils:is_player_herd(entity)
+	return self:get_herd_id(entity) == "player"
+end
+
 return utils

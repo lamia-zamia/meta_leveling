@@ -29,12 +29,13 @@ end
 ---@param entity_thats_responsible entity_id
 function death(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
+	if ML.utils:is_player_herd(died_entity) then return end
 	local exp = ML.exp:convert_max_hp_to_exp(died_entity)
+	exp = ML.exp:apply_multiplier(exp)
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
 	-- ######################### player kills ##########################
-	if ML.utils:entity_has_player_tag(entity_thats_responsible) then
-		exp = ML.exp:apply_multiplier(exp)
+	if ML.utils:entity_has_player_tag(entity_thats_responsible) or ML.utils:is_player_herd(entity_thats_responsible) then
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": " .. exp
 		ML.exp:add(exp)
 	else
@@ -44,13 +45,11 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 		if responsible_name then
 			local multiplier = ML.utils:get_global_number("EXP_MULTIPLIER_BETRAY", 0)
 			if multiplier == 0 then return end
-			exp = ML.exp:apply_multiplier(exp)
 			exp = exp * multiplier
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
 				.. T(responsible_name) .. ", " .. T("$ml_gained_xp") .. ": " .. exp
 			ML.exp:add(exp)
 		else -- ######################### trick kills ##########################
-			exp = ML.exp:apply_multiplier(exp)
 			local cause = T(damage_message)
 			local multiplier = 0.5 + ML.utils:get_global_number("EXP_MULTIPLIER_TRICK", 0)
 			if damage_message == "$damage_water" then multiplier = multiplier + 0.5 end
