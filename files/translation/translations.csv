@@ -92,7 +92,7 @@ ml_permanent_concentrated_mana_tp,"Gives you reduced, but permanent concentrated
 ml_projectile_damage_increase,More projectile damage,Больше урона снарядами,,,,,,,,,,
 ml_projectile_damage_increase_tp,Your projectiles deals 10% more damage,Ваши снаряды наносят на 10% больше урона,,,,,,,,,,
 ml_elemental_damage_increase,More elemental damage,Больше элементального урона,,,,,,,,,,
-ml_elemental_damage_increase_tp,You deal more elemental damage,Вы наносите больше элементального урона,,,,,,,,,,
+ml_elemental_damage_increase_tp,You deal 30% more elemental damage,Вы наносите на 30% больше элементального урона,,,,,,,,,,
 ml_drill_damage_increase,Deadly drills,Смертельные дрелли,,,,,,,,,,
 ml_drill_damage_increase_tp,Your drills are dealing more damage,Ваши дрелли наносят больше урона,,,,,,,,,,
 ml_drill_destructibility_increase,Harder drill,Крепкий дрелль,,,,,,,,,,

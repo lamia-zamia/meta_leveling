@@ -18,8 +18,14 @@ function shot(projectile_entity_id)
 
 	--	elemental
 	local elemental_multiplier = ML.utils:get_global_number("elemental_damage_increase", 1)
-	for _, type in pairs(elemental) do
-		ML.utils:multiply_value_in_component_object(projectile_component, "damage_by_type", type, elemental_multiplier)
+	if elemental_multiplier > 1 then
+		for _, type in pairs(elemental) do
+			local current = ComponentObjectGetValue2(projectile_component, "damage_by_type", type)
+			if current > 0 then
+				ComponentObjectSetValue2(projectile_component, "damage_by_type", type,
+					(current + elemental_multiplier / 25) * elemental_multiplier)
+			end
+		end
 	end
 
 	-- drills
@@ -32,11 +38,15 @@ function shot(projectile_entity_id)
 		end
 		local increment = ML.utils:get_global_number("drill_destructibility_increase", 0)
 		if increment > 0 then --DESTRUCT
-			local max_durability_to_destroy = ComponentObjectGetValue2(projectile_component, "config_explosion", "max_durability_to_destroy")
+			local max_durability_to_destroy = ComponentObjectGetValue2(projectile_component, "config_explosion",
+				"max_durability_to_destroy")
 			if max_durability_to_destroy then
-				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "max_durability_to_destroy", increment)
-				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy", 100000 * increment)
-				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius", increment)
+				ML.utils:add_value_to_component_object(projectile_component, "config_explosion",
+					"max_durability_to_destroy", increment)
+				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
+					100000 * increment)
+				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
+					increment)
 			end
 		end
 	end
