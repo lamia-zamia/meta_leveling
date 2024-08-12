@@ -205,6 +205,7 @@ function EB:GetSettings()
 	self.data.max_health = ML.player.max_hp
 	self.data.perc.x = self.dim.x - 38
 	self.data.perc.y = 12
+	self.data.perc.show = ML.utils:get_mod_setting_boolean("exp_bar_show_perc")
 	if ModSettingGet("meta_leveling.exp_bar_position") == "on_top" then
 		self.DrawBarFunction = self.DrawExpBarOnTop
 		self.bar.x = self.dim.x - 82
@@ -238,7 +239,7 @@ function EB:DrawExpBar()
 	self:UpdatePlayerStatus()
 	self:AddOption(2)
 	self:DrawBarFunction()
-	self:DrawPercentage(self.data.perc.x, self.data.perc.y)
+	if self.data.perc.show then self:DrawPercentage(self.data.perc.x, self.data.perc.y) end
 end
 
 function EB:loop()
