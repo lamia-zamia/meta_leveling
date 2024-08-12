@@ -220,7 +220,7 @@ local reward_list = {
 		ui_name = "$ml_more_experience",
 		description = "$ml_more_experience_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_const.xml",
-		var0 = "1",
+		var0 = "+1",
 		probability = 0.1,
 		max = 5,
 		min_level = 5,
@@ -236,7 +236,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
 		var0 = "25%",
 		probability = 0.3,
-		max = 2,
+		max = 3,
 		fn = function()
 			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 0.25)
 		end
@@ -249,7 +249,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
 		var0 = "50%",
 		probability = 0.2,
-		max = 3,
+		max = 2,
 		limit_before = "more_experience_trick1",
 		fn = function()
 			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 0.5)
@@ -295,7 +295,7 @@ local reward_list = {
 	{
 		id = "more_love",
 		ui_name = "$perk_genome_more_love",
-		description = "$perkdesc_genome_more_love",
+		description = "$ml_more_love",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_love.png",
 		probability = 0.3,
 		custom_check = function()
@@ -312,7 +312,7 @@ local reward_list = {
 	{
 		id = "more_hatred",
 		ui_name = "$perk_genome_more_hatred",
-		description = "$perkdesc_genome_more_hatred",
+		description = "$ml_more_hatred",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_hatred.png",
 		probability = 0.3,
 		custom_check = function()
