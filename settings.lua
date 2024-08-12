@@ -105,7 +105,6 @@ do --helpers
 		local value = tostring(U.get_setting_next("exp_bar_position"))
 		local max = U.get_thickness_limit(value)
 		local index = U.get_cat_and_setting_index("exp_bar_cat", "exp_bar_thickness")
-		print(index.cat, index.set)
 		mod_settings[index.cat].settings[index.set].value_max = max
 	end
 
