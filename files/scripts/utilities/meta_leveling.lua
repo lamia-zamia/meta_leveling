@@ -2,6 +2,7 @@
 ---@field player ml_player
 ---@field level_curve ml_level_curve
 ---@field gui boolean show gui or not
+---@field gui_em_exit boolean
 ---@field rewards_deck rewards_deck
 ---@field rewards ml_rewards_util
 ---@field utils ML_utils
@@ -14,6 +15,7 @@
 ---@field pending_levels number
 local ML = {
 	gui = false,
+	gui_em_exit = true,
 	player = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/player.lua"),
 	level_curve = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/level_curve.lua"),
 	rewards_deck = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/rewards_deck.lua"),
@@ -30,6 +32,7 @@ local ML = {
 
 function ML:toggle_ui()
 	ML.gui = not ML.gui
+	self.gui_em_exit = true
 end
 
 ---returns current level

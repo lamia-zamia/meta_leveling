@@ -29,8 +29,10 @@ local data = {
 	max_health = 4,
 	perc = {
 		x = 0,
-		y = 0
-	}
+		y = 0,
+		show = true
+	},
+	tooltip_force = true,
 }
 
 ---@class EB.bar

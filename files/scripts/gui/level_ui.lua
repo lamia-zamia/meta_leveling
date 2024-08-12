@@ -310,7 +310,7 @@ end
 
 ---main loop
 function LU:loop()
-	self:EmergencyExit()
+	if ML.gui_em_exit then self:EmergencyExit() end
 	self:StartFrame(self.DrawLevelUI, ML.gui)
 end
 

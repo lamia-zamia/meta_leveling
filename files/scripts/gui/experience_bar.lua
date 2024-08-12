@@ -64,17 +64,29 @@ function EB:ToolTipUI()
 	end
 	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp.current .. " / " .. ML.exp.next
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
-	local longest = self:GetLongestText({ level, experience, tooltip }, "exp_bar_tooltip. " .. experience, true)
+	local tooltip_force = nil
+	if EB.data.tooltip_force then
+		tooltip_force = self:Locale("$ml_exp_bar_tooltip_force")
+	end
+	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip. " .. experience,
+		true)
 	self.tp:TextCentered(0, 0, level, longest, "", true)
 	self.tp:TextCentered(0, 0, experience, longest, "", true)
+	self:Color(0.6, 0.6, 0.6)
 	self.tp:TextCentered(0, 0, tooltip, longest, "", true)
+	if tooltip_force then
+		self:Color(0.6, 0.6, 0.6)
+		self.tp:TextCentered(0, 0, tooltip_force, longest, "", true)
+	end
 end
 
 function EB:AnimateBarAlpha()
 	local alpha = self.data.anim.alpha
 	if alpha > self.const.anim.max_alpha then alpha = self.const.anim.max_alpha end
-	if self.data.anim.alpha > 0.75 or self.data.anim.alpha < 0 then self.data.anim.direction = self.data.anim.direction *
-		-1 end
+	if self.data.anim.alpha > 0.75 or self.data.anim.alpha < 0 then
+		self.data.anim.direction = self.data.anim.direction *
+			-1
+	end
 	self.data.anim.alpha = self.data.anim.alpha + self.const.anim.step * self.data.anim.direction
 	return alpha
 end
@@ -89,7 +101,18 @@ end
 function EB:AddToolTip(x, y, width, height)
 	self:ForceFocusable()
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
-	self:AddTooltipClickable(0, 0, self.ToolTipUI, ML.toggle_ui, ML.exp.current)
+	local prev = self:GetPrevious()
+	if prev.hovered then
+		self:ShowTooltip(prev.x, prev.y, self.ToolTipUI, ML.exp.current)
+		if InputIsMouseButtonJustDown(1) then -- mouse clicks
+			ML:toggle_ui()
+		end
+		if InputIsMouseButtonJustDown(2) then
+			GamePlaySound("ui", "ui/button_click", 0, 0)
+			ML:toggle_ui()
+			ML.gui_em_exit = false
+		end
+	end
 end
 
 function EB:GetPlayerDamageComponent()
@@ -140,11 +163,11 @@ function EB:DrawExpBarUnderHP()
 end
 
 function EB:DrawVerticalBorders(y)
-	self:DrawBorder(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, 1)                                        --top
-	self:DrawBorder(self.bar.x, y + 1, 1 * self.bar.scale_x, self.bar.scale_y)                                            --left
-	self:DrawBorder(self.bar.x, y + self.bar.scale_y, (2 + self.bar.thickness) * self.bar.scale_x, 1)                     --buttom
+	self:DrawBorder(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, 1)                 --top
+	self:DrawBorder(self.bar.x, y + 1, 1 * self.bar.scale_x, self.bar.scale_y)                     --left
+	self:DrawBorder(self.bar.x, y + self.bar.scale_y, (2 + self.bar.thickness) * self.bar.scale_x, 1) --buttom
 	self:DrawBorder(self.bar.x + (1 + self.bar.thickness) * self.bar.scale_x, y, 1 * self.bar.scale_x,
-		self.bar.scale_y + 1)                                                                                             --right
+		self.bar.scale_y + 1)                                                                      --right
 end
 
 function EB:DrawExpBarOnLeft()
@@ -178,10 +201,14 @@ function EB:LevelUpFX()
 	self.data.sound_played_level[ML.level] = true
 	if GameHasFlagRun(ML.const.flags.fx_played) then return end
 	GameAddFlagRun(ML.const.flags.fx_played)
-	if self.data.play_sound then GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x,
-			ML.player.y) end
-	if self.data.play_fx then EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x,
-			ML.player.y) end
+	if self.data.play_sound then
+		GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x,
+			ML.player.y)
+	end
+	if self.data.play_fx then
+		EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x,
+			ML.player.y)
+	end
 end
 
 function EB:UpdatePlayerStatus()
@@ -206,6 +233,9 @@ function EB:GetSettings()
 	self.data.perc.x = self.dim.x - 38
 	self.data.perc.y = 12
 	self.data.perc.show = ML.utils:get_mod_setting_boolean("exp_bar_show_perc")
+	self.data.tooltip_force = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
+		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
+		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause")
 	if ModSettingGet("meta_leveling.exp_bar_position") == "on_top" then
 		self.DrawBarFunction = self.DrawExpBarOnTop
 		self.bar.x = self.dim.x - 82
