@@ -58,9 +58,7 @@ end
 function ML:UpdateCommonParameters()
 	self.player:update()
 	self.exp:update()
-	if self.exp.percentage >= 1 then
-		self.pending_levels = self:get_pending_levels()
-	end
+	self.pending_levels = self:get_pending_levels()
 end
 
 function ML:StartUp()
