@@ -27,6 +27,10 @@ local data = {
 	animate_bar = true,
 	health_length = 42,
 	max_health = 4,
+	perc = {
+		x = 0,
+		y = 0
+	}
 }
 
 ---@class EB.bar

@@ -70,8 +70,10 @@ end
 ---@param r integer
 ---@param g integer
 ---@param b integer
-function ui_class:Color(r, g, b)
-	GuiColorSetForNextWidget(self.gui, r, g, b, 1)
+---@param a? integer
+function ui_class:Color(r, g, b, a)
+	a = a or 1
+	GuiColorSetForNextWidget(self.gui, r, g, b, a)
 end
 
 ---GuiAnimateAlphaFadeIn

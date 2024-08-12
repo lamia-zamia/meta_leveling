@@ -331,7 +331,7 @@ do -- Settings GUI
 		local _, _, _, x_no_layout, y_no_layout = GuiGetPreviousWidgetInfo(gui)
 
 		GuiZSetForNextWidget(gui, 5)
-		GuiImageNinePiece(gui, id(), x_no_layout, y_no_layout, 74, 40)
+		GuiImageNinePiece(gui, id(), x_no_layout, y_no_layout, 74, 38)
 		G.ImageClip(gui, id, x + 15, y + 14, 44, 7, G.draw_outline)
 		G.ImageClip(gui, id, x + 16, y + 15, 42, 5, G.draw_bar_color, true)
 
@@ -348,6 +348,8 @@ do -- Settings GUI
 			G.ImageClip(gui, id, x + 66, y + 14, thickness + 2, 29.25, G.draw_outline)
 			G.ImageClip(gui, id, x + 67, y + 15, thickness, 27.25, G.draw_bar_color)
 		end
+
+		if U.get_setting_next("exp_bar_show_perc") then GuiText(gui, x + 66, y + 5, "%") end
 		GuiOptionsRemove(gui, GUI_OPTION.Layout_NextSameLine)
 	end
 
@@ -423,6 +425,8 @@ local translations =
 		exp_bar_red = "Red amount",
 		exp_bar_green = "Green amount",
 		exp_bar_blue = "Blue amount",
+		exp_bar_misc = "Misc",
+		exp_bar_show_perc = "Show percent",
 		gameplay_cat = "Gameplay", --cat
 		gameplay_cat_d = "In-game relating settings",
 		session_exp_on_level_up = "On level up",
@@ -452,6 +456,8 @@ local translations =
 		exp_bar_red = "Красный",
 		exp_bar_green = "Зелёный",
 		exp_bar_blue = "Синий",
+		exp_bar_misc = "Прочее",
+		exp_bar_show_perc = "Показывать процент",
 		gameplay_cat = "Геймплей", --cat
 		gameplay_cat_d = "Настройки связанные с геймплеем",
 		session_exp_on_level_up = "При повышении уровня",
@@ -500,6 +506,7 @@ D = {
 	session_exp_close_ui_on_damage = true,
 	session_exp_close_ui_on_pause = true,
 	session_exp_popup = true,
+	exp_bar_show_perc = true,
 }
 
 local function build_settings()
@@ -571,6 +578,12 @@ local function build_settings()
 					ui_fn = S.mod_setting_number_float,
 					parent = "exp_bar_cat",
 				},
+				{
+					not_setting = true,
+					ui_fn = S.mod_setting_better_boolean,
+					ui_name = T.exp_bar_misc,
+					checkboxes = { "exp_bar_show_perc", "session_exp_animate_bar" },
+				}
 			},
 		},
 		{
@@ -585,7 +598,7 @@ local function build_settings()
 					not_setting = true,
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_level_up,
-					checkboxes = { "session_exp_play_sound", "session_exp_play_fx", "session_exp_animate_bar" },
+					checkboxes = { "session_exp_play_sound", "session_exp_play_fx" },
 				},
 				{
 					not_setting = true,
