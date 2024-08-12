@@ -57,14 +57,17 @@ function LU:PickReward(reward)
 	self:CloseRewardUI()
 end
 
+function LU:FormatString(text)
+	return text:lower():gsub("^%l", string.upper)
+end
+
 ---tooltip render for rewards
 ---@private
 ---@param reward ml_single_reward
 function LU:RewardsTooltip(reward)
 	local texts = {
-		name = self:Locale(reward.ui_name):gsub("^%l", string.upper),
-		description = self:GameTextGet(reward.description, reward.var0, reward.var1, reward.var2):gsub("^%l",
-			string.upper)
+		name = LU:FormatString(self:Locale(reward.ui_name)),
+		description = LU:FormatString(self:GameTextGet(reward.description, reward.var0, reward.var1, reward.var2))
 	}
 	local longest = self.tp:GetLongestText(texts, reward.ui_name)
 	self.tp:TextCentered(0, 0, texts.name, longest)
