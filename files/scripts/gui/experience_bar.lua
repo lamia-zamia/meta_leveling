@@ -15,8 +15,6 @@ function EB:TextColorAnim(fn, ...)
 end
 
 function EB:DrawPercentage(x, y)
-	
-	-- GuiBeginAutoBox(self.gui)
 	if ML.exp.percentage < 1 then
 		self:Text(x + 1, y - 2, "%")
 		self:Color(1, 1, 1, 0.80)
@@ -26,10 +24,7 @@ function EB:DrawPercentage(x, y)
 		self:TextColorAnim(self.Text, x + 10, y, tostring(ML.pending_levels), "data/fonts/font_small_numbers.xml")
 	end
 	local prev = self:GetPrevious()
-	self:ForceFocusable()
-	self:Draw9Piece(x, y, -1000, prev.w + 10, prev.h, self.c.empty, self.c.empty)
-	-- GuiEndAutoBoxNinePiece(self.gui, 0, 0, 0, false, 0, self.c.empty, self.c.empty)
-	self:AddTooltipClickable(0, 0, self.ToolTipUI, ML.toggle_ui, ML.exp.current)
+	self:AddToolTip(x, y, prev.w + 10, prev.h)
 end
 
 function EB:BarColor(m)
