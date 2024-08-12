@@ -11,9 +11,15 @@ local D = {}
 local U = {
 	whitebox = "data/debug/whitebox.png",
 	empty = "data/debug/empty.png",
-	offset = 0
+	offset = 0,
+	max_y = 300,
+	min_y = 50,
 }
 do --helpers
+	function U.setting_handle_callback(setting)
+		if setting.change_fn then setting.change_fn(setting) end
+	end
+
 	---@param setting_name setting_id
 	---@param value setting_value
 	function U.set_setting(setting_name, value)
@@ -95,9 +101,11 @@ do --helpers
 		return max
 	end
 
-	function U.set_thickness_limit(_, gui, in_main_menu, setting, old_value, new_value)
-		local max = U.get_thickness_limit(new_value)
+	function U.set_thickness_limit(setting)
+		local value = tostring(U.get_setting_next("exp_bar_position"))
+		local max = U.get_thickness_limit(value)
 		local index = U.get_cat_and_setting_index("exp_bar_cat", "exp_bar_thickness")
+		print(index.cat, index.set)
 		mod_settings[index.cat].settings[index.set].value_max = max
 	end
 
@@ -127,12 +135,12 @@ do --gui helpers
 
 	---@param gui gui
 	---@param id fun(): number
-	---@param setting_name setting_id
-	---@param text string
+	---@param setting mod_setting
 	---@param value setting_value
 	---@param set_value setting_value
-	function G.display_fake_button(gui, id, setting_name, text, value, set_value)
+	function G.display_fake_button(gui, id, setting, value, set_value)
 		local _, _, _, x, y, w = GuiGetPreviousWidgetInfo(gui)
+		local text = "[" .. T[set_value] .. "]"
 		local width, height = GuiGetTextDimensions(gui, text)
 		GuiImageNinePiece(gui, id(), x + w, y, width, height, 0)
 		local clicked, _, hovered = GuiGetPreviousWidgetInfo(gui)
@@ -142,40 +150,11 @@ do --gui helpers
 			G.yellow_if_hovered(gui, hovered)
 			if clicked then
 				GamePlaySound("ui", "ui/button_click", 0, 0)
-				U.set_setting(setting_name, set_value)
+				U.set_setting(setting.id, set_value)
+				U.setting_handle_callback(setting)
 			end
 		end
 		GuiText(gui, 0, 0, text)
-	end
-
-	function G.image_no_layout(gui, id, x, y, img, alpha, scale_x, scale_y)
-		local _, _, _, _, _, pw, ph = GuiGetPreviousWidgetInfo(gui)
-		GuiImage(gui, id(), x, y - ph, img, alpha, scale_x, scale_y)
-		_, _, _, _, _, pw, ph = GuiGetPreviousWidgetInfo(gui)
-		GuiText(gui, -pw, -ph, " ")
-	end
-
-	function G.draw_bar_color(gui, id, x, y, width, height)
-		local r = tonumber(U.get_setting_next("exp_bar_red")) or D.exp_bar_red
-		local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
-		local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
-		GuiColorSetForNextWidget(gui, r, g, b, 1)
-		GuiZSetForNextWidget(gui, 3)
-		G.image_no_layout(gui, id, x, y, U.whitebox, 1, width, height)
-	end
-
-	function G.draw_outline(gui, id, x, y, width, height)
-		GuiColorSetForNextWidget(gui, 0.4752, 0.2768, 0.2215, 1)
-		GuiZSetForNextWidget(gui, 4)
-		G.image_no_layout(gui, id, x, y, U.whitebox, 0.85, width, height)
-	end
-
-	function G.draw_9piece(gui, id, width, height)
-		local _, _, _, x, y, w, h = GuiGetPreviousWidgetInfo(gui)
-		GuiText(gui, 0 - w, 0 - h, "")
-		GuiZSetForNextWidget(gui, 5)
-		GuiImageNinePiece(gui, id(), x - w, y - h, width, height, 1)
-		GuiText(gui, 0, 0, " ")
 	end
 
 	---@param setting_name setting_id
@@ -278,6 +257,56 @@ do --gui helpers
 			GuiTooltip(gui, description, "")
 		end
 	end
+
+	---@param gui gui
+	---@param id fun():number
+	---@param x number
+	---@param y number
+	---@param width number
+	---@param height number
+	---@param fn fun(gui:gui, id:function, width:number, height:number, ...:any)
+	---@param ... any
+	function G.ImageClip(gui, id, x, y, width, height, fn, ...)
+		GuiText(gui, x, y, " ")
+		local _, _, _, _, prev_y = GuiGetPreviousWidgetInfo(gui)
+		if prev_y + height > U.max_y then
+			height = U.max_y - prev_y - 1
+		end
+		if prev_y < U.min_y then
+			height = prev_y - U.min_y + height
+			y = y + U.min_y - prev_y
+		end
+		if height < 0 then return end
+		GuiAnimateBegin(gui)
+		GuiAnimateAlphaFadeIn(gui, id(), 0, 0, true)
+		GuiBeginAutoBox(gui)
+
+		GuiZSetForNextWidget(gui, 1000)
+		GuiBeginScrollContainer(gui, id(), x, y, width, height, false, 0, 0)
+		GuiEndAutoBoxNinePiece(gui)
+		GuiAnimateEnd(gui)
+		fn(gui, id, width, height, ...)
+		GuiEndScrollContainer(gui)
+	end
+
+	function G.draw_outline(gui, id, width, height)
+		GuiColorSetForNextWidget(gui, 0.4752, 0.2768, 0.2215, 1)
+		GuiZSetForNextWidget(gui, 4)
+		GuiImage(gui, id(), 0, 0, U.whitebox, 0.85, width / 20, height / 20)
+	end
+
+	function G.draw_bar_color(gui, id, width, height, health)
+		if health then
+			GuiColorSetForNextWidget(gui, 0.53, 0.75, 0.1, 1)
+		else
+			local r = tonumber(U.get_setting_next("exp_bar_red")) or D.exp_bar_red
+			local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
+			local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
+			GuiColorSetForNextWidget(gui, r, g, b, 1)
+		end
+		GuiZSetForNextWidget(gui, 3)
+		GuiImage(gui, id(), 0, 0, U.whitebox, 1, width / 20, height / 20)
+	end
 end
 -- ###########################################
 -- ########		Settings GUI		##########
@@ -287,6 +316,42 @@ local S = {
 
 }
 do -- Settings GUI
+	function S.draw_bar_position(_, gui, in_main_menu, im_id, setting)
+		local gui_id = im_id
+		local function id()
+			gui_id = gui_id + 1
+			return gui_id
+		end
+		GuiOptionsAdd(gui, GUI_OPTION.Layout_NextSameLine)
+
+		local thickness = 1 + tonumber(U.get_setting_next("exp_bar_thickness")) or D.exp_bar_thickness
+		local position = U.get_setting_next("exp_bar_position")
+		local x = mod_setting_group_x_offset + U.offset + 92
+		local y = 8
+		GuiText(gui, x, y + 5, " ")
+		local _, _, _, x_no_layout, y_no_layout = GuiGetPreviousWidgetInfo(gui)
+
+		GuiZSetForNextWidget(gui, 5)
+		GuiImageNinePiece(gui, id(), x_no_layout, y_no_layout, 74, 40)
+		G.ImageClip(gui, id, x + 15, y + 14, 44, 7, G.draw_outline)
+		G.ImageClip(gui, id, x + 16, y + 15, 42, 5, G.draw_bar_color, true)
+
+		if position == "under_health" then
+			G.ImageClip(gui, id, x + 15, y + 20.5, 44, thickness + 1, G.draw_outline)
+			G.ImageClip(gui, id, x + 16, y + 20.5, 42, thickness, G.draw_bar_color)
+		elseif position == "on_top" then
+			G.ImageClip(gui, id, x + 15, y + 7, 44, thickness + 2, G.draw_outline)
+			G.ImageClip(gui, id, x + 16, y + 8, 42, thickness, G.draw_bar_color)
+		elseif position == "on_left" then
+			G.ImageClip(gui, id, x + 2, y + 14, thickness + 2, 29.25, G.draw_outline)
+			G.ImageClip(gui, id, x + 3, y + 15, thickness, 27.25, G.draw_bar_color)
+		else
+			G.ImageClip(gui, id, x + 66, y + 14, thickness + 2, 29.25, G.draw_outline)
+			G.ImageClip(gui, id, x + 67, y + 15, thickness, 27.25, G.draw_bar_color)
+		end
+		GuiOptionsRemove(gui, GUI_OPTION.Layout_NextSameLine)
+	end
+
 	---@param setting mod_setting_number
 	function S.mod_setting_number_float(_, gui, in_main_menu, im_id, setting)
 		local value, value_new = G.mod_setting_number(gui, im_id, setting)
@@ -304,7 +369,7 @@ do -- Settings GUI
 		end
 	end
 
-	function S.exp_bar_position(_, gui, in_main_menu, im_id, setting)
+	function S.mod_setting_better_string(_, gui, in_main_menu, im_id, setting)
 		local gui_id = im_id
 		local function id()
 			gui_id = gui_id + 1
@@ -312,52 +377,14 @@ do -- Settings GUI
 		end
 		local value = U.get_setting_next(setting.id)
 		if not value then return end
-		GuiLayoutBeginHorizontal(gui, mod_setting_group_x_offset, 0, true)
-		GuiText(gui, 0, 0, setting.ui_name .. ": ")
-		for _, values in ipairs(setting.values) do
-			G.display_fake_button(gui, id, setting.id, "[" .. values[2] .. "]", value, values[1])
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
+		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
+		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
+		GuiText(gui, 7, 0, "")
+		for _, button in ipairs(setting.buttons) do
+			G.display_fake_button(gui, id, setting, value, button)
 		end
 		GuiLayoutEnd(gui)
-	end
-
-	function S.draw_bar_position(_, gui, in_main_menu, im_id, setting)
-		local gui_id = im_id
-		local function id()
-			gui_id = gui_id + 1
-			return gui_id
-		end
-		local x = 110 + U.offset
-		local _, _, _, _, _, _, h = GuiGetPreviousWidgetInfo(gui)
-		local thickness = tonumber(ModSettingGetNextValue("meta_leveling.exp_bar_thickness")) * 0.7
-		local position = ModSettingGetNextValue("meta_leveling.exp_bar_position")
-		local width = 2.1
-		local y_offset = 0 - h - 4 - 26 - 3
-		GuiText(gui, x - 10, 26, " ")
-		G.draw_9piece(gui, id, 66, 37.25)
-		G.draw_outline(gui, id, x - 1, 3, width, 0.32) --outline
-		_, _, _, _, _, _, h = GuiGetPreviousWidgetInfo(gui)
-		GuiColorSetForNextWidget(gui, 0.53, 0.75, 0.1, 1)
-		G.image_no_layout(gui, id, x, 1, U.whitebox, 1, width - 0.1, 0.22) --hp bar
-
-		y_offset = y_offset - h
-		if position == "under_health" then
-			G.draw_outline(gui, id, x - 1, 4.25, width, thickness / 10 + 0.05)
-			G.draw_bar_color(gui, id, x, 1, width - 0.1, thickness / 10 - 0.05)
-			y_offset = y_offset - 5.35
-		elseif position == "on_top" then
-			G.draw_outline(gui, id, x - 1, -5, width, -(thickness / 10) - 0.05)
-			G.draw_bar_color(gui, id, x, -1, width - 0.1, -thickness / 10 + 0.05)
-			y_offset = y_offset + 6
-		elseif position == "on_left" then
-			local x_side = 2
-			G.draw_outline(gui, id, x - x_side, -1, -(thickness / 10) - 0.05, width / 2)
-			G.draw_bar_color(gui, id, x - x_side - 1, 1, -thickness / 10 + 0.05, width / 2 - 0.1)
-		elseif position == "on_right" then
-			local x_side = 42
-			G.draw_outline(gui, id, x + x_side, -1, (thickness / 10) + 0.05, width / 2)
-			G.draw_bar_color(gui, id, x + x_side + 1, 1, thickness / 10 - 0.05, width / 2 - 0.1)
-		end
-		GuiText(gui, x, y_offset, " ")
 	end
 
 	function S.mod_setting_better_boolean(_, gui, in_main_menu, im_id, setting)
@@ -496,10 +523,10 @@ local function build_settings()
 					ui_name = T.exp_bar_position,
 					ui_description = T.exp_bar_position_d,
 					value_default = D.exp_bar_position,
-					values = { { "under_health", T.under_health }, { "on_left", T.on_left }, { "on_right", T.on_right }, { "on_top", T.on_top } },
+					buttons = { "under_health", "on_left", "on_right", "on_top" },
 					scope = MOD_SETTING_SCOPE_RUNTIME,
 					change_fn = U.set_thickness_limit,
-					ui_fn = S.exp_bar_position,
+					ui_fn = S.mod_setting_better_string,
 				},
 				{
 					id = "exp_bar_thickness",
