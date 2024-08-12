@@ -12,15 +12,23 @@ local const = {
 	anim = anim_const
 }
 
----@class EB.data.anim
-local anim_data = {
+---@class EB.data.anim_text
+local anim_text = {
 	alpha = 0,
 	direction = 1,
 }
 
 ---@class EB.data
 local data = {
-	anim = anim_data,
+	anim_text = anim_text,
+	anim_bar = {
+		alpha = 0.7,
+		direction = 1,
+		max = 0.9,
+		min = 0.5,
+		step = 0.01,
+		size = 0.25
+	},
 	sound_played_level = {},
 	play_sound = true,
 	play_fx = true,

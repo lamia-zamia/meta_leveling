@@ -7,8 +7,8 @@ function EB:FloorPerc(value)
 	return tostring(math.floor(value * 100))
 end
 
-function EB:TextColorAnim(fn, ...)
-	self:Color(self.bar.red, self.bar.green, self.bar.blue, self.data.anim.alpha)
+function EB:TextColorAnim(fn, alpha, ...)
+	self:Color(self.bar.red, self.bar.green, self.bar.blue, self.data.anim_text.alpha)
 	self:SetZ(-1)
 	fn(self, ...)
 	fn(self, ...)
@@ -20,8 +20,9 @@ function EB:DrawPercentage(x, y)
 		self:Color(1, 1, 1, 0.80)
 		self:Text(x + 10, y, self:FloorPerc(ML.exp.percentage), "data/fonts/font_small_numbers.xml")
 	else
-		self:TextColorAnim(self.Text, x + 1, y - 2, "!!")
-		self:TextColorAnim(self.Text, x + 10, y, tostring(ML.pending_levels), "data/fonts/font_small_numbers.xml")
+		local alpha = self:AnimateTextAlpha()
+		self:TextColorAnim(self.Text, alpha, x + 1, y - 2, "!!")
+		self:TextColorAnim(self.Text, alpha, x + 10, y, tostring(ML.pending_levels), "data/fonts/font_small_numbers.xml")
 	end
 	local prev = self:GetPrevious()
 	self:AddToolTip(x, y, prev.w + 10, prev.h)
@@ -46,7 +47,42 @@ function EB:ClampFiller()
 	end
 end
 
+function EB:AnimateBarLogic(data)
+	self:BarColor(data.alpha)
+	self:SetZ(1)
+	if data.alpha >= self.data.anim_bar.max or data.alpha <= self.data.anim_bar.min then
+		data.direction = data.direction * -1
+	end
+	data.alpha = data.alpha + (self.data.anim_bar.step * data.direction)
+end
+
+function EB:AnimateBar(x, y, width, height)
+	local data = {
+		alpha = self.data.anim_bar.alpha,
+		direction = self.data.anim_bar.direction
+	}
+	if width > height then
+		for i = 0, width, self.data.anim_bar.size do
+			self:AnimateBarLogic(data)
+			self:Image(x + i, y, self.c.px, 1, self.data.anim_bar.size, height)
+		end
+	else
+		for i = 0, height, self.data.anim_bar.size do
+			self:AnimateBarLogic(data)
+			self:Image(x, y + i, self.c.px, 1, width, self.data.anim_bar.size)
+		end
+	end
+	if self.data.anim_bar.alpha >= self.data.anim_bar.max or self.data.anim_bar.alpha <= self.data.anim_bar.min then
+		self.data.anim_bar.direction = self.data.anim_bar.direction * -1
+	end
+	self.data.anim_bar.alpha = self.data.anim_bar.alpha + self.data.anim_bar.step * self.data.anim_bar.direction
+end
+
 function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
+	if self.data.animate_bar and ML.pending_levels > 0 then
+		self:AnimateBar(x, y, scale_x, scale_y)
+		return
+	end
 	local multiplier = self:ClampFiller()
 	self:SetZ(1)
 	self:BarColor(1)
@@ -80,23 +116,39 @@ function EB:ToolTipUI()
 	end
 end
 
-function EB:AnimateBarAlpha()
-	local alpha = self.data.anim.alpha
+function EB:AnimateTextAlpha()
+	local alpha = self.data.anim_text.alpha
 	if alpha > self.const.anim.max_alpha then alpha = self.const.anim.max_alpha end
-	if self.data.anim.alpha > 0.75 or self.data.anim.alpha < 0 then
-		self.data.anim.direction = self.data.anim.direction *
+	if self.data.anim_text.alpha > 0.75 or self.data.anim_text.alpha < 0 then
+		self.data.anim_text.direction = self.data.anim_text.direction *
 			-1
 	end
-	self.data.anim.alpha = self.data.anim.alpha + self.const.anim.step * self.data.anim.direction
+	self.data.anim_text.alpha = self.data.anim_text.alpha + self.const.anim.step * self.data.anim_text.direction
 	return alpha
 end
 
-function EB:AnimateBar(x, y, width, height)
-	if ML.exp.percentage >= 1 and self.data.animate_bar then
-		self:BarColor(0.9)
-		self:Image(x, y, self.c.px, EB:AnimateBarAlpha(), width, height)
-	end
-end
+-- function EB:AnimateBar(x, y, width, height)
+-- 	if ML.exp.percentage >= 1 and self.data.animate_bar then
+-- 		local size = 0.25
+-- 		local alpha = self.data.anim_bar.alpha
+-- 		local direction = self.data.anim_bar.direction
+-- 		if width > height then
+-- 			for i = 0, width, size do
+-- 				self:BarColor(alpha)
+-- 				self:SetZ(-5)
+-- 				self:Image(x + i, y, self.c.px, 1, size, height)
+-- 				if alpha >= self.data.anim_bar.max or alpha <= self.data.anim_bar.min then
+-- 					direction = direction * -1
+-- 				end
+-- 				alpha = alpha + (self.data.anim_bar.step * direction)
+-- 			end
+-- 			if self.data.anim_bar.alpha >= self.data.anim_bar.max or self.data.anim_bar.alpha <= self.data.anim_bar.min then
+-- 				self.data.anim_bar.direction = self.data.anim_bar.direction * -1
+-- 			end
+-- 			self.data.anim_bar.alpha = self.data.anim_bar.alpha + self.data.anim_bar.step * self.data.anim_bar.direction
+-- 		end
+-- 	end
+-- end
 
 function EB:AddToolTip(x, y, width, height)
 	self:ForceFocusable()
@@ -113,11 +165,6 @@ function EB:AddToolTip(x, y, width, height)
 			ML.gui_em_exit = false
 		end
 	end
-end
-
-function EB:GetPlayerDamageComponent()
-	local player_id = EntityGetWithTag("player_unit")[1]
-	return EntityGetFirstComponent(player_id, "DamageModelComponent")
 end
 
 function EB:SetPlayerHealthLength() --thanks Killua and Nathan
@@ -143,7 +190,7 @@ function EB:DrawExpBarOnTop()
 
 	self:DrawBackGround(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness)
 	self:DrawExpFiller(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness, false)
-	self:AnimateBar(self.bar.x, self.bar.y - 1, self.bar.scale_x + 0.25, 2 + self.bar.thickness)
+	-- self:AnimateBar(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness)
 	self:AddToolTip(self.bar.x, self.bar.y - 1, self.bar.scale_x + 0.25, 2 + self.bar.thickness)
 end
 
@@ -158,7 +205,7 @@ function EB:DrawExpBarUnderHP()
 
 	self:DrawBackGround(self.bar.x + 1, y, self.bar.scale_x - 1.75, self.bar.thickness)
 	self:DrawExpFiller(self.bar.x + 1, y, self.bar.scale_x - 1.70, self.bar.thickness, false)
-	self:AnimateBar(self.bar.x, y, self.bar.scale_x + 0.25, 1 + self.bar.thickness)
+	-- self:AnimateBar(self.bar.x + 1, y, self.bar.scale_x - 1.70, self.bar.thickness)
 	self:AddToolTip(self.bar.x, y, self.bar.scale_x + 0.25, 1 + self.bar.thickness)
 end
 
@@ -183,7 +230,7 @@ function EB:DrawExpBarOnLeft()
 	self:DrawBackGround(self.bar.x + self.bar.scale_x, y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1)
 	self:DrawExpFiller(self.bar.x + self.bar.scale_x, y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1,
 		true)
-	self:AnimateBar(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, self.bar.scale_y + 1)
+	-- self:AnimateBar(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, self.bar.scale_y + 1)
 	self:AddToolTip(self.bar.x - (2 + self.bar.thickness), y, (2 + self.bar.thickness), self.bar.scale_y + 1)
 end
 
@@ -193,7 +240,7 @@ function EB:DrawExpBarOnRight()
 		self.bar.scale_y - 1)
 	self:DrawExpFiller(self.bar.x + self.bar.scale_x, self.bar.y + 1, self.bar.thickness * self.bar.scale_x,
 		self.bar.scale_y - 1, true)
-	self:AnimateBar(self.bar.x, self.bar.y, (2 + self.bar.thickness) * self.bar.scale_x, self.bar.scale_y + 1)
+	-- self:AnimateBar(self.bar.x, self.bar.y, (2 + self.bar.thickness) * self.bar.scale_x, self.bar.scale_y + 1)
 	self:AddToolTip(self.bar.x, self.bar.y, (2 + self.bar.thickness), self.bar.scale_y + 1)
 end
 
