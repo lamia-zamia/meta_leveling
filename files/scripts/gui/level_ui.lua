@@ -1,5 +1,5 @@
 ---@class level_ui
-local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/level_ui_class.lua")
+local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/level_ui_class.lua")
 
 function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()

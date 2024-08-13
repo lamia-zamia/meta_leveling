@@ -219,20 +219,18 @@ end
 
 ---get dimensions
 ---@param text string
----@param pixel? boolean
+---@param font? string
 ---@return number, number
-function ui_class:GetTextDimension(text, pixel)
-	pixel = pixel or false
-	return GuiGetTextDimensions(self.gui, text, 1, 0, "", pixel)
+function ui_class:GetTextDimension(text, font)
+	font = font or ""
+	return GuiGetTextDimensions(self.gui, text, 1, 2, font)
 end
 
 ---get dimensions
 ---@param text string
----@param pixel? boolean
 ---@return number, number
-function ui_class:GuiTextDimensionLocale(text, pixel)
-	pixel = pixel or false
-	return self:GetTextDimension(self:Locale(text), pixel)
+function ui_class:GuiTextDimensionLocale(text)
+	return self:GetTextDimension(self:Locale(text), "")
 end
 
 ---actual function to draw tooltip
@@ -406,13 +404,11 @@ end
 ---@private
 ---@param array table strings
 ---@param key string cache key
----@param pixel? boolean font is pixel font
 ---@return number
-function ui_class:CalculateLongestText(array, key, pixel)
-	pixel = pixel or false
+function ui_class:CalculateLongestText(array, key)
 	local longest = 0
 	for _, text in ipairs(array) do
-		local length = self:GetTextDimension(text, pixel)
+		local length = self:GetTextDimension(text, "")
 		longest = math.max(longest, length)
 	end
 	self.gui_longest_string_cache[key] = longest
@@ -422,11 +418,10 @@ end
 ---Function to calculate the longest string in array
 ---@param array table table to look through
 ---@param key string cache key, should be static enough
----@param pixel? boolean font is pixel font
 ---@return number
-function ui_class:GetLongestText(array, key, pixel)
+function ui_class:GetLongestText(array, key)
 	key = self:Locale("$current_language") .. key
-	return self.gui_longest_string_cache[key] or self:CalculateLongestText(array, key, pixel)
+	return self.gui_longest_string_cache[key] or self:CalculateLongestText(array, key)
 end
 
 ---Set Z for next widget
@@ -449,12 +444,10 @@ end
 ---@param text string
 ---@param longest number longest string length
 ---@param font? string
----@param pixel? boolean font is pixel font
-function ui_class:TextCentered(x, y, text, longest, font, pixel)
+function ui_class:TextCentered(x, y, text, longest, font)
 	font = font or ""
-	pixel = pixel or false
-	local x_offset = (longest / 2) - (self:GetTextDimension(text, pixel) / 2)
-	GuiText(self.gui, x + x_offset, y, text, 1, font, pixel)
+	local x_offset = (longest / 2) - (self:GetTextDimension(text, font) / 2)
+	GuiText(self.gui, x + x_offset, y, text, 1, font)
 end
 
 ---for debugging

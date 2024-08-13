@@ -1,13 +1,13 @@
 ---@class experience_bar
-local EB = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/experience_bar_class.lua")
+local EB = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/experience_bar_class.lua")
 ---@param value number
 ---@return string
 function EB:FloorPerc(value)
 	return tostring(math.floor(value * 100))
 end
 
-function EB:TextColorAnim(fn, alpha, ...)
-	self:Color(self.bar.red, self.bar.green, self.bar.blue, alpha)
+function EB:TextColorAnim(fn, ...)
+	self:Color(self.bar.red, self.bar.green, self.bar.blue, math.min(self.const.anim.max_alpha, self.data.anim_text.alpha))
 	self:SetZ(-1)
 	fn(self, ...)
 	fn(self, ...)
@@ -19,9 +19,8 @@ function EB:DrawPercentage(x, y)
 		self:Color(1, 1, 1, 0.80)
 		self:Text(x + 10, y, self:FloorPerc(ML.exp.percentage), "data/fonts/font_small_numbers.xml")
 	else
-		local alpha = self:AnimateTextAlpha()
-		self:TextColorAnim(self.Text, alpha, x + 1, y - 2, "!!")
-		self:TextColorAnim(self.Text, alpha, x + 10, y, tostring(ML.pending_levels), "data/fonts/font_small_numbers.xml")
+		self:TextColorAnim(self.Text, x + 1, y - 2, "!!")
+		self:TextColorAnim(self.Text, x + 10, y, tostring(ML.pending_levels), "data/fonts/font_small_numbers.xml")
 	end
 	local prev = self:GetPrevious()
 	self:AddToolTip(x, y, prev.w + 10, prev.h)
@@ -97,6 +96,14 @@ function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
 	end
 end
 
+function EB:InventoryReminder()
+	if ML.pending_levels > 0 then
+		local text = self:Locale("$ml_level_up_tp") .. ", " .. self:Locale("$ml_pending") .. ": " .. ML.pending_levels
+		local width = self:GetTextDimension(text)
+		self:TextColorAnim(self.Text, self.dim.x - width - 130, 7, text)
+	end
+end
+
 function EB:ToolTipUI()
 	local level = self:Locale("$ml_level") .. ": " .. ML.level
 	if ML.pending_levels > 0 then
@@ -108,27 +115,23 @@ function EB:ToolTipUI()
 	if EB.data.tooltip_force then
 		tooltip_force = self:Locale("$ml_exp_bar_tooltip_force")
 	end
-	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip. " .. experience,
-		true)
-	self.tp:TextCentered(0, 0, level, longest, "", true)
-	self.tp:TextCentered(0, 0, experience, longest, "", true)
+	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip. " .. experience)
+	self.tp:TextCentered(0, 0, level, longest, "")
+	self.tp:TextCentered(0, 0, experience, longest, "")
 	self:Color(0.6, 0.6, 0.6)
-	self.tp:TextCentered(0, 0, tooltip, longest, "", true)
+	self.tp:TextCentered(0, 0, tooltip, longest, "")
 	if tooltip_force then
 		self:Color(0.6, 0.6, 0.6)
-		self.tp:TextCentered(0, 0, tooltip_force, longest, "", true)
+		self.tp:TextCentered(0, 0, tooltip_force, longest, "")
 	end
 end
 
-function EB:AnimateTextAlpha()
-	local alpha = self.data.anim_text.alpha
-	if alpha > self.const.anim.max_alpha then alpha = self.const.anim.max_alpha end
+function EB:AnimateTextFading()
 	if self.data.anim_text.alpha > 0.75 or self.data.anim_text.alpha < 0 then
 		self.data.anim_text.direction = self.data.anim_text.direction *
 			-1
 	end
 	self.data.anim_text.alpha = self.data.anim_text.alpha + self.const.anim.step * self.data.anim_text.direction
-	return alpha
 end
 
 function EB:AddToolTip(x, y, width, height)
@@ -264,6 +267,7 @@ function EB:GetSettings()
 	self.data.tooltip_force = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
 		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
 		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause")
+	self.data.reminder_in_inventory = ML.utils:get_mod_setting_boolean("hud_reminder_in_inventory")
 	if ModSettingGet("meta_leveling.exp_bar_position") == "on_top" then
 		self.DrawBarFunction = self.DrawExpBarOnTop
 		self.bar.x = self.dim.x - 82
@@ -298,6 +302,8 @@ function EB:DrawExpBar()
 	self:AddOption(2)
 	self:DrawBarFunction()
 	if self.data.perc.show then self:DrawPercentage(self.data.perc.x, self.data.perc.y) end
+	if self.data.reminder_in_inventory and GameIsInventoryOpen() then self:InventoryReminder() end
+	self:AnimateTextFading()
 end
 
 function EB:loop()

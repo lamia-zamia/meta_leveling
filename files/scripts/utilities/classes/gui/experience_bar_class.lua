@@ -41,6 +41,7 @@ local data = {
 		show = true
 	},
 	tooltip_force = true,
+	reminder_in_inventory = true,
 }
 
 ---@class EB.bar

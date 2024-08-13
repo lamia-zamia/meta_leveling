@@ -412,8 +412,8 @@ end
 local translations =
 {
 	["English"] = {
-		exp_bar_cat = "Experience bar", --cat
-		exp_bar_cat_d = "Settings for experience bar",
+		exp_bar_cat = "HUD", --cat
+		exp_bar_cat_d = "Settings for experience bar and misc",
 		exp_bar_position = "Position",
 		exp_bar_position_d = "Position of experience bar",
 		under_health = "under health",
@@ -421,12 +421,12 @@ local translations =
 		on_right = "on right",
 		on_top = "on top",
 		exp_bar_thickness = "Bar thickness",
-		exp_bar_thickness_d = "How thick the bar is",
 		exp_bar_red = "Red amount",
 		exp_bar_green = "Green amount",
 		exp_bar_blue = "Blue amount",
 		exp_bar_misc = "Misc",
 		exp_bar_show_perc = "Show percent",
+		hud_reminder_in_inventory = "Reminder in inventory",
 		gameplay_cat = "Gameplay", --cat
 		gameplay_cat_d = "In-game relating settings",
 		session_exp_on_level_up = "On level up",
@@ -443,8 +443,8 @@ local translations =
 		session_exp_close_ui_on_pause = "Pause",
 	},
 	["русский"] = {
-		exp_bar_cat = "Полоса опыта",
-		exp_bar_cat_d = "Настройки для полоски опыта",
+		exp_bar_cat = "HUD",
+		exp_bar_cat_d = "Настройки для полосы опыта и прочее",
 		exp_bar_position = "Позиция",
 		exp_bar_position_d = "Позиция полоски опыта",
 		under_health = "под здоровьем",
@@ -452,18 +452,18 @@ local translations =
 		on_right = "справа",
 		on_top = "сверху",
 		exp_bar_thickness = "Толщина полоски",
-		exp_bar_thickness_d = "Насколько полоска широкая",
 		exp_bar_red = "Красный",
 		exp_bar_green = "Зелёный",
 		exp_bar_blue = "Синий",
 		exp_bar_misc = "Прочее",
-		exp_bar_show_perc = "Показывать процент",
+		exp_bar_show_perc = "Процент",
+		hud_reminder_in_inventory = "Напоминание",
 		gameplay_cat = "Геймплей", --cat
 		gameplay_cat_d = "Настройки связанные с геймплеем",
-		session_exp_on_level_up = "При повышении уровня",
+		session_exp_on_level_up = "Новый уровень",
 		session_exp_play_sound = "Звук",
 		session_exp_play_fx = "Эффекты",
-		session_exp_animate_bar = "Анимировать бар",
+		session_exp_animate_bar = "Анимации",
 		session_exp_on_kills = "При убийствах",
 		session_exp_popup = "Показывать опыт",
 		session_exp_log = "Логировать",
@@ -500,13 +500,14 @@ D = {
 	session_exp_play_sound = true,
 	session_exp_play_fx = true,
 	session_exp_animate_bar = true,
+	hud_reminder_in_inventory = true,
+	exp_bar_show_perc = true,
 	session_exp_log = false,
 	session_exp_multiplier = 1,
 	session_exp_close_ui_on_shot = true,
 	session_exp_close_ui_on_damage = true,
 	session_exp_close_ui_on_pause = true,
 	session_exp_popup = true,
-	exp_bar_show_perc = true,
 }
 
 local function build_settings()
@@ -582,7 +583,7 @@ local function build_settings()
 					not_setting = true,
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.exp_bar_misc,
-					checkboxes = { "exp_bar_show_perc", "session_exp_animate_bar" },
+					checkboxes = { "exp_bar_show_perc", "session_exp_animate_bar", "hud_reminder_in_inventory" },
 				}
 			},
 		},
