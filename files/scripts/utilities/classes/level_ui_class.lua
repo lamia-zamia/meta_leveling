@@ -13,6 +13,7 @@ local const = {
 	width = 320,
 	sprite_offset = 20,
 	reward_box_size = 24,
+	z = 1,
 }
 
 ---@class LU.data

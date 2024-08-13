@@ -1,6 +1,17 @@
 ---@class level_ui
 local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/level_ui_class.lua")
 
+function LU:BlockInputOnPrevious()
+	local prev = self:GetPrevious()
+	self:AddOptionForNext(6)
+	self:Draw9Piece(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, 100,
+		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
+	prev = self:GetPrevious()
+	if prev.hovered then
+		self:BlockScrollInput()
+	end
+end
+
 function LU:AnimReset(key)
 	self.anim[key].reset = true
 	self.anim[key].frame = GameGetFrameNum()
@@ -84,7 +95,7 @@ function LU:DrawPointSpenderRewards(x, y, data)
 		local x_offset = x + (data.width + data.width9_offset) * (i - 1)
 		local reward_icon = ML.rewards_deck.reward_data[self.data.reward_list[i]].ui_icon
 		self:ForceFocusable()
-		self:Draw9Piece(x_offset, y, 999, data.width - data.width9_offset, data.height, self.const.ui_9p_reward,
+		self:Draw9Piece(x_offset, y, self.const.z, data.width - data.width9_offset, data.height, self.const.ui_9p_reward,
 			self.const.ui_9p_reward_hl)
 		local tp_offset = (data.width - data.width9_offset) / 2
 		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward,
@@ -110,7 +121,8 @@ function LU:DrawButtonsCentered(button_y)
 	local function add_button(name, tp, fn)
 		self:TextCentered(button_x, button_y, name, longest)
 		self:ForceFocusable()
-		self:Draw9Piece(button_x, button_y, 50, longest, 10, self.const.ui_9p_button, self.const.ui_9p_button_hl)
+		self:Draw9Piece(button_x, button_y, self.const.z + 1, longest, 10, self.const.ui_9p_button,
+			self.const.ui_9p_button_hl)
 		local prev = self:GetPrevious()
 		local tp_offset = (self:GuiTextDimensionLocale(tp) - prev.w - 1.5) / -2
 		self:AddTooltipClickable(tp_offset, prev.h * 2.2, tp, fn)
@@ -135,8 +147,9 @@ function LU:DrawPointSpender()
 	data.height = self.const.reward_box_size - data.width9_offset
 	data.total_width = data.amount * (data.width + data.width9_offset) - data.width9_offset * 2
 	local x, y = self:CalculateCenterInScreen(data.total_width, data.height)
-	self:Draw9Piece(x, y, 1000, data.total_width, data.height, self.const.ui_9piece)
-
+	
+	self:Draw9Piece(x, y, self.const.z + 1, data.total_width, data.height, self.const.ui_9piece)
+	self:BlockInputOnPrevious()
 	self:DrawPointSpenderRewards(x, y, data)
 
 	local button_y = y + data.height + data.width9_offset * 3
@@ -163,7 +176,7 @@ function LU:DrawCurrentRewardsItems()
 			end
 			local tooltip = ""
 			self:Image(x, y + self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
-			self:Draw9Piece(self.data.x + x, self.data.y + y, 999, 16, 16, self.const.ui_9p_reward)
+			self:Draw9Piece(self.data.x + x, self.data.y + y, self.const.z, 16, 16, self.const.ui_9p_reward)
 			for _, reward_id in ipairs(group.rewards) do
 				local reward = ML.rewards_deck.reward_data[reward_id]
 				if reward.pick_count > 0 then
@@ -183,7 +196,7 @@ end
 function LU:DrawCurrentRewards()
 	local section = self.data.curent_rewards_height
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, section, self.const.ui_9piece_gray,
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, section, self.const.z + 1, self.const.ui_9piece_gray,
 		self.DrawCurrentRewardsItems)
 end
 
@@ -200,11 +213,12 @@ function LU:AddMenuSelector(x, y, text, tooltip, fn)
 	if self.DrawWindow == fn then
 		self:TextGray(x, y, text)
 		self:ForceFocusable()
-		self:Add9PieceBackGroundText(self.const.ui_9p_button_hl, self.const.ui_9p_button_hl)
+		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button_hl, self.const.ui_9p_button_hl)
 		self:MakePreviousClickable(self.ToggleMenuWindow, fn)
 	else
 		self:Text(x, y, text)
-		self:MakeButtonFromPrev(tooltip, self.ToggleMenuWindow, self.const.ui_9p_button, self.const.ui_9p_button_hl, fn)
+		self:MakeButtonFromPrev(tooltip, self.ToggleMenuWindow, self.const.z, self.const.ui_9p_button,
+			self.const.ui_9p_button_hl, fn)
 	end
 end
 
@@ -219,23 +233,24 @@ function LU:DrawMenuButtons()
 	end
 	if ML.exp.percentage >= 1 then
 		self:Text(x, y, self:Locale("$ml_level_up"))
-		self:MakeButtonFromPrev(self:Locale("$ml_level_up_tp"), self.OpenLevelUpMenu, self.const.ui_9p_button_important,
+		self:MakeButtonFromPrev(self:Locale("$ml_level_up_tp"), self.OpenLevelUpMenu, self.const.z,
+			self.const.ui_9p_button_important,
 			self.const.ui_9p_button_hl)
 	else
 		self:TextGray(x, y, self:Locale("$ml_level_up"))
-		self:Add9PieceBackGroundText(self.const.ui_9p_button)
+		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 	end
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), "whatever", self.DrawCurrentRewards)
 
 	self:TextGray(x_off(), y, self:Locale("Stats (WIP)"))
-	self:Add9PieceBackGroundText(self.const.ui_9p_button)
+	self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 
 	self:TextGray(x_off(), y, self:Locale("Meta (WIP)"))
-	self:Add9PieceBackGroundText(self.const.ui_9p_button)
+	self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 
 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("$ml_close")), y,
 		self:Locale("$ml_close"))
-	self:MakeButtonFromPrev(self:Locale("$ml_close_tp"), self.CloseMenu, self.const.ui_9p_button,
+	self:MakeButtonFromPrev(self:Locale("$ml_close_tp"), self.CloseMenu, self.const.z, self.const.ui_9p_button,
 		self.const.ui_9p_button_hl)
 	self:AnimateE()
 end
@@ -253,7 +268,8 @@ function LU:DrawMainHeader()
 	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp.current .. " / " .. ML.exp.next
 	local level = self:Locale("$ml_level") .. ": " .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:Draw9Piece(self.data.x, self.data.y, 1000, self.const.width, section, self.const.ui_9piece)
+	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)
+	self:BlockInputOnPrevious()
 	self:TextCentered(self.data.x, self.data.y, experience, self.const.width * 0.33)
 	self:TextCentered(self.data.x, self.data.y, "META LEVELING", self.const.width)
 	self:TextCentered(self.data.x + self.const.width * 0.33, self.data.y, level, self.const.width)
@@ -265,9 +281,10 @@ end
 function LU:DrawMenuConnector()
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, false)
-	self:SetZ(1001)
-	self:Draw9Piece(self.data.x, self.data.y, 1000, self.const.width, 0,
+	self:SetZ(5)
+	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, 0,
 		"mods/meta_leveling/files/gfx/ui/ui_9piece_connector.png")
+	self:BlockInputOnPrevious()
 	self:AnimateE()
 end
 
@@ -302,6 +319,7 @@ end
 ---main logic
 ---@private
 function LU:DrawLevelUI()
+	GuiZSet(self.gui, self.const.z - 2)
 	if GameHasFlagRun(ML.const.flags.leveling_up) then
 		self:DrawPointSpender()
 	else
