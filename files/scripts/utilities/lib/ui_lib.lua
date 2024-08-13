@@ -361,7 +361,6 @@ function ui_class:BlockScrollInput()
 	local m_x, m_y = self:get_mouse_pos()
 	GuiAnimateBegin(self.gui)
 	GuiAnimateAlphaFadeIn(self.gui, 2, 0, 0, true)
-	-- GuiOptionsAddForNextWidget(self.gui, 47) --NoSound
 	GuiOptionsAddForNextWidget(self.gui, 3)  --AlwaysClickable
 	GuiBeginScrollContainer(self.gui, 2, m_x - 25, m_y - 25, 50, 50, false, 0, 0)
 	GuiAnimateEnd(self.gui)
