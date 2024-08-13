@@ -24,9 +24,7 @@ local function damage_done_by_water(damage_message)
 	return false
 end
 
----@param damage_type_bit_field damage_type_bit_field
----@param damage_message damage_message
----@param entity_thats_responsible entity_id
+---@type script_death
 function death(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
 	if ML.utils:is_player_herd(died_entity) then return end

@@ -4,6 +4,7 @@ local elemental = {
 	"electricity", "fire", "ice", "radioactive", "poison", "curse", "holy"
 }
 
+---@type script_shot
 function shot(projectile_entity_id)
 	local projectile_component = EntityGetFirstComponentIncludingDisabled(projectile_entity_id, "ProjectileComponent")
 	if not projectile_component then return end
