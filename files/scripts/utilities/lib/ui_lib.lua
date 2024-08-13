@@ -316,15 +316,15 @@ function ui_class:MakePreviousClickable(click_fn, variable)
 	end
 end
 
-function ui_class:Add9PieceBackGroundText(sprite, highlight)
+function ui_class:Add9PieceBackGroundText(z, sprite, highlight)
 	local prev = self:GetPrevious()
-	self:Draw9Piece(prev.x - 1, prev.y, 999, prev.w + 1.5, prev.h, sprite, highlight)
+	self:Draw9Piece(prev.x - 1, prev.y, z, prev.w + 1.5, prev.h, sprite, highlight)
 end
 
-function ui_class:MakeButtonFromPrev(text, click_fn, sprite, highlight, variable)
+function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, variable)
 	local prev = self:GetPrevious()
 	self:ForceFocusable()
-	self:Add9PieceBackGroundText(sprite, highlight)
+	self:Add9PieceBackGroundText(z, sprite, highlight)
 	local tp_offset = (self:GuiTextDimensionLocale(text) - prev.w - 1.5) / -2
 	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, variable)
 end
@@ -382,11 +382,11 @@ function ui_class:MakePreviousScrollable()
 	end
 end
 
-function ui_class:FakeScrollBox(x, y, width, height, sprite, draw_fn)
+function ui_class:FakeScrollBox(x, y, width, height, z, sprite, draw_fn)
 	local id = self:id()
 	local sprite_dim = GuiGetImageDimensions(self.gui, sprite, 1)
 	local limiter = height + y - sprite_dim / 3
-	self:Draw9Piece(x, y, 1000, width, height, sprite)
+	self:Draw9Piece(x, y, z, width, height, sprite)
 
 	self:MakePreviousScrollable()
 	
