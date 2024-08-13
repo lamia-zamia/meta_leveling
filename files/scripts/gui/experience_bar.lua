@@ -301,7 +301,7 @@ function EB:DrawExpBar()
 end
 
 function EB:loop()
-	self:StartFrame(self.DrawExpBar, not GameIsInventoryOpen())
+	self:StartFrame(self.DrawExpBar, true)
 end
 
 return EB
