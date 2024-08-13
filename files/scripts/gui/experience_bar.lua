@@ -1,6 +1,5 @@
 ---@class experience_bar
 local EB = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/experience_bar_class.lua")
-
 ---@param value number
 ---@return string
 function EB:FloorPerc(value)
@@ -8,7 +7,7 @@ function EB:FloorPerc(value)
 end
 
 function EB:TextColorAnim(fn, alpha, ...)
-	self:Color(self.bar.red, self.bar.green, self.bar.blue, self.data.anim_text.alpha)
+	self:Color(self.bar.red, self.bar.green, self.bar.blue, alpha)
 	self:SetZ(-1)
 	fn(self, ...)
 	fn(self, ...)
@@ -47,8 +46,13 @@ function EB:ClampFiller()
 	end
 end
 
+function EB:AnimateBarHSVFade(alpha)
+	local h, s, v = ML.colors:rgb2hsv(self.bar.red, self.bar.green, self.bar.blue)
+	return ML.colors:hsv2rgb(h, s, v - alpha)
+end
+
 function EB:AnimateBarLogic(data)
-	self:BarColor(data.alpha)
+	self:Color(self:AnimateBarHSVFade(data.alpha))
 	self:SetZ(1)
 	if data.alpha >= self.data.anim_bar.max or data.alpha <= self.data.anim_bar.min then
 		data.direction = data.direction * -1
@@ -126,29 +130,6 @@ function EB:AnimateTextAlpha()
 	self.data.anim_text.alpha = self.data.anim_text.alpha + self.const.anim.step * self.data.anim_text.direction
 	return alpha
 end
-
--- function EB:AnimateBar(x, y, width, height)
--- 	if ML.exp.percentage >= 1 and self.data.animate_bar then
--- 		local size = 0.25
--- 		local alpha = self.data.anim_bar.alpha
--- 		local direction = self.data.anim_bar.direction
--- 		if width > height then
--- 			for i = 0, width, size do
--- 				self:BarColor(alpha)
--- 				self:SetZ(-5)
--- 				self:Image(x + i, y, self.c.px, 1, size, height)
--- 				if alpha >= self.data.anim_bar.max or alpha <= self.data.anim_bar.min then
--- 					direction = direction * -1
--- 				end
--- 				alpha = alpha + (self.data.anim_bar.step * direction)
--- 			end
--- 			if self.data.anim_bar.alpha >= self.data.anim_bar.max or self.data.anim_bar.alpha <= self.data.anim_bar.min then
--- 				self.data.anim_bar.direction = self.data.anim_bar.direction * -1
--- 			end
--- 			self.data.anim_bar.alpha = self.data.anim_bar.alpha + self.data.anim_bar.step * self.data.anim_bar.direction
--- 		end
--- 	end
--- end
 
 function EB:AddToolTip(x, y, width, height)
 	self:ForceFocusable()

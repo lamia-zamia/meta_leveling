@@ -10,6 +10,7 @@
 ---@field exp ml_experience
 ---@field font ml_font
 ---@field EZWand any
+---@field colors colors
 ---@field nxml nxml
 ---@field level number
 ---@field pending_levels number
@@ -26,6 +27,7 @@ local ML = {
 	font = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/font.lua"),
 	EZWand = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/EZWand.lua"),
 	nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua"),
+	colors = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/colors.lua"),
 	level = 1,
 	pending_levels = 0,
 }

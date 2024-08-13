@@ -22,12 +22,12 @@ local anim_text = {
 local data = {
 	anim_text = anim_text,
 	anim_bar = {
-		alpha = 0.7,
+		alpha = 0.1,
 		direction = 1,
-		max = 0.9,
-		min = 0.5,
-		step = 0.01,
-		size = 0.25
+		max = 0.3,
+		min = -0.1,
+		step = 0.005,
+		size = 0.5
 	},
 	sound_played_level = {},
 	play_sound = true,
