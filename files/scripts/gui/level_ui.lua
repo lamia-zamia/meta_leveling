@@ -1,76 +1,9 @@
 ---@class level_ui
 local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/level_ui_class.lua")
 
-function LU:BlockInputOnPrevious()
-	local prev = self:GetPrevious()
-	self:AddOptionForNext(6)
-	self:Draw9Piece(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, 100,
-		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
-	prev = self:GetPrevious()
-	if prev.hovered then
-		self:BlockScrollInput()
-	end
-end
-
-function LU:AnimReset(key)
-	self.anim[key].reset = true
-	self.anim[key].frame = GameGetFrameNum()
-end
-
-function LU:CheckForAnim()
-	for key, _ in pairs(self.anim) do
-		if self.anim[key].reset then
-			if GameGetFrameNum() - self.anim[key].frame > 1 then
-				self.anim[key].reset = false
-			end
-		end
-	end
-end
-
-function LU:MenuAnimS(key)
-	self:AnimateB()
-	self:AnimateAlpha(0.08, 0.1, self.anim[key].reset)
-	self:AnimateScale(0.08, self.anim[key].reset)
-end
-
----toggle level up menu, adds flag to run so you can't close it
----@private
-function LU:OpenLevelUpMenu()
-	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
-	GameAddFlagRun(ML.const.flags.leveling_up)
-	self:AnimReset("rewards")
-end
-
----Close level up UI
-function LU:CloseRewardUI()
-	ML:level_up()
-	GameRemoveFlagRun(ML.const.flags.fx_played)
-	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
-	if ML.exp.percentage < 1 then
-		GameRemoveFlagRun(ML.const.flags.leveling_up)
-		ML:toggle_ui()
-	end
-	self.data.reward_list = nil
-	self:AnimReset("rewards")
-end
-
----Skip button function
----@private
-function LU:SkipReward()
-	ML.rewards_deck:skip_reward()
-	self:CloseRewardUI()
-end
-
----Choose reward
----@private
-function LU:PickReward(reward)
-	ML.rewards_deck:pick_reward(reward.id)
-	self:CloseRewardUI()
-end
-
-function LU:FormatString(text)
-	return text:lower():gsub("^%l", string.upper)
-end
+-- ############################################
+-- #########		MISC		###########
+-- ############################################
 
 ---tooltip render for rewards
 ---@private
@@ -85,25 +18,88 @@ function LU:RewardsTooltip(reward)
 	self.tp:TextCentered(0, 0, texts.description, longest)
 end
 
----Draw rewards in level up menu
+---close ui on triggers
 ---@private
----@param x number
----@param y number
----@param data table
-function LU:DrawPointSpenderRewards(x, y, data)
-	for i = 1, data.amount do
-		local x_offset = x + (data.width + data.width9_offset) * (i - 1)
-		local reward_icon = ML.rewards_deck.reward_data[self.data.reward_list[i]].ui_icon
-		self:ForceFocusable()
-		self:Draw9Piece(x_offset, y, self.const.z, data.width - data.width9_offset, data.height, self.const.ui_9p_reward,
-			self.const.ui_9p_reward_hl)
-		local tp_offset = (data.width - data.width9_offset) / 2
-		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward,
-			ML.rewards_deck.reward_data[self.data.reward_list[i]])
-		if not self.data.reward_list then return end
-		self:Image(x_offset + (data.width - data.width9_offset - data.icon_size) / 2,
-			y + (data.height - data.icon_size) / 2, reward_icon)
+function LU:EmergencyExit()
+	if self.data.CloseOnDamage and ML.player.mLastDamageFrame ~= self.data.mLastDamageFrame then
+		self.data.mLastDamageFrame = ML.player.mLastDamageFrame
+		ML.gui = false
 	end
+	if self.data.CloseOnShot and ML.player.mButtonLastFrameFire ~= self.data.mButtonLastFrameFire then
+		self.data.mButtonLastFrameFire = ML.player.mButtonLastFrameFire
+		ML.gui = false
+	end
+end
+
+---beautiful rewards name
+---@private
+function LU:FormatString(text)
+	return text:lower():gsub("^%l", string.upper)
+end
+
+---invisible 9piece to block inputs on gui
+---@private
+function LU:BlockInputOnPrevious()
+	local prev = self:GetPrevious()
+	self:AddOptionForNext(6)
+	self:Draw9Piece(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, 100,
+		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
+	prev = self:GetPrevious()
+	if prev.hovered then
+		self:BlockScrollInput()
+	end
+end
+
+---reset animation by key
+---@private
+function LU:AnimReset(key)
+	self.anim[key].reset = true
+	self.anim[key].frame = GameGetFrameNum()
+end
+
+---check if animation should be resetted, it's done so it could wait 1 frame, otherwise animations don't reset
+---@private
+function LU:CheckForAnim()
+	for key, _ in pairs(self.anim) do
+		if self.anim[key].reset then
+			if GameGetFrameNum() - self.anim[key].frame > 1 then
+				self.anim[key].reset = false
+			end
+		end
+	end
+end
+
+---set common parameters for menu animation
+---@private
+function LU:MenuAnimS(key)
+	self:AnimateB()
+	self:AnimateAlpha(0.08, 0.1, self.anim[key].reset)
+	self:AnimateScale(0.08, self.anim[key].reset)
+end
+
+---function to close menu
+---@private
+function LU:CloseMenu()
+	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+	ML.gui = false
+end
+
+-- ############################################
+-- #########		LEVELING UP		###########
+-- ############################################
+
+---Skip button function
+---@private
+function LU:SkipReward()
+	ML.rewards_deck:skip_reward()
+	self:CloseRewardUI()
+end
+
+---Choose reward
+---@private
+function LU:PickReward(reward)
+	ML.rewards_deck:pick_reward(reward.id)
+	self:CloseRewardUI()
 end
 
 ---draw level up buttons
@@ -133,6 +129,27 @@ function LU:DrawButtonsCentered(button_y)
 	add_button(self:Locale("$ml_close"), self:Locale("$ml_close_tp"), self.CloseMenu)
 end
 
+---Draw rewards in level up menu
+---@private
+---@param x number
+---@param y number
+---@param data table
+function LU:DrawPointSpenderRewards(x, y, data)
+	for i = 1, data.amount do
+		local x_offset = x + (data.width + data.width9_offset) * (i - 1)
+		local reward_icon = ML.rewards_deck.reward_data[self.data.reward_list[i]].ui_icon
+		self:ForceFocusable()
+		self:Draw9Piece(x_offset, y, self.const.z, data.width - data.width9_offset, data.height, self.const.ui_9p_reward,
+			self.const.ui_9p_reward_hl)
+		local tp_offset = (data.width - data.width9_offset) / 2
+		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward,
+			ML.rewards_deck.reward_data[self.data.reward_list[i]])
+		if not self.data.reward_list then return end
+		self:Image(x_offset + (data.width - data.width9_offset - data.icon_size) / 2,
+			y + (data.height - data.icon_size) / 2, reward_icon)
+	end
+end
+
 ---draw level up menu window
 ---@private
 function LU:DrawPointSpender()
@@ -147,7 +164,7 @@ function LU:DrawPointSpender()
 	data.height = self.const.reward_box_size - data.width9_offset
 	data.total_width = data.amount * (data.width + data.width9_offset) - data.width9_offset * 2
 	local x, y = self:CalculateCenterInScreen(data.total_width, data.height)
-	
+
 	self:Draw9Piece(x, y, self.const.z + 1, data.total_width, data.height, self.const.ui_9piece)
 	self:BlockInputOnPrevious()
 	self:DrawPointSpenderRewards(x, y, data)
@@ -156,6 +173,31 @@ function LU:DrawPointSpender()
 	self:DrawButtonsCentered(button_y)
 	self:AnimateE()
 end
+
+---checks for pending level and close level up UI
+function LU:CloseRewardUI()
+	ML:level_up()
+	GameRemoveFlagRun(ML.const.flags.fx_played)
+	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+	if ML.pending_levels <= 0 then
+		GameRemoveFlagRun(ML.const.flags.leveling_up)
+		ML:toggle_ui()
+	end
+	self.data.reward_list = nil
+	self:AnimReset("rewards")
+end
+
+---toggle level up menu, adds flag to run so you can't close it
+---@private
+function LU:OpenLevelUpMenu()
+	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+	GameAddFlagRun(ML.const.flags.leveling_up)
+	self:AnimReset("rewards")
+end
+
+-- ############################################
+-- ########		CURRENT REWARDS		###########
+-- ############################################
 
 function LU:DrawCurrentRewardsItems()
 	local y = 2
@@ -200,6 +242,12 @@ function LU:DrawCurrentRewards()
 		self.DrawCurrentRewardsItems)
 end
 
+-- ############################################
+-- ############		MAIN MENU		###########
+-- ############################################
+
+---toggle between different windows when buttons pressed
+---@private
 function LU:ToggleMenuWindow(window)
 	self.scroll.y = 0
 	if self.DrawWindow == window then
@@ -209,6 +257,8 @@ function LU:ToggleMenuWindow(window)
 	end
 end
 
+---buttons functions
+---@private
 function LU:AddMenuSelector(x, y, text, tooltip, fn)
 	if self.DrawWindow == fn then
 		self:TextGray(x, y, text)
@@ -222,6 +272,8 @@ function LU:AddMenuSelector(x, y, text, tooltip, fn)
 	end
 end
 
+---draw buttons under the header
+---@private
 function LU:DrawMenuButtons()
 	self:MenuAnimS("header")
 	local y = self.data.y - 5.5
@@ -255,12 +307,7 @@ function LU:DrawMenuButtons()
 	self:AnimateE()
 end
 
-function LU:CloseMenu()
-	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
-	ML.gui = false
-end
-
----draw main window
+---draw header
 ---@private
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
@@ -278,6 +325,8 @@ function LU:DrawMainHeader()
 	self.data.y = self.data.y + section + self.const.sprite_offset
 end
 
+---draw connector between header and window
+---@private
 function LU:DrawMenuConnector()
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, false)
@@ -288,6 +337,8 @@ function LU:DrawMenuConnector()
 	self:AnimateE()
 end
 
+---main window
+---@private
 function LU:DrawMainMenu()
 	self.data.x, self.data.y = self:CalculateCenterInScreen(self.const.width, self.const.height)
 	self:DrawMainHeader()
@@ -300,17 +351,11 @@ function LU:DrawMainMenu()
 	end
 end
 
-function LU:EmergencyExit()
-	if self.data.CloseOnDamage and ML.player.mLastDamageFrame ~= self.data.mLastDamageFrame then
-		self.data.mLastDamageFrame = ML.player.mLastDamageFrame
-		ML.gui = false
-	end
-	if self.data.CloseOnShot and ML.player.mButtonLastFrameFire ~= self.data.mButtonLastFrameFire then
-		self.data.mButtonLastFrameFire = ML.player.mButtonLastFrameFire
-		ML.gui = false
-	end
-end
+-- ############################################
+-- #############		LOGIC		###########
+-- ############################################
 
+---gathers settings on pause update
 function LU:GetSetting()
 	self.data.CloseOnShot = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
 	self.data.CloseOnDamage = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
