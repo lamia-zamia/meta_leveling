@@ -95,6 +95,8 @@ function LU:SkipReward()
 	self:CloseRewardUI()
 end
 
+---Reroll button
+---@private
 function LU:Reroll()
 	self:AnimReset("rewards")
 	ML.rewards_deck:reroll()
@@ -109,6 +111,8 @@ function LU:PickReward(reward)
 end
 
 ---draw level up buttons
+---@private
+---@param button_y number
 function LU:DrawButtonsCentered(button_y)
 	local texts = {
 		self:Locale("$ml_skip"),
@@ -192,6 +196,7 @@ function LU:DrawPointSpender()
 end
 
 ---checks for pending level and close level up UI
+---@private
 function LU:CloseRewardUI()
 	ML:level_up()
 	GameRemoveFlagRun(ML.const.flags.fx_played)
@@ -216,6 +221,8 @@ end
 -- ########		CURRENT REWARDS		###########
 -- ############################################
 
+---function to draw rewards itself
+---@private
 function LU:DrawCurrentRewardsItems()
 	local y = 2
 	local x = 2
@@ -252,6 +259,8 @@ function LU:DrawCurrentRewardsItems()
 	end
 end
 
+---function to draw current rewards
+---@private
 function LU:DrawCurrentRewards()
 	local section = self.data.curent_rewards_height
 	self.data.y = self.data.y + self.const.sprite_offset
