@@ -1,7 +1,7 @@
 ---@class (exact) ml_entity_scanner
 ---@field private tags table
 local entity_scanner = {
-	tags = {"enemy", "nest", "helpless_animal"}
+	tags = {"enemy", "nest", "homing_target"}
 }
 
 ---@param entity entity_id
