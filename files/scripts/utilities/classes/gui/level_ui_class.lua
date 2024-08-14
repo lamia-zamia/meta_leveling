@@ -27,6 +27,7 @@ local data = {
 	y = 0,
 	CloseOnShot = false,
 	CloseOnDamage = false,
+	SkipMenuOnPending = true,
 }
 
 ---@class LU.anim
