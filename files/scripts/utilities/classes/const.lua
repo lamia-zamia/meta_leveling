@@ -11,6 +11,7 @@ local sound_banks = {
 	ui = "data/audio/Desktop/ui.bank",
 }
 
+---constant values
 ---@class ml_const
 ---@field sounds sound_list
 local const = {
@@ -53,10 +54,11 @@ local const = {
 		"player_unit", "player_projectile", "projectile_player"
 	},
 	globals_prefix = "META_LEVELING_",
-	globals = {
+	globals = { --globals name used by this mod
 		current_level = "CURRENT_LEVEL", --current level, default 1
 		draw_amount = "DRAW_AMOUNT", --how many extra options, default 0
 		draw_index = "DRAW_INDEX", --current index in reward deck
+		reroll_count = "REROLL_COUNT", --current available reroll count
 		current_exp = "CURRENT_EXP", --current experience
 		exp_multiplier = "EXP_MULTIPLIER", --current exp multiplier from rewards in percentage
 		exp_const = "EXP_CONST", --current amount of exp to constantly add, integer

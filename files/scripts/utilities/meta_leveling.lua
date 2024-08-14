@@ -56,7 +56,10 @@ end
 function ML:level_up()
 	self.level = self.level + 1
 	self.utils:set_global_number(ML.const.globals.current_level, self:get_level() + 1)
-	self.exp:update()
+	if self.level % 5 == 0 then
+		self.rewards_deck:add_reroll(1)
+	end
+	self:UpdateCommonParameters()
 end
 
 function ML:UpdateCommonParameters()
@@ -70,6 +73,7 @@ function ML:StartUp()
 	self.level = self:get_level()
 	self.rewards_deck:GatherData()
 	self.rewards:gather_action_info()
+	self.rewards_deck:get_reroll_count()
 end
 
 return ML

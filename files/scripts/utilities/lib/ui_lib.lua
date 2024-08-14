@@ -125,8 +125,8 @@ end
 ---@return string
 function ui_class:GameTextGet(string, var0, var1, var2)
 	var0 = self:Locale(var0)
-	if var1 then var1 = self:Locale(var1) end
-	if var2 then var2 = self:Locale(var2) end
+	if var1 then var1 = self:Locale(var1) else var1 = "" end
+	if var2 then var2 = self:Locale(var2) else var2 = "" end
 	if string:find("^%$") then
 		return GameTextGet(string, var0, var1, var2)
 	else
@@ -229,8 +229,8 @@ end
 ---get dimensions
 ---@param text string
 ---@return number, number
-function ui_class:GuiTextDimensionLocale(text)
-	return self:GetTextDimension(self:Locale(text), "")
+function ui_class:GuiTextDimensionLocale(text, font)
+	return self:GetTextDimension(self:Locale(text), font)
 end
 
 ---actual function to draw tooltip
@@ -300,7 +300,7 @@ function ui_class:AddTooltipClickable(x, y, draw, click_fn, variable)
 	if prev.hovered then
 		self:ShowTooltip(prev.x + x, prev.y + y, draw, variable)
 		if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
-			click_fn(self, variable)
+			if click_fn then click_fn(self, variable) end
 		end
 	end
 end
@@ -327,8 +327,12 @@ function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, varia
 	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, variable)
 end
 
-function ui_class:TextGray(x, y, text)
+function ui_class:ColorGray()
 	self:Color(0.6, 0.6, 0.6)
+end
+
+function ui_class:TextGray(x, y, text)
+	self:ColorGray()
 	self:Text(x, y, text)
 end
 
@@ -446,7 +450,7 @@ end
 ---@param font? string
 function ui_class:TextCentered(x, y, text, longest, font)
 	font = font or ""
-	local x_offset = (longest / 2) - (self:GetTextDimension(text, font) / 2)
+	local x_offset = (longest - self:GetTextDimension(text, font)) / 2
 	GuiText(self.gui, x + x_offset, y, text, 1, font)
 end
 

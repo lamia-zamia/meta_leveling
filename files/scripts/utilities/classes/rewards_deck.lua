@@ -33,6 +33,7 @@ local reward_data = {}
 ---@field private min_probability number min probability for single reward
 ---@field private list table table of rewards id
 ---@field private distance number mimimum distance between rewards
+---@field reroll_count number
 local rewards_deck = {
 	reward_data = reward_data,
 	groups_data = {},
@@ -41,6 +42,7 @@ local rewards_deck = {
 	min_probability = 0.01,
 	list = {},
 	distance = 4,
+	reroll_count = 1,
 }
 
 ---default function if function was not found
@@ -290,6 +292,21 @@ function rewards_deck:pick_reward(draw_id)
 	self.reward_data[draw_id].fn()
 
 	self:add_specific_reward_pickup_amount(draw_id)
+end
+
+function rewards_deck:get_reroll_count()
+	self.reroll_count = ML.utils:get_global_number(ML.const.globals.reroll_count, 1)
+end
+
+function rewards_deck:add_reroll(count)
+	self.reroll_count = self.reroll_count + count
+	ML.utils:set_global_number(ML.const.globals.reroll_count, self.reroll_count)
+end
+
+function rewards_deck:reroll()
+	self.reroll_count = self.reroll_count - 1
+	ML.utils:set_global_number(ML.const.globals.reroll_count, self.reroll_count)
+	self:set_draw_index()
 end
 
 return rewards_deck
