@@ -36,7 +36,7 @@ end
 ---toggle level up menu, adds flag to run so you can't close it
 ---@private
 function LU:OpenLevelUpMenu()
-	GamePlaySound("ui", "ui/button_click", 0, 0)
+	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
 	GameAddFlagRun(ML.const.flags.leveling_up)
 	self:AnimReset("rewards")
 end
@@ -45,7 +45,7 @@ end
 function LU:CloseRewardUI()
 	ML:level_up()
 	GameRemoveFlagRun(ML.const.flags.fx_played)
-	GamePlaySound("ui", "ui/button_click", 0, 0)
+	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
 	if ML.exp.percentage < 1 then
 		GameRemoveFlagRun(ML.const.flags.leveling_up)
 		ML:toggle_ui()
@@ -256,7 +256,7 @@ function LU:DrawMenuButtons()
 end
 
 function LU:CloseMenu()
-	GamePlaySound(ML.const.sound_banks.ui, "ui/button_click", 0, 0)
+	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
 	ML.gui = false
 end
 

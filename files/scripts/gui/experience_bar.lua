@@ -7,7 +7,8 @@ function EB:FloorPerc(value)
 end
 
 function EB:TextColorAnim(fn, ...)
-	self:Color(self.bar.red, self.bar.green, self.bar.blue, math.min(self.const.anim.max_alpha, self.data.anim_text.alpha))
+	self:Color(self.bar.red, self.bar.green, self.bar.blue,
+		math.min(self.const.anim.max_alpha, self.data.anim_text.alpha))
 	self:SetZ(-1)
 	fn(self, ...)
 	fn(self, ...)
@@ -144,7 +145,7 @@ function EB:AddToolTip(x, y, width, height)
 			ML:toggle_ui()
 		end
 		if InputIsMouseButtonJustDown(2) then
-			GamePlaySound("ui", "ui/button_click", 0, 0)
+			GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
 			ML:toggle_ui()
 			ML.gui_em_exit = false
 		end
@@ -268,6 +269,7 @@ function EB:GetSettings()
 		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
 		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause")
 	self.data.reminder_in_inventory = ML.utils:get_mod_setting_boolean("hud_reminder_in_inventory")
+	self.data.hotkey = ML.utils:get_mod_setting_number("open_ui_hotkey")
 	if ModSettingGet("meta_leveling.exp_bar_position") == "on_top" then
 		self.DrawBarFunction = self.DrawExpBarOnTop
 		self.bar.x = self.dim.x - 82
@@ -304,6 +306,10 @@ function EB:DrawExpBar()
 	if self.data.perc.show then self:DrawPercentage(self.data.perc.x, self.data.perc.y) end
 	if self.data.reminder_in_inventory and GameIsInventoryOpen() then self:InventoryReminder() end
 	self:AnimateTextFading()
+	if InputIsKeyJustDown(self.data.hotkey) then
+		ML:toggle_ui()
+		GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+	end
 end
 
 function EB:loop()
