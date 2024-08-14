@@ -51,8 +51,24 @@ local const = {
 	},
 	player_tags = {
 		"player_unit", "player_projectile", "projectile_player"
+	},
+	globals_prefix = "META_LEVELING_",
+	globals = {
+		current_level = "CURRENT_LEVEL", --current level, default 1
+		draw_amount = "DRAW_AMOUNT", --how many extra options, default 0
+		draw_index = "DRAW_INDEX", --current index in reward deck
+		current_exp = "CURRENT_EXP", --current experience
+		exp_multiplier = "EXP_MULTIPLIER", --current exp multiplier from rewards in percentage
+		exp_const = "EXP_CONST", --current amount of exp to constantly add, integer
+		exp_betray = "EXP_MULTIPLIER_BETRAY", --current exp multiplier from betray in percentage, default 0
+		exp_trick = "EXP_MULTIPLIER_TRICK", --current exp multiplier for trick kills, default 0.5
+		permanent_concentrated_mana = "PERMANENT_CONCENTRATED_MANA", --amount of permanent_concentrated_mana in percentage
+		drill_destructibility = "DRILL_DESTRUCTIBILITY_INCREASE", --stronger drills
+		drill_damage_increase = "DRILL_DAMAGE_INCREASE", --more drill damage
+		crit_chance_increase = "CRIT_CHANCE_INCREASE", --crit chance, percentage
+		elemental_damage_increase = "ELEMENTAL_DAMAGE_INCREASE", --elemental damage increase, const + percentage
+		projectile_damage_increase = "PROJECTILE_DAMAGE_INCREASE", --more projectile damage, percentage
 	}
 }
-
 
 return const

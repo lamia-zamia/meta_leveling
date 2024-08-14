@@ -42,7 +42,7 @@ end
 ---returns current level
 ---@return number
 function ML:get_level()
-	return self.utils:get_global_number("CURRENT_LEVEL", 1)
+	return self.utils:get_global_number(ML.const.globals.current_level, 1)
 end
 
 function ML:get_pending_levels()
@@ -55,7 +55,7 @@ end
 
 function ML:level_up()
 	self.level = self.level + 1
-	self.utils:set_global_number("CURRENT_LEVEL", self:get_level() + 1)
+	self.utils:set_global_number(ML.const.globals.current_level, self:get_level() + 1)
 	self.exp:update()
 end
 

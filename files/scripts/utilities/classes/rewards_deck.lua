@@ -205,14 +205,14 @@ end
 ---returns how many to draw
 ---@return number
 function rewards_deck:get_draw_amount()
-	return ML.utils:get_global_number("DRAW_AMOUNT", 0) + 3
+	return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 3
 end
 
 ---return current draw index
 ---@private
 ---@return number
 function rewards_deck:get_draw_index()
-	return ML.utils:get_global_number("DRAW_INDEX", 1)
+	return ML.utils:get_global_number(ML.const.globals.draw_index, 1)
 end
 
 ---return next valid draw index
@@ -238,7 +238,7 @@ function rewards_deck:set_draw_index()
 	for _ = 1, self:get_draw_amount() + 1 do
 		index = self:get_next_draw_index(index + 1)
 	end
-	ML.utils:set_global_number("DRAW_INDEX", index)
+	ML.utils:set_global_number(ML.const.globals.draw_index, index)
 end
 
 ---Return next reward
@@ -259,7 +259,7 @@ end
 ---@param reward_id string
 ---@return number pickup_count
 function rewards_deck:get_specific_reward_pickup_amount(reward_id)
-	return ML.utils:get_global_number(reward_id .. "_PICKUP_COUNT", 0)
+	return ML.utils:get_global_number(ML.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", 0)
 end
 
 ---add reward pick up count
@@ -268,7 +268,7 @@ end
 function rewards_deck:add_specific_reward_pickup_amount(reward_id)
 	self.reward_data[reward_id].pick_count = self.reward_data[reward_id].pick_count + 1
 	self.groups_data[self.reward_data[reward_id].group_id].picked = true
-	ML.utils:set_global_number(reward_id .. "_PICKUP_COUNT", self.reward_data[reward_id].pick_count)
+	ML.utils:set_global_number(ML.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", self.reward_data[reward_id].pick_count)
 end
 
 function rewards_deck:skip_reward()

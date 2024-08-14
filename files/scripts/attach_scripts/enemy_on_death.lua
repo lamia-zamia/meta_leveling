@@ -41,7 +41,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 		local responsible_name = EntityGetName(entity_thats_responsible)
 		-- ######################### killed by someone ##########################
 		if responsible_name then
-			local multiplier = ML.utils:get_global_number("EXP_MULTIPLIER_BETRAY", 0)
+			local multiplier = ML.utils:get_global_number(ML.const.globals.exp_betray, 0)
 			if multiplier == 0 then return end
 			exp = exp * multiplier
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
@@ -49,7 +49,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 			ML.exp:add(exp)
 		else -- ######################### trick kills ##########################
 			local cause = T(damage_message)
-			local multiplier = 0.25 + ML.utils:get_global_number("EXP_MULTIPLIER_TRICK", 0)
+			local multiplier = 0.25 + ML.utils:get_global_number(ML.const.globals.exp_trick, 0)
 			if damage_message == "$damage_water" then multiplier = multiplier + 0.5 end
 			if damage_type_bit_field == 32 and damage_done_by_water(damage_message) then multiplier = multiplier + 0.5 end
 

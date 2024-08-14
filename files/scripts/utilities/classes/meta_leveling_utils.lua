@@ -6,14 +6,14 @@ local utils = {}
 ---@param key string
 ---@param default number
 function utils:get_global_number(key, default)
-	return tonumber(GlobalsGetValue("META_LEVELING_" .. key:upper(), tostring(default))) or default
+	return tonumber(GlobalsGetValue(ML.const.globals_prefix .. key:upper(), tostring(default))) or default
 end
 
 ---set global valuess of META_LEVELING_
 ---@param key string
 ---@param value number
 function utils:set_global_number(key, value)
-	GlobalsSetValue("META_LEVELING_" .. key:upper(), tostring(value))
+	GlobalsSetValue(ML.const.globals_prefix .. key:upper(), tostring(value))
 end
 
 ---add value to global

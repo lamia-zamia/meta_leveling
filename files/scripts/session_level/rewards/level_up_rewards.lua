@@ -11,8 +11,8 @@ local reward_list = {
 		max = 4,
 		min_level = 5,
 		fn = function()
-			ML.utils:add_to_global_number("DRAW_AMOUNT", 1)
-			for _=1, ML.utils:get_global_number("DRAW_AMOUNT", 0) do
+			ML.utils:add_to_global_number(ML.const.globals.draw_amount, 1)
+			for _=1, ML.utils:get_global_number(ML.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
 		end
@@ -28,8 +28,8 @@ local reward_list = {
 		max = 2,
 		limit_before = "extra_reward_choice1",
 		fn = function()
-			ML.utils:add_to_global_number("DRAW_AMOUNT", 2)
-			for _=1, ML.utils:get_global_number("DRAW_AMOUNT", 0) do
+			ML.utils:add_to_global_number(ML.const.globals.draw_amount, 2)
+			for _=1, ML.utils:get_global_number(ML.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
 		end
@@ -185,7 +185,7 @@ local reward_list = {
 		probability = 0.5,
 		max = 5,
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER", 0.1)
+			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.1)
 		end
 	},
 	{
@@ -199,7 +199,7 @@ local reward_list = {
 		max = 4,
 		limit_before = "more_experience1",
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER", 0.25)
+			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.25)
 		end
 	},
 	{
@@ -212,7 +212,7 @@ local reward_list = {
 		probability = 0.1,
 		limit_before = "more_experience2",
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER", 0.5)
+			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.5)
 		end
 	},
 	{
@@ -225,7 +225,7 @@ local reward_list = {
 		max = 5,
 		min_level = 5,
 		fn = function()
-			ML.utils:add_to_global_number("EXP_CONST", 1)
+			ML.utils:add_to_global_number(ML.const.globals.exp_const, 1)
 		end
 	},
 	{
@@ -238,7 +238,7 @@ local reward_list = {
 		probability = 0.3,
 		max = 3,
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 0.25)
+			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 0.25)
 		end
 	},
 	{
@@ -252,7 +252,7 @@ local reward_list = {
 		max = 2,
 		limit_before = "more_experience_trick1",
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 0.5)
+			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 0.5)
 		end
 	},
 	{
@@ -265,7 +265,7 @@ local reward_list = {
 		probability = 0.1,
 		limit_before = "more_experience_trick1",
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER_TRICK", 1.0)
+			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 1.0)
 		end
 	},
 	{
@@ -277,7 +277,7 @@ local reward_list = {
 		probability = 0.3,
 		max = 1,
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER_BETRAY", 0.25)
+			ML.utils:add_to_global_number(ML.const.globals.exp_betray, 0.25)
 		end
 	},
 	{
@@ -289,7 +289,7 @@ local reward_list = {
 		probability = 0.1,
 		limit_before = "more_experience_betray1",
 		fn = function()
-			ML.utils:add_to_global_number("EXP_MULTIPLIER_BETRAY", 0.25)
+			ML.utils:add_to_global_number(ML.const.globals.exp_betray, 0.25)
 		end
 	},
 	{
@@ -334,7 +334,7 @@ local reward_list = {
 		probability = 0.2,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_source_file", ML.const.files.mana_regen)
-			ML.utils:add_to_global_number("permanent_concentrated_mana", 0.25)
+			ML.utils:add_to_global_number(ML.const.globals.permanent_concentrated_mana, 0.25)
 		end
 	},
 	{
@@ -345,7 +345,7 @@ local reward_list = {
 		probability = 0.2,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number("projectile_damage_increase", 0.1, 1)
+			ML.utils:add_to_global_number(ML.const.globals.projectile_damage_increase, 0.1, 1)
 		end
 	},
 	{
@@ -356,7 +356,7 @@ local reward_list = {
 		probability = 0.2,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number("elemental_damage_increase", 0.3, 1)
+			ML.utils:add_to_global_number(ML.const.globals.elemental_damage_increase, 0.3, 1)
 		end
 	},
 	{
@@ -367,7 +367,7 @@ local reward_list = {
 		probability = 0.1,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number("drill_damage_increase", 0.4)
+			ML.utils:add_to_global_number(ML.const.globals.drill_damage_increase, 0.4)
 		end
 	},
 	{
@@ -378,7 +378,7 @@ local reward_list = {
 		probability = 0.1,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number("crit_chance_increase", 15)
+			ML.utils:add_to_global_number(ML.const.globals.crit_chance_increase, 15)
 		end
 	},
 	{
@@ -390,7 +390,7 @@ local reward_list = {
 		max = 3,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number("drill_destructibility_increase", 1)
+			ML.utils:add_to_global_number(ML.const.globals.drill_destructibility, 1)
 		end
 	},
 	{

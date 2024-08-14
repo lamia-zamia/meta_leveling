@@ -17,21 +17,21 @@ end
 ---get current exp
 ---@return number
 function exp:get()
-	local experience = ML.utils:get_global_number("CURRENT_EXP", 0)
+	local experience = ML.utils:get_global_number(ML.const.globals.current_exp, 0)
 	return self:floor_number(experience)
 end
 
 function exp:apply_multiplier(value)
 	local multiplier = ML.utils:get_mod_setting_number("session_exp_multiplier", 1) +
-		ML.utils:get_global_number("EXP_MULTIPLIER", 0)
-	value = (value * multiplier) + ML.utils:get_global_number("EXP_CONST", 0)
+		ML.utils:get_global_number(ML.const.globals.exp_multiplier, 0)
+	value = (value * multiplier) + ML.utils:get_global_number(ML.const.globals.exp_const, 0)
 	return value
 end
 
 ---add exp
 ---@param value number
 function exp:add(value)
-	ML.utils:add_to_global_number("CURRENT_EXP", value)
+	ML.utils:add_to_global_number(ML.const.globals.current_exp, value)
 end
 
 ---returns how many exp needs for next level
