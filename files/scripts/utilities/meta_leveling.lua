@@ -11,6 +11,7 @@
 ---@field font ml_font
 ---@field EZWand any
 ---@field colors colors
+---@field entity_scanner ml_entity_scanner
 ---@field nxml nxml
 ---@field level number
 ---@field pending_levels number
@@ -28,6 +29,7 @@ local ML = {
 	EZWand = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/EZWand.lua"),
 	nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua"),
 	colors = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/colors.lua"),
+	entity_scanner = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/entity_scanner.lua"),
 	level = 1,
 	pending_levels = 0,
 }
@@ -58,6 +60,7 @@ function ML:level_up()
 end
 
 function ML:UpdateCommonParameters()
+	self.entity_scanner:check_entities()
 	self.player:update()
 	self.exp:update()
 	self.pending_levels = self:get_pending_levels()
