@@ -1,16 +1,10 @@
 ---@class ml_font
-local font = {
-	source = "data/fonts/font_pixel.xml",
-	path = "mods/meta_leveling/vfs/font/",
-	font_size = 3,
-	LifetimeComponent = {
-		lifetime = 60,
-		fade_sprites = true
-	},
-	LuaComponent = {
-		script_source_file = "mods/meta_leveling/files/scripts/attach_scripts/popup_exp.lua",
-	},
-}
+local font = {}
+
+---@private
+function font:add_vsc(entity, name, value)
+	EntityAddComponent2(entity, "VariableStorageComponent", { name = name, value_string = value })
+end
 
 ---returns string of rgb or exp color if none
 ---@param r? number|string
@@ -24,14 +18,34 @@ function font:get_color(r, g, b)
 	return r, g, b
 end
 
----generate virtual font
+---create font generator entity
 ---@private
 ---@param r string
 ---@param g string
 ---@param b string
----@param path string
-function font:generate(r, g, b, path)
-	local xml = ML.nxml.parse(ModTextFileGetContent(self.source))
+function font:create_generator(x, y, text, scale, r, g, b)
+	entity = EntityCreateNew("ml_font_generate")
+	EntityAddComponent2(entity, "LuaComponent", {
+		script_source_file = "mods/meta_leveling/files/scripts/attach_scripts/generate_font_hax.lua",
+		execute_times = 1
+	})
+	self:add_vsc(entity, "x", x)
+	self:add_vsc(entity, "y", y)
+	self:add_vsc(entity, "text", text)
+	self:add_vsc(entity, "scale", scale)
+	self:add_vsc(entity, "red", r)
+	self:add_vsc(entity, "green", g)
+	self:add_vsc(entity, "blue", b)
+end
+
+---create font generator entity
+---@private
+---@param r string
+---@param g string
+---@param b string
+function font:generate(r, g, b)
+	local path = "mods/meta_leveling/vfs/font/" .. r .. g .. b .. ".xml"
+	local xml = ML.nxml.parse(ModTextFileGetContent("data/fonts/font_pixel.xml"))
 	xml.attr.color_r = r
 	xml.attr.color_g = g
 	xml.attr.color_b = b
@@ -40,18 +54,20 @@ function font:generate(r, g, b, path)
 end
 
 ---returns path to virtual colored font and generate if it doesn't exist
+---@private
 ---@param r string
 ---@param g string
 ---@param b string
----@return string path
+---@return string? path
 function font:get_path(r, g, b)
-	local path = self.path .. r .. g .. b .. ".xml"
+	local path = "mods/meta_leveling/vfs/font/" .. r .. g .. b .. ".xml"
 	if ModDoesFileExist(path) then
 		return path
-	else
-		font:generate(r, g, b, path)
+	elseif ModTextFileSetContent then
+		self:generate(r, g, b)
 		return path
 	end
+	return nil
 end
 
 ---popup text on entity
@@ -64,19 +80,30 @@ end
 function font:popup(source_entity, text, scale, r, g, b)
 	scale = scale or 1
 	local x, y = EntityGetFirstHitboxCenter(source_entity)
-	local offset = #text * self.font_size * scale
 	if not x then return end
-	entity = EntityCreateNew("ml_exp_popup")
-	EntityAddComponent2(entity, "SpriteComponent", {
-		image_file = self:get_path(r, g, b),
-		is_text_sprite = true,
-		text = text,
-		z_index = -2,
-		emissive = true,
-	})
-	EntityAddComponent2(entity, "LifetimeComponent", self.LifetimeComponent)
-	EntityAddComponent2(entity, "LuaComponent", self.LuaComponent)
-	EntitySetTransform(entity, x - offset, y - 7, 0, scale, scale)
+	x = x - (#text * 3 * scale)
+	y = y - 7
+	local path = self:get_path(r, g, b)
+	if path then
+		entity = EntityCreateNew("ml_popup")
+		EntityAddComponent2(entity, "SpriteComponent", {
+			image_file = path,
+			is_text_sprite = true,
+			text = text,
+			z_index = -2,
+			emissive = true,
+		})
+		EntityAddComponent2(entity, "LifetimeComponent", {
+			lifetime = 60,
+			fade_sprites = true
+		})
+		EntityAddComponent2(entity, "LuaComponent", {
+			script_source_file = "mods/meta_leveling/files/scripts/attach_scripts/popup_exp.lua",
+		})
+		EntitySetTransform(entity, x, y, 0, scale, scale)
+	else
+		self:create_generator(x, y, text, scale, r, g, b) --because ModTextFileSetContent available only from lua component
+	end
 end
 
 ---popup exp on entity
