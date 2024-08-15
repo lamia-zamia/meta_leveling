@@ -135,7 +135,7 @@ function LU:DrawButtonsCentered(button_y)
 		end
 		local prev = self:GetPrevious()
 		self:TextCentered(button_x, button_y, self:Locale(name), longest)
-		local tp_offset = math.abs(self:GuiTextDimensionLocale(tp) - longest - 1.5) / -2
+		local tp_offset = math.abs(self:GetTextDimension(tp) - longest - 1.5) / -2
 		if prev.hovered then
 			self:ShowTooltip(prev.x + tp_offset, prev.y + prev.h * 2.2, tp)
 			if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
@@ -251,7 +251,7 @@ function LU:DrawCurrentRewardsItems()
 				end
 			end
 			local prev = self:GetPrevious()
-			local tp_offset = (self:GuiTextDimensionLocale(tooltip) - prev.w - 1.5) / -2
+			local tp_offset = (self:GetTextDimension(tooltip) - prev.w - 1.5) / -2
 			self:AddTooltip(tp_offset, distance_between, tooltip)
 			x = x + distance_between
 			count = count + 1
@@ -287,7 +287,8 @@ end
 ---@private
 function LU:AddMenuSelector(x, y, text, tooltip, fn)
 	if self.DrawWindow == fn then
-		self:TextGray(x, y, text)
+		self:ColorGray()
+		self:Text(x, y, text)
 		self:ForceFocusable()
 		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button_hl, self.const.ui_9p_button_hl)
 		self:MakePreviousClickable(self.ToggleMenuWindow, fn)
@@ -315,15 +316,18 @@ function LU:DrawMenuButtons()
 			self.const.ui_9p_button_important,
 			self.const.ui_9p_button_hl)
 	else
-		self:TextGray(x, y, self:Locale("$ml_level_up"))
+		self:ColorGray()
+		self:Text(x, y, self:Locale("$ml_level_up"))
 		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 	end
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), "whatever", self.DrawCurrentRewards)
 
-	self:TextGray(x_off(), y, self:Locale("Stats (WIP)"))
+	self:ColorGray()
+	self:Text(x_off(), y, self:Locale("Stats (WIP)"))
 	self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 
-	self:TextGray(x_off(), y, self:Locale("Meta (WIP)"))
+	self:ColorGray()
+	self:Text(x_off(), y, self:Locale("Meta (WIP)"))
 	self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 
 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("$ml_close")), y,

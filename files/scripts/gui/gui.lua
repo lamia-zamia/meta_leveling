@@ -1,4 +1,4 @@
----@type UI_class
+---@class UI_class
 local UI = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_lib.lua")
 ---@type experience_bar
 local EB = dofile_once("mods/meta_leveling/files/scripts/gui/experience_bar.lua")
@@ -15,18 +15,19 @@ local gui = {
 	LU = LU
 }
 
+---update settings
 function gui:UpdateSettings()
-	self.UI:UpdateDimensions()
+	UI:UpdateDimensions()
 	self.EB:GetSettings()
 	self.LU:GetSetting()
 end
 
+---draw gui
 function gui:Draw()
 	if ML then
 		self.EB:loop()
 		self.LU:loop()
-		self.UI.tp:StartFrame()
-		-- self.UI:DebugDrawGrid()
+		UI.tp:StartFrame()
 	end
 end
 

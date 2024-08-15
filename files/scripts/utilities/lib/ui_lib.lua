@@ -7,7 +7,7 @@ local const = {
 	gui_id = 100,
 }
 
----@class UI_dimensions
+---@class (exact) UI_dimensions
 ---@field x number
 ---@field y number
 local dimensions = {
@@ -19,11 +19,11 @@ local dimensions = {
 ---@field protected gui gui
 ---@field private gui_id number
 ---@field private gui_longest_string_cache table
----@field tp tooltip
+---@field protected tp tooltip
 ---@field private __index UI_class
----@field c UI_const
----@field dim UI_dimensions
----@field scroll table
+---@field protected c UI_const constants
+---@field protected dim UI_dimensions
+---@field protected scroll table
 local ui_class = {
 	gui = GuiCreate(),
 	gui_id = const.gui_id,
@@ -37,6 +37,7 @@ local ui_class = {
 
 ---create new gui
 ---@return UI_class
+---@protected
 function ui_class:new()
 	local o = {}
 	setmetatable(o, self)
@@ -55,6 +56,7 @@ tooltip_class.tooltip_z = -100
 ui_class.tp = tooltip_class
 
 ---update dimensions
+---@protected
 function ui_class:UpdateDimensions()
 	GuiStartFrame(self.gui)
 	self.dim.x, self.dim.y = GuiGetScreenDimensions(self.gui)
@@ -71,6 +73,7 @@ end
 ---@param g integer
 ---@param b integer
 ---@param a? integer
+---@protected
 function ui_class:Color(r, g, b, a)
 	a = a or 1
 	GuiColorSetForNextWidget(self.gui, r, g, b, a)
@@ -80,20 +83,24 @@ end
 ---@param speed integer
 ---@param step integer
 ---@param reset boolean
+---@protected
 function ui_class:AnimateAlpha(speed, step, reset)
 	GuiAnimateAlphaFadeIn(self.gui, self:id(), speed, step, reset)
 end
 
+---@protected
 function ui_class:AnimateScale(acceleration, reset)
 	GuiAnimateScaleIn(self.gui, self:id(), acceleration, reset)
 end
 
 ---End animation
+---@protected
 function ui_class:AnimateE()
 	GuiAnimateEnd(self.gui)
 end
 
 ---Start animation
+---@protected
 function ui_class:AnimateB()
 	GuiAnimateBegin(self.gui)
 end
@@ -106,6 +113,7 @@ function ui_class:id()
 	return self.gui_id
 end
 
+---@protected
 function ui_class:ForceFocusable()
 	self:AddOptionForNext(7)
 end
@@ -113,6 +121,7 @@ end
 ---Returns translated text from $string
 ---@param string string should be in $string format
 ---@return string
+---@protected
 function ui_class:Locale(string)
 	return GameTextGetTranslatedOrNot(string)
 end
@@ -123,6 +132,7 @@ end
 ---@param var1? string
 ---@param var2? string
 ---@return string
+---@protected
 function ui_class:GameTextGet(string, var0, var1, var2)
 	var0 = self:Locale(var0)
 	if var1 then var1 = self:Locale(var1) else var1 = "" end
@@ -221,16 +231,10 @@ end
 ---@param text string
 ---@param font? string
 ---@return number, number
+---@protected
 function ui_class:GetTextDimension(text, font)
 	font = font or ""
 	return GuiGetTextDimensions(self.gui, text, 1, 2, font)
-end
-
----get dimensions
----@param text string
----@return number, number
-function ui_class:GuiTextDimensionLocale(text, font)
-	return self:GetTextDimension(self:Locale(text), font)
 end
 
 ---actual function to draw tooltip
@@ -271,6 +275,7 @@ end
 ---@param y number position of y.
 ---@param draw function|string function to render in tooltip.
 ---@param variable? any optional parameter to pass to ui function.
+---@protected
 function ui_class:ShowTooltip(x, y, draw, variable)
 	local fn_type = type(draw)
 	if fn_type == "string" then
@@ -285,6 +290,7 @@ end
 ---@param y number offset y.
 ---@param draw function|string function to render in tooltip.
 ---@param variable? any optional parameter to pass to ui function.
+---@protected
 function ui_class:AddTooltip(x, y, draw, variable)
 	local prev = self:GetPrevious()
 	if prev.hovered then self:ShowTooltip(prev.x + x, prev.y + y, draw, variable) end
@@ -295,6 +301,7 @@ end
 ---@param y number offset y.
 ---@param draw function|string function to render in tooltip.
 ---@param variable? any optional parameter to pass to ui function.
+---@protected
 function ui_class:AddTooltipClickable(x, y, draw, click_fn, variable)
 	local prev = self:GetPrevious()
 	if prev.hovered then
@@ -305,6 +312,7 @@ function ui_class:AddTooltipClickable(x, y, draw, click_fn, variable)
 	end
 end
 
+---@protected
 function ui_class:MakePreviousClickable(click_fn, variable)
 	local prev = self:GetPrevious()
 	if prev.hovered then
@@ -314,32 +322,31 @@ function ui_class:MakePreviousClickable(click_fn, variable)
 	end
 end
 
+---@protected
 function ui_class:Add9PieceBackGroundText(z, sprite, highlight)
 	local prev = self:GetPrevious()
 	self:Draw9Piece(prev.x - 1, prev.y, z, prev.w + 1.5, prev.h, sprite, highlight)
 end
 
+---@protected
 function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, variable)
 	local prev = self:GetPrevious()
 	self:ForceFocusable()
 	self:Add9PieceBackGroundText(z, sprite, highlight)
-	local tp_offset = (self:GuiTextDimensionLocale(text) - prev.w - 1.5) / -2
+	local tp_offset = (self:GetTextDimension(text) - prev.w - 1.5) / -2
 	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, variable)
 end
 
+---@protected
 function ui_class:ColorGray()
 	self:Color(0.6, 0.6, 0.6)
-end
-
-function ui_class:TextGray(x, y, text)
-	self:ColorGray()
-	self:Text(x, y, text)
 end
 
 ---@param text string
 ---@param font? string
 ---@param x number
 ---@param y number
+---@protected
 function ui_class:Text(x, y, text, font)
 	font = font or ""
 	GuiText(self.gui, x, y, text, 1, font)
@@ -352,12 +359,16 @@ function ui_class:TooltipText(text)
 	self:Text(0, 0, text)
 end
 
+---i dont remember
+---@protected
 function ui_class:get_mouse_pos()
 	local mouse_screen_x, mouse_screen_y = InputGetMousePosOnScreen()
 	local mx_p, my_p = mouse_screen_x / 1280, mouse_screen_y / 720
 	return mx_p * self.dim.x, my_p * self.dim.y
 end
 
+---i dont remember
+---@protected
 function ui_class:BlockScrollInput()
 	GuiIdPushString(self.gui, "STOP_FLICKERING_SCROLLBAR")
 	local m_x, m_y = self:get_mouse_pos()
@@ -370,6 +381,8 @@ function ui_class:BlockScrollInput()
 	GuiIdPop(self.gui)
 end
 
+---i dont remember
+---@protected
 function ui_class:MakePreviousScrollable()
 	local prev = self:GetPrevious()
 	if prev.hovered then
@@ -383,6 +396,8 @@ function ui_class:MakePreviousScrollable()
 	end
 end
 
+---i dont remember
+---@protected
 function ui_class:FakeScrollBox(x, y, width, height, z, sprite, draw_fn)
 	local id = self:id()
 	local sprite_dim = GuiGetImageDimensions(self.gui, sprite, 1)
@@ -404,11 +419,12 @@ function ui_class:FakeScrollBox(x, y, width, height, z, sprite, draw_fn)
 	GuiEndScrollContainer(self.gui)
 end
 
----Get the longest string length from array
+---Function to calculate the longest string in array
 ---@private
 ---@param array table strings
 ---@param key string cache key
 ---@return number
+---@protected
 function ui_class:CalculateLongestText(array, key)
 	local longest = 0
 	for _, text in ipairs(array) do
@@ -419,10 +435,11 @@ function ui_class:CalculateLongestText(array, key)
 	return self.gui_longest_string_cache[key]
 end
 
----Function to calculate the longest string in array
+---Get the longest string length from array
 ---@param array table table to look through
 ---@param key string cache key, should be static enough
 ---@return number
+---@protected
 function ui_class:GetLongestText(array, key)
 	key = self:Locale("$current_language") .. key
 	return self.gui_longest_string_cache[key] or self:CalculateLongestText(array, key)
@@ -430,12 +447,14 @@ end
 
 ---Set Z for next widget
 ---@param number number
+---@protected
 function ui_class:SetZ(number)
 	GuiZSetForNextWidget(self.gui, number)
 end
 
 ---get center of screen
 ---@return number x, number y
+---@protected
 function ui_class:CalculateCenterInScreen(width, height)
 	local x = (self.dim.x - width) / 2
 	local y = (self.dim.y - height) / 2
@@ -448,6 +467,7 @@ end
 ---@param text string
 ---@param longest number longest string length
 ---@param font? string
+---@protected
 function ui_class:TextCentered(x, y, text, longest, font)
 	font = font or ""
 	local x_offset = (longest - self:GetTextDimension(text, font)) / 2
@@ -456,6 +476,7 @@ end
 
 ---for debugging
 ---@debug
+---@protected
 function ui_class:DebugDrawGrid()
 	for i = 0, 640, 10 do
 		if i % 16 == 0 then GuiColorSetForNextWidget(self.gui, 1, 0, 0, 1) end
@@ -469,12 +490,14 @@ end
 
 ---set option for all next widgets
 ---@param option number
+---@protected
 function ui_class:AddOption(option)
 	GuiOptionsAdd(self.gui, option)
 end
 
 ---set option for next widget
 ---@param option number
+---@protected
 function ui_class:AddOptionForNext(option)
 	GuiOptionsAddForNextWidget(self.gui, option)
 end
@@ -486,6 +509,7 @@ end
 ---@param alpha? number
 ---@param scale_x? number
 ---@param scale_y? number
+---@protected
 function ui_class:Image(x, y, sprite, alpha, scale_x, scale_y)
 	alpha = alpha or 1
 	scale_x = scale_x or 1
@@ -501,6 +525,7 @@ end
 ---@param height number
 ---@param sprite? string
 ---@param highlight? string
+---@protected
 function ui_class:Draw9Piece(x, y, z, width, height, sprite, highlight)
 	sprite = sprite or self.c.default_9piece
 	highlight = highlight or sprite
@@ -512,6 +537,7 @@ end
 ---@param z number
 ---@param sprite? string
 ---@param highlight? string
+---@protected
 function ui_class:Add9PieceBackGround(z, sprite, highlight)
 	sprite = sprite or self.c.default_9piece
 	highlight = highlight or sprite
@@ -530,6 +556,7 @@ end
 
 ---returns previous widget info
 ---@return PreviousInfo return hover, x, y, w, h
+---@protected
 ---@nodiscard
 function ui_class:GetPrevious()
 	local lc, rc, prev_hovered, x, y, width, height = GuiGetPreviousWidgetInfo(self.gui)
@@ -548,6 +575,7 @@ end
 ---start frame
 ---@param fn function
 ---@param bool boolean
+---@protected
 function ui_class:StartFrame(fn, bool)
 	self:id_reset()
 	local player = EntityGetWithTag("player_unit")[1]
