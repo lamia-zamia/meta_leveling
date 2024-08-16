@@ -342,7 +342,7 @@ end
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local section = 10
-	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp.current .. " / " .. ML.exp.next
+	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
 	local level = self:Locale("$ml_level") .. ": " .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)

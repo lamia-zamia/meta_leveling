@@ -1,16 +1,38 @@
 ---@class ml_experience
+---@field current number
+---@field next number
+---@field percentage number
 local exp = {
 	current = 0,
 	next = 0,
 	percentage = 0,
 }
 
----@private
-function exp:floor_number(value)
-	return tonumber(self:floor(value))
+function exp:floor(value)
+	if value >= 1000 then
+		return string.format("%.0f", value)
+	elseif value >= 100 then
+		return string.format("%.1f", value)
+	end
+	return (string.format("%.2f", value):gsub("%.?0+$", ""))
 end
 
-function exp:floor(value)
+---@param value number
+---@return string
+function exp:format(value)
+	if value >= 1000000000000 then
+		return string.format("%.1fT", value / 1000000000000)
+	elseif value >= 1000000000 then
+		return string.format("%.1fB", value / 1000000000)
+	elseif value >= 10000000 then
+		return string.format("%.1fM", value / 1000000)
+	elseif value >= 10000 then
+		return string.format("%.1fK", value / 1000)
+	elseif value >= 1000 then
+		return string.format("%.0f", value)
+	elseif value >= 100 then
+		return (string.format("%.1f", value):gsub("%.?0+$", ""))
+	end
 	return (string.format("%.2f", value):gsub("%.?0+$", ""))
 end
 
@@ -18,7 +40,7 @@ end
 ---@return number
 function exp:get()
 	local experience = ML.utils:get_global_number(ML.const.globals.current_exp, 0)
-	return self:floor_number(experience)
+	return math.floor(experience * 100) / 100
 end
 
 function exp:apply_multiplier(value)

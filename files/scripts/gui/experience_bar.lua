@@ -110,7 +110,7 @@ function EB:ToolTipUI()
 	if ML.pending_levels > 0 then
 		level = level .. ", " .. self:Locale("$ml_pending") .. ": " .. ML.pending_levels
 	end
-	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp.current .. " / " .. ML.exp.next
+	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp:floor(ML.exp.current) .. " / " .. ML.exp.next
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = nil
 	if EB.data.tooltip_force then
@@ -140,7 +140,7 @@ function EB:AddToolTip(x, y, width, height)
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		self:ShowTooltip(prev.x, prev.y, self.ToolTipUI, ML.exp.current)
+		self:ShowTooltip(prev.x, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
 		if InputIsMouseButtonJustDown(1) then -- mouse clicks
 			ML:toggle_ui()
 		end
@@ -240,6 +240,7 @@ function EB:LevelUpFX()
 	if self.data.play_fx then
 		EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x,
 			ML.player.y)
+		-- ML.font:popup(ML.player.id, self:Locale("$ml_level_up"), 1, ML.font:get_color())
 	end
 end
 
