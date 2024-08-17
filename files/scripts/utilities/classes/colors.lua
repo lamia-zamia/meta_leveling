@@ -1,6 +1,6 @@
----@class colors_hue
----@class colors_saturation
----@class colors_value
+---@class colors_hue:number
+---@class colors_saturation:number
+---@class colors_value:number
 
 ---@class (exact) colors
 ---@field private converter color_converter
