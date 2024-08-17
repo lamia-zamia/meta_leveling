@@ -26,6 +26,8 @@ function exp:format(value)
 		return string.format("%.1fB", value / 1000000000)
 	elseif value >= 10000000 then
 		return string.format("%.1fM", value / 1000000)
+	elseif value >= 1000000 then
+		return string.format("%.2fM", value / 1000000)
 	elseif value >= 10000 then
 		return string.format("%.1fK", value / 1000)
 	elseif value >= 1000 then
