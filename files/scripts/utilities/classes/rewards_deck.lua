@@ -1,32 +1,28 @@
 ---@class ml_reward_definition_list
----@field [number] ml_single_reward
+---@field [number] ml_reward
 
----@class ml_single_reward_data
----@field id string id of reward
----@field ui_name string name to display in game
+---@class (exact) ml_single_reward_data:ml_reward
 ---@field fn function function to run on pick
 ---@field group_id string id of group if part of group
----@field description string description
 ---@field ui_icon string path to icon
 ---@field probability number|fun():number should be between 0 and 1
 ---@field max number max number of reward that you can pick
----@field custom_check? function custom check to perform before adding to reward deck, should return boolean
----@field limit_before? string don't spawn this reward before this reward was hit it's max
----@field var0 any variable to replace $0 in name/description
----@field var1 any variable to replace $1 in name/description
----@field var2 any variable to replace $2 in name/description
 ---@field sound ml_sound see sounds
----@field no_sound boolean if set to true no sound will be played
----@field min_level number if set will not appear before this level
 ---@field pick_count number
+
+---@class (exact) group_data
+---@field rewards table<[number], [string]> list of rewards in group
+---@field picked boolean if something from group was picked
+
+---@class (exact) groups_data
+---@field [string] group_data
 
 ---@class (exact) reward_data
 ---@field [string] ml_single_reward_data
-local reward_data = {}
 
 ---@class (exact) rewards_deck
----@field private reward_definition_list ml_reward_definition_list list of rewards
----@field groups_data table
+---@field private reward_definition_list ml_rewards list of rewards
+---@field groups_data groups_data
 ---@field reward_data reward_data data of rewards
 ---@field default_icon string
 ---@field private max_probability number max probability for single reward
@@ -35,7 +31,7 @@ local reward_data = {}
 ---@field private distance number mimimum distance between rewards
 ---@field reroll_count number
 local rewards_deck = {
-	reward_data = reward_data,
+	reward_data = {},
 	groups_data = {},
 	default_icon = "mods/meta_leveling/files/gfx/rewards/no_png.png",
 	max_probability = 1,
@@ -52,13 +48,13 @@ function rewards_deck:function_not_found()
 end
 
 ---add single reward to list
----@param table ml_single_reward
+---@param table ml_reward
 function rewards_deck:add_reward(table)
 	self.reward_definition_list[#self.reward_definition_list + 1] = table
 end
 
 ---add array of rewards to list
----@param table ml_reward_definition_list
+---@param table ml_rewards
 function rewards_deck:add_rewards(table)
 	for _, reward in ipairs(table) do
 		self:add_reward(reward)
@@ -74,13 +70,13 @@ function rewards_deck:GatherData()
 			id = reward.id,
 			group_id = reward.group_id or reward.id,
 			ui_name = reward.ui_name,
-			description = reward.description or reward.ui_name,
+			description = reward.description or nil,
+			description_var = reward.description_var or nil,
+			description2 = reward.description2 or nil,
+			description2_var = reward.description_var or nil,
 			ui_icon = reward.ui_icon or self.default_icon,
 			probability = self:set_probability(reward.probability),
 			max = reward.max or 1280,
-			var0 = reward.var0 or "",
-			var1 = reward.var1 or "",
-			var2 = reward.var2 or "",
 			fn = reward.fn or self.function_not_found,
 			pick_count = self:get_specific_reward_pickup_amount(reward.id),
 			limit_before = reward.limit_before or nil,
@@ -93,8 +89,10 @@ function rewards_deck:GatherData()
 		if self.groups_data[group_id] then
 			self.groups_data[group_id].rewards[#self.groups_data[group_id].rewards + 1] = reward.id
 		else
-			self.groups_data[group_id] = {}
-			self.groups_data[group_id].rewards = { reward.id }
+			self.groups_data[group_id] = {
+				rewards = { reward.id },
+				picked = false
+			}
 		end
 		if self.reward_data[reward.id].pick_count > 0 then self.groups_data[group_id].picked = true end
 	end
@@ -278,9 +276,9 @@ function rewards_deck:skip_reward()
 end
 
 function rewards_deck:play_sound(draw_id)
-	if reward_data[draw_id].no_sound then return end
+	if self.reward_data[draw_id].no_sound then return end
 	local player = EntityGetWithTag("player_unit")[1]
-	GamePlaySound(reward_data[draw_id].sound.bank, reward_data[draw_id].sound.event, EntityGetTransform(player))
+	GamePlaySound(self.reward_data[draw_id].sound.bank, self.reward_data[draw_id].sound.event, EntityGetTransform(player))
 end
 
 ---do stuff after pickup

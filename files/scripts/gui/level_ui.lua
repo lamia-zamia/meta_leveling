@@ -5,13 +5,31 @@ local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/l
 -- #########		MISC		###########
 -- ############################################
 
+---function to unpack variable descriptions
+---@param description string
+---@param variables reward_description
+---@return string?
+function LU:UnpackDescription(description, variables)
+	if not description then return nil end
+	description = self:Locale(description)
+	if not variables then return description end
+	for i, variable in ipairs(variables) do
+		if type(variable) == "string" then
+			description = description:gsub("%$" .. i - 1, self:Locale(variable))
+		elseif type(variable) == "function" then
+			description = description:gsub("$" .. i - 1, variable())
+		end
+	end
+	return description
+end
+
 ---tooltip render for rewards
 ---@private
----@param reward ml_single_reward
+---@param reward ml_reward
 function LU:RewardsTooltip(reward)
 	local texts = {
 		name = LU:FormatString(self:Locale(reward.ui_name)),
-		description = LU:FormatString(self:GameTextGet(reward.description, reward.var0, reward.var1, reward.var2))
+		description = LU:UnpackDescription(reward.description, reward.description_var)
 	}
 	local longest = self.tp:GetLongestText(texts, reward.ui_name)
 	self.tp:TextCentered(0, 0, texts.name, longest)
@@ -247,7 +265,7 @@ function LU:DrawCurrentRewardsItems()
 				local reward = ML.rewards_deck.reward_data[reward_id]
 				if reward.pick_count > 0 then
 					tooltip = tooltip .. reward.pick_count .. "x [" .. self:Locale(reward.ui_name) .. "] "
-						.. self:GameTextGet(reward.description, reward.var0, reward.var1, reward.var2) .. "\n"
+						.. self:UnpackDescription(reward.description, reward.description_var) .. "\n"
 				end
 			end
 			local prev = self:GetPrevious()

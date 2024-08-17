@@ -1,4 +1,4 @@
----@type ml_reward_definition_list
+---@type ml_rewards
 local rewards_perk = {
 	{
 		id = "EXTRA_PERK",

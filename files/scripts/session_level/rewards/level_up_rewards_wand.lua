@@ -1,4 +1,4 @@
----@type ml_reward_definition_list
+---@type ml_rewards
 local wand_rewards = {
 	{
 		id = "faster_wand_both",

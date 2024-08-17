@@ -1,4 +1,4 @@
----@type ml_reward_definition_list
+---@type ml_rewards
 local potion_reward = {
 	{
 		id = "random_potion_complete",
@@ -63,8 +63,7 @@ local potion_reward = {
 		group_id = "potion",
 		ui_name = "$mat_magic_liquid_hp_regeneration",
 		description = "$ml_potion_static",
-		var0 = "$ml_a",
-		var1 = "$mat_magic_liquid_hp_regeneration",
+		description_var = { "$ml_a", "$mat_magic_liquid_hp_regeneration" },
 		ui_icon = "data/ui_gfx/items/potion.png",
 		probability = 0.01,
 		max = 2,
@@ -79,8 +78,7 @@ local potion_reward = {
 		group_id = "potion",
 		ui_name = "$mat_magic_liquid_hp_regeneration_unstable",
 		description = "$ml_potion_static",
-		var0 = "$ml_a",
-		var1 = "$mat_magic_liquid_hp_regeneration_unstable",
+		description_var = { "$ml_a", "$mat_magic_liquid_hp_regeneration_unstable" },
 		ui_icon = "data/ui_gfx/items/potion.png",
 		probability = 0.01,
 		max = 2,
@@ -95,8 +93,7 @@ local potion_reward = {
 		group_id = "potion",
 		ui_name = "$mat_magic_liquid_hp_regeneration",
 		description = "$ml_potion_static",
-		var0 = "$ml_a",
-		var1 = "$mat_magic_liquid_hp_regeneration",
+		description_var = { "$ml_a", "$mat_magic_liquid_hp_regeneration" },
 		ui_icon = "data/ui_gfx/items/potion.png",
 		probability = 0.05,
 		max = 1,

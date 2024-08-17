@@ -1,4 +1,4 @@
----@type ml_single_reward
+---@type ml_reward
 local reward = {
 	id = "spell_refresh",
 	ui_name = "$item_spell_refresh",
@@ -13,7 +13,7 @@ local reward = {
 
 ML.rewards_deck:add_reward(reward)
 
----@type ml_reward_definition_list
+---@type ml_rewards
 local rewards = {
 	{
 		id = "spawn_chest1",
@@ -39,7 +39,7 @@ local rewards = {
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
-		var0 = "$ml_but_better",
+		description_var = { "$ml_but_better" },
 		probability = 0.6,
 		max = 5,
 		limit_before = "spawn_chest1",
@@ -59,8 +59,7 @@ local rewards = {
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
-		var0 = "$ml_but_better",
-		var1 = "!",
+		description_var = { "$ml_but_better", "!" },
 		probability = 0.6,
 		limit_before = "spawn_chest2",
 		fn = function()
@@ -79,16 +78,13 @@ local rewards = {
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
-		var0 = "$ml_but_better",
-		var1 = "?",
+		description_var = { "$ml_but_better", "?" },
 		max = 1,
 		probability = 0.2,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/chest_leggy.xml")
 		end
 	}
-
-	-- data/entities/items/pickup/utility_box.xml
 }
 
 ML.rewards_deck:add_rewards(rewards)
