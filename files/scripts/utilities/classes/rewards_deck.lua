@@ -73,7 +73,7 @@ function rewards_deck:GatherData()
 			description = reward.description or nil,
 			description_var = reward.description_var or nil,
 			description2 = reward.description2 or nil,
-			description2_var = reward.description_var or nil,
+			description2_var = reward.description2_var or nil,
 			ui_icon = reward.ui_icon or self.default_icon,
 			probability = self:set_probability(reward.probability),
 			max = reward.max or 1280,

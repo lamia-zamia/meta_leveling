@@ -12,10 +12,10 @@ local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/l
 function LU:UnpackDescription(description, variables)
 	if not description then return nil end
 	description = self:Locale(description)
-	if not variables then return description end
+	if not variables then return (description:gsub("%$%d", "")) end
 	for i, variable in ipairs(variables) do
 		if type(variable) == "string" then
-			description = description:gsub("%$" .. i - 1, self:Locale(variable))
+			description = description:gsub("%$" .. i - 1, self:Locale(variable:gsub("%%", "%%%%")))
 		elseif type(variable) == "function" then
 			description = description:gsub("$" .. i - 1, variable())
 		end
@@ -29,11 +29,16 @@ end
 function LU:RewardsTooltip(reward)
 	local texts = {
 		name = LU:FormatString(self:Locale(reward.ui_name)),
-		description = LU:UnpackDescription(reward.description, reward.description_var)
+		description = LU:UnpackDescription(reward.description, reward.description_var),
+		description2 = LU:UnpackDescription(reward.description2, reward.description2_var)
 	}
 	local longest = self.tp:GetLongestText(texts, reward.ui_name)
 	self.tp:TextCentered(0, 0, texts.name, longest)
-	self.tp:TextCentered(0, 0, texts.description, longest)
+	if texts.description then self.tp:TextCentered(0, 0, texts.description, longest) end
+	if texts.description2 then
+		self:ColorGray()
+		self.tp:TextCentered(0, 0, texts.description2, longest)
+	end
 end
 
 ---close ui on triggers
@@ -164,7 +169,8 @@ function LU:DrawButtonsCentered(button_y)
 	end
 
 	add_button("$ml_skip", self:Locale("$ml_skip_tp"), self.SkipReward, true)
-	add_button("$ml_reroll", self:GameTextGet("$ml_reroll_tp", tostring(ML.rewards_deck.reroll_count)), self.Reroll, ML.rewards_deck.reroll_count > 0)
+	add_button("$ml_reroll", self:GameTextGet("$ml_reroll_tp", tostring(ML.rewards_deck.reroll_count)), self.Reroll,
+		ML.rewards_deck.reroll_count > 0)
 	add_button("$ml_close", self:Locale("$ml_close_tp"), self.CloseMenu, true)
 end
 
@@ -239,6 +245,20 @@ end
 -- ########		CURRENT REWARDS		###########
 -- ############################################
 
+---function to draw tooltip on current rewards
+---@private
+function LU:DrawCurrentRewardsTooltip(rewards)
+	for _, reward_id in ipairs(rewards) do
+		local reward = ML.rewards_deck.reward_data[reward_id]
+		if reward.pick_count > 0 then
+			local text = reward.pick_count .. "x [" .. self:Locale(reward.ui_name) .. "] "
+				.. LU:UnpackDescription(reward.description, reward.description_var) .. "\n"
+			local offset = self:GetTextDimension(text)
+			self:Text(- offset / 2, 0, text)
+		end
+	end
+end
+
 ---function to draw rewards itself
 ---@private
 function LU:DrawCurrentRewardsItems()
@@ -252,25 +272,16 @@ function LU:DrawCurrentRewardsItems()
 		if group.picked then
 			if count > max_per_row then
 				count = 1
-				y = y + distance_between
 				x = 2
+				y = y + distance_between
 			end
 			if self.data.curent_rewards_height < y then
 				self.data.curent_rewards_height = self.data.curent_rewards_height + distance_between
 			end
-			local tooltip = ""
 			self:Image(x, y + self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
-			self:Draw9Piece(self.data.x + x, self.data.y + y, self.const.z, 16, 16, self.const.ui_9p_reward)
-			for _, reward_id in ipairs(group.rewards) do
-				local reward = ML.rewards_deck.reward_data[reward_id]
-				if reward.pick_count > 0 then
-					tooltip = tooltip .. reward.pick_count .. "x [" .. self:Locale(reward.ui_name) .. "] "
-						.. self:UnpackDescription(reward.description, reward.description_var) .. "\n"
-				end
-			end
 			local prev = self:GetPrevious()
-			local tp_offset = (self:GetTextDimension(tooltip) - prev.w - 1.5) / -2
-			self:AddTooltip(tp_offset, distance_between, tooltip)
+			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward)
+			self:AddTooltip(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 			x = x + distance_between
 			count = count + 1
 		end
@@ -360,7 +371,8 @@ end
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local section = 10
-	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
+	local experience = self:Locale("$ml_experience") ..
+		": " .. ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
 	local level = self:Locale("$ml_level") .. ": " .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)

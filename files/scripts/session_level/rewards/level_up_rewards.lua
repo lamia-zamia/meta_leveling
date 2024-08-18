@@ -6,6 +6,10 @@ local reward_list = {
 		ui_name = "$ml_extra_reward_choice",
 		description = "$ml_extra_reward_choice_tp",
 		description_var = { "1" },
+		description2 = "$ml_extra_reward_choice_clarify",
+		description2_var = {function()
+			return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 1
+		end},
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.5,
 		max = 4,
@@ -23,6 +27,10 @@ local reward_list = {
 		ui_name = "$ml_extra_reward_choice",
 		description = "$ml_extra_reward_choice_tp",
 		description_var = { "2" },
+		description2 = "$ml_extra_reward_choice_clarify",
+		description2_var = {function()
+			return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 2
+		end},
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.2,
 		max = 2,

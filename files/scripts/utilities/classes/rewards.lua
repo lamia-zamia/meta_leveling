@@ -11,7 +11,7 @@
 ---@field description? string description
 ---@field description_var? reward_description variable for description
 ---@field description2? string additional description for clarifying things, second line in gray
----@field description_var2? reward_description variable for description
+---@field description2_var? reward_description variable for description
 ---@field ui_icon? string path to icon
 ---@field probability? number|fun():number should be between 0 and 1
 ---@field max? number max number of reward that you can pick
