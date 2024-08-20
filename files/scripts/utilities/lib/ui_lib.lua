@@ -15,6 +15,15 @@ local dimensions = {
 	y = 360
 }
 
+---@class (exact) ui_fake_scroll
+---@field y number
+---@field target_y number
+---@field limit_not_hit boolean
+---@field max_y number
+---@field move_triggered boolean
+---@field position_triggered number
+---@field max_y_target number
+
 ---@class (exact) UI_class
 ---@field protected gui gui
 ---@field private gui_id number
@@ -23,7 +32,7 @@ local dimensions = {
 ---@field private __index UI_class
 ---@field protected c UI_const constants
 ---@field protected dim UI_dimensions
----@field protected scroll table
+---@field protected scroll ui_fake_scroll
 local ui_class = {
 	gui = GuiCreate(),
 	gui_id = const.gui_id,
@@ -31,7 +40,13 @@ local ui_class = {
 	c = const,
 	dim = dimensions,
 	scroll = {
-		limit_not_hit = true
+		y = 0,
+		target_y = 0,
+		max_y = 0,
+		limit_not_hit = true,
+		move_triggered = false,
+		position_triggered = 0,
+		max_y_target = 0
 	},
 }
 
@@ -182,7 +197,7 @@ function tooltip_class:GetOffsetX(x, w)
 	elseif x > self.dim.x * 0.75 then
 		x_offset = x_offset - w
 		-- if (self.dim.x - x - w) < -min_offset then x_offset = self.dim.x - x - w - min_offset end
-		
+
 		-- if x_offset > -min_offset then x_offset = -min_offset end
 	else
 		-- if x <= 10 then
@@ -359,53 +374,121 @@ function ui_class:TooltipText(text)
 	self:Text(0, 0, text)
 end
 
----i dont remember
+---return x and y of mouse pos
 ---@protected
+---@return number mouse_x, number mouse_y
 function ui_class:get_mouse_pos()
 	local mouse_screen_x, mouse_screen_y = InputGetMousePosOnScreen()
 	local mx_p, my_p = mouse_screen_x / 1280, mouse_screen_y / 720
 	return mx_p * self.dim.x, my_p * self.dim.y
 end
 
----i dont remember
+---creates invisible scrollbox to block clicks and scrolls
 ---@protected
-function ui_class:BlockScrollInput()
+function ui_class:BlockInput()
 	GuiIdPushString(self.gui, "STOP_FLICKERING_SCROLLBAR")
 	local m_x, m_y = self:get_mouse_pos()
 	GuiAnimateBegin(self.gui)
 	GuiAnimateAlphaFadeIn(self.gui, 2, 0, 0, true)
-	GuiOptionsAddForNextWidget(self.gui, 3)  --AlwaysClickable
+	GuiOptionsAddForNextWidget(self.gui, 3) --AlwaysClickable
 	GuiBeginScrollContainer(self.gui, 2, m_x - 25, m_y - 25, 50, 50, false, 0, 0)
 	GuiAnimateEnd(self.gui)
 	GuiEndScrollContainer(self.gui)
 	GuiIdPop(self.gui)
 end
 
----i dont remember
----@protected
-function ui_class:MakePreviousScrollable()
-	local prev = self:GetPrevious()
-	if prev.hovered then
-		self:BlockScrollInput()
-		if self.scroll.y < 0 and InputIsMouseButtonJustDown(4) then --up
-			self.scroll.y = self.scroll.y + 10
+function ui_class:FakeScrollBox_MouseDrag(x, y, width, height, z, sprite_dim)
+	local content_height = self.scroll.max_y - y
+	local visible_height = height - sprite_dim / 1.5
+	local scrollbar_height = (visible_height / content_height) * (height)
+	local scrollbar_pos = (self.scroll.y / (content_height - visible_height)) * (height - scrollbar_height)
+	self:Draw9Piece(x + width + sprite_dim / 3 - 5, y + scrollbar_pos, z - 1, 0, scrollbar_height)
+	self:Draw9Piece(x + width + sprite_dim / 3 - 8, y, z - 1, 6, height, self.c.empty, self.c.empty)
+	local scroll_prev = self:GetPrevious()
+	if scroll_prev.hovered then
+		if InputIsMouseButtonJustDown(1) then
+			self.scroll.move_triggered = true
+			_, self.scroll.position_triggered = self:get_mouse_pos()
 		end
-		if self.scroll.limit_not_hit and InputIsMouseButtonJustDown(5) then --down
-			self.scroll.y = self.scroll.y - 10
+	end
+	if not InputIsMouseButtonDown(1) then
+		self.scroll.move_triggered = false
+		self.scroll.position_triggered = 0
+	end
+	if self.scroll.move_triggered then
+		local _, mouse_y = self:get_mouse_pos()
+		local target = self.scroll.target_y + mouse_y - self.scroll.position_triggered
+		if target > 0 and target < self.scroll.max_y_target then
+			self.scroll.position_triggered = mouse_y
 		end
+		self.scroll.target_y = math.max(math.min(target, self.scroll.max_y_target), 0)
 	end
 end
 
----i dont remember
+---reply on actions
+---@private
+function ui_class:FakeScrollBox_MakePreviousScrollable()
+	if self.scroll.target_y > 0 and InputIsMouseButtonJustDown(4) then --up
+		self.scroll.target_y = self.scroll.target_y - 10
+	end
+	if self.scroll.target_y < self.scroll.max_y_target and InputIsMouseButtonJustDown(5) then --down
+		self.scroll.target_y = self.scroll.target_y + 10
+	end
+end
+
+---function to clump target and move scroll
+---@private
+function ui_class:FakeScrollBox_ClumpAndMove()
+	if self.scroll.target_y < 0 then self.scroll.target_y = 0 end
+	if self.scroll.target_y > self.scroll.max_y_target then self.scroll.target_y = self.scroll.max_y_target end
+	if math.abs(self.scroll.target_y - self.scroll.y) < 1 then
+		self.scroll.y = self.scroll.target_y
+	end
+
+	if self.scroll.target_y ~= self.scroll.y then
+		self.scroll.y = (self.scroll.y + self.scroll.target_y) / 2
+	end
+end
+
+---function to reset scrollbox cache
 ---@protected
+function ui_class:FakeScrollBox_Reset()
+	self.scroll.y = 0
+	self.scroll.target_y = 0
+	self.scroll.max_y = 0
+	self.scroll.max_y_target = 0
+	self.scroll.limit_not_hit = true
+	self.scroll.move_triggered = false
+	self.scroll.position_triggered = 0
+end
+
+---fake scroll box
+---@protected
+---@param x number position x
+---@param y number position y
+---@param width number width
+---@param height number height
+---@param z number z of scrollbox
+---@param sprite string 9piece for scrollbox
+---@param draw_fn function function to draw inside scrollbox, position is relative
 function ui_class:FakeScrollBox(x, y, width, height, z, sprite, draw_fn)
 	local id = self:id()
 	local sprite_dim = GuiGetImageDimensions(self.gui, sprite, 1)
-	local limiter = height + y - sprite_dim / 3
+	self.scroll.max_y_target = self.scroll.max_y - y - height + sprite_dim / 1.5
 	self:Draw9Piece(x, y, z, width, height, sprite)
 
-	self:MakePreviousScrollable()
-	
+	---phantom 9piece with corrent hitbox
+	self:Draw9Piece(x - sprite_dim / 3, y - sprite_dim / 3, z, width + sprite_dim / 1.5, height + sprite_dim / 1.5,
+		self.c.empty, self.c.empty)
+	local main_window = self:GetPrevious()
+	if main_window.hovered then
+		self:BlockInput()
+	end
+	if self.scroll.max_y > y + height then
+		self:FakeScrollBox_MakePreviousScrollable()
+		self:FakeScrollBox_MouseDrag(x, y, width, height, z, sprite_dim)
+	end
+
 	GuiAnimateBegin(self.gui)
 	GuiAnimateAlphaFadeIn(self.gui, id, 0, 0, true)
 	GuiBeginAutoBox(self.gui)
@@ -414,8 +497,8 @@ function ui_class:FakeScrollBox(x, y, width, height, z, sprite, draw_fn)
 	GuiAnimateEnd(self.gui)
 	draw_fn(self)
 	local prev = self:GetPrevious()
-	if prev.y <= height + y - sprite_dim / 3 then self.scroll.limit_not_hit = false
-	else self.scroll.limit_not_hit = true end
+	self.scroll.max_y = math.max(self.scroll.max_y, prev.y + prev.h)
+	self:FakeScrollBox_ClumpAndMove()
 	GuiEndScrollContainer(self.gui)
 end
 

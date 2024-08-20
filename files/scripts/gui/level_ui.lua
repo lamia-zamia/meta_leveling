@@ -69,7 +69,7 @@ function LU:BlockInputOnPrevious()
 		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
 	prev = self:GetPrevious()
 	if prev.hovered then
-		self:BlockScrollInput()
+		self:BlockInput()
 	end
 end
 
@@ -254,7 +254,7 @@ function LU:DrawCurrentRewardsTooltip(rewards)
 			local text = reward.pick_count .. "x [" .. self:Locale(reward.ui_name) .. "] "
 				.. LU:UnpackDescription(reward.description, reward.description_var) .. "\n"
 			local offset = self:GetTextDimension(text)
-			self:Text(- offset / 2, 0, text)
+			self:Text(-offset / 2, 0, text)
 		end
 	end
 end
@@ -267,6 +267,7 @@ function LU:DrawCurrentRewardsItems()
 	local distance_between = 30
 	local count = 1
 	local max_per_row = 11
+	local max_column = 4
 
 	for _, group in pairs(ML.rewards_deck.groups_data) do
 		if group.picked then
@@ -275,25 +276,28 @@ function LU:DrawCurrentRewardsItems()
 				x = 2
 				y = y + distance_between
 			end
-			if self.data.curent_rewards_height < y then
-				self.data.curent_rewards_height = self.data.curent_rewards_height + distance_between
+			if self.data.current_rewards_height < y and self.data.current_rewards_height < distance_between * (max_column - 1) then
+				self.data.current_rewards_height = self.data.current_rewards_height + distance_between
 			end
-			self:Image(x, y + self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
+			self:Image(x, y - self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
 			local prev = self:GetPrevious()
 			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward)
-			self:AddTooltip(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
+			if y - self.scroll.y + distance_between / 2 > 0 and y - self.scroll.y - distance_between / 2 < distance_between * (max_column - 1) then
+				self:AddTooltip(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
+			end
 			x = x + distance_between
 			count = count + 1
 		end
 	end
+	self:Text(0, y, "") -- set height for scrollbar, 9piece works weird
 end
 
 ---function to draw current rewards
 ---@private
 function LU:DrawCurrentRewards()
-	local section = self.data.curent_rewards_height
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, section, self.const.z + 1, self.const.ui_9piece_gray,
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.current_rewards_height, self.const.z + 1,
+		self.const.ui_9piece_gray,
 		self.DrawCurrentRewardsItems)
 end
 
@@ -304,7 +308,7 @@ end
 ---toggle between different windows when buttons pressed
 ---@private
 function LU:ToggleMenuWindow(window)
-	self.scroll.y = 0
+	self:FakeScrollBox_Reset()
 	if self.DrawWindow == window then
 		self.DrawWindow = nil
 	else
