@@ -1,5 +1,7 @@
 ---@class ML_utils
-local utils = {}
+local utils = {
+	set_content = ModTextFileSetContent
+}
 
 ---get global valuess of META_LEVELING_
 ---@return number
