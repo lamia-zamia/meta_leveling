@@ -12,15 +12,17 @@ local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/l
 function LU:UnpackDescription(description, variables)
 	if not description then return nil end
 	description = self:Locale(description)
-	if not variables then return (description:gsub("%$%d", "")) end
-	for i, variable in ipairs(variables) do
-		if type(variable) == "string" then
-			description = description:gsub("%$" .. i - 1, self:Locale(variable:gsub("%%", "%%%%")))
-		elseif type(variable) == "function" then
-			description = description:gsub("$" .. i - 1, variable())
+	if variables then
+		for i, variable in ipairs(variables) do
+			if type(variable) == "string" then
+				description = description:gsub("%$" .. i - 1, self:Locale(variable:gsub("%%", "%%%%")))
+			elseif type(variable) == "function" then
+				description = description:gsub("$" .. i - 1, variable())
+			end
 		end
 	end
-	return description
+	description = description:gsub("%$%d", "")
+	return self:FormatString(description)
 end
 
 ---tooltip render for rewards
