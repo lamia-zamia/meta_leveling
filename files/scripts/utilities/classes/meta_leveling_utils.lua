@@ -130,6 +130,15 @@ function utils:merge_tables(table1, table2)
 end
 
 ---@param entity entity_id
+---@param tag string
+function utils:entity_has_tag(entity, tag)
+	local tags = EntityGetTags(entity)
+	if not tags then return false end
+	if tags:find(tag) then return true end
+	return false
+end
+
+---@param entity entity_id
 ---@return boolean
 function utils:entity_has_player_tag(entity)
 	local tags = EntityGetTags(entity)

@@ -30,6 +30,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	if ML.utils:is_player_herd(died_entity) then return end
 	local exp = ML.exp:convert_max_hp_to_exp(died_entity)
 	exp = ML.exp:apply_multiplier(exp)
+	if ML.utils:entity_has_tag(died_entity, "boss") then exp = exp * 2 end
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
 	-- ######################### player kills ##########################
