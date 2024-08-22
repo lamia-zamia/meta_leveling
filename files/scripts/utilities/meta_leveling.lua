@@ -76,4 +76,20 @@ function ML:StartUp()
 	self.rewards_deck:get_reroll_count()
 end
 
+---@param exp number number of exp to add BEFORE applying multiplier
+---@param entity? entity_id entity id from which to popup exp
+---@param message? string message to log, exp value will be added to the end
+function ML:AddExpGlobal(exp, entity, message)
+	exp = self.exp:apply_multiplier(exp)
+	if message and self.utils:get_mod_setting_boolean("session_exp_log") then
+		message = message .. exp
+		GamePrint(message)
+	end
+	if entity and EntityGetIsAlive(entity) and self.utils:get_mod_setting_boolean("session_exp_popup") then
+		self.font:popup_exp(entity,	self.exp:format(exp), exp)
+	end
+
+	self.exp:add(exp)
+end
+
 return ML

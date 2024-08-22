@@ -84,13 +84,6 @@ function exp:convert_max_hp_to_exp(entity_id)
 	return health
 end
 
----convert enemy hp and add to exp
----@private
----@param entity_id entity_id
-function exp:kill_reward(entity_id)
-	self:add(self:convert_max_hp_to_exp(entity_id))
-end
-
 function exp:update()
 	self.current = self:get()
 	self.next = self:get_next()

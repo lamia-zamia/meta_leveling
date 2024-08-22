@@ -18,11 +18,11 @@ end
 ---@param append ml_quest_append
 local function add_after_collected(append)
 	local search = "(" .. append.search .. ")(.-)(if collected then)"
-	local replace = "%1%2%3\n			local ml_exp = ML.exp:apply_multiplier(" .. append.exp .. ")\n"
+	local replace = "%1%2%3\n			local ml_exp = " .. append.exp .. "\n"
 	if append.multiplier then replace = replace .. "			ml_exp = ml_exp * " .. append.multiplier .. "\n" end
 	replace = replace .. [[
-			ML.exp:add(ml_exp)
-			ML.font:popup_exp(ML.player:get_id(), ML.exp:format(ml_exp), ml_exp)
+			local message = GameTextGetTranslatedOrNot("$ml_quest_done")
+			ML:AddExpGlobal(ml_exp, ML.player:get_id(), message .. ": ")
 	]]
 	content = content:gsub(search, replace, 1)
 end
