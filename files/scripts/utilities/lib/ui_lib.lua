@@ -138,7 +138,10 @@ end
 ---@return string
 ---@protected
 function ui_class:Locale(string)
-	return GameTextGetTranslatedOrNot(string)
+	local pattern = "$%w[%w_]+"
+	string = string:gsub(pattern, GameTextGetTranslatedOrNot, 1)
+	if string:find(pattern) then return self:Locale(string)
+	else return string end
 end
 
 ---Returns GameTextGet with args replaced if input is valid
