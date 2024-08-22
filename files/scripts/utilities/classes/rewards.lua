@@ -15,7 +15,7 @@
 ---@field ui_icon? string path to icon
 ---@field probability? number|fun():number should be between 0 and 1
 ---@field max? number max number of reward that you can pick
----@field custom_check? function custom check to perform before adding to reward deck, should return boolean
+---@field custom_check? function custom check to perform before adding to reward deck, should return boolean.<br>True - add to deck, false - don't add
 ---@field limit_before? string don't spawn this reward before this reward was hit it's max
 ---@field sound? ml_sound see sounds
 ---@field no_sound? boolean if set to true no sound will be played
@@ -39,7 +39,7 @@ function rewards:gather_action_info()
 	dofile_once("data/scripts/gun/gun_actions.lua")
 	for _, action in ipairs(actions) do
 		if action.spawn_probability == "0" then
-			self.spells_no_spawn[action.id] = action.spawn_probability
+			self.spells_no_spawn[action.id] = true
 		end
 		if action.spawn_requires_flag then
 			self.locked_spells[action.id] = action.spawn_requires_flag
@@ -84,12 +84,12 @@ end
 ---check if player can have this spell
 ---@param action_id string
 ---@return boolean
-function rewards:check_if_spell_is_invalid(action_id)
-	if self.spells_no_spawn[action_id] then return true end
+function rewards:spell_is_valid(action_id)
+	if self.spells_no_spawn[action_id] then return false end
 	if self.locked_spells[action_id] and not HasFlagPersistent(self.locked_spells[action_id]) then
-		return true
+		return false
 	end
-	return false
+	return true
 end
 
 ---return random spells of level
@@ -97,11 +97,13 @@ end
 ---@return string action_id
 function rewards:get_random_spell(level)
 	if level > 6 then level = 10 end
-	local action_id = "OCARINA_A" --placeholder
-	while (self:check_if_spell_is_invalid(action_id)) do
-		action_id = GetRandomAction(ML.player.x, ML.player.y, level, GameGetFrameNum())
+	for i = 1, 1000 do
+		local action_id = GetRandomAction(ML.player.x, ML.player.y, level, i)
+		if self:spell_is_valid(action_id) then
+			return action_id
+		end
 	end
-	return action_id
+	return "OCARINA_A"
 end
 
 ---return random typed spells of level
@@ -110,11 +112,13 @@ end
 ---@return string action_id
 function rewards:get_random_typed_spell(level, type)
 	if level > 6 then level = 10 end
-	local action_id = "OCARINA_A" --placeholder
-	while (self:check_if_spell_is_invalid(action_id)) do
-		action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, GameGetFrameNum())
+	for i = 1, 1000 do
+		local action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, i)
+		if self:spell_is_valid(action_id) then
+			return action_id
+		end
 	end
-	return action_id
+	return "OCARINA_A"
 end
 
 function rewards:force_fungal_shift()
