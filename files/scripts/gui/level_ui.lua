@@ -253,7 +253,7 @@ function LU:DrawCurrentRewardsTooltip(rewards)
 	for _, reward_id in ipairs(rewards) do
 		local reward = ML.rewards_deck.reward_data[reward_id]
 		if reward.pick_count > 0 then
-			local text = reward.pick_count .. "x [" .. self:Locale(reward.ui_name) .. "] "
+			local text = reward.pick_count .. "x [" .. LU:FormatString(self:Locale(reward.ui_name)) .. "] "
 				.. LU:UnpackDescription(reward.description, reward.description_var) .. "\n"
 			local offset = self:GetTextDimension(text)
 			self:Text(-offset / 2, 0, text)
