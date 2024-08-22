@@ -5,7 +5,8 @@ local files = {
 	"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards_perk.lua",
 	"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards_transformations.lua",
 	"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards_pickups.lua",
-	"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards_health.lua"
+	"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards_health.lua",
+	"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards_playerstats.lua"
 }
 
 for _, file in ipairs(files) do

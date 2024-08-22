@@ -145,6 +145,13 @@ function player:get_mButtonLastFrameFire()
 	else return -2 end
 end
 
+function player:has_effect(effect_name)
+	if not self:validate() then return false end
+	local comp = GameGetGameEffect(self.id, effect_name)
+	if not comp or comp == 0 then return false end
+	return true
+end
+
 function player:update()
 	if self:validate() then
 		self.x, self.y = self:get_pos()
