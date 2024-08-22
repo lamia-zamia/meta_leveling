@@ -2,7 +2,7 @@
 local player_stats = {
 	{
 		id = "movement_speed",
-		ui_name = "$ml_movement_speed",
+		ui_name = "$ml_slightly $perk_movement_faster",
 		description = "$perkdesc_movement_faster",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/movement_speed.png",
 		probability = 0.5,
@@ -28,7 +28,7 @@ local player_stats = {
 	},
 	{
 		id = "hover_energy",
-		ui_name = "$ml_hover_energy",
+		ui_name = "$ml_slightly $perk_hover_boost",
 		description = "$ml_hover_energy_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_energy.png",
 		probability = 0.3,

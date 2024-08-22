@@ -302,7 +302,7 @@ local reward_list = {
 	},
 	{
 		id = "more_love",
-		ui_name = "$ml_more_love",
+		ui_name = "$ml_slightly $perk_genome_more_love",
 		description = "$perkdesc_genome_more_love",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_love.png",
 		probability = 0.3,
@@ -319,7 +319,7 @@ local reward_list = {
 	},
 	{
 		id = "more_hatred",
-		ui_name = "$ml_more_hatred",
+		ui_name = "$ml_slightly $perk_genome_more_hatred",
 		description = "$perkdesc_genome_more_hatred",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_hatred.png",
 		probability = 0.3,
