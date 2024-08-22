@@ -99,24 +99,24 @@ end
 
 function EB:InventoryReminder()
 	if ML.pending_levels > 0 then
-		local text = self:Locale("$ml_level_up_tp") .. ", " .. self:Locale("$ml_pending") .. ": " .. ML.pending_levels
+		local text = self:Locale("$ml_level_up_tp, ") .. self:Locale("$ml_pending: ") .. ML.pending_levels
 		local width = self:GetTextDimension(text)
 		self:TextColorAnim(self.Text, self.dim.x - width - 130, 7, text)
 	end
 end
 
 function EB:ToolTipUI()
-	local level = self:Locale("$ml_level") .. ": " .. ML.level
+	local level = self:Locale("$ml_level: ") .. ML.level
 	if ML.pending_levels > 0 then
-		level = level .. ", " .. self:Locale("$ml_pending") .. ": " .. ML.pending_levels
+		level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels
 	end
-	local experience = self:Locale("$ml_experience") .. ": " .. ML.exp:floor(ML.exp.current) .. " / " .. ML.exp.next
+	local experience = self:Locale("$ml_experience: ") .. ML.exp:floor(ML.exp.current) .. " / " .. ML.exp.next
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = nil
 	if EB.data.tooltip_force then
 		tooltip_force = self:Locale("$ml_exp_bar_tooltip_force")
 	end
-	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip. " .. experience)
+	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
 	self.tp:TextCentered(0, 0, level, longest, "")
 	self.tp:TextCentered(0, 0, experience, longest, "")
 	self:Color(0.6, 0.6, 0.6)

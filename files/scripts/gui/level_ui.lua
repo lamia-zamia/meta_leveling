@@ -355,7 +355,8 @@ function LU:DrawMenuButtons()
 		self:Text(x, y, self:Locale("$ml_level_up"))
 		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 	end
-	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), "whatever", self.DrawCurrentRewards)
+	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
+	self.DrawCurrentRewards)
 
 	self:ColorGray()
 	self:Text(x_off(), y, self:Locale("Stats (WIP)"))
@@ -377,9 +378,9 @@ end
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local section = 10
-	local experience = self:Locale("$ml_experience") ..
-		": " .. ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
-	local level = self:Locale("$ml_level") .. ": " .. ML:get_level()
+	local experience = self:Locale("$ml_experience: ") ..
+		ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
+	local level = self:Locale("$ml_level: ") .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)
 	self:BlockInputOnPrevious()
