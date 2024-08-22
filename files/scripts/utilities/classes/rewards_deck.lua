@@ -164,7 +164,7 @@ end
 ---gather list
 ---@private
 function rewards_deck:get_from_list()
-	self.distance = self:get_draw_amount()
+	self.distance = self:get_draw_amount() * 4
 	self.list = {}
 	for _, reward in pairs(self.reward_data) do
 		local probability = Randomf(self.min_probability, self:get_probability(reward.probability))
@@ -277,8 +277,7 @@ end
 
 function rewards_deck:play_sound(draw_id)
 	if self.reward_data[draw_id].no_sound then return end
-	local player = EntityGetWithTag("player_unit")[1]
-	GamePlaySound(self.reward_data[draw_id].sound.bank, self.reward_data[draw_id].sound.event, EntityGetTransform(player))
+	GamePlaySound(self.reward_data[draw_id].sound.bank, self.reward_data[draw_id].sound.event, ML.player.x, ML.player.y)
 end
 
 ---do stuff after pickup
