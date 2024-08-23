@@ -165,4 +165,24 @@ function utils:is_player_herd(entity)
 	return self:get_herd_id(entity) == "player"
 end
 
+---@param entity entity_id
+---@param effect game_effect
+---@return boolean
+function utils:entity_has_effect(entity, effect)
+	if entity == 0 then return false end
+	local comp = GameGetGameEffect(entity, effect)
+	if not comp or comp == 0 then return false end
+	return true
+end
+
+---returns true if entity is related to player (tag, herd, charm)
+---@param entity entity_id
+---@return boolean
+function utils:entity_is_player_related(entity)
+	if self:entity_has_player_tag(entity) or self:is_player_herd(entity) or self:entity_has_effect(entity, "CHARM") then
+		return true
+	end
+	return false
+end
+
 return utils

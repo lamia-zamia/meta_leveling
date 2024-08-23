@@ -14,7 +14,8 @@ function entity_scanner:add_lua_component_if_none(entity)
 	EntityAddComponent2(entity, "LuaComponent", {
 		execute_every_n_frame= -1,
 		script_death = "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua",
-		remove_after_executed=true
+		script_damage_received = "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua",
+		-- remove_after_executed=true
 	})
 end
 

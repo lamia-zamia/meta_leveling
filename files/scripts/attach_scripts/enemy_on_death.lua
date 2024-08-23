@@ -10,7 +10,7 @@ local function not_visible(entity)
 	if ent_x + offset < cam_x or ent_x - offset > cam_x + cam_w then return true end
 	if ent_y + offset < cam_y or ent_y - offset > cam_y + cam_h then return true end
 	local fog = GameGetFogOfWarBilinear(ent_x, ent_y)
-	if fog > 130 then return true end
+	if fog > 230 then return true end
 	return false
 end
 
@@ -24,6 +24,13 @@ local function damage_done_by_water(damage_message)
 	return false
 end
 
+---@type script_damage_received
+function damage_received(damage, message, entity_thats_responsible, is_fatal, projectile_thats_responsible)
+	if ML.utils:entity_is_player_related(entity_thats_responsible) then
+		SetValueInteger("ML_damaged_by_player", GameGetFrameNum())
+	end
+end
+
 ---@type script_death
 function death(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
@@ -33,7 +40,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
 	-- ######################### player kills ##########################
-	if ML.utils:entity_has_player_tag(entity_thats_responsible) or ML.utils:is_player_herd(entity_thats_responsible) then
+	if GameGetFrameNum() - GetValueInteger("ML_damaged_by_player", 0) < 180 then
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": "
 	else
 		if not_visible(died_entity) then return end
