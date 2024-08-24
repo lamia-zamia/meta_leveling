@@ -61,11 +61,37 @@ function rewards_deck:add_rewards(table)
 	end
 end
 
+---function to validate deck
+---@private
+function rewards_deck:ValidateData()
+	local reward_count = 0
+	for id, reward in pairs(self.reward_data) do
+		if reward.limit_before and not self.reward_data[reward.limit_before] then
+			print("[Meta Leveling]: error - limit before is invalid in reward: " .. id)
+			self.reward_data[id].limit_before = nil
+		end
+		if reward.custom_check and type(reward.custom_check()) ~= "boolean" then
+			print("[Meta Leveling]: error - custom check is invalid in reward: " .. id)
+			self.reward_data[id].custom_check = nil
+		end
+		reward_count = reward_count + 1
+	end
+
+	local group_count = 0
+	for _, _ in pairs(self.groups_data) do
+		group_count = group_count + 1
+	end
+	print("[Meta Leveling]: loaded " .. reward_count .. " rewards, ".. group_count .. " unique rewards group")
+end
+
 ---function to gather data from list
 function rewards_deck:GatherData()
 	self.reward_definition_list = dofile_once("mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards.lua")
 	dofile_once("mods/meta_leveling/files/scripts/session_level/rewards/rewards_append.lua")
 	for _, reward in ipairs(self.reward_definition_list) do
+		if self.reward_data[reward.id] then
+			print("[Meta Leveling]: warning - duplicate reward id " .. reward.id)
+		end
 		self.reward_data[reward.id] = {
 			id = reward.id,
 			group_id = reward.group_id or reward.id,
@@ -96,11 +122,7 @@ function rewards_deck:GatherData()
 		end
 		if self.reward_data[reward.id].pick_count > 0 then self.groups_data[group_id].picked = true end
 	end
-	local i = 0
-	for _, _ in pairs(self.groups_data) do
-		i = i + 1
-	end
-	print("[Meta Leveling]: loaded " .. i .. " unique rewards group")
+	self:ValidateData()
 end
 
 ---get normalized probability
