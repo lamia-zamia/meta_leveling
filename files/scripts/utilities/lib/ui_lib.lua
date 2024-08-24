@@ -88,80 +88,64 @@ tooltip_class.gui_tooltip_size_cache = setmetatable({}, { __mode = "k" })
 tooltip_class.tooltip_z = -100
 ui_class.tp = tooltip_class
 
----zero or minus
----@private
----@param value number
----@return number
-function tooltip_class:ReturnZeroOrMinus(value)
-	if value <= 10 then
-		return value - 19
-	else
-		return 0
-	end
-end
-
----calculate y offset needed to not go over the screen
+---Calculate y offset needed to not go over the screen
 ---@private
 ---@param y number
 ---@param h number
 function tooltip_class:GetOffsetY(y, h)
 	local y_offset = 0
-	if y > self.dim.y * 0.75 then
-		y_offset = y_offset - h - 10
-	else
-		y_offset = self:ReturnZeroOrMinus(self.dim.y - y - h)
+	-- Move the tooltip up if it overflows the bottom edge
+	if y + h > self.dim.y then
+		y_offset = self.dim.y - y - h - 10 
+	-- Move the tooltip down if it overflows the top edge
+	elseif y < 0 then
+		y_offset = -y + 10
 	end
 	return y_offset
 end
 
----calculate x offset needed to not go over the screen
+---Calculate x offset needed to not go over the screen
 ---@private
 ---@param x number
 ---@param w number
 function tooltip_class:GetOffsetX(x, w)
-	local min_offset = 38
+	local min_offset = 38 -- Minimum padding from the screen edge
 	local x_offset = 0
-	if x > self.dim.x * 0.9 then
-		x_offset = self.dim.x - x - w - min_offset
-	elseif x > self.dim.x * 0.75 then
-		x_offset = x_offset - w
-		-- if (self.dim.x - x - w) < -min_offset then x_offset = self.dim.x - x - w - min_offset end
 
-		-- if x_offset > -min_offset then x_offset = -min_offset end
-	else
-		-- if x <= 10 then
-		-- 	x_offset = 10
-		-- elseif screen_w - x - w <= min_offset then
-		-- 	x_offset = screen_w - x - w - min_offset
-		-- end
-		-- x_offset = ReturnZeroOrMinus(screen_w - x - w )
+	-- Move the tooltip left if it overflows the right edge
+	if x + w > self.dim.x then
+		x_offset = self.dim.x - x - w - min_offset
+	-- Move the tooltip right if it overflows the left edge
+	elseif x < 0 then
+		x_offset = -x + min_offset
 	end
+
 	return x_offset
 end
 
----set tooltip cache
+---Set tooltip cache if not already set
 ---@private
 ---@param key string
 ---@param x number
 ---@param y number
 function tooltip_class:SetTooltipCache(x, y, key)
-	self.gui_tooltip_size_cache[key] = {}
 	local prev = self:GetPrevious()
-	self.gui_tooltip_size_cache[key].width = prev.w
-	self.gui_tooltip_size_cache[key].height = prev.h
-	self.gui_tooltip_size_cache[key].x_offset = self:GetOffsetX(x, self.gui_tooltip_size_cache[key].width)
-	self.gui_tooltip_size_cache[key].y_offset = self:GetOffsetY(y, self.gui_tooltip_size_cache[key].height)
+	self.gui_tooltip_size_cache[key] = {
+		width = prev.w,
+		height = prev.h,
+		x_offset = self:GetOffsetX(x, prev.w),
+		y_offset = self:GetOffsetY(y, prev.h)
+	}
 end
 
----set tooltip cache if empty
+---Draw tooltip off-screen to measure its size
 ---@private
 ---@param x number
 ---@param y number
 ---@param ui_fn function
 ---@param variable any
 ---@param key string
-function tooltip_class:GuiTooltipValidateTooltipCache(x, y, ui_fn, variable, key)
-	if self.gui_tooltip_size_cache[key] then return end
+function tooltip_class:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
 	local offscreen_offset = 1000
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
@@ -169,27 +153,49 @@ function tooltip_class:GuiTooltipValidateTooltipCache(x, y, ui_fn, variable, key
 	GuiLayoutEnd(self.gui)
 	GuiEndAutoBoxNinePiece(self.gui)
 	self:SetTooltipCache(x, y, key)
+	self:SetTooltipCache(x, y, key)
 end
 
----actual function to draw tooltip
+---Retrieve tooltip data, drawing it off-screen if necessary
+---@param x number
+---@param y number
+---@param ui_fn function
+---@param variable any
+---@return table
+function tooltip_class:GetTooltipData(x, y, ui_fn, variable)
+	local key = self:GetKey(x, y, ui_fn, variable)
+	if not self.gui_tooltip_size_cache[key] then
+		self:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
+	end
+	return self.gui_tooltip_size_cache[key]
+end
+
+---Generate a unique key for the tooltip cache
+---@protected
+---@param x number
+---@param y number
+---@param ui_fn function
+---@param variable any
+---@return string
+function tooltip_class:GetKey(x, y, ui_fn, variable)
+	return self:Locale("$current_language") .. tostring(x) .. tostring(y) .. tostring(ui_fn) .. tostring(variable)
+end
+
+---Actual function to draw tooltip
 ---@private
 ---@param x number
 ---@param y number
 ---@param ui_fn function
 ---@param variable any
 function tooltip_class:DrawToolTip(x, y, ui_fn, variable)
-	local key = self:Locale("$current_language") .. tostring(x) .. tostring(y) .. tostring(ui_fn) .. tostring(variable)
+	local cache = self:GetTooltipData(x, y, ui_fn, variable)
 	self:id_reset()
-	self:GuiTooltipValidateTooltipCache(x, y, ui_fn, variable, key)
 	GuiZSet(self.gui, self.tooltip_z)
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, false)
 	self:AnimateScale(0.08, false)
 	GuiBeginAutoBox(self.gui)
-	GuiLayoutBeginVertical(
-		self.gui, x + self.gui_tooltip_size_cache[key].x_offset,
-		y + self.gui_tooltip_size_cache[key].y_offset, true
-	)
+	GuiLayoutBeginVertical(self.gui, x + cache.x_offset, y + cache.y_offset, true)
 	ui_fn(self, variable)
 	GuiLayoutEnd(self.gui)
 	GuiZSet(self.gui, self.tooltip_z + 1)

@@ -140,7 +140,8 @@ function EB:AddToolTip(x, y, width, height)
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		self:ShowTooltip(prev.x, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
+		local cache = self.tp:GetTooltipData(prev.x, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
+		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
 		if InputIsMouseButtonJustDown(1) then -- mouse clicks
 			ML:toggle_ui()
 		end
