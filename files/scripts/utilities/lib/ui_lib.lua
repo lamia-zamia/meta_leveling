@@ -112,18 +112,20 @@ end
 
 ---Calculate x offset needed to not go over the screen
 ---@private
----@param x number
----@param w number
+---@param x number The x-coordinate of the tooltip
+---@param w number The width of the tooltip
+---@return number x_offset The offset to apply to keep the tooltip within screen bounds
 function tooltip_class:GetOffsetX(x, w)
 	local min_offset = 38 -- Minimum padding from the screen edge
 	local x_offset = 0
 
 	-- Move the tooltip left if it overflows the right edge
-	if x + w > self.dim.x then
+	if x + w > self.dim.x - min_offset then
 		x_offset = self.dim.x - x - w - min_offset
+	end
 	-- Move the tooltip right if it overflows the left edge
-	elseif x < 0 then
-		x_offset = -x + min_offset
+	if x + x_offset < min_offset then
+		x_offset = min_offset - x
 	end
 
 	return x_offset
