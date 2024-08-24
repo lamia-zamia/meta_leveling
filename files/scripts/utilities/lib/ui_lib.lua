@@ -80,8 +80,14 @@ end
 -- #########		TOOLTIPS		###########
 -- ############################################
 
+---@class gui_tooltip_size_cache
+---@field width number
+---@field height number
+---@field x_offset number
+---@field y_offset number
+
 ---@class tooltip:UI_class
----@field private gui_tooltip_size_cache table
+---@field private gui_tooltip_size_cache gui_tooltip_size_cache
 ---@field private tooltip_z number
 local tooltip_class = ui_class:new()
 tooltip_class.gui_tooltip_size_cache = setmetatable({}, { __mode = "k" })
@@ -161,7 +167,7 @@ end
 ---@param y number
 ---@param ui_fn function
 ---@param variable any
----@return table
+---@return gui_tooltip_size_cache
 function tooltip_class:GetTooltipData(x, y, ui_fn, variable)
 	local key = self:GetKey(x, y, ui_fn, variable)
 	if not self.gui_tooltip_size_cache[key] then
