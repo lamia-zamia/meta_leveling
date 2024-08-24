@@ -32,30 +32,22 @@ function LU_debug:debug_all_rewards_tooltip(reward)
 		self:Text(0, 0, "desk2: " .. unpack_vars(reward.description2, reward.description2_var))
 	end
 	self:Text(0, 0, "prob: " .. ML.rewards_deck:get_probability(reward.probability)) ---@diagnostic disable-line: invisible
-	self:Text(0, 0, "max: " .. reward.max)
+	if reward.max < 1280 then
+		self:Text(0, 0, "max: " .. reward.max)
+	end
 	if reward.limit_before then
 		self:Text(0, 0, "not before: " .. reward.limit_before)
 	end
 	if reward.custom_check then
 		self:Text(0, 0, "custom check: " .. tostring(reward.custom_check()))
 	end
-	-- if reward.description_var then
-	-- 	GuiLayoutBeginHorizontal(self.gui, 0, 0, false, 0, 0)
-	-- 	self:Text(0, 0, "desc vars: ")
-	-- 	for _, variable in ipairs(reward.description_var) do
-	-- 		-- self:AddOptionForNext(14)
-	-- 		if type(variable) == "string" then
-	-- 			self:Text(0, 0, variable)
-	-- 		elseif type(variable) == "function" then
-	-- 			self:Text(0, 0, "*" .. variable())
-	-- 		end
-	-- 	end
-	-- 	GuiLayoutEnd(self.gui)
-	-- end
 	if reward.min_level > 1 then
 		self:Text(0, 0, "min level: " .. reward.min_level)
 	end
-	-- self:Text
+end
+
+function LU_debug:debug_reward_deck_tooltip(text)
+	self:Text(0, 0, text)
 end
 
 ---draws debug window
@@ -123,7 +115,7 @@ function LU_debug:DrawDebugWindow()
 		self:Text(0, y + 23 - self.scroll.y, string.rep("_", 60))
 		y = y + 13 + distance_between
 		x = 3
-		for _, reward in self:orderedPairs( ML.rewards_deck.reward_data) do
+		for _, reward in self:orderedPairs(ML.rewards_deck.reward_data) do
 			if x + distance_between / 2 > self.const.width then
 				x = 3
 				y = y + distance_between
@@ -143,7 +135,8 @@ function LU_debug:DrawDebugWindow()
 			if self:ElementIsVisible(y, distance_between) then
 				prev = self:GetPrevious()
 				if prev.hovered then
-					self:AddTooltip(0, distance_between, LU_debug.debug_all_rewards_tooltip, reward)
+					local cache = self.tp:GetTooltipData(0, distance_between, LU_debug.debug_all_rewards_tooltip, reward)
+					self:AddTooltip((cache.width - 16) / -2, distance_between, LU_debug.debug_all_rewards_tooltip, reward)
 					if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
 						ML.rewards_deck:pick_reward(reward.id)
 					end
@@ -184,7 +177,8 @@ function LU_debug:DrawDebugWindow()
 			self:Image(x, y - self.scroll.y, reward.ui_icon, 1, 0.5, 0.5)
 			if self:ElementIsVisible(y, distance_between) then
 				self:Draw9Piece(prev.x, prev.y, self.const.z, 8, 8, self.c.empty)
-				self:AddTooltip(0, distance_between, "index: " .. i .. ", id: " .. reward_id)
+				local cache = self.tp:GetTooltipData(0, distance_between, LU_debug.debug_reward_deck_tooltip, "index: " .. i .. ", id: " .. reward_id)
+				self:AddTooltip((cache.width - 8) / -2, distance_between + 8, LU_debug.debug_reward_deck_tooltip, "index: " .. i .. ", id: " .. reward_id)
 			end
 			x = x + distance_between
 		end
