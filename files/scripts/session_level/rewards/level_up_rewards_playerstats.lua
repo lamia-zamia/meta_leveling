@@ -1,7 +1,7 @@
 ---@type ml_rewards
 local player_stats = {
 	{
-		id = "movement_speed",
+		id = "stats_movement_speed",
 		ui_name = "$ml_slightly $perk_movement_faster",
 		description = "$perkdesc_movement_faster",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/movement_speed.png",
@@ -14,7 +14,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "hover_speed",
+		id = "stats_hover_speed",
 		ui_name = "$ml_hover_speed",
 		description = "$ml_hover_speed_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_speed.png",
@@ -27,7 +27,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "hover_energy",
+		id = "stats_hover_energy",
 		ui_name = "$ml_slightly $perk_hover_boost",
 		description = "$ml_hover_energy_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_energy.png",
@@ -39,7 +39,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "hover_recharge",
+		id = "stats_hover_recharge",
 		ui_name = "$ml_hover_recharge",
 		description = "$ml_hover_recharge_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_recharge.png",
@@ -52,7 +52,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "bigger_lungs",
+		id = "stats_bigger_lungs",
 		ui_name = "$ml_bigger_lungs",
 		description = "$ml_bigger_lungs_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/bigger_lungs.png",
@@ -67,7 +67,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "projectile_resistance",
+		id = "stats_projectile_resistance",
 		ui_name = "$ml_projectile_resistance",
 		description = "$ml_projectile_resistance_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/projectile_resistance.png",
@@ -79,7 +79,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "explosion_resistance",
+		id = "stats_explosion_resistance",
 		ui_name = "$ml_explosion_resistance",
 		description = "$ml_explosion_resistance_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/explosion_resistance.png",
@@ -94,7 +94,7 @@ local player_stats = {
 		end
 	},
 	{
-		id = "melee_resistance",
+		id = "stats_melee_resistance",
 		ui_name = "$ml_melee_resistance",
 		description = "$ml_melee_resistance_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/melee_resistance.png",

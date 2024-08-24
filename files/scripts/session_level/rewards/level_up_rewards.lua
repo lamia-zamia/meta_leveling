@@ -43,8 +43,8 @@ local reward_list = {
 		end
 	},
 	{
-		id = "add_gold1",
-		group_id = "add_gold",
+		id = "gold_add1",
+		group_id = "gold_add",
 		ui_name = "$ml_add_gold",
 		description = "$ml_add_gold_tp",
 		description_var = { "400" },
@@ -59,8 +59,8 @@ local reward_list = {
 		end
 	},
 	{
-		id = "add_gold2",
-		group_id = "add_gold",
+		id = "gold_add2",
+		group_id = "gold_add",
 		ui_name = "$ml_add_gold",
 		description = "$ml_add_gold_tp",
 		description_var = { "1600" },
@@ -68,7 +68,7 @@ local reward_list = {
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
 		sound = ML.const.sounds.shop_item,
-		limit_before = "add_gold1",
+		limit_before = "gold_add1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
@@ -76,15 +76,15 @@ local reward_list = {
 		end
 	},
 	{
-		id = "add_gold3",
-		group_id = "add_gold",
+		id = "gold_add3",
+		group_id = "gold_add",
 		ui_name = "$ml_add_gold",
 		description = "$ml_add_gold_tp",
 		description_var = { "5000" },
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		sound = ML.const.sounds.shop_item,
-		limit_before = "add_gold2",
+		limit_before = "gold_add2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
@@ -92,7 +92,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "bloody_money",
+		id = "gold_bloody_money",
 		ui_name = "$ml_bloody_money",
 		description = "$ml_bloody_money_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/bloody_money.xml",
@@ -154,7 +154,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "peace_with_gods",
+		id = "gods_peace_with_gods",
 		group_id = "gods",
 		ui_name = "$ml_peace_with_gods",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/peace_with_gods.xml",
@@ -169,7 +169,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "forgetful_gods",
+		id = "gods_forgetful_gods",
 		group_id = "gods",
 		ui_name = "$ml_forgetful_gods",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/peace_with_gods.xml",
@@ -335,7 +335,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "permanent_concentrated_mana",
+		id = "buff_permanent_concentrated_mana",
 		ui_name = "$ml_permanent_concentrated_mana",
 		description = "$ml_permanent_concentrated_mana_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/permanent_concentrated_mana.xml",
@@ -346,7 +346,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "projectile_damage_increase",
+		id = "buff_damage_projectile_damage_increase",
 		ui_name = "$ml_projectile_damage_increase",
 		description = "$ml_projectile_damage_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/projectile_damage.xml",
@@ -357,7 +357,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "elemental_damage_increase",
+		id = "buff_damage_elemental_damage_increase",
 		ui_name = "$ml_elemental_damage_increase",
 		description = "$ml_elemental_damage_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/elemental_damage.xml",
@@ -368,7 +368,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "drill_damage_increase",
+		id = "buff_damage_drill_damage_increase",
 		ui_name = "$ml_drill_damage_increase",
 		description = "$ml_drill_damage_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/drill_damage.xml",
@@ -379,7 +379,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "crit_chance_increase",
+		id = "buff_damage_crit_chance_increase",
 		ui_name = "$action_critical_hit",
 		description = "$actiondesc_critical_hit",
 		ui_icon = "data/ui_gfx/gun_actions/critical_hit.png",
@@ -390,7 +390,7 @@ local reward_list = {
 		end
 	},
 	{
-		id = "drill_destructibility_increase",
+		id = "buff_damage_drill_destructibility_increase",
 		ui_name = "$ml_drill_destructibility_increase",
 		description = "$ml_drill_destructibility_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/drill_destructibility.xml",

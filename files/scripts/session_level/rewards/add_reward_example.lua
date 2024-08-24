@@ -1,6 +1,6 @@
 ---@type ml_reward
 local reward = {
-	id = "spell_refresh",
+	id = "pickup_spell_refresh",
 	ui_name = "$item_spell_refresh",
 	description = "$streamingeventdesc_spell_refresh",
 	ui_icon = "mods/meta_leveling/files/gfx/rewards/spell_refresh.xml",
@@ -16,8 +16,8 @@ ML.rewards_deck:add_reward(reward)
 ---@type ml_rewards
 local rewards = {
 	{
-		id = "spawn_chest1",
-		group_id = "spawn_chest",
+		id = "pickup_spawn_chest1",
+		group_id = "pickup_spawn_chest",
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
@@ -34,15 +34,15 @@ local rewards = {
 		end
 	},
 	{
-		id = "spawn_chest2",
-		group_id = "spawn_chest",
+		id = "pickup_spawn_chest2",
+		group_id = "pickup_spawn_chest",
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better" },
 		probability = 0.6,
 		max = 5,
-		limit_before = "spawn_chest1",
+		limit_before = "pickup_spawn_chest1",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
@@ -54,14 +54,14 @@ local rewards = {
 		end
 	},
 	{
-		id = "spawn_chest3",
-		group_id = "spawn_chest",
+		id = "pickup_spawn_chest3",
+		group_id = "pickup_spawn_chest",
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better", "!" },
 		probability = 0.6,
-		limit_before = "spawn_chest2",
+		limit_before = "pickup_spawn_chest2",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
@@ -73,8 +73,8 @@ local rewards = {
 		end
 	},
 	{
-		id = "spawn_chest_mimic",
-		group_id = "spawn_chest",
+		id = "pickup_spawn_chest_mimic",
+		group_id = "pickup_spawn_chest",
 		ui_name = "$ml_spawn_chest",
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",

@@ -1,8 +1,8 @@
 ---@type ml_rewards
 local reward_spell = {
 	{
-		id = "random_spell1",
-		group_id = "random_spell",
+		id = "spell_random1",
+		group_id = "spell_random",
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_spell.xml",
@@ -16,8 +16,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_spell2",
-		group_id = "random_spell",
+		id = "spell_random2",
+		group_id = "spell_random",
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/random_spell.xml",
@@ -32,8 +32,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_spell3",
-		group_id = "random_spell",
+		id = "spell_random3",
+		group_id = "spell_random",
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
 		description_var = { "$ml_spell_high" },
@@ -48,8 +48,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_projectile1",
-		group_id = "random_projectile",
+		id = "spell_random_projectile1",
+		group_id = "spell_random_projectile",
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		description_var = { "$ml_spell_low" },
@@ -63,8 +63,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_projectile2",
-		group_id = "random_projectile",
+		id = "spell_random_projectile2",
+		group_id = "spell_random_projectile",
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		description_var = { "$ml_spell_mid" },
@@ -79,8 +79,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_projectile3",
-		group_id = "random_projectile",
+		id = "spell_random_projectile3",
+		group_id = "spell_random_projectile",
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		description_var = { "$ml_spell_high" },
@@ -95,8 +95,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_static_projectile1",
-		group_id = "random_static_projectile",
+		id = "spell_random_static_projectile1",
+		group_id = "spell_random_static_projectile",
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_low" },
@@ -110,8 +110,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_static_projectile2",
-		group_id = "random_static_projectile",
+		id = "spell_random_static_projectile2",
+		group_id = "spell_random_static_projectile",
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_mid" },
@@ -126,8 +126,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_static_projectile3",
-		group_id = "random_static_projectile",
+		id = "spell_random_static_projectile3",
+		group_id = "spell_random_static_projectile",
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_high" },
@@ -142,8 +142,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_modifier1",
-		group_id = "random_modifier",
+		id = "spell_random_modifier1",
+		group_id = "spell_random_modifier",
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		description_var = { "$ml_spell_low" },
@@ -157,8 +157,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_modifier2",
-		group_id = "random_modifier",
+		id = "spell_random_modifier2",
+		group_id = "spell_random_modifier",
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		description_var = { "$ml_spell_mid" },
@@ -173,8 +173,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_modifier3",
-		group_id = "random_modifier",
+		id = "spell_random_modifier3",
+		group_id = "spell_random_modifier",
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		description_var = { "$ml_spell_high" },
@@ -189,7 +189,7 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_passive_spell1",
+		id = "spell_random_passive_spell1",
 		ui_name = "$ml_passive_spell",
 		description = "$ml_passive_spell_tp",
 		sound = ML.const.sounds.chest,
@@ -202,7 +202,7 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_material_spell1",
+		id = "spell_random_material_spell1",
 		ui_name = "$ml_material_spell",
 		description = "$ml_material_spell_tp",
 		sound = ML.const.sounds.chest,
@@ -216,8 +216,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_utility1",
-		group_id = "random_utility",
+		id = "spell_random_utility1",
+		group_id = "spell_random_utility",
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		description_var = { "$ml_spell_low" },
@@ -231,8 +231,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_utility2",
-		group_id = "random_utility",
+		id = "spell_random_utility2",
+		group_id = "spell_random_utility",
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		description_var = { "$ml_spell_mid" },
@@ -247,8 +247,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_utility3",
-		group_id = "random_utility",
+		id = "spell_random_utility3",
+		group_id = "spell_random_utility",
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		description_var = { "$ml_spell_high" },
@@ -263,8 +263,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_other2",
-		group_id = "random_other",
+		id = "spell_random_other2",
+		group_id = "spell_random_other",
 		ui_name = "$ml_random_other",
 		description = "$ml_random_other_tp",
 		description_var = { "$ml_spell_mid" },
@@ -279,8 +279,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_other3",
-		group_id = "random_other",
+		id = "spell_random_other3",
+		group_id = "spell_random_other",
 		ui_name = "$ml_random_other",
 		description = "$ml_random_other_tp",
 		description_var = { "$ml_spell_high" },
@@ -295,8 +295,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_draw_many1",
-		group_id = "random_draw_many",
+		id = "spell_random_draw_many1",
+		group_id = "spell_random_draw_many",
 		ui_name = "$ml_random_draw_many",
 		description = "$ml_random_draw_many_tp",
 		description_var = { "$ml_spell_low" },
@@ -310,8 +310,8 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "random_draw_many2",
-		group_id = "random_draw_many",
+		id = "spell_random_draw_many2",
+		group_id = "spell_random_draw_many",
 		ui_name = "$ml_random_draw_many",
 		description = "$ml_random_draw_many_tp",
 		description_var = { "$ml_spell_mid" },
@@ -326,7 +326,7 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "teleport_bolt",
+		id = "spell_teleport_bolt",
 		ui_name = "$action_teleport_projectile_short",
 		description = "$ml_spell_static",
 		description_var = { "$ml_a", "$action_teleport_projectile_short" },
@@ -367,7 +367,7 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "spell_BLOOD_MAGIC",
+		id = "spell_blood_magic",
 		ui_name = "$action_blood_magic",
 		description = "$ml_spell_static",
 		description_var = { "$ml_a", "$action_blood_magic" },
@@ -381,7 +381,7 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "spell_COV",
+		id = "spell_cov",
 		ui_name = "$action_regeneration_field",
 		description = "$ml_spell_static",
 		description_var = { "$ml_a", "$action_regeneration_field" },
@@ -396,7 +396,7 @@ local reward_spell = {
 		end
 	},
 	{
-		id = "heal_spells",
+		id = "spell_heal_spells",
 		ui_name = "$ml_heal_spells",
 		description = "$ml_heal_spells_tp",
 		ui_icon = "data/ui_gfx/gun_actions/heal_bullet.png",

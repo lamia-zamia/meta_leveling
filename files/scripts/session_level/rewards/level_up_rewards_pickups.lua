@@ -1,8 +1,8 @@
 ---@type ml_rewards
 local potion_reward = {
 	{
-		id = "random_potion_complete",
-		group_id = "potion",
+		id = "pickup_potion_random_complete",
+		group_id = "pickup_potion",
 		ui_name = "$ml_random_potion",
 		description = "$ml_random_potion_complete_tp",
 		ui_icon = "data/ui_gfx/items/potion.png",
@@ -13,8 +13,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "random_potion",
-		group_id = "potion",
+		id = "pickup_potion_random",
+		group_id = "pickup_potion",
 		ui_name = "$ml_random_potion",
 		description = "$ml_random_potion_tp",
 		ui_icon = "data/ui_gfx/items/potion.png",
@@ -25,8 +25,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "random_potion_secret",
-		group_id = "potion",
+		id = "pickup_potion_random_secret",
+		group_id = "pickup_potion",
 		ui_name = "$ml_random_potion",
 		description = "$ml_random_potion_secret_tp",
 		ui_icon = "data/ui_gfx/items/potion.png",
@@ -37,8 +37,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "potion_milk",
-		group_id = "potion",
+		id = "pickup_potion_milk",
+		group_id = "pickup_potion",
 		ui_name = "$mat_milk",
 		ui_icon = "data/ui_gfx/items/potion.png",
 		probability = 0.01,
@@ -48,8 +48,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "potion_urine",
-		group_id = "potion",
+		id = "pickup_potion_urine",
+		group_id = "pickup_potion",
 		ui_name = "$mat_urine",
 		ui_icon = "data/ui_gfx/items/potion.png",
 		probability = 0.01,
@@ -59,8 +59,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "potion_healthium",
-		group_id = "potion",
+		id = "pickup_potion_healthium",
+		group_id = "pickup_potion",
 		ui_name = "$mat_magic_liquid_hp_regeneration",
 		description = "$ml_potion_static",
 		description_var = { "$ml_a", "$mat_magic_liquid_hp_regeneration" },
@@ -74,8 +74,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "potion_LC",
-		group_id = "potion",
+		id = "pickup_potion_LC",
+		group_id = "pickup_potion",
 		ui_name = "$mat_magic_liquid_hp_regeneration_unstable",
 		description = "$ml_potion_static",
 		description_var = { "$ml_a", "$mat_magic_liquid_hp_regeneration_unstable" },
@@ -89,8 +89,8 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "potion_mimic",
-		group_id = "potion",
+		id = "pickup_potion_mimic",
+		group_id = "pickup_potion",
 		ui_name = "$mat_magic_liquid_hp_regeneration",
 		description = "$ml_potion_static",
 		description_var = { "$ml_a", "$mat_magic_liquid_hp_regeneration" },
@@ -103,7 +103,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_stonestone",
+		id = "pickup_item_stonestone",
 		ui_name = "$item_stonestone",
 		description = "$itemdesc_stonestone",
 		ui_icon = "data/ui_gfx/items/stonestone.png",
@@ -114,7 +114,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_thunderstone",
+		id = "pickup_item_thunderstone",
 		ui_name = "$item_thunderstone",
 		description = "$item_description_thunderstone",
 		ui_icon = "data/ui_gfx/items/ingredient_1.png",
@@ -125,7 +125,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_safe_haven",
+		id = "pickup_item_safe_haven",
 		ui_name = "$item_safe_haven",
 		description = "$item_description_safe_haven",
 		ui_icon = "data/ui_gfx/items/safe_haven.png",
@@ -136,7 +136,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_powder_stash_3",
+		id = "pickup_item_powder_stash_3",
 		ui_name = "$item_powder_stash_3",
 		description = "$itemdesc_powder_stash_3",
 		ui_icon = "data/ui_gfx/items/material_pouch.png",
@@ -147,7 +147,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_waterstone",
+		id = "pickup_item_waterstone",
 		ui_name = "$item_waterstone",
 		description = "$item_description_waterstone",
 		ui_icon = "data/ui_gfx/items/waterstone.png",
@@ -158,7 +158,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_evil_eye",
+		id = "pickup_item_evil_eye",
 		ui_name = "$item_evil_eye",
 		description = "$item_description_evil_eye",
 		ui_icon = "data/ui_gfx/items/evil_eye.png",
@@ -169,7 +169,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_broken_wand",
+		id = "pickup_item_broken_wand",
 		ui_name = "$item_broken_wand",
 		description = "$item_description_broken_wand",
 		ui_icon = "data/ui_gfx/items/broken_wand.png",
@@ -180,7 +180,7 @@ local potion_reward = {
 		end
 	},
 	{
-		id = "item_brimstone",
+		id = "pickup_item_brimstone",
 		ui_name = "$item_brimstone",
 		description = "$item_description_brimstone",
 		ui_icon = "data/ui_gfx/items/brimstone.png",

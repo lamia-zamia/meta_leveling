@@ -10,6 +10,7 @@ local const = {
 	ui_9p_button_hl = "mods/meta_leveling/files/gfx/ui/ui_9piece_button_highlight.png",
 	ui_9p_button_important = "mods/meta_leveling/files/gfx/ui/ui_9piece_button_important.png",
 	height = 180,
+	height_max = 140,
 	width = 320,
 	sprite_offset = 20,
 	reward_box_size = 24,
@@ -21,7 +22,7 @@ local data = {
 	mLastDamageFrame = -120,
 	mButtonLastFrameFire = -2,
 	reward_list = nil,
-	current_rewards_height = const.sprite_offset,
+	scrollbox_height = const.sprite_offset,
 	DrawWindow = nil,
 	x = 0,
 	y = 0,
@@ -46,7 +47,7 @@ local anim = {
 	}
 }
 
----@class (exact) level_ui:UI_class
+---@class level_ui:UI_class
 ---@field private const LU.const
 ---@field private data LU.data
 ---@field private anim LU.anim

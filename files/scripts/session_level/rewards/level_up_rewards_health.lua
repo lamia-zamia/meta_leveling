@@ -1,8 +1,8 @@
 ---@type ml_rewards
 local health_rewards = {
 	{
-		id = "simple_extra_health1",
-		group_id = "simple_extra_health",
+		id = "health_extra_health1",
+		group_id = "health_extra_health",
 		ui_name = "$ml_simple_extra_health",
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
@@ -17,8 +17,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "simple_extra_health2",
-		group_id = "simple_extra_health",
+		id = "health_extra_health2",
+		group_id = "health_extra_health",
 		ui_name = "$ml_simple_extra_health",
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
@@ -26,7 +26,7 @@ local health_rewards = {
 		description_var = { "50" },
 		max = 5,
 		sound = ML.const.sounds.heart,
-		limit_before = "simple_extra_health1",
+		limit_before = "health_extra_health1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -34,15 +34,15 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "simple_extra_health3",
-		group_id = "simple_extra_health",
+		id = "health_extra_health3",
+		group_id = "health_extra_health",
 		ui_name = "$ml_simple_extra_health",
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
 		description_var = { "100" },
 		sound = ML.const.sounds.heart,
-		limit_before = "simple_extra_health2",
+		limit_before = "health_extra_health2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -50,8 +50,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "extra_health_perc1",
-		group_id = "simple_extra_health",
+		id = "health_extra_health_perc1",
+		group_id = "health_extra_health",
 		ui_name = "$ml_simple_extra_health",
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
@@ -59,7 +59,7 @@ local health_rewards = {
 		description_var = { "10%" },
 		max = 5,
 		sound = ML.const.sounds.heart,
-		limit_before = "simple_extra_health2",
+		limit_before = "health_extra_health2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -67,15 +67,15 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "extra_health_perc2",
-		group_id = "simple_extra_health",
+		id = "health_extra_health_perc2",
+		group_id = "health_extra_health",
 		ui_name = "$ml_simple_extra_health",
 		description = "$ml_simple_extra_health_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
 		description_var = { "25%" },
 		sound = ML.const.sounds.heart,
-		limit_before = "extra_health_perc1",
+		limit_before = "health_extra_health_perc1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -83,8 +83,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "heal_con1",
-		group_id = "heal",
+		id = "health_heal_con1",
+		group_id = "health_heal",
 		ui_name = "$ml_heal_con",
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
@@ -104,8 +104,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "heal_con2",
-		group_id = "heal",
+		id = "health_heal_con2",
+		group_id = "health_heal",
 		ui_name = "$ml_heal_con",
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
@@ -114,7 +114,7 @@ local health_rewards = {
 		end,
 		max = 3,
 		description_var = { "150" },
-		limit_before = "heal_con1",
+		limit_before = "health_heal_con1",
 		sound = ML.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
@@ -126,8 +126,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "heal_con3",
-		group_id = "heal",
+		id = "health_heal_con3",
+		group_id = "health_heal",
 		ui_name = "$ml_heal_con",
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
@@ -135,7 +135,7 @@ local health_rewards = {
 			return ML.player.absent_hp_percent + 0.1
 		end,
 		description_var = { "300" },
-		limit_before = "heal_con2",
+		limit_before = "health_heal_con2",
 		sound = ML.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
@@ -147,8 +147,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "heal_perc1",
-		group_id = "heal",
+		id = "health_heal_perc1",
+		group_id = "health_heal",
 		ui_name = "$ml_heal_con",
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
@@ -170,8 +170,8 @@ local health_rewards = {
 		end
 	},
 	{
-		id = "heal_perc2",
-		group_id = "heal",
+		id = "health_heal_perc2",
+		group_id = "health_heal",
 		ui_name = "$ml_heal_con",
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
@@ -179,7 +179,7 @@ local health_rewards = {
 			return ML.player.absent_hp_percent + 0.1
 		end,
 		description_var = { "100 + 25%" },
-		limit_before = "heal_perc1",
+		limit_before = "health_heal_perc1",
 		sound = ML.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1

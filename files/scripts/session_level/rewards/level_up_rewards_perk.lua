@@ -1,7 +1,7 @@
 ---@type ml_rewards
 local rewards_perk = {
 	{
-		id = "EXTRA_PERK",
+		id = "perk_extra_perk",
 		ui_name = "$perk_extra_perk",
 		description = "$perkdesc_extra_perk",
 		ui_icon = "data/items_gfx/perks/extra_perk.png",
@@ -18,7 +18,7 @@ local rewards_perk = {
 		end
 	},
 	{
-		id = "PERKS_LOTTERY",
+		id = "perk_perks_lottery",
 		ui_name = "$perk_perks_lottery",
 		description = "$perkdesc_perks_lottery",
 		ui_icon = "data/items_gfx/perks/perks_lottery.png",
@@ -35,7 +35,7 @@ local rewards_perk = {
 		end
 	},
 	{
-		id = "REMOVE_FOG_OF_WAR",
+		id = "perk_remove_fog_of_war",
 		ui_name = "$perk_remove_fog_of_war",
 		description = "$perkdesc_remove_fog_of_war",
 		ui_icon = "data/items_gfx/perks/remove_fog_of_war.png",
@@ -52,7 +52,7 @@ local rewards_perk = {
 		end
 	},
 	{
-		id = "EDIT_WANDS_EVERYWHERE",
+		id = "perk_edit_wands_everywhere",
 		ui_name = "$perk_edit_wands_everywhere",
 		description = "$perkdesc_edit_wands_everywhere",
 		ui_icon = "data/items_gfx/perks/edit_wands_everywhere.png",
@@ -69,7 +69,7 @@ local rewards_perk = {
 		end
 	},
 	{
-		id = "RESPAWN",
+		id = "perk_respawn",
 		ui_name = "$perk_respawn",
 		description = "$perkdesc_respawn",
 		ui_icon = "data/items_gfx/perks/respawn.png",

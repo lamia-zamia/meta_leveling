@@ -1,7 +1,7 @@
 ---@type ml_rewards
 local wand_rewards = {
 	{
-		id = "faster_wand_both",
+		id = "wand_faster_delay_and_recharge",
 		ui_name = "$ml_faster_wand",
 		description = "$ml_faster_wand_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_wand.png",
@@ -16,7 +16,7 @@ local wand_rewards = {
 		end
 	},
 	{
-		id = "faster_wand_delay",
+		id = "wand_faster_delay",
 		ui_name = "$ml_faster_wand",
 		description = "$ml_faster_wand_delay",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_delay.png",
@@ -30,7 +30,7 @@ local wand_rewards = {
 		end
 	},
 	{
-		id = "faster_wand_recharge",
+		id = "wand_faster_recharge",
 		ui_name = "$ml_faster_wand",
 		description = "$ml_faster_wand_recharge",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_recharge.png",
@@ -136,7 +136,7 @@ local wand_rewards = {
 		end
 	},
 	{
-		id = "lower_spread",
+		id = "wand_lower_spread",
 		ui_name = "$ml_wand_lower_spread",
 		description = "$ml_wand_lower_spread_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/lower_spread.png",
