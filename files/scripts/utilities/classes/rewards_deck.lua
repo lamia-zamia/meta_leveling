@@ -283,12 +283,12 @@ end
 ---do stuff after pickup
 ---@param draw_id string
 function rewards_deck:pick_reward(draw_id)
-	self:set_draw_index()
+	rewards_deck:set_draw_index()
 
-	self:play_sound(draw_id)
-	self.reward_data[draw_id].fn()
+	rewards_deck:play_sound(draw_id)
+	rewards_deck.reward_data[draw_id].fn()
 
-	self:add_specific_reward_pickup_amount(draw_id)
+	rewards_deck:add_specific_reward_pickup_amount(draw_id)
 end
 
 function rewards_deck:get_reroll_count()
