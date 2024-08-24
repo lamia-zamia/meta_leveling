@@ -319,8 +319,7 @@ function LU:DrawCurrentRewardsTooltip(rewards)
 			local description = LU:UnpackDescription(reward.description, reward.description_var)
 			if description then text = text .. " " .. description end
 			text = text .. "\n"
-			local offset = self:GetTextDimension(text)
-			self:Text(-offset / 2, 0, text)
+			self:Text(0, 0, text)
 		end
 	end
 end
@@ -345,7 +344,8 @@ function LU:DrawCurrentRewardsItems()
 			local prev = self:GetPrevious()
 			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward)
 			if self:ElementIsVisible(y, distance_between) then
-				self:AddTooltip(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
+				local cache = self.tp:GetTooltipData(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
+				self:AddTooltip((cache.width - 16) / - 2, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 			end
 			x = x + distance_between
 		end
