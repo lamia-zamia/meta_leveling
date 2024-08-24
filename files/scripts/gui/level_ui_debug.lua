@@ -183,6 +183,7 @@ function LU_debug:DrawDebugWindow()
 			end
 			self:Image(x, y - self.scroll.y, reward.ui_icon, 1, 0.5, 0.5)
 			if self:ElementIsVisible(y, distance_between) then
+				self:Draw9Piece(prev.x, prev.y, self.const.z, 8, 8, self.c.empty)
 				self:AddTooltip(0, distance_between, "index: " .. i .. ", id: " .. reward_id)
 			end
 			x = x + distance_between
