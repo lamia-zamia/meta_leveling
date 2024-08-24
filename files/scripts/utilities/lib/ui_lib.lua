@@ -332,14 +332,13 @@ end
 ---@param height number height of scrollbox
 function ui_class:FakeScrollBox_HandleClick(y, height)
 	local _, mouse_y = self:get_mouse_pos()
-	local scrollbar_pos = self.scroll.scrollbar_pos
 	if self:FakeScrollBox_ClickedOnScrollBarThumb(mouse_y, y) then
 		local scroll_target = self:FakeScrollBox_CalculateTargetScroll(mouse_y, y, height,
 			self.scroll.scrollbar_height / 2)
-		scrollbar_pos = self:FakeScrollBox_CalculateScrallbarPos(scroll_target, height)
+		self.scroll.scrollbar_pos = self:FakeScrollBox_CalculateScrallbarPos(scroll_target, height)
 	end
 	self.scroll.move_triggered = true
-	self.scroll.click_offset = mouse_y - (y + scrollbar_pos)
+	self.scroll.click_offset = mouse_y - (y + self.scroll.scrollbar_pos)
 end
 
 ---function to draw scrollbar
@@ -406,9 +405,7 @@ function ui_class:FakeScrollBox_ClumpAndMove()
 	self.scroll.target_y = math.max(math.min(self.scroll.target_y, self.scroll.max_y_target), 0)
 	if math.abs(self.scroll.target_y - self.scroll.y) < 1 then
 		self.scroll.y = self.scroll.target_y
-	end
-
-	if self.scroll.target_y ~= self.scroll.y then
+	else
 		self.scroll.y = (self.scroll.y + self.scroll.target_y) / 2
 	end
 end
