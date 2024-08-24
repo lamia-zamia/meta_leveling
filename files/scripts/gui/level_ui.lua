@@ -17,7 +17,7 @@ function LU:UnpackDescription(description, variables)
 			if type(variable) == "string" then
 				description = description:gsub("%$" .. i - 1, self:Locale(variable:gsub("%%", "%%%%")))
 			elseif type(variable) == "function" then
-				description = description:gsub("$" .. i - 1, variable())
+				description = description:gsub("%$" .. i - 1, variable())
 			end
 		end
 	end
@@ -107,6 +107,55 @@ end
 function LU:CloseMenu()
 	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
 	ML.gui = false
+end
+
+---check if element is visible within scrollbox
+---@private
+---@param y number
+---@param distance_between number
+---@return boolean
+function LU:ElementIsVisible(y, distance_between)
+	if y - self.scroll.y + distance_between / 2 > 0 and y - self.scroll.y - distance_between / 2 < self.const.height_max then
+		return true
+	end
+	return false
+end
+
+---function to reset scrollbox height
+---@private
+function LU:ResetScrollBoxHeight()
+	self:FakeScrollBox_Reset()
+	self.data.scrollbox_height = self.const.sprite_offset
+end
+
+---function to reset scrollbox params to default
+---@private
+function LU:ResetScrollBox()
+	self:AnimReset("window")
+	self:ResetScrollBoxHeight()
+end
+
+---Pairs sorted
+---@generic T: table, K, V
+---@param tbl T
+---@return fun(table: table<K, V>, index?: K):K, V
+---@return T
+function LU:orderedPairs(tbl)
+	local keys = {}
+	for k in pairs(tbl) do
+		table.insert(keys, k)
+	end
+	table.sort(keys)
+
+	local i = 0
+	local function iter()
+		i = i + 1
+		if keys[i] then
+			return keys[i], tbl[keys[i]]
+		end
+	end
+
+	return iter, tbl
 end
 
 -- ############################################
@@ -244,6 +293,19 @@ function LU:OpenLevelUpMenu()
 end
 
 -- ############################################
+-- ############		DEBUG		###############
+-- ############################################
+
+LU.Debug = dofile_once("mods/meta_leveling/files/scripts/gui/level_ui_debug.lua")
+
+function LU:DrawDebugMenu()
+	self.data.y = self.data.y + self.const.sprite_offset
+	self:FakeScrollBox(self.data.x - 1, self.data.y, self.const.width + 2, self.data.scrollbox_height, self.const.z + 1,
+		self.const.ui_9piece_gray,
+		self.Debug.DrawDebugWindow)
+end
+
+-- ############################################
 -- ########		CURRENT REWARDS		###########
 -- ############################################
 
@@ -253,8 +315,10 @@ function LU:DrawCurrentRewardsTooltip(rewards)
 	for _, reward_id in ipairs(rewards) do
 		local reward = ML.rewards_deck.reward_data[reward_id]
 		if reward.pick_count > 0 then
-			local text = reward.pick_count .. "x [" .. LU:FormatString(self:Locale(reward.ui_name)) .. "] "
-				.. LU:UnpackDescription(reward.description, reward.description_var) .. "\n"
+			local text = reward.pick_count .. "x [" .. LU:FormatString(self:Locale(reward.ui_name)) .. "]"
+			local description = LU:UnpackDescription(reward.description, reward.description_var)
+			if description then text = text .. " " .. description end
+			text = text .. "\n"
 			local offset = self:GetTextDimension(text)
 			self:Text(-offset / 2, 0, text)
 		end
@@ -267,28 +331,23 @@ function LU:DrawCurrentRewardsItems()
 	local y = 2
 	local x = 2
 	local distance_between = 30
-	local count = 1
-	local max_per_row = 11
-	local max_column = 4
 
-	for _, group in pairs(ML.rewards_deck.groups_data) do
+	for _, group in LU:orderedPairs(ML.rewards_deck.groups_data) do
 		if group.picked then
-			if count > max_per_row then
-				count = 1
+			if x + distance_between / 2 > self.const.width then
 				x = 2
 				y = y + distance_between
 			end
-			if self.data.current_rewards_height < y and self.data.current_rewards_height < distance_between * (max_column - 1) then
-				self.data.current_rewards_height = self.data.current_rewards_height + distance_between
+			if self.data.scrollbox_height < y and self.data.scrollbox_height < self.const.height_max then
+				self.data.scrollbox_height = self.data.scrollbox_height + distance_between
 			end
 			self:Image(x, y - self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
 			local prev = self:GetPrevious()
 			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward)
-			if y - self.scroll.y + distance_between / 2 > 0 and y - self.scroll.y - distance_between / 2 < distance_between * (max_column - 1) then
+			if self:ElementIsVisible(y, distance_between) then
 				self:AddTooltip(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 			end
 			x = x + distance_between
-			count = count + 1
 		end
 	end
 	self:Text(0, y, "") -- set height for scrollbar, 9piece works weird
@@ -298,7 +357,7 @@ end
 ---@private
 function LU:DrawCurrentRewards()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.current_rewards_height, self.const.z + 1,
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.scrollbox_height, self.const.z + 1,
 		self.const.ui_9piece_gray,
 		self.DrawCurrentRewardsItems)
 end
@@ -310,7 +369,7 @@ end
 ---toggle between different windows when buttons pressed
 ---@private
 function LU:ToggleMenuWindow(window)
-	self:FakeScrollBox_Reset()
+	self:ResetScrollBox()
 	if self.DrawWindow == window then
 		self.DrawWindow = nil
 	else
@@ -356,7 +415,7 @@ function LU:DrawMenuButtons()
 		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 	end
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
-	self.DrawCurrentRewards)
+		self.DrawCurrentRewards)
 
 	self:ColorGray()
 	self:Text(x_off(), y, self:Locale("Stats (WIP)"))
@@ -371,6 +430,14 @@ function LU:DrawMenuButtons()
 	self:MakeButtonFromPrev(self:Locale("$ml_close_tp"), self.CloseMenu, self.const.z, self.const.ui_9p_button,
 		self.const.ui_9p_button_hl)
 	self:AnimateE()
+
+	if self.data.debug then
+		self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("DEBUG")),
+			y - self.const.sprite_offset * 2 - 10.5,
+			self:Locale("DEBUG"))
+		self:MakeButtonFromPrev("cheat menu", self.ToggleMenuWindow, self.const.z, self.const.ui_9p_button,
+			self.const.ui_9p_button_hl, self.DrawDebugMenu)
+	end
 end
 
 ---draw header
@@ -396,7 +463,7 @@ end
 ---@private
 function LU:DrawMenuConnector()
 	self:AnimateB()
-	self:AnimateAlpha(0.08, 0.1, false)
+	self:AnimateAlpha(0.08, 0.1, self.anim["window"].reset)
 	self:SetZ(5)
 	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, 0,
 		"mods/meta_leveling/files/gfx/ui/ui_9piece_connector.png")
@@ -427,6 +494,7 @@ function LU:GetSetting()
 	self.data.CloseOnShot = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
 	self.data.CloseOnDamage = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = ML.utils:get_mod_setting_boolean("session_exp_ui_open_auto")
+	self.data.debug = ML.utils:get_mod_setting_boolean("show_debug")
 end
 
 ---main logic

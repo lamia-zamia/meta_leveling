@@ -468,6 +468,8 @@ end
 local translations =
 {
 	["English"] = {
+		debug = "Debug",
+		show_debug = "Show debug button",
 		exp_bar_cat = "HUD", --cat
 		exp_bar_cat_d = "Settings for experience bar and misc",
 		exp_bar_position = "Position",
@@ -519,6 +521,8 @@ local translations =
 		session_exp_multiplier_d = "If you find default to be unsatisfying"
 	},
 	["русский"] = {
+		debug = "Debug",
+		show_debug = "Show debug button",
 		exp_bar_cat = "HUD",
 		exp_bar_cat_d = "Настройки для полосы опыта и прочее",
 		exp_bar_position = "Позиция",
@@ -587,6 +591,7 @@ setmetatable(T, mt)
 
 ---@class ml_settings_default
 D = {
+	show_debug = false,
 	exp_bar_position = "under_health",
 	exp_bar_thickness = 2,
 	exp_bar_red = 0,
@@ -751,6 +756,22 @@ local function build_settings()
 				},
 			},
 		},
+		{
+			category_id = "debug",
+			ui_name = "Debug",
+			foldable = true,
+			_folded = true,
+			settings =
+			{
+				{
+					not_setting = true,
+					id = "debug",
+					ui_fn = S.mod_setting_better_boolean,
+					ui_name = T.debug,
+					checkboxes = { "show_debug" }
+				}
+			}
+		}
 	}
 	U.offset = 0
 	return settings
