@@ -1,11 +1,18 @@
 ---@class experience_bar
 local EB = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/experience_bar_class.lua")
+
+---Helper function to format percentage
+---@private
 ---@param value number
 ---@return string
 function EB:FloorPerc(value)
 	return tostring(math.floor(value * 100))
 end
 
+---Helper function to handle text color animation
+---@private
+---@param fn function
+---@param ... any
 function EB:TextColorAnim(fn, ...)
 	self:Color(self.bar.red, self.bar.green, self.bar.blue,
 		math.min(self.const.anim.max_alpha, self.data.anim_text.alpha))
@@ -14,11 +21,16 @@ function EB:TextColorAnim(fn, ...)
 	fn(self, ...)
 end
 
+---Draw percentage text
+---@private
+---@param x number
+---@param y number
 function EB:DrawPercentage(x, y)
-	if ML.exp.percentage < 1 then
+	local percentage = ML.exp.percentage
+	if percentage < 1 then
 		self:Text(x + 1, y - 2, "%")
 		self:Color(1, 1, 1, 0.80)
-		self:Text(x + 10, y, self:FloorPerc(ML.exp.percentage), "data/fonts/font_small_numbers.xml")
+		self:Text(x + 10, y, self:FloorPerc(percentage), "data/fonts/font_small_numbers.xml")
 	else
 		self:TextColorAnim(self.Text, x + 1, y - 2, "!!")
 		self:TextColorAnim(self.Text, x + 10, y, tostring(ML.pending_levels), "data/fonts/font_small_numbers.xml")
@@ -27,30 +39,47 @@ function EB:DrawPercentage(x, y)
 	self:AddToolTip(x, y, prev.w + 10, prev.h)
 end
 
+---Adjust bar color based on multiplier
+---@private
+---@param m number
 function EB:BarColor(m)
 	self:Color(self.bar.red * m, self.bar.green * m, self.bar.blue * m)
 end
 
+---Draw the background of the bar
+---@private
+---@param x number
+---@param y number
+---@param scale_x number
+---@param scale_y number
 function EB:DrawBackGround(x, y, scale_x, scale_y)
 	self:SetZ(3)
 	self:BarColor(0.6)
 	self:Image(x, y, self.c.px, 0.85, scale_x, scale_y)
 end
 
+---Clamp filler value
+---@private
+---@return number
 function EB:ClampFiller()
 	local percent = ML.exp.percentage
 	if percent < self.const.filler_clamp or percent == 1 then
-		return ML.exp.percentage
+		return percent
 	else
 		return self.const.filler_clamp
 	end
 end
 
+---Animate the bar's HSV fade
+---@private
+---@param alpha number
+---@return number, number, number
 function EB:AnimateBarHSVFade(alpha)
 	local h, s, v = ML.colors:rgb2hsv(self.bar.red, self.bar.green, self.bar.blue)
 	return ML.colors:hsv2rgb(h, s, v - alpha)
 end
 
+---@private
 function EB:AnimateBarLogic(data)
 	self:Color(self:AnimateBarHSVFade(data.alpha))
 	self:SetZ(1)
@@ -60,6 +89,7 @@ function EB:AnimateBarLogic(data)
 	data.alpha = data.alpha + (self.data.anim_bar.step * data.direction)
 end
 
+---@private
 function EB:AnimateBar(x, y, width, height)
 	local data = {
 		alpha = self.data.anim_bar.alpha,
@@ -82,6 +112,13 @@ function EB:AnimateBar(x, y, width, height)
 	self.data.anim_bar.alpha = self.data.anim_bar.alpha + self.data.anim_bar.step * self.data.anim_bar.direction
 end
 
+---Draw the experience filler
+---@private
+---@param x number
+---@param y number
+---@param scale_x number
+---@param scale_y number
+---@param vertical boolean
 function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
 	if self.data.animate_bar and ML.pending_levels > 0 then
 		self:AnimateBar(x, y, scale_x, scale_y)
@@ -90,13 +127,12 @@ function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
 	local multiplier = self:ClampFiller()
 	self:SetZ(1)
 	self:BarColor(1)
-	if vertical then
-		self:Image(x, y + scale_y, self.c.px, 1, scale_x, -(scale_y * multiplier))
-	else
-		self:Image(x, y, self.c.px, 1, scale_x * multiplier, scale_y)
-	end
+	local sx, sy = vertical and -(scale_y * multiplier) or scale_x * multiplier, vertical and scale_x or scale_y
+	self:Image(x, y + (vertical and scale_y or 0), self.c.px, 1, sx, sy)
 end
 
+---Display inventory reminder if needed
+---@private
 function EB:InventoryReminder()
 	if ML.pending_levels > 0 then
 		local text = self:Locale("$ml_level_up_tp, ") .. self:Locale("$ml_pending: ") .. ML.pending_levels
@@ -105,6 +141,8 @@ function EB:InventoryReminder()
 	end
 end
 
+---Show tooltip UI
+---@private
 function EB:ToolTipUI()
 	local level = self:Locale("$ml_level: ") .. ML.level
 	if ML.pending_levels > 0 then
@@ -112,10 +150,7 @@ function EB:ToolTipUI()
 	end
 	local experience = self:Locale("$ml_experience: ") .. ML.exp:floor(ML.exp.current) .. " / " .. ML.exp.next
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
-	local tooltip_force = nil
-	if EB.data.tooltip_force then
-		tooltip_force = self:Locale("$ml_exp_bar_tooltip_force")
-	end
+	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
 	self.tp:TextCentered(0, 0, level, longest, "")
 	self.tp:TextCentered(0, 0, experience, longest, "")
@@ -127,14 +162,21 @@ function EB:ToolTipUI()
 	end
 end
 
+---Animate text fading effect
+---@private
 function EB:AnimateTextFading()
 	if self.data.anim_text.alpha > 0.75 or self.data.anim_text.alpha < 0 then
-		self.data.anim_text.direction = self.data.anim_text.direction *
-			-1
+		self.data.anim_text.direction = -self.data.anim_text.direction
 	end
 	self.data.anim_text.alpha = self.data.anim_text.alpha + self.const.anim.step * self.data.anim_text.direction
 end
 
+---Add tooltip UI
+---@private
+---@param x number
+---@param y number
+---@param width number
+---@param height number
 function EB:AddToolTip(x, y, width, height)
 	self:ForceFocusable()
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
@@ -153,98 +195,105 @@ function EB:AddToolTip(x, y, width, height)
 	end
 end
 
-function EB:SetPlayerHealthLength() --thanks Killua and Nathan
-	local bar_length = 40 * math.log((2.5 * self.data.max_health), 10)
-	-- clamping
-	bar_length = math.max(bar_length, 16)
-	bar_length = math.min(bar_length, 80)
-
+---Set player health bar length
+---@private
+function EB:SetPlayerHealthLength()
+	local bar_length = math.max(math.min(40 * math.log((2.5 * self.data.max_health), 10), 80), 16)
 	self.data.health_length = bar_length + 2
 end
 
+---Draw border around the bar
+---@private
+---@param x number
+---@param y number
+---@param scale_x number
+---@param scale_y number
 function EB:DrawBorder(x, y, scale_x, scale_y)
 	self:SetZ(2)
 	self:Color(0.4752, 0.2768, 0.2215)
 	self:Image(x, y, self.c.px, 0.85, scale_x, scale_y)
 end
 
+---Draw experience bar on top of the screen
+---@private
 function EB:DrawExpBarOnTop()
 	self:DrawBorder(self.bar.x, self.bar.y - 1, self.bar.scale_x + 0.25, self.bar.scale_y)                       --top
 	self:DrawBorder(self.bar.x, self.bar.y, self.bar.scale_y, 1 + self.bar.thickness)                            --left
-	self:DrawBorder(self.bar.x, self.bar.y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y)      --buttom
+	self:DrawBorder(self.bar.x, self.bar.y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y)      --bottom
 	self:DrawBorder(self.bar.x + self.bar.scale_x - 0.75, self.bar.y - 1, self.bar.scale_y, 2 + self.bar.thickness) --right
 
 	self:DrawBackGround(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness)
 	self:DrawExpFiller(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness, false)
-	-- self:AnimateBar(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness)
 	self:AddToolTip(self.bar.x, self.bar.y - 1, self.bar.scale_x + 0.25, 2 + self.bar.thickness)
 end
 
+---Draw experience bar under the HP bar
+---@private
 function EB:DrawExpBarUnderHP()
 	self.bar.x = self.dim.x - 40 - self.data.health_length
 	self.bar.scale_x = self.data.health_length
 	local y = self.bar.y
 	if ML.player.drowning then y = y + 8 end
 	self:DrawBorder(self.bar.x, y, self.bar.scale_y, 1 + self.bar.thickness)                        --left
-	self:DrawBorder(self.bar.x, y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y)  --buttom
+	self:DrawBorder(self.bar.x, y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y)  --bottom
 	self:DrawBorder(self.bar.x + self.bar.scale_x - 0.75, y, self.bar.scale_y, 1 + self.bar.thickness) --right
 
 	self:DrawBackGround(self.bar.x + 1, y, self.bar.scale_x - 1.75, self.bar.thickness)
 	self:DrawExpFiller(self.bar.x + 1, y, self.bar.scale_x - 1.70, self.bar.thickness, false)
-	-- self:AnimateBar(self.bar.x + 1, y, self.bar.scale_x - 1.70, self.bar.thickness)
 	self:AddToolTip(self.bar.x, y, self.bar.scale_x + 0.25, 1 + self.bar.thickness)
 end
 
+---Draw vertical borders for the bar
+---@private
+---@param y number
 function EB:DrawVerticalBorders(y)
 	self:DrawBorder(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, 1)                 --top
 	self:DrawBorder(self.bar.x, y + 1, 1 * self.bar.scale_x, self.bar.scale_y)                     --left
-	self:DrawBorder(self.bar.x, y + self.bar.scale_y, (2 + self.bar.thickness) * self.bar.scale_x, 1) --buttom
+	self:DrawBorder(self.bar.x, y + self.bar.scale_y, (2 + self.bar.thickness) * self.bar.scale_x, 1) --bottom
 	self:DrawBorder(self.bar.x + (1 + self.bar.thickness) * self.bar.scale_x, y, 1 * self.bar.scale_x,
 		self.bar.scale_y + 1)                                                                      --right
 end
 
+---Draw experience bar on the left of the screen
+---@private
 function EB:DrawExpBarOnLeft()
 	local y = self.bar.y
 	if self.data.health_length > 46 then
-		if ML.player.drowning then
-			y = y + 18
-		else
-			y = y + 10
-		end
+		y = y + (ML.player.drowning and 18 or 10)
 	end
 	self:DrawVerticalBorders(y)
 	self:DrawBackGround(self.bar.x + self.bar.scale_x, y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1)
 	self:DrawExpFiller(self.bar.x + self.bar.scale_x, y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1,
 		true)
-	-- self:AnimateBar(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, self.bar.scale_y + 1)
 	self:AddToolTip(self.bar.x - (2 + self.bar.thickness), y, (2 + self.bar.thickness), self.bar.scale_y + 1)
 end
 
+---Draw experience bar on the right of the screen
+---@private
 function EB:DrawExpBarOnRight()
 	self:DrawVerticalBorders(self.bar.y)
 	self:DrawBackGround(self.bar.x + self.bar.scale_x, self.bar.y + 1, self.bar.thickness * self.bar.scale_x,
 		self.bar.scale_y - 1)
 	self:DrawExpFiller(self.bar.x + self.bar.scale_x, self.bar.y + 1, self.bar.thickness * self.bar.scale_x,
 		self.bar.scale_y - 1, true)
-	-- self:AnimateBar(self.bar.x, self.bar.y, (2 + self.bar.thickness) * self.bar.scale_x, self.bar.scale_y + 1)
 	self:AddToolTip(self.bar.x, self.bar.y, (2 + self.bar.thickness), self.bar.scale_y + 1)
 end
 
+---Play level-up effects
+---@private
 function EB:LevelUpFX()
-	self.data.sound_played_level[ML.level] = true
-	if GameHasFlagRun(ML.const.flags.fx_played) then return end
+	if self.data.sound_played_level[ML.level] or GameHasFlagRun(ML.const.flags.fx_played) then return end
 	GameAddFlagRun(ML.const.flags.fx_played)
 	if self.data.play_sound then
-		GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x,
-			ML.player.y)
+		GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x, ML.player.y)
 	end
 	if self.data.play_fx then
-		EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x,
-			ML.player.y)
-		-- ML.font:popup(ML.player.id, self:Locale("$ml_level_up"), 1, ML.font:get_color())
+		EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x, ML.player.y)
 	end
 end
 
+---Update player status and check for level-up
+---@private
 function EB:UpdatePlayerStatus()
 	if self.data.max_health ~= ML.player.max_hp then
 		self.data.max_health = ML.player.max_hp
@@ -255,6 +304,7 @@ function EB:UpdatePlayerStatus()
 	end
 end
 
+---Load and apply settings
 function EB:GetSettings()
 	self.data.play_sound = ML.utils:get_mod_setting_boolean("session_exp_play_sound", true)
 	self.data.play_fx = ML.utils:get_mod_setting_boolean("session_exp_play_fx", true)
@@ -272,21 +322,21 @@ function EB:GetSettings()
 		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause")
 	self.data.reminder_in_inventory = ML.utils:get_mod_setting_boolean("hud_reminder_in_inventory")
 	self.data.hotkey = ML.utils:get_mod_setting_number("open_ui_hotkey")
-	if ModSettingGet("meta_leveling.exp_bar_position") == "on_top" then
+
+	local position = ModSettingGet("meta_leveling.exp_bar_position")
+	if position == "on_top" then
 		self.DrawBarFunction = self.DrawExpBarOnTop
 		self.bar.x = self.dim.x - 82
 		self.bar.y = 17 - self.bar.thickness
 		self.bar.scale_x = 42
 		self.bar.scale_y = 1
-	elseif
-		ModSettingGet("meta_leveling.exp_bar_position") == "on_left" then
+	elseif position == "on_left" then
 		self.DrawBarFunction = self.DrawExpBarOnLeft
 		self.bar.x = self.dim.x - 88
 		self.bar.y = 20
 		self.bar.scale_x = -1
 		self.bar.scale_y = 29.25
-	elseif
-		ModSettingGet("meta_leveling.exp_bar_position") == "on_right" then
+	elseif position == "on_right" then
 		self.DrawBarFunction = self.DrawExpBarOnRight
 		self.bar.x = self.dim.x - 8
 		self.bar.y = 20
@@ -301,6 +351,8 @@ function EB:GetSettings()
 	end
 end
 
+---Draw the experience bar
+---@private
 function EB:DrawExpBar()
 	self:UpdatePlayerStatus()
 	self:AddOption(2)
@@ -314,6 +366,7 @@ function EB:DrawExpBar()
 	end
 end
 
+---Main loop function
 function EB:loop()
 	self:StartFrame(self.DrawExpBar, true)
 end
