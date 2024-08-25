@@ -67,7 +67,7 @@ function LU_debug:DrawDebugWindow()
 			ui_name = "Add levels",
 			description = "Gain 10 levels",
 			fn = function()
-				ML.utils:set_global_number(ML.const.globals.current_exp, ML.level_curve[ML.level + 9])
+				ML.utils:set_global_number(ML.const.globals.current_exp, ML.level_curve[ML:get_level() + 9 + ML.pending_levels])
 			end,
 		},
 		{
@@ -75,7 +75,6 @@ function LU_debug:DrawDebugWindow()
 			description = "Set level to 1",
 			fn = function()
 				ML.utils:set_global_number(ML.const.globals.current_exp, 0)
-				ML.level = 1
 				ML.utils:set_global_number(ML.const.globals.current_level, 1)
 			end,
 		},

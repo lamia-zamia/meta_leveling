@@ -446,16 +446,19 @@ end
 ---@private
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
+	local third_width = self.const.width * 0.33
 	local section = 10
-	local experience = self:Locale("$ml_experience: ") ..
-		ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
+	local experience = self:Locale("$ml_experience: ") .. ML.exp:format(ML.exp.current)
+	if ML.exp.current < 10^21 then
+		experience = experience .. "/" .. ML.exp:format(ML.exp.next)
+	end
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)
 	self:BlockInputOnPrevious()
-	self:TextCentered(self.data.x, self.data.y, experience, self.const.width * 0.33)
-	self:TextCentered(self.data.x, self.data.y, "META LEVELING", self.const.width)
-	self:TextCentered(self.data.x + self.const.width * 0.33, self.data.y, level, self.const.width)
+	self:TextCentered(self.data.x, self.data.y, experience, third_width)
+	self:TextCentered(self.data.x + third_width, self.data.y, "META LEVELING", third_width)
+	self:TextCentered(self.data.x + third_width * 2, self.data.y, level, third_width)
 	self:AnimateE()
 
 	self.data.y = self.data.y + section + self.const.sprite_offset

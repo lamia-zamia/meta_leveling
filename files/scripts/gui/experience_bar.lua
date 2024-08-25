@@ -151,11 +151,11 @@ end
 ---Show tooltip UI
 ---@private
 function EB:ToolTipUI()
-	local level = self:Locale("$ml_level: ") .. ML.level
+	local level = self:Locale("$ml_level: ") .. ML:get_level()
 	if ML.pending_levels > 0 then
 		level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels
 	end
-	local experience = self:Locale("$ml_experience: ") .. ML.exp:floor(ML.exp.current) .. " / " .. ML.exp.next
+	local experience = self:Locale("$ml_experience: ") .. ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
@@ -289,7 +289,7 @@ end
 ---Play level-up effects
 ---@private
 function EB:LevelUpFX()
-	if self.data.sound_played_level[ML.level] or GameHasFlagRun(ML.const.flags.fx_played) then return end
+	if self.data.sound_played_level[ML:get_level()] or GameHasFlagRun(ML.const.flags.fx_played) then return end
 	GameAddFlagRun(ML.const.flags.fx_played)
 	if self.data.play_sound then
 		GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x, ML.player.y)
@@ -306,7 +306,7 @@ function EB:UpdatePlayerStatus()
 		self.data.max_health = ML.player.max_hp
 		self:SetPlayerHealthLength()
 	end
-	if ML.exp.percentage >= 1 and not self.data.sound_played_level[ML.level] then
+	if ML.exp.percentage >= 1 and not self.data.sound_played_level[ML:get_level()] then
 		self:LevelUpFX()
 	end
 end

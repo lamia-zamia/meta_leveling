@@ -30,7 +30,6 @@ local ML = {
 	nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua"),
 	colors = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/colors.lua"),
 	entity_scanner = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/entity_scanner.lua"),
-	level = 1,
 	pending_levels = 0,
 }
 
@@ -54,9 +53,8 @@ function ML:get_pending_levels()
 end
 
 function ML:level_up()
-	self.level = self.level + 1
 	self.utils:set_global_number(ML.const.globals.current_level, self:get_level() + 1)
-	if self.level % 5 == 0 then
+	if self:get_level() % 5 == 0 then
 		self.rewards_deck:add_reroll(1)
 	end
 	self:UpdateCommonParameters()

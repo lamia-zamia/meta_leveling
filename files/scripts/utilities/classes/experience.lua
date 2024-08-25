@@ -20,22 +20,25 @@ end
 ---@param value number
 ---@return string
 function exp:format(value)
-	if value >= 1000000000000 then
-		return string.format("%.1fT", value / 1000000000000)
-	elseif value >= 1000000000 then
-		return string.format("%.1fB", value / 1000000000)
-	elseif value >= 10000000 then
-		return string.format("%.1fM", value / 1000000)
-	elseif value >= 1000000 then
-		return string.format("%.2fM", value / 1000000)
-	elseif value >= 10000 then
-		return string.format("%.1fK", value / 1000)
-	elseif value >= 1000 then
-		return string.format("%.0f", value)
-	elseif value >= 100 then
-		return (string.format("%.1f", value):gsub("%.?0+$", ""))
+	if value < 1 then
+		return (string.format("%.2f", value):gsub("%.?0+$", ""))
 	end
-	return (string.format("%.2f", value):gsub("%.?0+$", ""))
+
+	local units = { "K", "M", "B", "T", "Q", "P" } -- Extendable list of units
+	local magnitude = math.floor(math.log10(value)) -- Determine the order of magnitude of the number
+	local unit_index = math.floor(magnitude / 3) -- Determine the index for the units array
+	local divisor = 10 ^ (unit_index * 3)        -- Calculate the divisor based on the unit index
+
+	-- Handle values that don't need shortening
+	if unit_index == 0 then
+		return (string.format("%.2f", value):gsub("%.?0+$", ""))
+	elseif unit_index > #units then
+		return string.format("%.1e", value) -- Fall back to scientific notation if out of units
+	end
+
+	-- Automatically determine precision based on the size of the number
+	local precision = (value / divisor) >= 1000 and "%.0f" or (value / divisor) >= 100 and "%.1f" or "%.2f"
+	return string.format(precision .. units[unit_index], value / divisor)
 end
 
 ---get current exp
