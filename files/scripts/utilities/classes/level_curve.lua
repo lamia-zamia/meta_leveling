@@ -24,4 +24,9 @@ for i = 1, 1000 do
 	levels[#levels + 1] = next_level(levels[i])
 end
 
+---because fuck you that's why
+for i = 1, 20 do
+	levels[#levels + 1] = levels[#levels] * 10^i
+end
+
 return levels
