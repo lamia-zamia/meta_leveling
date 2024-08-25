@@ -70,6 +70,13 @@ function EB:ClampFiller()
 	end
 end
 
+function EB:AnimateBarHSVFadeDetermineBoundaries()
+	local _, _, v = ML.colors:rgb2hsv(self.bar.red, self.bar.green, self.bar.blue)
+	local min = v - 1
+	local max = min + self.data.anim_bar.range * 2
+	return min, max, (min + max) / 2
+end
+
 ---Animate the bar's HSV fade
 ---@private
 ---@param alpha number
@@ -322,7 +329,7 @@ function EB:GetSettings()
 		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause")
 	self.data.reminder_in_inventory = ML.utils:get_mod_setting_boolean("hud_reminder_in_inventory")
 	self.data.hotkey = ML.utils:get_mod_setting_number("open_ui_hotkey")
-
+	self.data.anim_bar.min, self.data.anim_bar.max, self.data.anim_bar.alpha = self:AnimateBarHSVFadeDetermineBoundaries()
 	local position = ModSettingGet("meta_leveling.exp_bar_position")
 	if position == "on_top" then
 		self.DrawBarFunction = self.DrawExpBarOnTop
