@@ -27,7 +27,7 @@ end
 
 ---tooltip render for rewards
 ---@private
----@param reward ml_reward
+---@param reward ml_single_reward_data
 function LU:RewardsTooltip(reward)
 	local texts = {
 		name = LU:FormatString(self:Locale(reward.ui_name)),
@@ -179,6 +179,7 @@ end
 
 ---Choose reward
 ---@private
+---@param reward ml_single_reward_data
 function LU:PickReward(reward)
 	ML.rewards_deck:pick_reward(reward.id)
 	self:CloseRewardUI()
@@ -311,6 +312,7 @@ end
 
 ---function to draw tooltip on current rewards
 ---@private
+---@param rewards ml_reward_id_list
 function LU:DrawCurrentRewardsTooltip(rewards)
 	for _, reward_id in ipairs(rewards) do
 		local reward = ML.rewards_deck.reward_data[reward_id]

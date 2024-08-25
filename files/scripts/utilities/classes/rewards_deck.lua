@@ -1,5 +1,8 @@
 ---@class ml_reward_id
 
+---@class ml_reward_id_list
+---@field [number] ml_reward_id
+
 ---@class (exact) ml_single_reward_data:ml_reward
 ---@field id ml_reward_id The id of the reward
 ---@field group_id ml_reward_id The id of the group if part of a group
@@ -10,24 +13,24 @@
 ---@field sound ml_sound see sounds
 ---@field pick_count number
 
----@class (exact) group_data
----@field rewards table<[number], [ml_reward_id]> list of rewards in group
+---@class (exact) ml_group_data
+---@field rewards ml_reward_id_list list of rewards in group
 ---@field picked boolean if something from group was picked
 
----@class (exact) groups_data
----@field [string] group_data
+---@class (exact) ml_groups_data
+---@field [string] ml_group_data
 
 ---@class (exact) reward_data
 ---@field [string] ml_single_reward_data
 
 ---@class (exact) rewards_deck
 ---@field private reward_definition_list ml_rewards list of rewards
----@field groups_data groups_data
+---@field groups_data ml_groups_data
 ---@field reward_data reward_data data of rewards
 ---@field default_icon string
 ---@field private max_probability number max probability for single reward
 ---@field private min_probability number min probability for single reward
----@field private list table table of rewards id
+---@field private list ml_reward_id_list table of rewards id
 ---@field private distance number minimum distance between rewards
 ---@field reroll_count number
 local rewards_deck = {
