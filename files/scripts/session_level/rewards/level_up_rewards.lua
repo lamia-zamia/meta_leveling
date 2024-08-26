@@ -7,9 +7,9 @@ local reward_list = {
 		description = "$ml_extra_reward_choice_tp",
 		description_var = { "1" },
 		description2 = "$ml_extra_reward_choice_clarify",
-		description2_var = {function()
+		description2_var = { function()
 			return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 1
-		end},
+		end },
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.5,
 		max = 4,
@@ -28,9 +28,9 @@ local reward_list = {
 		description = "$ml_extra_reward_choice_tp",
 		description_var = { "2" },
 		description2 = "$ml_extra_reward_choice_clarify",
-		description2_var = {function()
+		description2_var = { function()
 			return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 2
-		end},
+		end },
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.2,
 		max = 2,
@@ -161,11 +161,18 @@ local reward_list = {
 		description = "$ml_peace_with_gods_tp",
 		probability = 0.3,
 		custom_check = function()
-			return GlobalsGetValue("TEMPLE_SPAWN_GUARDIAN", "0") ~= "0"
+			return GlobalsGetValue("TEMPLE_SPAWN_GUARDIAN", "0") ~= "0" and
+				GlobalsGetValue("TEMPLE_PEACE_WITH_GODS", "0") == "0"
 		end,
 		fn = function()
 			GlobalsSetValue("TEMPLE_SPAWN_GUARDIAN", "0")
 			GamePrintImportant("$ml_piece_with_gods_message1", "$ml_piece_with_gods_message2")
+			local steves = EntityGetWithTag("necromancer_shop")
+			if steves then
+				for _, entity_steve in ipairs(steves) do
+					GetGameEffectLoadTo(entity_steve, "CHARM", true)
+				end
+			end
 		end
 	},
 	{
