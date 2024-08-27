@@ -418,6 +418,18 @@ local reward_list = {
 			ML.rewards:force_fungal_shift()
 		end
 	},
+	{
+		id = "polymorph_immunity",
+		ui_name = "$ml_polymorph_immunity",
+		description = "$ml_polymorph_immunity_tp",
+		description2 = "$ml_polymorph_immunity_tp2",
+		probability = 0.05,
+		min_level = 100,
+		max = 1,
+		fn = function()
+			EntityAddTag(ML.player.id, "polymorphable_NOT")
+		end
+	}
 }
 
 return reward_list
