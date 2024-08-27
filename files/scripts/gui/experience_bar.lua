@@ -159,13 +159,13 @@ function EB:ToolTipUI()
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
-	self.tp:TextCentered(0, 0, level, longest, "")
-	self.tp:TextCentered(0, 0, experience, longest, "")
+	self:TextCentered(0, 0, level, longest, "")
+	self:TextCentered(0, 0, experience, longest, "")
 	self:Color(0.6, 0.6, 0.6)
-	self.tp:TextCentered(0, 0, tooltip, longest, "")
+	self:TextCentered(0, 0, tooltip, longest, "")
 	if tooltip_force then
 		self:Color(0.6, 0.6, 0.6)
-		self.tp:TextCentered(0, 0, tooltip_force, longest, "")
+		self:TextCentered(0, 0, tooltip_force, longest, "")
 	end
 end
 
@@ -189,7 +189,7 @@ function EB:AddToolTip(x, y, width, height)
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		local cache = self.tp:GetTooltipData(prev.x, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
+		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
 		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
 		if InputIsMouseButtonJustDown(1) then -- mouse clicks
 			ML:toggle_ui()
@@ -313,6 +313,7 @@ end
 
 ---Load and apply settings
 function EB:GetSettings()
+	self:UpdateDimensions()
 	self.data.play_sound = ML.utils:get_mod_setting_boolean("session_exp_play_sound", true)
 	self.data.play_fx = ML.utils:get_mod_setting_boolean("session_exp_play_fx", true)
 	self.data.animate_bar = ML.utils:get_mod_setting_boolean("session_exp_animate_bar", true)

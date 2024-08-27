@@ -10,17 +10,22 @@ local const = {
 ---@class (exact) UI_dimensions
 ---@field x number
 ---@field y number
-local dimensions = {
-	x = 640,
-	y = 360
-}
+
+---@class gui_tooltip_size_cache
+---@field width number
+---@field height number
+---@field x_offset number
+---@field y_offset number
 
 ---@class (exact) UI_class
 ---@field protected gui gui
+---@field private gui_tooltip gui
 ---@field private gui_id number
 ---@field private gui_longest_string_cache table
----@field protected tp tooltip
 ---@field private __index UI_class
+---@field private gui_tooltip_size_cache gui_tooltip_size_cache
+---@field private tooltip_z number
+---@field private tooltip_gui_id number
 ---@field protected c UI_const constants
 ---@field protected dim UI_dimensions
 ---@field protected scroll ui_fake_scroll
@@ -29,12 +34,18 @@ local ui_class = {
 	gui_id = const.gui_id,
 	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
 	c = const,
-	dim = dimensions,
+	dim = {
+		x = 640,
+		y = 360
+	},
 	scroll = {
 		y = 0,
 		target_y = 0,
 		max_y = 0
 	},
+	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
+	tooltip_z = -100,
+	tooltip_gui_id = const.gui_id
 }
 
 ---create new gui
@@ -45,6 +56,7 @@ function ui_class:new()
 	setmetatable(o, self)
 	self.__index = self
 	o.gui = GuiCreate()
+	o.gui_tooltip = GuiCreate()
 	return o
 end
 
@@ -80,25 +92,11 @@ end
 -- #########		TOOLTIPS		###########
 -- ############################################
 
----@class gui_tooltip_size_cache
----@field width number
----@field height number
----@field x_offset number
----@field y_offset number
-
----@class tooltip:UI_class
----@field private gui_tooltip_size_cache gui_tooltip_size_cache
----@field private tooltip_z number
-local tooltip_class = ui_class:new()
-tooltip_class.gui_tooltip_size_cache = setmetatable({}, { __mode = "k" })
-tooltip_class.tooltip_z = -100
-ui_class.tp = tooltip_class
-
 ---Calculate y offset needed to not go over the screen
 ---@private
 ---@param y number
 ---@param h number
-function tooltip_class:GetOffsetY(y, h)
+function ui_class:GetOffsetY(y, h)
 	local y_offset = 0
 	-- Move the tooltip up if it overflows the bottom edge
 	if y + h > self.dim.y then
@@ -115,7 +113,7 @@ end
 ---@param x number The x-coordinate of the tooltip
 ---@param w number The width of the tooltip
 ---@return number x_offset The offset to apply to keep the tooltip within screen bounds
-function tooltip_class:GetOffsetX(x, w)
+function ui_class:GetOffsetX(x, w)
 	local min_offset = 38 -- Minimum padding from the screen edge
 	local x_offset = 0
 
@@ -136,7 +134,7 @@ end
 ---@param key string
 ---@param x number
 ---@param y number
-function tooltip_class:SetTooltipCache(x, y, key)
+function ui_class:SetTooltipCache(x, y, key)
 	local prev = self:GetPrevious()
 	self.gui_tooltip_size_cache[key] = {
 		width = prev.w,
@@ -153,7 +151,7 @@ end
 ---@param ui_fn function
 ---@param variable any
 ---@param key string
-function tooltip_class:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
+function ui_class:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
 	local offscreen_offset = 1000
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
@@ -170,7 +168,7 @@ end
 ---@param ui_fn function
 ---@param variable any
 ---@return gui_tooltip_size_cache
-function tooltip_class:GetTooltipData(x, y, ui_fn, variable)
+function ui_class:GetTooltipData(x, y, ui_fn, variable)
 	local key = self:GetKey(x, y, ui_fn, variable)
 	if not self.gui_tooltip_size_cache[key] then
 		self:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
@@ -185,7 +183,7 @@ end
 ---@param ui_fn function
 ---@param variable any
 ---@return string
-function tooltip_class:GetKey(x, y, ui_fn, variable)
+function ui_class:GetKey(x, y, ui_fn, variable)
 	return self:Locale("$current_language") .. tostring(x) .. tostring(y) .. tostring(ui_fn) .. tostring(variable)
 end
 
@@ -195,9 +193,11 @@ end
 ---@param y number
 ---@param ui_fn function
 ---@param variable any
-function tooltip_class:DrawToolTip(x, y, ui_fn, variable)
+function ui_class:DrawToolTip(x, y, ui_fn, variable)
+	local orig_gui, orig_id = self.gui, self.gui_id
+	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
+	GuiIdPushString(self.gui, "tooltips")
 	local cache = self:GetTooltipData(x, y, ui_fn, variable)
-	self:id_reset()
 	GuiZSet(self.gui, self.tooltip_z)
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, false)
@@ -210,12 +210,8 @@ function tooltip_class:DrawToolTip(x, y, ui_fn, variable)
 	GuiEndAutoBoxNinePiece(self.gui)
 	self:AnimateE()
 	GuiZSet(self.gui, 0)
-end
-
----Start frame for tooltip rendering
-function tooltip_class:StartFrame()
-	self:id_reset()
-	if self.gui ~= nil then GuiStartFrame(self.gui) end
+	GuiIdPop(self.gui)
+	self.gui, self.gui_id = orig_gui, orig_id
 end
 
 ---Custom tooltip.
@@ -227,9 +223,9 @@ end
 function ui_class:ShowTooltip(x, y, draw, variable)
 	local fn_type = type(draw)
 	if fn_type == "string" then
-		tooltip_class:DrawToolTip(x, y, self.TooltipText, draw)
+		self:DrawToolTip(x, y, self.TooltipText, draw)
 	elseif fn_type == "function" then
-		tooltip_class:DrawToolTip(x, y, draw, variable)
+		self:DrawToolTip(x, y, draw, variable)
 	end
 end
 
@@ -765,6 +761,7 @@ end
 ---@protected
 function ui_class:id_reset()
 	self.gui_id = self.c.gui_id
+	self.tooltip_gui_id = 0
 end
 
 ---return id with increment
@@ -784,6 +781,7 @@ function ui_class:StartFrame(fn, bool)
 	local player = EntityGetWithTag("player_unit")[1]
 	if player then --if player is even alive
 		if self.gui ~= nil then GuiStartFrame(self.gui) end
+		if self.gui_tooltip ~= nil then GuiStartFrame(self.gui_tooltip) end
 		if fn ~= nil and bool then
 			fn(self)
 		end

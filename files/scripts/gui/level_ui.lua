@@ -1,6 +1,20 @@
 ---@class level_ui
 local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/level_ui_class.lua")
 
+local modules = {
+	"mods/meta_leveling/files/scripts/gui/level_ui_debug.lua",
+	-- "mods/meta_leveling/files/scripts/gui/level_ui_levelup.lua"
+}
+
+
+
+for _, module_name in ipairs(modules) do
+	local module = dofile(module_name)
+	for k, v in pairs(module) do
+        LU[k] = v
+    end
+end
+
 -- ############################################
 -- #########		MISC		###########
 -- ############################################
@@ -34,12 +48,12 @@ function LU:RewardsTooltip(reward)
 		description = LU:UnpackDescription(reward.description, reward.description_var),
 		description2 = LU:UnpackDescription(reward.description2, reward.description2_var)
 	}
-	local longest = self.tp:GetLongestText(texts, reward.ui_name)
-	self.tp:TextCentered(0, 0, texts.name, longest)
-	if texts.description then self.tp:TextCentered(0, 0, texts.description, longest) end
+	local longest = self:GetLongestText(texts, reward.ui_name)
+	self:TextCentered(0, 0, texts.name, longest)
+	if texts.description then self:TextCentered(0, 0, texts.description, longest) end
 	if texts.description2 then
 		self:ColorGray()
-		self.tp:TextCentered(0, 0, texts.description2, longest)
+		self:TextCentered(0, 0, texts.description2, longest)
 	end
 end
 
@@ -297,14 +311,9 @@ end
 -- ############		DEBUG		###############
 -- ############################################
 
-LU.Debug = dofile_once("mods/meta_leveling/files/scripts/gui/level_ui_debug.lua")
+-- LU.Debug = dofile_once("mods/meta_leveling/files/scripts/gui/level_ui_debug.lua")
 
-function LU:DrawDebugMenu()
-	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x - 1, self.data.y, self.const.width + 2, self.data.scrollbox_height, self.const.z + 1,
-		self.const.ui_9piece_gray,
-		self.Debug.DrawDebugWindow)
-end
+
 
 -- ############################################
 -- ########		CURRENT REWARDS		###########
@@ -346,7 +355,7 @@ function LU:DrawCurrentRewardsItems()
 			local prev = self:GetPrevious()
 			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward)
 			if self:ElementIsVisible(y, distance_between) then
-				local cache = self.tp:GetTooltipData(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
+				local cache = self:GetTooltipData(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 				self:AddTooltip((cache.width - 16) / - 2, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 			end
 			x = x + distance_between
@@ -496,6 +505,7 @@ end
 
 ---gathers settings on pause update
 function LU:GetSetting()
+	self:UpdateDimensions()
 	self.data.CloseOnShot = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
 	self.data.CloseOnDamage = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = ML.utils:get_mod_setting_boolean("session_exp_ui_open_auto")
