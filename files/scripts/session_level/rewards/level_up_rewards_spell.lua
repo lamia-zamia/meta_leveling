@@ -379,8 +379,7 @@ local reward_spells = {
 		max = 2,
 		min_level = 20,
 		fn = function()
-			local list = dofile_once("mods/meta_leveling/files/scripts/compatibility/heal_spell_list.lua")
-			local action = ML.utils:weighted_random(list)
+			local action = ML.utils:weighted_random(ML.guns.heal_spells)
 			ML.utils:spawn_spell(action)
 		end
 	},
@@ -417,6 +416,34 @@ local reward_spells = {
 		fn = function()
 			ML.utils:random_seed()
 			local action_id = ML.guns:get_random_from_list(ML.guns.trigger_timer)
+			ML.utils:spawn_spell(action_id)
+		end
+	},
+	{
+		id = "spell_drills",
+		ui_name = "$ml_spell_drills",
+		ui_description = "$ml_spell_drills_tp",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/spell_drills.xml",
+		probability = 0.3,
+		max = 1,
+		fn = function()
+			ML.utils:random_seed()
+			local action_id = ML.guns:get_random_from_list(ML.guns.drill_spells)
+			ML.utils:spawn_spell(action_id)
+		end
+	},
+	{
+		id = "spell_random_glimmer",
+		ui_name = "$ml_spell_glimmers",
+		ui_description = "$ml_spell_glimmers_tp",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/spell_random_glimmer.xml",
+		probability = 0.1,
+		custom_check = function()
+			return HasFlagPersistent("card_unlocked_paint")
+		end,
+		fn = function()
+			ML.utils:random_seed()
+			local action_id = ML.guns:get_random_from_list(ML.guns.glimmers)
 			ML.utils:spawn_spell(action_id)
 		end
 	},

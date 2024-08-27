@@ -143,3 +143,7 @@ ml_explosion_resistance,Explosion resistance,Сопротивление взры
 ml_explosion_resistance_tp,You take less damage from explosions,Вы получаете меньше урона от взрывов,,,,,,,,,,
 ml_melee_resistance,Melee resistance,Сопротивление рукопашной,,,,,,,,,,
 ml_melee_resistance_tp,You take less damage from melee damage,Вы получаете меньше урона от рукопашной,,,,,,,,,,
+ml_spell_drills,Random drill,Случайная дрелль,,,,,,,,,,
+ml_spell_drills_tp,Spawn a random drill,Создаёт случайный дрелль,,,,,,,,,,
+ml_spell_glimmers,Random glimmer,Случайное мерцание,,,,,,,,,,
+ml_spell_glimmers_tp,Spawn a random glimmer,Создаёт случайное сияние,,,,,,,,,,

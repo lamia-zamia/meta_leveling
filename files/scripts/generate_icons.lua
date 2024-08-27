@@ -249,9 +249,38 @@ local icons_to_generate = {
 			}
 		}
 	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/spell_drills.xml",
+		layers = {
+			{
+				IG.spell_background.projectile
+			},
+			{
+				"data/ui_gfx/gun_actions/digger.png",
+				"data/ui_gfx/gun_actions/powerdigger.png"
+			}
+		}
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/spell_random_glimmer.xml",
+		layers = {
+			{
+				IG.spell_background.modifier
+			},
+			{
+				"data/ui_gfx/gun_actions/colour_red.png",
+				"data/ui_gfx/gun_actions/colour_orange.png",
+				"data/ui_gfx/gun_actions/colour_green.png",
+				"data/ui_gfx/gun_actions/colour_yellow.png",
+				"data/ui_gfx/gun_actions/colour_purple.png",
+				"data/ui_gfx/gun_actions/colour_blue.png",
+				"data/ui_gfx/gun_actions/colour_rainbow.png",
+				"data/ui_gfx/gun_actions/colour_invis.png"
+			}
+		}
+	},
 }
 
 for _, icon in ipairs(icons_to_generate) do
-	print(icon.path)
 	IG:generate(icon)
 end

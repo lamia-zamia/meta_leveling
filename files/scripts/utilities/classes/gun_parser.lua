@@ -3,6 +3,7 @@
 ---@field trigger_timer string[]
 ---@field trigger_death string[]
 ---@field heal_spells table
+---@field drill_spells string[]
 ---@field spells_no_spawn table
 ---@field locked_spells table
 ---@field glimmers string[]
@@ -10,7 +11,8 @@ local guns = {
 	trigger_hit_world = {},
 	trigger_timer = {},
 	trigger_death = {},
-	heal_spells = {},
+	heal_spells = dofile_once("mods/meta_leveling/files/scripts/compatibility/heal_spell_list.lua"),
+	drill_spells = { "DIGGER", "POWERDIGGER" },
 	spells_no_spawn = {},
 	locked_spells = {},
 	glimmers = {},
