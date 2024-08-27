@@ -18,7 +18,7 @@ local const = {
 }
 
 ---@class LU.data
----@field reward_list? ml_reward_id_list
+---@field reward_list? ml_reward_id[]
 local data = {
 	mLastDamageFrame = -120,
 	mButtonLastFrameFire = -2,

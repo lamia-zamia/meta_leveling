@@ -13,6 +13,7 @@
 ---@field colors colors
 ---@field entity_scanner ml_entity_scanner
 ---@field nxml nxml
+---@field guns ml_gun_parser
 ---@field level number
 ---@field pending_levels number
 local ML = {
@@ -30,6 +31,7 @@ local ML = {
 	nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua"),
 	colors = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/colors.lua"),
 	entity_scanner = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/entity_scanner.lua"),
+	guns = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gun_parser.lua"),
 	pending_levels = 0,
 }
 
@@ -69,8 +71,9 @@ end
 
 function ML:StartUp()
 	self.level = self:get_level()
+	self.guns:parse_actions()
 	self.rewards_deck:GatherData()
-	self.rewards:gather_action_info()
+	-- self.rewards:gather_action_info()
 	self.rewards_deck:get_reroll_count()
 end
 

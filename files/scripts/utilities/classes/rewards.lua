@@ -21,8 +21,7 @@
 ---@field no_sound? boolean if set to true no sound will be played
 ---@field min_level? number if set will not appear before this level
 
----@class (exact) ml_rewards
----@field [number] ml_reward
+---@alias ml_rewards ml_reward[]
 
 ---@class (exact) ml_rewards_util
 ---@field locked_spells table list of locked spells
@@ -81,17 +80,6 @@ function rewards:grant_perk(perk_id)
 	perk_pickup(0, ML.player.id, perk_id, true, false, true)
 end
 
----check if player can have this spell
----@param action_id string
----@return boolean
-function rewards:spell_is_valid(action_id)
-	if self.spells_no_spawn[action_id] then return false end
-	if self.locked_spells[action_id] and not HasFlagPersistent(self.locked_spells[action_id]) then
-		return false
-	end
-	return true
-end
-
 ---return random spells of level
 ---@param level number
 ---@return string action_id
@@ -99,7 +87,7 @@ function rewards:get_random_spell(level)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
 		local action_id = GetRandomAction(ML.player.x, ML.player.y, level, i)
-		if self:spell_is_valid(action_id) then
+		if ML.guns:spell_is_valid(action_id) then
 			return action_id
 		end
 	end
@@ -114,7 +102,7 @@ function rewards:get_random_typed_spell(level, type)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
 		local action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, i)
-		if self:spell_is_valid(action_id) then
+		if ML.guns:spell_is_valid(action_id) then
 			return action_id
 		end
 	end
