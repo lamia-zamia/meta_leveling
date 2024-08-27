@@ -7,6 +7,10 @@ dofile_once("mods/meta_leveling/files/scripts/load_file_into_vfs.lua")
 dofile_once("mods/meta_leveling/files/scripts/mod_settings_virtual.lua")
 dofile_once("mods/meta_leveling/files/scripts/appends.lua")
 
+function OnModPostInit()
+	dofile_once("mods/meta_leveling/files/scripts/generate_icons.lua")
+end
+
 function OnWorldInitialized()
 	ML:StartUp()
 end
