@@ -1,17 +1,18 @@
 ---@class UI_const
----@field default_9piece string
+---@field empty string empty png, 20x20
+---@field default_9piece string default 9piece
+---@field px string white pixel, 1x1
 local const = {
-	empty = "data/ui_gfx/empty.png",
-	default_9piece = "data/ui_gfx/decorations/9piece0_gray.png",
-	px = "mods/meta_leveling/vfs/white.png",
-	gui_id = 100,
+	empty = "data/ui_gfx/empty.png", 
+	default_9piece = "data/ui_gfx/decorations/9piece0_gray.png", 
+	px = "mods/meta_leveling/vfs/white.png", --white pixel
 }
 
 ---@class (exact) UI_dimensions
 ---@field x number
 ---@field y number
 
----@class gui_tooltip_size_cache
+---@class (exact) gui_tooltip_size_cache
 ---@field width number
 ---@field height number
 ---@field x_offset number
@@ -30,22 +31,21 @@ local const = {
 ---@field protected dim UI_dimensions
 ---@field protected scroll ui_fake_scroll
 local ui_class = {
-	gui = GuiCreate(),
-	gui_id = const.gui_id,
-	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
 	c = const,
 	dim = {
 		x = 640,
 		y = 360
 	},
+	gui_id = 100,
+	tooltip_gui_id = 0,
+	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
+	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
+	tooltip_z = -100,
 	scroll = {
 		y = 0,
 		target_y = 0,
 		max_y = 0
-	},
-	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
-	tooltip_z = -100,
-	tooltip_gui_id = const.gui_id
+	}
 }
 
 ---create new gui
@@ -760,7 +760,7 @@ end
 ---reset gui id
 ---@protected
 function ui_class:id_reset()
-	self.gui_id = self.c.gui_id
+	self.gui_id = 100
 	self.tooltip_gui_id = 0
 end
 
