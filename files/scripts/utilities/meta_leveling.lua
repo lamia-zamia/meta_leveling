@@ -73,7 +73,6 @@ function ML:StartUp()
 	self.level = self:get_level()
 	self.guns:parse_actions()
 	self.rewards_deck:GatherData()
-	-- self.rewards:gather_action_info()
 	self.rewards_deck:get_reroll_count()
 end
 
