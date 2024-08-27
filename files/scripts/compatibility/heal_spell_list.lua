@@ -9,7 +9,7 @@ local heal_spells = {
 	},
 	{
 		id = "ANTIHEAL",
-		weight = 80
+		weight = 40
 	}
 }
 
