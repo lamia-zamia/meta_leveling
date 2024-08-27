@@ -312,7 +312,7 @@ end
 
 ---function to draw tooltip on current rewards
 ---@private
----@param rewards ml_reward_id_list
+---@param rewards ml_reward_id[]
 function LU:DrawCurrentRewardsTooltip(rewards)
 	for _, reward_id in ipairs(rewards) do
 		local reward = ML.rewards_deck.reward_data[reward_id]
