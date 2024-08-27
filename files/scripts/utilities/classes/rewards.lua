@@ -80,35 +80,6 @@ function rewards:grant_perk(perk_id)
 	perk_pickup(0, ML.player.id, perk_id, true, false, true)
 end
 
----return random spells of level
----@param level number
----@return string action_id
-function rewards:get_random_spell(level)
-	if level > 6 then level = 10 end
-	for i = 1, 1000 do
-		local action_id = GetRandomAction(ML.player.x, ML.player.y, level, i)
-		if ML.guns:spell_is_valid(action_id) then
-			return action_id
-		end
-	end
-	return "OCARINA_A"
-end
-
----return random typed spells of level
----@param level number
----@param type number
----@return string action_id
-function rewards:get_random_typed_spell(level, type)
-	if level > 6 then level = 10 end
-	for i = 1, 1000 do
-		local action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, i)
-		if ML.guns:spell_is_valid(action_id) then
-			return action_id
-		end
-	end
-	return "OCARINA_A"
-end
-
 function rewards:force_fungal_shift()
 	dofile_once("data/scripts/magic/fungal_shift.lua")
 	fungal_shift(ML.player.id, ML.player.x, ML.player.y, true)

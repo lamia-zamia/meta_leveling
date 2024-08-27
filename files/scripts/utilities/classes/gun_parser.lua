@@ -218,4 +218,46 @@ function guns:spell_is_valid(action_id)
 	return true
 end
 
+---returns a valid spell from list
+---@param list string[]
+---@return string action_id
+function guns:get_random_from_list(list)
+	local length = #list
+	local index = Random(1, length)
+	for _ = 1, length do
+		if self:spell_is_valid(list[index]) then return list[index] end
+		index = index % length + 1
+	end
+	return "OCARINA_A"
+end
+
+---return random spells of level
+---@param level number
+---@return string action_id
+function guns:get_random_spell(level)
+	if level > 6 then level = 10 end
+	for i = 1, 1000 do
+		local action_id = GetRandomAction(ML.player.x, ML.player.y, level, i)
+		if self:spell_is_valid(action_id) then
+			return action_id
+		end
+	end
+	return "OCARINA_A"
+end
+
+---return random typed spells of level
+---@param level number
+---@param type number
+---@return string action_id
+function guns:get_random_typed_spell(level, type)
+	if level > 6 then level = 10 end
+	for i = 1, 1000 do
+		local action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, i)
+		if self:spell_is_valid(action_id) then
+			return action_id
+		end
+	end
+	return "OCARINA_A"
+end
+
 return guns
