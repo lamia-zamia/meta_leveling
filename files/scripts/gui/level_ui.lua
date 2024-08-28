@@ -8,15 +8,15 @@ local modules = {
 }
 
 for _, module_name in ipairs(modules) do
-	local module = dofile(module_name)
+	local module = dofile_once(module_name)
 	if not module then error("couldn't load " .. module_name) end
 	for k, v in pairs(module) do
-        LU[k] = v
-    end
+		LU[k] = v
+	end
 end
 
 -- ############################################
--- #########		MISC		###########
+-- #############		MISC		###########
 -- ############################################
 
 ---function to unpack variable descriptions
@@ -239,7 +239,7 @@ function LU:DrawMainHeader()
 	local third_width = self.const.width * 0.33
 	local section = 10
 	local experience = self:Locale("$ml_experience: ") .. ML.exp:format(ML.exp.current)
-	if ML.exp.current < 10^21 then
+	if ML.exp.current < 10 ^ 21 then
 		experience = experience .. "/" .. ML.exp:format(ML.exp.next)
 	end
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
