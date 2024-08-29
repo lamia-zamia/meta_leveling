@@ -24,27 +24,10 @@
 ---@alias ml_rewards ml_reward[]
 
 ---@class (exact) ml_rewards_util
----@field locked_spells table list of locked spells
----@field spells_no_spawn table list of spells with 0 spawn rate
 ---@field transformation ml_transformations
 local rewards = {
-	locked_spells = {},
-	spells_no_spawn = {},
 	transformation = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/player_transformations.lua")
 }
-
----function to gather spells info in order to validate them later
-function rewards:gather_action_info()
-	dofile_once("data/scripts/gun/gun_actions.lua")
-	for _, action in ipairs(actions) do
-		if action.spawn_probability == "0" then
-			self.spells_no_spawn[action.id] = true
-		end
-		if action.spawn_requires_flag then
-			self.locked_spells[action.id] = action.spawn_requires_flag
-		end
-	end
-end
 
 ---get reward_id picked count
 ---@param reward_id string
