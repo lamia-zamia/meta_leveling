@@ -4,7 +4,8 @@ local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/l
 local modules = {
 	"mods/meta_leveling/files/scripts/gui/level_ui_debug.lua",
 	"mods/meta_leveling/files/scripts/gui/level_ui_level_up.lua",
-	"mods/meta_leveling/files/scripts/gui/level_ui_current.lua"
+	"mods/meta_leveling/files/scripts/gui/level_ui_current.lua",
+	"mods/meta_leveling/files/scripts/gui/level_ui_stats.lua"
 }
 
 for _, module_name in ipairs(modules) do
@@ -209,9 +210,10 @@ function LU:DrawMenuButtons()
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
 		self.DrawCurrentRewards)
 
-	self:ColorGray()
-	self:Text(x_off(), y, self:Locale("Stats (WIP)"))
-	self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
+	self:AddMenuSelector(x_off(), y, "Stats", "heh", self.DrawStatsMenu)
+	-- self:ColorGray()
+	-- self:Text(x_off(), y, self:Locale("Stats (WIP)"))
+	-- self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 
 	self:ColorGray()
 	self:Text(x_off(), y, self:Locale("Meta (WIP)"))
