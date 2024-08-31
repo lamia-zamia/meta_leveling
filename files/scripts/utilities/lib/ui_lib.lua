@@ -78,12 +78,15 @@ function ui_class:BlockInput()
 	GuiIdPop(self.gui)
 end
 
+---Make previous clickable
 ---@protected
-function ui_class:MakePreviousClickable(click_fn, variable)
+---@param click_fn function
+---@param ... any
+function ui_class:MakePreviousClickable(click_fn, ...)
 	local prev = self:GetPrevious()
 	if prev.hovered then
 		if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
-			click_fn(self, variable)
+			click_fn(self, ...)
 		end
 	end
 end
@@ -149,13 +152,13 @@ end
 ---@param x number
 ---@param y number
 ---@param ui_fn function
----@param variable any
 ---@param key string
-function ui_class:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
+---@param ... any
+function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
 	local offscreen_offset = 1000
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
-	ui_fn(self, variable)
+	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
 	GuiEndAutoBoxNinePiece(self.gui)
 	self:SetTooltipCache(x, y, key)
@@ -166,12 +169,12 @@ end
 ---@param x number
 ---@param y number
 ---@param ui_fn function
----@param variable any
+---@param ... any
 ---@return gui_tooltip_size_cache
-function ui_class:GetTooltipData(x, y, ui_fn, variable)
-	local key = self:GetKey(x, y, ui_fn, variable)
+function ui_class:GetTooltipData(x, y, ui_fn, ...)
+	local key = self:GetKey(x, y, ui_fn, ...)
 	if not self.gui_tooltip_size_cache[key] then
-		self:DrawTooltipOffScreen(x, y, ui_fn, variable, key)
+		self:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
 	end
 	return self.gui_tooltip_size_cache[key]
 end
@@ -181,10 +184,14 @@ end
 ---@param x number
 ---@param y number
 ---@param ui_fn function
----@param variable any
+---@param ... any
 ---@return string
-function ui_class:GetKey(x, y, ui_fn, variable)
-	return self:Locale("$current_language") .. tostring(x) .. tostring(y) .. tostring(ui_fn) .. tostring(variable)
+function ui_class:GetKey(x, y, ui_fn, ...)
+	local key = self:Locale("$current_language") .. tostring(x) .. tostring(y) .. tostring(ui_fn)
+	for _, var in ipairs({...}) do
+		key = key .. tostring(var)
+	end
+	return key
 end
 
 ---Actual function to draw tooltip
@@ -192,19 +199,19 @@ end
 ---@param x number
 ---@param y number
 ---@param ui_fn function
----@param variable any
-function ui_class:DrawToolTip(x, y, ui_fn, variable)
+---@param ... any
+function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	local orig_gui, orig_id = self.gui, self.gui_id
 	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
 	GuiIdPushString(self.gui, "tooltips")
-	local cache = self:GetTooltipData(x, y, ui_fn, variable)
+	local cache = self:GetTooltipData(x, y, ui_fn, ...)
 	GuiZSet(self.gui, self.tooltip_z)
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, false)
 	self:AnimateScale(0.08, false)
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + cache.x_offset, y + cache.y_offset, true)
-	ui_fn(self, variable)
+	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
 	GuiZSet(self.gui, self.tooltip_z + 1)
 	GuiEndAutoBoxNinePiece(self.gui)
@@ -219,13 +226,13 @@ end
 ---@param x number position of x.
 ---@param y number position of y.
 ---@param draw function|string function to render in tooltip.
----@param variable? any optional parameter to pass to ui function.
-function ui_class:ShowTooltip(x, y, draw, variable)
+---@param ... any optional parameter to pass to ui function.
+function ui_class:ShowTooltip(x, y, draw, ...)
 	local fn_type = type(draw)
 	if fn_type == "string" then
 		self:DrawToolTip(x, y, self.TooltipText, draw)
 	elseif fn_type == "function" then
-		self:DrawToolTip(x, y, draw, variable)
+		self:DrawToolTip(x, y, draw, ...)
 	end
 end
 
@@ -234,10 +241,10 @@ end
 ---@param x number offset x.
 ---@param y number offset y.
 ---@param draw function|string function to render in tooltip.
----@param variable? any optional parameter to pass to ui function.
-function ui_class:AddTooltip(x, y, draw, variable)
+---@param ... any optional parameter to pass to ui function.
+function ui_class:AddTooltip(x, y, draw, ...)
 	local prev = self:GetPrevious()
-	if prev.hovered then self:ShowTooltip(prev.x + x, prev.y + y, draw, variable) end
+	if prev.hovered then self:ShowTooltip(prev.x + x, prev.y + y, draw, ...) end
 end
 
 ---Custom tooltip with hovered check and make clickable.
@@ -245,24 +252,24 @@ end
 ---@param x number offset x.
 ---@param y number offset y.
 ---@param draw function|string function to render in tooltip.
----@param variable? any optional parameter to pass to ui function.
-function ui_class:AddTooltipClickable(x, y, draw, click_fn, variable)
+---@param ... any optional parameter to pass to ui function.
+function ui_class:AddTooltipClickable(x, y, draw, click_fn, ...)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		self:ShowTooltip(prev.x + x, prev.y + y, draw, variable)
+		self:ShowTooltip(prev.x + x, prev.y + y, draw, ...)
 		if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
-			if click_fn then click_fn(self, variable) end
+			if click_fn then click_fn(self, ...) end
 		end
 	end
 end
 
 ---@protected
-function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, variable)
+function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, ...)
 	local prev = self:GetPrevious()
 	self:ForceFocusable()
 	self:Add9PieceBackGroundText(z, sprite, highlight)
 	local tp_offset = (self:GetTextDimension(text) - prev.w - 1.5) / -2
-	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, variable)
+	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, ...)
 end
 
 ---draw text at 0
