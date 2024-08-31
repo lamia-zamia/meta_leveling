@@ -666,10 +666,12 @@ end
 function ui_class:DebugDrawGrid()
 	for i = 0, 640, 10 do
 		if i % 16 == 0 then GuiColorSetForNextWidget(self.gui, 1, 0, 0, 1) end
+		self:SetZ(-5000)
 		GuiImage(self.gui, self:id(), i, 0, self.c.px, 0.2, 1, 360)
 	end
 	for i = 0, 360, 10 do
 		if i % 9 == 0 then GuiColorSetForNextWidget(self.gui, 1, 0, 0, 1) end
+		self:SetZ(-5000)
 		GuiImage(self.gui, self:id(), 0, i, self.c.px, 0.2, 640, 1)
 	end
 end
