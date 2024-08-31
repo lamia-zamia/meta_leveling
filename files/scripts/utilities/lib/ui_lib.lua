@@ -27,6 +27,8 @@ local const = {
 ---@field private gui_tooltip_size_cache gui_tooltip_size_cache
 ---@field private tooltip_z number
 ---@field private tooltip_gui_id number
+---@field private tooltip_reset boolean
+---@field private tooltip_previous? table
 ---@field protected c UI_const constants
 ---@field protected dim UI_dimensions
 ---@field protected scroll ui_fake_scroll
@@ -41,6 +43,8 @@ local ui_class = {
 	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
 	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
 	tooltip_z = -100,
+	tooltip_reset = true,
+	tooltip_previous = nil,
 	scroll = {
 		y = 0,
 		target_y = 0,
@@ -205,10 +209,15 @@ function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
 	GuiIdPushString(self.gui, "tooltips")
 	local cache = self:GetTooltipData(x, y, ui_fn, ...)
+	if self.tooltip_previous ~= cache then
+		self.tooltip_previous = cache
+	else
+		self.tooltip_reset = false
+	end
 	GuiZSet(self.gui, self.tooltip_z)
 	self:AnimateB()
-	self:AnimateAlpha(0.08, 0.1, false)
-	self:AnimateScale(0.08, false)
+	self:AnimateAlpha(0.08, 0.1, self.tooltip_reset)
+	self:AnimateScale(0.08, self.tooltip_reset)
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + cache.x_offset, y + cache.y_offset, true)
 	ui_fn(self, ...)
@@ -787,6 +796,7 @@ end
 ---@protected
 function ui_class:StartFrame(fn, bool)
 	self:id_reset()
+	self.tooltip_reset = true
 	local player = EntityGetWithTag("player_unit")[1]
 	if player then --if player is even alive
 		if self.gui ~= nil then GuiStartFrame(self.gui) end
