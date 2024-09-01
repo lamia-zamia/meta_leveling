@@ -42,7 +42,7 @@ local ui_class = {
 	tooltip_gui_id = 0,
 	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
 	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
-	tooltip_z = -100,
+	tooltip_z = -10000,
 	tooltip_reset = true,
 	tooltip_previous = nil,
 	scroll = {
