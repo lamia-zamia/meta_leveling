@@ -40,7 +40,7 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	local message = nil
 	local died_name = T(EntityGetName(died_entity))
 	-- ######################### player kills ##########################
-	if GameGetFrameNum() - GetValueInteger("ML_damaged_by_player", 0) < 180 then
+	if GameGetFrameNum() - GetValueInteger("ML_damaged_by_player", -900) < 180 then
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": "
 	else
 		if not_visible(died_entity) then return end
