@@ -38,8 +38,8 @@ local ui_class = {
 		x = 640,
 		y = 360
 	},
-	gui_id = 100,
-	tooltip_gui_id = 0,
+	gui_id = 100000,
+	tooltip_gui_id = 1000,
 	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
 	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
 	tooltip_z = -10000,
@@ -207,7 +207,6 @@ end
 function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	local orig_gui, orig_id = self.gui, self.gui_id
 	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
-	GuiIdPushString(self.gui, "tooltips")
 	local cache = self:GetTooltipData(x, y, ui_fn, ...)
 	if self.tooltip_previous ~= cache then
 		self.tooltip_previous = cache
@@ -226,7 +225,6 @@ function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	GuiEndAutoBoxNinePiece(self.gui)
 	self:AnimateE()
 	GuiZSet(self.gui, 0)
-	GuiIdPop(self.gui)
 	self.gui, self.gui_id = orig_gui, orig_id
 end
 
@@ -778,8 +776,8 @@ end
 ---reset gui id
 ---@protected
 function ui_class:id_reset()
-	self.gui_id = 100
-	self.tooltip_gui_id = 0
+	self.gui_id = 100000
+	self.tooltip_gui_id = 1000
 end
 
 ---return id with increment
