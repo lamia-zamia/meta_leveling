@@ -6,6 +6,8 @@ local append_list = {
 	"mods/meta_leveling/files/scripts/appends/dofile_before/sunquest/spot_1_finish.lua",
 	["data/entities/animals/boss_centipede/ending/sampo_start_ending_sequence.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/sampo_start_ending_sequence.lua",
+	["data/scripts/magic/altar_tablet_magic.lua"] =
+	"mods/meta_leveling/files/scripts/appends/dofile_before/altar_tablet_magic.lua"
 }
 
 for original_file, append_file in pairs(append_list) do
