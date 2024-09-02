@@ -167,7 +167,6 @@ function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
 	GuiLayoutEnd(self.gui)
 	GuiEndAutoBoxNinePiece(self.gui)
 	self:SetTooltipCache(x, y, key)
-	self:SetTooltipCache(x, y, key)
 end
 
 ---Retrieve tooltip data, drawing it off-screen if necessary
