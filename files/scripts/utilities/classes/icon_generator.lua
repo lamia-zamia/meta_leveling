@@ -86,7 +86,7 @@ function IG:copy_from_icon(image_id, x, source)
 	for i = 0, 15 do
 		for j = 0, 15 do
 			local color_source = ModImageGetPixel(source_id, i, j)
-			if color_source < 0 then
+			if self:color_has_alhpa(color_source) then
 				local color = self:blend_colors(color_source, ModImageGetPixel(image_id, x + i, j))
 				ModImageSetPixel(image_id, x + i, j, color)
 			end
@@ -184,6 +184,14 @@ function IG:blend_colors(color1, color2)
 
 	-- Merge the final color with full opacity
 	return self:color_abgr_merge(r, g, b, 255)
+end
+
+---Returns true if color's alpha > 0
+---@private
+---@param abgr_int integer
+function IG:color_has_alhpa(abgr_int)
+	local _, _, _, alpha = self:color_abgr_split(abgr_int)
+	return alpha > 0
 end
 
 IG:generate_common_if_not()
