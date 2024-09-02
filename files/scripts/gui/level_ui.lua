@@ -288,7 +288,7 @@ function LU:GetSetting()
 	self.data.CloseOnShot = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
 	self.data.CloseOnDamage = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = ML.utils:get_mod_setting_boolean("session_exp_ui_open_auto")
-	self.data.debug = ML.utils:get_mod_setting_boolean("show_debug")
+	self.data.debug = ModIsEnabled("component-explorer")
 	self:CalculateProgressOffset()
 end
 
