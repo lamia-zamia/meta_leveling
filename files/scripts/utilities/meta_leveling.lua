@@ -57,8 +57,12 @@ end
 
 function ML:level_up()
 	self.utils:set_global_number(ML.const.globals.current_level, self:get_level() + 1)
-	if self:get_level() % 5 == 0 then
+	local level = self:get_level()
+	if level % 5 == 0 then
 		self.rewards_deck:add_reroll(1)
+	end
+	if level % 100 == 0 then
+		self.meta:modify_current_currency(1)
 	end
 	self:UpdateCommonParameters()
 end
