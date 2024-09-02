@@ -46,4 +46,17 @@ function SM:Write()
 	ModTextFileSetContent(self.file, self.content)
 end
 
+---Destroys the current instance by clearing its fields.
+function SM:Destroy()
+    self.file = nil
+    self.content = nil
+    setmetatable(self, nil)
+end
+
+---Writes the manipulated content back to the file and destroys the current instance by clearing its fields.
+function SM:WriteAndClose()
+	self:Write()
+	self:Destroy()
+end
+
 return SM
