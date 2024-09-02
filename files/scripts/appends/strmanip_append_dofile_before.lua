@@ -3,11 +3,10 @@ local SM = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/stringman
 
 local append_list = {
 	["data/scripts/buildings/sun/spot_1_finish.lua"] =
-	"mods/meta_leveling/files/scripts/appends/sunquest/spot_1_finish.lua",
+	"mods/meta_leveling/files/scripts/appends/dofile_before/sunquest/spot_1_finish.lua",
 	["data/entities/animals/boss_centipede/ending/sampo_start_ending_sequence.lua"] =
-	"mods/meta_leveling/files/scripts/appends/ending_sequence_append.lua",
+	"mods/meta_leveling/files/scripts/appends/dofile_before/sampo_start_ending_sequence.lua",
 }
-
 
 for original_file, append_file in pairs(append_list) do
 	local sm = SM:new(original_file)
