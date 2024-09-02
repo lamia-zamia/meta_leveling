@@ -10,6 +10,7 @@ local player_stats = {
 			local component_id = ML.player:get_component_by_name("CharacterPlatformingComponent")
 			if not component_id then return end
 			ML.utils:add_value_to_component(component_id, "velocity_max_x", 20)
+			ML.utils:add_value_to_component(component_id, "fly_velocity_x", 20)
 			ML.utils:add_value_to_component(component_id, "run_velocity", 20)
 		end
 	},
