@@ -53,7 +53,8 @@ function LU_debug:DrawDebugWindow()
 			ui_name = "Add levels",
 			description = "Gain 10 levels",
 			fn = function()
-				ML.utils:set_global_number(ML.const.globals.current_exp, ML.level_curve[ML:get_level() + 9 + ML.pending_levels])
+				ML.utils:set_global_number(ML.const.globals.current_exp,
+					ML.level_curve[ML:get_level() + 9 + ML.pending_levels])
 			end,
 		},
 		{
@@ -162,8 +163,10 @@ function LU_debug:DrawDebugWindow()
 			self:Image(x, y - self.scroll.y, reward.ui_icon, 1, 0.5, 0.5)
 			if self:ElementIsVisible(y, distance_between) then
 				self:Draw9Piece(prev.x, prev.y, self.const.z, 8, 8, self.c.empty)
-				local cache = self:GetTooltipData(0, distance_between, self.debug_reward_deck_tooltip, "index: " .. i .. ", id: " .. reward_id)
-				self:AddTooltip((cache.width - 8) / -2, distance_between + 8, self.debug_reward_deck_tooltip, "index: " .. i .. ", id: " .. reward_id)
+				local cache = self:GetTooltipData(0, distance_between, self.debug_reward_deck_tooltip,
+					"index: " .. i .. ", id: " .. reward_id)
+				self:AddTooltip((cache.width - 8) / -2, distance_between + 8, self.debug_reward_deck_tooltip,
+					"index: " .. i .. ", id: " .. reward_id)
 			end
 			x = x + distance_between
 		end

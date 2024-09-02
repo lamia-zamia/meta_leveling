@@ -246,7 +246,7 @@ local reward_list = {
 	{
 		id = "more_experience_trick1",
 		group_id = "more_experience_trick",
-		ui_name = "$ml_more_experience",
+		ui_name = "$ml_more_experience_trick",
 		description = "$ml_more_experience_trick_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
 		description_var = { "25%" },
@@ -259,7 +259,7 @@ local reward_list = {
 	{
 		id = "more_experience_trick2",
 		group_id = "more_experience_trick",
-		ui_name = "$ml_more_experience",
+		ui_name = "$ml_more_experience_trick",
 		description = "$ml_more_experience_trick_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
 		description_var = { "50%" },
@@ -273,7 +273,7 @@ local reward_list = {
 	{
 		id = "more_experience_trick3",
 		group_id = "more_experience_trick",
-		ui_name = "$ml_more_experience",
+		ui_name = "$ml_more_experience_trick",
 		description = "$ml_more_experience_trick_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_exp_trick.xml",
 		description_var = { "100%" },

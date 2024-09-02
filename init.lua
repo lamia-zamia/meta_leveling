@@ -4,7 +4,6 @@ ML = dofile_once("mods/meta_leveling/files/scripts/utilities/meta_leveling.lua")
 local gui = dofile_once("mods/meta_leveling/files/scripts/gui/gui.lua")
 
 dofile_once("mods/meta_leveling/files/scripts/load_file_into_vfs.lua")
-dofile_once("mods/meta_leveling/files/scripts/mod_settings_virtual.lua")
 dofile_once("mods/meta_leveling/files/scripts/appends.lua")
 
 function OnModPostInit()
@@ -16,6 +15,7 @@ function OnWorldInitialized()
 end
 
 function OnPlayerSpawned()
+	ML:OnSpawn()
 	gui:UpdateSettings()
 end
 

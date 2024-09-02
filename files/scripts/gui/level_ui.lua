@@ -5,7 +5,8 @@ local modules = {
 	"mods/meta_leveling/files/scripts/gui/level_ui_debug.lua",
 	"mods/meta_leveling/files/scripts/gui/level_ui_level_up.lua",
 	"mods/meta_leveling/files/scripts/gui/level_ui_current.lua",
-	"mods/meta_leveling/files/scripts/gui/level_ui_stats.lua"
+	"mods/meta_leveling/files/scripts/gui/level_ui_stats.lua",
+	"mods/meta_leveling/files/scripts/gui/level_ui_meta.lua"
 }
 
 for _, module_name in ipairs(modules) do
@@ -211,13 +212,8 @@ function LU:DrawMenuButtons()
 		self.DrawCurrentRewards)
 
 	self:AddMenuSelector(x_off(), y, "Stats", "heh", self.DrawStatsMenu)
-	-- self:ColorGray()
-	-- self:Text(x_off(), y, self:Locale("Stats (WIP)"))
-	-- self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 
-	self:ColorGray()
-	self:Text(x_off(), y, self:Locale("Meta (WIP)"))
-	self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
+	self:AddMenuSelector(x_off(), y, "Meta", "mheh", self.DrawMetaMenu)
 
 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("$ml_close")), y,
 		self:Locale("$ml_close"))
@@ -293,6 +289,7 @@ function LU:GetSetting()
 	self.data.CloseOnDamage = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = ML.utils:get_mod_setting_boolean("session_exp_ui_open_auto")
 	self.data.debug = ML.utils:get_mod_setting_boolean("show_debug")
+	self:CalculateProgressOffset()
 end
 
 ---main logic

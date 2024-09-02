@@ -27,7 +27,7 @@ local const = {
 ---@field private gui_tooltip_size_cache gui_tooltip_size_cache
 ---@field private tooltip_z number
 ---@field private tooltip_gui_id number
----@field private tooltip_reset boolean
+---@field protected tooltip_reset boolean
 ---@field private tooltip_previous? table
 ---@field protected c UI_const constants
 ---@field protected dim UI_dimensions
@@ -51,16 +51,17 @@ local ui_class = {
 		max_y = 0
 	}
 }
+ui_class.__index = ui_class
 
 ---create new gui
 ---@protected
 ---@return UI_class
 function ui_class:new()
-	local o = {}
+	local o = {
+		gui = GuiCreate(),
+		gui_tooltip = GuiCreate()
+	}
 	setmetatable(o, self)
-	self.__index = self
-	o.gui = GuiCreate()
-	o.gui_tooltip = GuiCreate()
 	return o
 end
 

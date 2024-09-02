@@ -14,7 +14,7 @@
 ---@field entity_scanner ml_entity_scanner
 ---@field nxml nxml
 ---@field guns ml_gun_parser
----@field level number
+---@field meta ml_meta
 ---@field pending_levels number
 local ML = {
 	gui = false,
@@ -32,6 +32,7 @@ local ML = {
 	colors = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/colors.lua"),
 	entity_scanner = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/entity_scanner.lua"),
 	guns = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gun_parser.lua"),
+	meta = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/meta.lua"),
 	pending_levels = 0,
 }
 
@@ -67,13 +68,17 @@ function ML:UpdateCommonParameters()
 	self.player:update()
 	self.exp:update()
 	self.pending_levels = self:get_pending_levels()
+	self.meta:update()
 end
 
 function ML:StartUp()
-	self.level = self:get_level()
 	self.guns:parse_actions()
 	self.rewards_deck:GatherData()
 	self.rewards_deck:get_reroll_count()
+end
+
+function ML:OnSpawn()
+	self.meta:initialize()
 end
 
 ---@param exp number number of exp to add BEFORE applying multiplier
