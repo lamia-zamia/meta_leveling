@@ -43,7 +43,7 @@ end
 
 ---Writes the manipulated content back to the file.
 function SM:Write()
-	ModTextFileSetContent(self.file, self.content)
+	ModTextFileSetContent(self.file, self.content:gsub("\r", ""))
 end
 
 ---Destroys the current instance by clearing its fields.

@@ -33,9 +33,12 @@ end
 ---checks player id and return false if player is not found
 ---@return boolean
 function player:validate()
-	if not EntityGetIsAlive(self.id) then self.id = self:get_id() end
-	if EntityGetIsAlive(self.id) then return true
-	else return false end
+	if self.id and EntityGetIsAlive(self.id) then
+		return true
+	else
+		self.id = self:get_id()
+		return EntityGetIsAlive(self.id)
+	end
 end
 
 ---returns player x, y
@@ -126,8 +129,11 @@ end
 ---@param default number
 function player:get_damagemodel_value_number(field, default)
 	local value = self:get_damagemodel_value(field)
-	if type(value) == "number" then return value
-	else return default end
+	if type(value) == "number" then
+		return value
+	else
+		return default
+	end
 end
 
 ---@param field ControlsComponent
@@ -141,8 +147,11 @@ end
 ---@return number
 function player:get_mButtonLastFrameFire()
 	local value = self:get_controlscomponent_value("mButtonLastFrameFire")
-	if type(value) == "number" then return value
-	else return -2 end
+	if type(value) == "number" then
+		return value
+	else
+		return -2
+	end
 end
 
 function player:has_effect(effect_name)
