@@ -279,7 +279,7 @@ end
 ---@param index number
 ---@param point ml_progress_point_run
 function LU_meta:DrawPointProgressElement(index, point)
-	local progress_name = self:Locale(point.ui_name)
+	local progress_name = self:FormatString(self:Locale(point.ui_name))
 	self:Text(0, self.meta.y - self.scroll.y, progress_name .. ":")
 	local prev = self:GetPrevious()
 	self:ProgressPointAddTooltip(prev.x, prev.y + 1, prev.w, prev.h - 2, self:GetTextDimension(progress_name) / 2,
