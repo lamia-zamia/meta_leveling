@@ -1,67 +1,76 @@
+---class to handle font generation, color management, and popup text displays.
 ---@class ml_font
 local font = {}
 
----returns string of rgb or exp color if none
----@param r? number|string
----@param g? number|string
----@param b? number|string
----@return string r, string g, string b
+---Returns a string of RGB values or retrieves them from mod settings if not provided.
+---@param r? number|string Optional red component (0-1). Defaults to mod setting.
+---@param g? number|string Optional green component (0-1). Defaults to mod setting.
+---@param b? number|string Optional blue component (0-1). Defaults to mod setting.
+---@return string r Red component as a string.
+---@return string g Green component as a string.
+---@return string b Blue component as a string.
 function font:get_color(r, g, b)
-	if r then r = tostring(r) else r = string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_red")) end
-	if g then g = tostring(g) else g = string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_green")) end
-	if b then b = tostring(b) else b = string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_blue")) end
-	return r, g, b
+	r = r or string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_red"))
+	g = g or string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_green"))
+	b = b or string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_blue"))
+	return tostring(r), tostring(g), tostring(b)
 end
 
----create font generator entity
+---Generates a font XML file with the specified RGB values.
 ---@private
----@param r string
----@param g string
----@param b string
-function font:generate(r, g, b, fn)
-	local path = "mods/meta_leveling/vfs/font/" .. r .. g .. b .. ".xml"
+---@param r string Red component as a string.
+---@param g string Green component as a string.
+---@param b string Blue component as a string.
+---@param set_content function Function to save the generated XML content.
+function font:generate(r, g, b, set_content)
+	local path = string.format("mods/meta_leveling/vfs/font/%s%s%s.xml", r, g, b)
 	local xml = ML.nxml.parse(ModTextFileGetContent("data/fonts/font_pixel.xml"))
 	xml.attr.color_r = r
 	xml.attr.color_g = g
 	xml.attr.color_b = b
 	xml.attr.color_a = "1"
-	fn(path, tostring(xml))
+	set_content(path, tostring(xml))
 end
 
----returns path to virtual colored font and generate if it doesn't exist
+---Returns the path to the virtual colored font file, generating it if it doesn't exist.
 ---@private
----@param r string
----@param g string
----@param b string
----@return string path
+---@param r string Red component as a string.
+---@param g string Green component as a string.
+---@param b string Blue component as a string.
+---@return string path Path to the generated or existing font file.
 function font:get_path(r, g, b)
-	local path = "mods/meta_leveling/vfs/font/" .. r .. g .. b .. ".xml"
+	local path = string.format("mods/meta_leveling/vfs/font/%s%s%s.xml", r, g, b)
 	if ModDoesFileExist(path) then
 		return path
-	elseif ModTextFileSetContent then
-		self:generate(r, g, b, ModTextFileSetContent)
-		return path
-	elseif ML.utils.set_content then
-		self:generate(r, g, b, ML.utils.set_content)
+	end
+
+	local set_content = ModTextFileSetContent or ML.utils.set_content
+	if set_content then
+		self:generate(r, g, b, set_content)
 		return path
 	end
-	return "data/fonts/font_pixel.xml"
+
+	return "data/fonts/font_pixel.xml" -- Fallback to the default font if generation is not possible
 end
 
----popup text on entity
----@param source_entity entity_id
----@param text string
----@param r string
----@param g string
----@param b string
----@param scale number
+---Displays a popup text on the specified entity with customizable scale and color.
+---@param source_entity entity_id Entity ID where the popup should appear.
+---@param text string Text to display in the popup.
+---@param scale number Scale factor for the text size. Defaults to 1.
+---@param r string Optional red component as a string.
+---@param g string Optional green component as a string.
+---@param b string Optional blue component as a string.
 function font:popup(source_entity, text, scale, r, g, b)
 	scale = scale or 1
 	local x, y = EntityGetFirstHitboxCenter(source_entity)
 	if not x then return end
+
+	-- Adjust positions
 	x = x - (#text * 3 * scale)
 	y = y - 7
+
 	local path = self:get_path(r, g, b)
+
 	entity = EntityCreateNew("ml_popup")
 	EntityAddComponent2(entity, "SpriteComponent", {
 		image_file = path,
@@ -80,10 +89,10 @@ function font:popup(source_entity, text, scale, r, g, b)
 	EntitySetTransform(entity, x, y, 0, scale, scale)
 end
 
----popup exp on entity
----@param source_entity entity_id
----@param text string
----@param scale number
+---Displays a popup for experience points on the specified entity, adjusting scale based on input.
+---@param source_entity entity_id Entity ID where the popup should appear.
+---@param text string Text to display in the popup.
+---@param scale number Scale factor for the text size.
 function font:popup_exp(source_entity, text, scale)
 	if scale < 1 then
 		scale = 0.5
