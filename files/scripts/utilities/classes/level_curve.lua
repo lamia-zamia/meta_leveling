@@ -9,10 +9,7 @@ local levels = {
 }
 
 local function make_number_round(number)
-	local result
-	if number > 100 then result = math.floor((number / 10) + 0.6) * 10
-	else result = math.floor(number + 0.6) end
-	return result
+	return number > 100 and math.ceil(number / 10) * 10 or math.ceil(number)
 end
 
 local function next_level(level)
@@ -26,7 +23,7 @@ end
 
 ---because fuck you that's why
 for i = 1, 20 do
-	levels[#levels + 1] = levels[#levels] * 10^i
+	levels[#levels + 1] = levels[#levels] * 10 ^ i
 end
 
 return levels
