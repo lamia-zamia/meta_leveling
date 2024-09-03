@@ -6,8 +6,13 @@ local gui = dofile_once("mods/meta_leveling/files/scripts/gui/gui.lua")
 dofile_once("mods/meta_leveling/files/scripts/load_file_into_vfs.lua")
 dofile_once("mods/meta_leveling/files/scripts/appends.lua")
 
-function OnModPostInit()
+function OnMagicNumbersAndWorldSeedInitialized()
 	dofile_once("mods/meta_leveling/files/scripts/generate_icons.lua")
+end
+
+function OnWorldPostUpdate()
+	ML:UpdateCommonParameters()
+	gui:Draw()
 end
 
 function OnWorldInitialized()
@@ -17,11 +22,6 @@ end
 function OnPlayerSpawned()
 	ML:OnSpawn()
 	gui:UpdateSettings()
-end
-
-function OnWorldPostUpdate()
-	ML:UpdateCommonParameters()
-	gui:Draw()
 end
 
 function OnPausedChanged()
