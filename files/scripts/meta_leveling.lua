@@ -41,7 +41,7 @@ end
 
 function ML:get_pending_levels()
 	local pending = 0
-	while MLP.exp:get() >= self.level_curve[self:get_level() + pending] do
+	while MLP.exp:current() >= self.level_curve[self:get_level() + pending] do
 		pending = pending + 1
 	end
 	return pending
@@ -91,7 +91,7 @@ end
 function ML:get_percentage()
 	local current_level_exp = ML.level_curve[ML:get_level() - 1]
 	local next_level_exp = self:get_next()
-	local perc = (MLP.exp:get() - current_level_exp) / (next_level_exp - current_level_exp)
+	local perc = (MLP.exp:current() - current_level_exp) / (next_level_exp - current_level_exp)
 	perc = math.min(perc, 1)
 	perc = math.max(perc, 0.00001)
 	return perc

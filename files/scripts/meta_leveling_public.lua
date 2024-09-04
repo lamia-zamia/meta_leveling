@@ -15,7 +15,6 @@ local MLP = {
 }
 MLP.get.MLP = MLP
 MLP.set.MLP = MLP
-MLP.exp.MLP = MLP
 MLP.font.MLP = MLP
 
 ---@param exp number number of exp to add BEFORE applying multiplier

@@ -155,7 +155,7 @@ function EB:ToolTipUI()
 	if ML.pending_levels > 0 then
 		level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels
 	end
-	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:get()) .. " / " .. MLP.exp:format(ML.next_exp)
+	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current()) .. " / " .. MLP.exp:format(ML.next_exp)
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
@@ -189,8 +189,8 @@ function EB:AddToolTip(x, y, width, height)
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:get()))
-		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:get()))
+		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
+		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
 		if InputIsMouseButtonJustDown(1) then -- mouse clicks
 			ML:toggle_ui()
 		end

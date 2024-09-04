@@ -1,6 +1,12 @@
 ---@class (exact) ML_experience
----@field MLP MetaLevelingPublic
-local exp = {}
+---@field private get ML_get
+---@field private set ML_set
+---@field private const ml_const
+local exp = {
+	get = dofile_once("mods/meta_leveling/files/scripts/classes/public/get.lua"),
+	set = dofile_once("mods/meta_leveling/files/scripts/classes/public/set.lua"),
+	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua"),
+}
 
 ---Rounds down a number and formats it to a string based on its magnitude.
 ---For values >= 1000, it returns an integer string.
@@ -45,8 +51,8 @@ end
 
 ---Gets the current experience points.
 ---@return number experience The current experience points, floored to two decimal places.
-function exp:get()
-	local experience = self.MLP.get:global_number(MLP.const.globals.current_exp, 0)
+function exp:current()
+	local experience = self.get:global_number(self.const.globals.current_exp, 0)
 	return math.floor(experience * 100) / 100
 end
 
@@ -54,16 +60,16 @@ end
 ---@param value number The base experience value.
 ---@return number experience The experience value after applying the multiplier and constants.
 function exp:apply_multiplier(value)
-	local multiplier = self.MLP.get:mod_setting_number("session_exp_multiplier", 1) +
-	self.MLP.get:global_number(MLP.const.globals.exp_multiplier, 0)
-	value = (value * multiplier) + self.MLP.get:global_number(MLP.const.globals.exp_const, 0)
+	local multiplier = self.get:mod_setting_number("session_exp_multiplier", 1) +
+	self.get:global_number(self.const.globals.exp_multiplier, 0)
+	value = (value * multiplier) + self.get:global_number(self.const.globals.exp_const, 0)
 	return value
 end
 
 ---Adds experience points to the current total.
 ---@param value number The amount of experience to add.
 function exp:add(value)
-	self.MLP.set:add_to_global_number(MLP.const.globals.current_exp, value)
+	self.set:add_to_global_number(self.const.globals.current_exp, value)
 end
 
 ---Converts an entity's maximum HP into experience points.

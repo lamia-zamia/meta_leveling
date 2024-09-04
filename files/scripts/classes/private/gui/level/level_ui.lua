@@ -236,8 +236,8 @@ function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local third_width = self.const.width * 0.33
 	local section = 10
-	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:get())
-	if MLP.exp:get() < 10 ^ 21 then
+	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current())
+	if MLP.exp:current() < 10 ^ 21 then
 		experience = experience .. "/" .. MLP.exp:format(ML.next_exp)
 	end
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
