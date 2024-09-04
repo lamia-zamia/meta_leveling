@@ -1,3 +1,5 @@
+local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
+
 ---@type ml_rewards
 local reward_list = {
 	{
@@ -55,7 +57,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "money", 200)
+			components:add_value_to_component(component_id, "money", 200)
 		end
 	},
 	{
@@ -72,7 +74,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "money", 1000)
+			components:add_value_to_component(component_id, "money", 1000)
 		end
 	},
 	{
@@ -88,7 +90,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "money", 5000)
+			components:add_value_to_component(component_id, "money", 5000)
 		end
 	},
 	{
@@ -100,9 +102,9 @@ local reward_list = {
 		min_level = 20,
 		max = 3,
 		fn = function()
-			local comp_worldstate = ML.utils:get_world_state_component()
+			local comp_worldstate = components:get_world_state_component()
 			if not comp_worldstate then return end
-			ML.utils:add_value_to_component(comp_worldstate, "perk_hp_drop_chance", 20)
+			components:add_value_to_component(comp_worldstate, "perk_hp_drop_chance", 20)
 		end
 	},
 	{
@@ -132,8 +134,8 @@ local reward_list = {
 			local entity_id = EntityGetWithName("ml_permanent_light")
 			local comp_id = EntityGetFirstComponent(entity_id, "SpriteComponent")
 			if not comp_id then return end
-			ML.utils:add_value_to_component(comp_id, "special_scale_x", 2)
-			ML.utils:add_value_to_component(comp_id, "special_scale_y", 2)
+			components:add_value_to_component(comp_id, "special_scale_x", 2)
+			components:add_value_to_component(comp_id, "special_scale_y", 2)
 		end
 	},
 	{
@@ -150,7 +152,7 @@ local reward_list = {
 			local entity_id = EntityGetWithName("ml_permanent_light")
 			local comp_id = EntityGetFirstComponent(entity_id, "SpriteComponent")
 			if not comp_id then return end
-			ML.utils:add_value_to_component(comp_id, "alpha", 0.1)
+			components:add_value_to_component(comp_id, "alpha", 0.1)
 		end
 	},
 	{
@@ -314,14 +316,14 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_love.png",
 		probability = 0.3,
 		custom_check = function()
-			local comp_id = ML.utils:get_world_state_component()
+			local comp_id = components:get_world_state_component()
 			if not comp_id then return end
 			return ComponentGetValue2(comp_id, "global_genome_relations_modifier") < 100
 		end,
 		fn = function()
-			local comp_id = ML.utils:get_world_state_component()
+			local comp_id = components:get_world_state_component()
 			if not comp_id then return end
-			ML.utils:add_value_to_component(comp_id, "global_genome_relations_modifier", 10)
+			components:add_value_to_component(comp_id, "global_genome_relations_modifier", 10)
 		end
 	},
 	{
@@ -331,14 +333,14 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_hatred.png",
 		probability = 0.3,
 		custom_check = function()
-			local comp_id = ML.utils:get_world_state_component()
+			local comp_id = components:get_world_state_component()
 			if not comp_id then return end
 			return ComponentGetValue2(comp_id, "global_genome_relations_modifier") > -100
 		end,
 		fn = function()
-			local comp_id = ML.utils:get_world_state_component()
+			local comp_id = components:get_world_state_component()
 			if not comp_id then return end
-			ML.utils:add_value_to_component(comp_id, "global_genome_relations_modifier", -10)
+			components:add_value_to_component(comp_id, "global_genome_relations_modifier", -10)
 		end
 	},
 	{

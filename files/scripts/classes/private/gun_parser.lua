@@ -175,10 +175,10 @@ function guns:parse_actions()
 	for key, value in pairs(_G) do
 		__G[key] = value
 	end
+	dofile_once = dofile
 	-- ###############################################################
 	-- #################		SANDBOX START		##################
 	-- ###############################################################
-
 	dofile("data/scripts/gun/gunaction_generated.lua")
 	dofile("data/scripts/gun/gun_generated.lua")
 	dofile("data/scripts/gun/gunshoteffects_generated.lua")
@@ -206,7 +206,6 @@ function guns:parse_actions()
 			_G[key] = __G[key]
 		end
 	end
-	__G = nil
 end
 
 ---check if player can have this spell

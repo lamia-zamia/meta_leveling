@@ -1,3 +1,5 @@
+local EZWand = dofile("mods/meta_leveling/files/scripts/lib/EZWand.lua")
+
 ---@type ml_rewards
 local wand_rewards = {
 	{
@@ -9,7 +11,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.castDelay = Randomf(wand.castDelay * 0.9 - 5, wand.castDelay - 2)
 			wand.rechargeTime = Randomf(wand.rechargeTime * 0.9 - 5, wand.rechargeTime -2)
@@ -24,7 +26,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.castDelay = Randomf(wand.castDelay * 0.80 - 5, wand.castDelay - 2)
 		end
@@ -38,7 +40,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.rechargeTime = Randomf(wand.rechargeTime * 0.80 - 5, wand.rechargeTime - 2)
 		end
@@ -52,7 +54,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.manaMax = wand.manaMax + Random(5, 10) * Random(5, 20)
 		end
@@ -66,7 +68,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.manaChargeSpeed = wand.manaChargeSpeed + Random(1, ML:get_level() * 5) + 10
 		end
@@ -80,7 +82,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.manaMax = wand.manaMax + Random(2, 5) * Random(2, 10)
 			wand.manaChargeSpeed = wand.manaChargeSpeed + Random(1, ML:get_level() * 3) + 5
@@ -99,7 +101,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			local old_capacity = wand.capacity
 			local new_capacity = math.min(26, wand.capacity + Random(1, 3))
@@ -117,7 +119,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.capacity = wand.capacity + Random(1, 3)
 		end
@@ -131,7 +133,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			wand.shuffle = false
 		end
 	},
@@ -144,7 +146,7 @@ local wand_rewards = {
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
-			local wand = ML.EZWand(wand_id)
+			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.spread = wand.spread - Random(2, 10)
 		end

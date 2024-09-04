@@ -1,3 +1,5 @@
+local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
+
 ---@type ml_rewards
 local player_stats = {
 	{
@@ -9,9 +11,9 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("CharacterPlatformingComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "velocity_max_x", 20)
-			ML.utils:add_value_to_component(component_id, "fly_velocity_x", 20)
-			ML.utils:add_value_to_component(component_id, "run_velocity", 20)
+			components:add_value_to_component(component_id, "velocity_max_x", 20)
+			components:add_value_to_component(component_id, "fly_velocity_x", 20)
+			components:add_value_to_component(component_id, "run_velocity", 20)
 		end
 	},
 	{
@@ -23,8 +25,8 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("CharacterPlatformingComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "fly_speed_max_up", 20)
-			ML.utils:add_value_to_component(component_id, "pixel_gravity", 8)
+			components:add_value_to_component(component_id, "fly_speed_max_up", 20)
+			components:add_value_to_component(component_id, "pixel_gravity", 8)
 		end
 	},
 	{
@@ -36,7 +38,7 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("CharacterDataComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "fly_time_max", 1)
+			components:add_value_to_component(component_id, "fly_time_max", 1)
 		end
 	},
 	{
@@ -48,8 +50,8 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("CharacterDataComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "fly_recharge_spd", 0.1)
-			ML.utils:add_value_to_component(component_id, "fly_recharge_spd_ground", 1.5)
+			components:add_value_to_component(component_id, "fly_recharge_spd", 0.1)
+			components:add_value_to_component(component_id, "fly_recharge_spd_ground", 1.5)
 		end
 	},
 	{
@@ -64,7 +66,7 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "air_in_lungs_max", 3)
+			components:add_value_to_component(component_id, "air_in_lungs_max", 3)
 		end
 	},
 	{
@@ -76,7 +78,7 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component_object(component_id, "damage_multipliers", "projectile", -0.1)
+			components:add_value_to_component_object(component_id, "damage_multipliers", "projectile", -0.1)
 		end
 	},
 	{
@@ -91,7 +93,7 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component_object(component_id, "damage_multipliers", "explosion", -0.05)
+			components:add_value_to_component_object(component_id, "damage_multipliers", "explosion", -0.05)
 		end
 	},
 	{
@@ -106,7 +108,7 @@ local player_stats = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component_object(component_id, "damage_multipliers", "melee", -0.1)
+			components:add_value_to_component_object(component_id, "damage_multipliers", "melee", -0.1)
 		end
 	},
 }

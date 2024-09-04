@@ -1,3 +1,5 @@
+local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
+
 ---@type ml_rewards
 local health_rewards = {
 	{
@@ -13,7 +15,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "max_hp", 1)
+			components:add_value_to_component(component_id, "max_hp", 1)
 		end
 	},
 	{
@@ -30,7 +32,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "max_hp", 2)
+			components:add_value_to_component(component_id, "max_hp", 2)
 		end
 	},
 	{
@@ -46,7 +48,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "max_hp", 4)
+			components:add_value_to_component(component_id, "max_hp", 4)
 		end
 	},
 	{
@@ -63,7 +65,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:multiply_value_in_component(component_id, "max_hp", 1.1)
+			components:multiply_value_in_component(component_id, "max_hp", 1.1)
 		end
 	},
 	{
@@ -79,7 +81,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:multiply_value_in_component(component_id, "max_hp", 1.25)
+			components:multiply_value_in_component(component_id, "max_hp", 1.25)
 		end
 	},
 	{
@@ -100,7 +102,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "hp", 3)
+			components:add_value_to_component(component_id, "hp", 3)
 		end
 	},
 	{
@@ -122,7 +124,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "hp", 6)
+			components:add_value_to_component(component_id, "hp", 6)
 		end
 	},
 	{
@@ -143,7 +145,7 @@ local health_rewards = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "hp", 12)
+			components:add_value_to_component(component_id, "hp", 12)
 		end
 	},
 	{
@@ -166,7 +168,7 @@ local health_rewards = {
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
-			ML.utils:add_value_to_component(component_id, "hp", 2 + (value * 0.1))
+			components:add_value_to_component(component_id, "hp", 2 + (value * 0.1))
 		end
 	},
 	{
@@ -188,7 +190,7 @@ local health_rewards = {
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
-			ML.utils:add_value_to_component(component_id, "hp", 4 + (value * 0.25))
+			components:add_value_to_component(component_id, "hp", 4 + (value * 0.25))
 		end
 	},
 }
