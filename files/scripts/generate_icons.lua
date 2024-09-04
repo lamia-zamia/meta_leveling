@@ -1,5 +1,5 @@
 ---@type ml_icon_generator
-local IG = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/icon_generator.lua")
+local IG = dofile_once("mods/meta_leveling/files/scripts/classes/private/icon_generator.lua")
 
 ---@type ml_icon_generator_table[]
 local icons_to_generate = {

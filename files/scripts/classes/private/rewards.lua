@@ -26,7 +26,7 @@
 ---@class (exact) ml_rewards_util
 ---@field transformation ml_transformations
 local rewards = {
-	transformation = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/player_transformations.lua")
+	transformation = dofile_once("mods/meta_leveling/files/scripts/classes/private/player_transformations.lua")
 }
 
 ---get reward_id picked count
