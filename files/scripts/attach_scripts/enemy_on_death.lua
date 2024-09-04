@@ -1,5 +1,5 @@
 ---@type MetaLevelingPublic
-MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 local waters = dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua")
 local T = GameTextGetTranslatedOrNot
 

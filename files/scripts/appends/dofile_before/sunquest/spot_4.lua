@@ -1,4 +1,4 @@
-MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 GamePrintImportant_ML_Old = GamePrintImportant
 
 GamePrintImportant = function(title, description, ui_custom_decoration_file)

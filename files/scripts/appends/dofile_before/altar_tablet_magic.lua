@@ -1,4 +1,4 @@
-MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 
 AddFlagPersistent_ML_Old = AddFlagPersistent
 
