@@ -10,24 +10,29 @@ local gui = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui.lu
 dofile_once("mods/meta_leveling/files/scripts/load_file_into_vfs.lua")
 dofile_once("mods/meta_leveling/files/scripts/appends.lua")
 
+---After OnModPostInit
 function OnMagicNumbersAndWorldSeedInitialized()
 	dofile_once("mods/meta_leveling/files/scripts/generate_icons.lua")
 end
 
+---Idk why it's called before initialized
 function OnWorldPostUpdate()
 	ML:UpdateCommonParameters()
 	gui:Draw()
 end
 
+---World actually loaded
 function OnWorldInitialized()
 	ML:StartUp()
 end
 
+---?
 function OnPlayerSpawned()
 	ML:OnSpawn()
 	gui:UpdateSettings()
 end
 
+---Update settings when paused
 function OnPausedChanged()
 	gui:UpdateSettings()
 	if MLP.get:mod_setting_boolean("session_exp_close_ui_on_pause") then ML.gui = false end

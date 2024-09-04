@@ -7,7 +7,7 @@ local elemental = {
 }
 
 ---@type script_shot
-function shot(projectile_entity_id)
+local script_shot = function(projectile_entity_id)
 	local projectile_component = EntityGetFirstComponentIncludingDisabled(projectile_entity_id, "ProjectileComponent")
 	if not projectile_component then return end
 
@@ -50,10 +50,12 @@ function shot(projectile_entity_id)
 		if increment > 0 then
 			cmp:add_value_to_component_object(projectile_component, "config_explosion",
 				"max_durability_to_destroy", increment)
-				cmp:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
+			cmp:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
 				100000 * increment)
-				cmp:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
+			cmp:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
 				increment)
 		end
 	end
 end
+
+shot = script_shot

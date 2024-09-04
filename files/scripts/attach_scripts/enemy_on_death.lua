@@ -25,14 +25,15 @@ local function damage_done_by_water(damage_message)
 end
 
 ---@type script_damage_received
-function damage_received(damage, message, entity_thats_responsible, is_fatal, projectile_thats_responsible)
+local script_damage_received = function(damage, message, entity_thats_responsible, is_fatal, projectile_thats_responsible)
 	if MLP.get:entity_is_player_related(entity_thats_responsible) then
 		SetValueInteger("ML_damaged_by_player", GameGetFrameNum())
 	end
 end
+damage_received = script_damage_received
 
 ---@type script_death
-function death(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
+local script_death = function(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
 	if MLP.get:is_player_herd(died_entity) then return end
 	local exp = MLP.exp:convert_max_hp_to_exp(died_entity)
@@ -65,3 +66,4 @@ function death(damage_type_bit_field, damage_message, entity_thats_responsible, 
 	end
 	MLP:AddExpGlobal(exp, died_entity, message)
 end
+death = script_death

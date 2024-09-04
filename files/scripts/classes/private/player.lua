@@ -59,6 +59,7 @@ end
 
 ---add lua component if absent
 ---@param value LuaComponent
+---@param file string
 function player:add_lua_component_if_none(value, file)
 	if not self:validate() then return end
 	local components = EntityGetComponentIncludingDisabled(self.id, "LuaComponent") or {}
@@ -71,6 +72,8 @@ end
 
 ---get specific LuaComponent id
 ---@param value LuaComponent
+---@param file string
+---@return component_id?
 function player:get_lua_component(value, file)
 	if not self:validate() then return end
 	local components = EntityGetComponentIncludingDisabled(self.id, "LuaComponent") or {}
@@ -96,6 +99,7 @@ end
 
 ---@param field DamageModelComponent
 ---@param default number
+---@return number
 function player:get_damagemodel_value_number(field, default)
 	local value = self:get_damagemodel_value(field)
 	if type(value) == "number" then

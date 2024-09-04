@@ -128,6 +128,7 @@ end
 ---@private
 ---@param index number number of segment
 ---@param current number number of currently owned
+---@param next number
 ---@param x number x position
 ---@param width number width of segment
 function LU_meta:DrawPointProgressBarSegment(index, current, next, x, width)

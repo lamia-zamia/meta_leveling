@@ -37,6 +37,7 @@ end
 
 ---@param entity entity_id
 ---@param tag string
+---@return boolean
 function ML_get:entity_has_tag(entity, tag)
 	local tags = EntityGetTags(entity)
 	if not tags then return false end

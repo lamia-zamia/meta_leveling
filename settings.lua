@@ -381,6 +381,7 @@ do -- Settings GUI
 	end
 
 	---@param setting mod_setting_number
+	---@param gui gui
 	function S.mod_setting_number_float(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
 		if value ~= value_new then
@@ -389,6 +390,7 @@ do -- Settings GUI
 	end
 
 	---@param setting mod_setting_number
+	---@param gui gui
 	function S.mod_setting_number_integer(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
 		value_new = math.floor(value_new + 0.5)
@@ -762,6 +764,7 @@ end
 -- #############		Meh		##############
 -- ###########################################
 
+---@param init_scope number
 function ModSettingsUpdate(init_scope)
 	-- local old_version = mod_settings_get_version(mod_id)
 	U.set_default(false)
@@ -774,10 +777,13 @@ function ModSettingsUpdate(init_scope)
 	mod_settings_update(mod_id, mod_settings, init_scope)
 end
 
+---@return number
 function ModSettingsGuiCount()
 	return mod_settings_gui_count(mod_id, mod_settings)
 end
 
+---@param gui gui
+---@param in_main_menu boolean
 function ModSettingsGui(gui, in_main_menu)
 	gui_id = 1
 	GuiIdPushString(gui, "META_LEVEING")

@@ -189,6 +189,7 @@ end
 ---Returns true if color's alpha > 0
 ---@private
 ---@param abgr_int integer
+---@return boolean
 function IG:color_has_alhpa(abgr_int)
 	local _, _, _, alpha = self:color_abgr_split(abgr_int)
 	return alpha > 0

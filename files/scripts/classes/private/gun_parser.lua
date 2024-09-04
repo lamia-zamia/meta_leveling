@@ -102,36 +102,44 @@ end
 
 ---Overwrites some functions
 local function overwrite_functions()
+	---@param entity_filename string
 	function BeginProjectile(entity_filename)
 		-- buffer.xml_file = entity_filename
 	end
 
+	---Timer
 	function BeginTriggerTimer()
 		buffer.type = "trigger_timer"
 	end
 
+	---On death
 	function BeginTriggerDeath()
 		buffer.type = "trigger_death"
 	end
 
+	---Regular trigger
 	function BeginTriggerHitWorld()
 		buffer.type = "trigger_hit_world"
 	end
 
+	---@param entity_filename string
 	function add_projectile(entity_filename)
 		BeginProjectile(entity_filename)
 	end
 
+	---@param entity_filename string
 	function add_projectile_trigger_timer(entity_filename)
 		BeginProjectile(entity_filename)
 		BeginTriggerTimer()
 	end
 
+	---@param entity_filename string
 	function add_projectile_trigger_hit_world(entity_filename)
 		BeginProjectile(entity_filename)
 		BeginTriggerHitWorld()
 	end
 
+	---@param entity_filename string
 	function add_projectile_trigger_death(entity_filename)
 		BeginProjectile(entity_filename)
 		BeginTriggerDeath()

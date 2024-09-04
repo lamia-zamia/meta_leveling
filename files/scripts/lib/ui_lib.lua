@@ -104,6 +104,7 @@ end
 ---@private
 ---@param y number
 ---@param h number
+---@return number
 function ui_class:GetOffsetY(y, h)
 	local y_offset = 0
 	-- Move the tooltip up if it overflows the bottom edge
@@ -259,6 +260,7 @@ end
 ---@param x number offset x.
 ---@param y number offset y.
 ---@param draw function|string function to render in tooltip.
+---@param click_fn function
 ---@param ... any optional parameter to pass to ui function.
 function ui_class:AddTooltipClickable(x, y, draw, click_fn, ...)
 	local prev = self:GetPrevious()

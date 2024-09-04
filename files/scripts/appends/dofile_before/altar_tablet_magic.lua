@@ -2,6 +2,7 @@ local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.l
 
 AddFlagPersistent_ML_Old = AddFlagPersistent
 
+---@param key string
 AddFlagPersistent = function(key)
 	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
 	local function get_tablet_count()

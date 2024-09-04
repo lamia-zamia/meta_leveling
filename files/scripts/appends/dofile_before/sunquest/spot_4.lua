@@ -1,6 +1,9 @@
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 GamePrintImportant_ML_Old = GamePrintImportant
 
+---@param title string
+---@param description string
+---@param ui_custom_decoration_file string
 GamePrintImportant = function(title, description, ui_custom_decoration_file)
 	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
 	local player_id = EntityGetWithTag("player_unit")[1]
