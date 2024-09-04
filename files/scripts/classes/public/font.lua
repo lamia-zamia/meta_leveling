@@ -1,8 +1,9 @@
 ---class to handle font generation, color management, and popup text displays.
 ---@class ML_font
----@field MLP MetaLevelingPublic
+---@field private get ML_get
 local font = {
-	set_content = ModTextFileSetContent
+	set_content = ModTextFileSetContent,
+	get = dofile_once("mods/meta_leveling/files/scripts/classes/public/get.lua"),
 }
 
 ---Returns a string of RGB values or retrieves them from mod settings if not provided.
@@ -13,9 +14,9 @@ local font = {
 ---@return string g Green component as a string.
 ---@return string b Blue component as a string.
 function font:get_color(r, g, b)
-	r = r or string.format("%.2f", self.MLP.get:mod_setting_number("exp_bar_red"))
-	g = g or string.format("%.2f", self.MLP.get:mod_setting_number("exp_bar_green"))
-	b = b or string.format("%.2f", self.MLP.get:mod_setting_number("exp_bar_blue"))
+	r = r or string.format("%.2f", self.get:mod_setting_number("exp_bar_red"))
+	g = g or string.format("%.2f", self.get:mod_setting_number("exp_bar_green"))
+	b = b or string.format("%.2f", self.get:mod_setting_number("exp_bar_blue"))
 	return tostring(r), tostring(g), tostring(b)
 end
 

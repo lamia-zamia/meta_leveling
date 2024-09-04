@@ -13,9 +13,6 @@ local MLP = {
 	font = dofile_once("mods/meta_leveling/files/scripts/classes/public/font.lua"),
 	points = dofile_once("mods/meta_leveling/files/scripts/classes/public/meta_points.lua"),
 }
-MLP.get.MLP = MLP
-MLP.set.MLP = MLP
-MLP.font.MLP = MLP
 
 ---@param exp number number of exp to add BEFORE applying multiplier
 ---@param entity? entity_id entity id from which to popup exp

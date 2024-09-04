@@ -1,13 +1,15 @@
 ---@class (exact) ML_get
----@field MLP MetaLevelingPublic
-local ML_get = {}
+---@field private const ml_const
+local ML_get = {
+	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua"),
+}
 
 ---get global valuess of META_LEVELING_
 ---@return number
 ---@param key string
 ---@param default number
 function ML_get:global_number(key, default)
-	return tonumber(GlobalsGetValue(self.MLP.const.globals_prefix .. key:upper(), tostring(default))) or default
+	return tonumber(GlobalsGetValue(self.const.globals_prefix .. key:upper(), tostring(default))) or default
 end
 
 ---return number from mod settings
@@ -47,7 +49,7 @@ end
 function ML_get:entity_has_player_tag(entity)
 	local tags = EntityGetTags(entity)
 	if not tags then return false end
-	for _, tag in ipairs(self.MLP.const.player_tags) do
+	for _, tag in ipairs(self.const.player_tags) do
 		if tags:find(tag) then return true end
 	end
 	return false
