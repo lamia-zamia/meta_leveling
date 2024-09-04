@@ -1,6 +1,9 @@
 ---class to handle font generation, color management, and popup text displays.
----@class ml_font
-local font = {}
+---@class ML_font
+---@field MLP MetaLevelingPublic
+local font = {
+	set_content = ModTextFileSetContent
+}
 
 ---Returns a string of RGB values or retrieves them from mod settings if not provided.
 ---@param r? number|string Optional red component (0-1). Defaults to mod setting.
@@ -10,9 +13,9 @@ local font = {}
 ---@return string g Green component as a string.
 ---@return string b Blue component as a string.
 function font:get_color(r, g, b)
-	r = r or string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_red"))
-	g = g or string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_green"))
-	b = b or string.format("%.2f", ML.utils:get_mod_setting_number("exp_bar_blue"))
+	r = r or string.format("%.2f", self.MLP.get:mod_setting_number("exp_bar_red"))
+	g = g or string.format("%.2f", self.MLP.get:mod_setting_number("exp_bar_green"))
+	b = b or string.format("%.2f", self.MLP.get:mod_setting_number("exp_bar_blue"))
 	return tostring(r), tostring(g), tostring(b)
 end
 
@@ -24,7 +27,8 @@ end
 ---@param set_content function Function to save the generated XML content.
 function font:generate(r, g, b, set_content)
 	local path = string.format("mods/meta_leveling/vfs/font/%s%s%s.xml", r, g, b)
-	local xml = ML.nxml.parse(ModTextFileGetContent("data/fonts/font_pixel.xml"))
+	local nxml = dofile_once("mods/meta_leveling/files/scripts/lib/nxml.lua")
+	local xml = nxml.parse(ModTextFileGetContent("data/fonts/font_pixel.xml"))
 	xml.attr.color_r = r
 	xml.attr.color_g = g
 	xml.attr.color_b = b
@@ -44,7 +48,7 @@ function font:get_path(r, g, b)
 		return path
 	end
 
-	local set_content = ModTextFileSetContent or ML.utils.set_content
+	local set_content = ModTextFileSetContent or self.set_content
 	if set_content then
 		self:generate(r, g, b, set_content)
 		return path

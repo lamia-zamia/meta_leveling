@@ -1,5 +1,6 @@
 local file_list = {
-	"mods/meta_leveling/files/scripts/utilities/meta_leveling.lua",
+	"mods/meta_leveling/files/scripts/meta_leveling.lua",
+	"mods/meta_leveling/files/scripts/meta_leveling_public.lua",
 	"data/scripts/perks/perk.lua"
 }
 local white_pixel = "mods/meta_leveling/vfs/white.png"

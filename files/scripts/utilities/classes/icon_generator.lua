@@ -1,5 +1,5 @@
 ---@type nxml
-local nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua")
+local nxml = dofile_once("mods/meta_leveling/files/scripts/lib/nxml.lua")
 
 ---@class ml_icon_generator
 local IG = {

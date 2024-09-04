@@ -63,7 +63,7 @@ end
 ---Display available points
 ---@private
 function LU_meta:ProgressDisplayAvailablePoints()
-	local text = self:Locale("$ml_meta_available: ") .. ML.meta.points
+	local text = self:Locale("$ml_meta_available: ") .. MLP.points:get_current_currency()
 	local text_dim = self:GetTextDimension(text)
 	self:Text(self.const.width - text_dim, 0, text)
 	self:AddTooltip(text_dim / 2, self.meta.distance * 2, self.ProgressDisplayAvailablePointsTooltip, text)
@@ -219,7 +219,7 @@ function LU_meta:DrawPointIncreaser(index, point)
 	local next_val = point.next_value
 	if next_val >= point.stack then return end
 	local price = point.price[next_val + 1]
-	local available = ML.meta.points >= price
+	local available = MLP.points:get_current_currency() >= price
 	local color = available and { 0.5, 0.8, 0.5 } or { 0.5, 0.5, 0.5 }
 	self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.c.empty)
 	if self:ElementIsVisible(self.meta.y, self.meta.distance) then

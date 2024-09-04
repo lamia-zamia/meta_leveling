@@ -1,5 +1,5 @@
 ---@type StringManip
-local SM = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/stringmanip.lua")
+local SM = dofile_once("mods/meta_leveling/files/scripts/lib/stringmanip.lua")
 
 local append_list = {
 	["data/scripts/buildings/sun/spot_1_finish.lua"] =

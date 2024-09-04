@@ -7,7 +7,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_wand.png",
 		probability = 0.2,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -22,7 +22,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_delay.png",
 		probability = 0.3,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -36,7 +36,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_recharge.png",
 		probability = 0.3,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -50,7 +50,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_mana.png",
 		probability = 0.3,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -64,7 +64,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_recharge.png",
 		probability = 0.3,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -78,7 +78,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_mana_and_recharge.png",
 		probability = 0.2,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -97,7 +97,7 @@ local wand_rewards = {
 			return ML:get_level() < 40
 		end,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -115,7 +115,7 @@ local wand_rewards = {
 		probability = 0.3,
 		min_level = 41,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()
@@ -129,7 +129,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/no_shuffle.png",
 		probability = 0.3,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			wand.shuffle = false
@@ -142,7 +142,7 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/lower_spread.png",
 		probability = 0.3,
 		fn = function()
-			local wand_id = ML.player:get_hold_wand(true)
+			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
 			local wand = ML.EZWand(wand_id)
 			ML.utils:random_seed()

@@ -26,7 +26,7 @@ end
 ---@param x number
 ---@param y number
 function EB:DrawPercentage(x, y)
-	local percentage = ML.exp.percentage
+	local percentage = ML:get_percentage()
 	if percentage < 1 then
 		self:Text(x + 1, y - 2, "%")
 		self:Color(1, 1, 1, 0.80)
@@ -62,7 +62,7 @@ end
 ---@private
 ---@return number
 function EB:ClampFiller()
-	local percent = ML.exp.percentage
+	local percent = ML:get_percentage()
 	if percent < self.const.filler_clamp or percent == 1 then
 		return percent
 	else
@@ -155,7 +155,7 @@ function EB:ToolTipUI()
 	if ML.pending_levels > 0 then
 		level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels
 	end
-	local experience = self:Locale("$ml_experience: ") .. ML.exp:format(ML.exp.current) .. " / " .. ML.exp:format(ML.exp.next)
+	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:get()) .. " / " .. MLP.exp:format(ML.next_exp)
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
@@ -189,13 +189,13 @@ function EB:AddToolTip(x, y, width, height)
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
-		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, ML.exp:floor(ML.exp.current))
+		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:get()))
+		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:get()))
 		if InputIsMouseButtonJustDown(1) then -- mouse clicks
 			ML:toggle_ui()
 		end
 		if InputIsMouseButtonJustDown(2) then
-			GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+			GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 			ML:toggle_ui()
 			ML.gui_em_exit = false
 		end
@@ -289,10 +289,10 @@ end
 ---Play level-up effects
 ---@private
 function EB:LevelUpFX()
-	if self.data.sound_played_level[ML:get_level()] or GameHasFlagRun(ML.const.flags.fx_played) then return end
-	GameAddFlagRun(ML.const.flags.fx_played)
+	if self.data.sound_played_level[ML:get_level()] or GameHasFlagRun(MLP.const.flags.fx_played) then return end
+	GameAddFlagRun(MLP.const.flags.fx_played)
 	if self.data.play_sound then
-		GamePlaySound(ML.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x, ML.player.y)
+		GamePlaySound(MLP.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x, ML.player.y)
 	end
 	if self.data.play_fx then
 		EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x, ML.player.y)
@@ -306,7 +306,7 @@ function EB:UpdatePlayerStatus()
 		self.data.max_health = ML.player.max_hp
 		self:SetPlayerHealthLength()
 	end
-	if ML.exp.percentage >= 1 and not self.data.sound_played_level[ML:get_level()] then
+	if ML:get_percentage() >= 1 and not self.data.sound_played_level[ML:get_level()] then
 		self:LevelUpFX()
 	end
 end
@@ -314,22 +314,22 @@ end
 ---Load and apply settings
 function EB:GetSettings()
 	self:UpdateDimensions()
-	self.data.play_sound = ML.utils:get_mod_setting_boolean("session_exp_play_sound", true)
-	self.data.play_fx = ML.utils:get_mod_setting_boolean("session_exp_play_fx", true)
-	self.data.animate_bar = ML.utils:get_mod_setting_boolean("session_exp_animate_bar", true)
-	self.bar.thickness = ML.utils:get_mod_setting_number("exp_bar_thickness")
-	self.bar.red = ML.utils:get_mod_setting_number("exp_bar_red")
-	self.bar.green = ML.utils:get_mod_setting_number("exp_bar_green")
-	self.bar.blue = ML.utils:get_mod_setting_number("exp_bar_blue")
+	self.data.play_sound = MLP.get:mod_setting_boolean("session_exp_play_sound", true)
+	self.data.play_fx = MLP.get:mod_setting_boolean("session_exp_play_fx", true)
+	self.data.animate_bar = MLP.get:mod_setting_boolean("session_exp_animate_bar", true)
+	self.bar.thickness = MLP.get:mod_setting_number("exp_bar_thickness")
+	self.bar.red = MLP.get:mod_setting_number("exp_bar_red")
+	self.bar.green = MLP.get:mod_setting_number("exp_bar_green")
+	self.bar.blue = MLP.get:mod_setting_number("exp_bar_blue")
 	self.data.max_health = ML.player.max_hp
 	self.data.perc.x = self.dim.x - 38
 	self.data.perc.y = 12
-	self.data.perc.show = ML.utils:get_mod_setting_boolean("exp_bar_show_perc")
-	self.data.tooltip_force = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
-		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
-		or ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_pause")
-	self.data.reminder_in_inventory = ML.utils:get_mod_setting_boolean("hud_reminder_in_inventory")
-	self.data.hotkey = ML.utils:get_mod_setting_number("open_ui_hotkey")
+	self.data.perc.show = MLP.get:mod_setting_boolean("exp_bar_show_perc")
+	self.data.tooltip_force = MLP.get:mod_setting_boolean("session_exp_close_ui_on_damage")
+		or MLP.get:mod_setting_boolean("session_exp_close_ui_on_shot")
+		or MLP.get:mod_setting_boolean("session_exp_close_ui_on_pause")
+	self.data.reminder_in_inventory = MLP.get:mod_setting_boolean("hud_reminder_in_inventory")
+	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
 	self.data.anim_bar.min, self.data.anim_bar.max, self.data.anim_bar.alpha = self:AnimateBarHSVFadeDetermineBoundaries()
 	local position = ModSettingGet("meta_leveling.exp_bar_position")
 	if position == "on_top" then
@@ -370,7 +370,7 @@ function EB:DrawExpBar()
 	self:AnimateTextFading()
 	if InputIsKeyJustDown(self.data.hotkey) then
 		ML:toggle_ui()
-		GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+		GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	end
 end
 

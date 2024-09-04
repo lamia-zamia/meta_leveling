@@ -33,7 +33,7 @@ local rewards = {
 ---@param reward_id string
 ---@return number
 function rewards:get_reward_picked_count(reward_id)
-	return ML.utils:get_global_number(reward_id .. "_PICKUP_COUNT", 0)
+	return MLP.get:global_number(reward_id .. "_PICKUP_COUNT", 0)
 end
 
 ---returns true if reward_id was picked more then number

@@ -53,7 +53,7 @@ function LU_debug:DrawDebugWindow()
 			ui_name = "Add levels",
 			description = "Gain 10 levels",
 			fn = function()
-				ML.utils:set_global_number(ML.const.globals.current_exp,
+				MLP.set:global_number(MLP.const.globals.current_exp,
 					ML.level_curve[ML:get_level() + 9 + ML.pending_levels])
 			end,
 		},
@@ -61,8 +61,8 @@ function LU_debug:DrawDebugWindow()
 			ui_name = "Reset levels",
 			description = "Set level to 1",
 			fn = function()
-				ML.utils:set_global_number(ML.const.globals.current_exp, 0)
-				ML.utils:set_global_number(ML.const.globals.current_level, 1)
+				MLP.set:global_number(MLP.const.globals.current_exp, 0)
+				MLP.set:global_number(MLP.const.globals.current_level, 1)
 			end,
 		},
 		{
@@ -135,7 +135,7 @@ function LU_debug:DrawDebugWindow()
 	if cheat.draw_deck then
 		if #ML.rewards_deck.list == 0 then ML.rewards_deck:refresh_reward_order() end ---@diagnostic disable-line: invisible
 		local list = ML.rewards_deck.list ---@diagnostic disable-line: invisible
-		local current_index = ML.utils:get_global_number(ML.const.globals.draw_index, 1)
+		local current_index = MLP.get:global_number(MLP.const.globals.draw_index, 1)
 		self:Text(0, y + 10 - self.scroll.y, string.rep("_", 60))
 		self:TextCentered(0, y + 19 - self.scroll.y,
 			"Deck, current index: " .. current_index .. ", total number: " .. #list, self.const.width)

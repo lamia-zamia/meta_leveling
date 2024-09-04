@@ -5,7 +5,7 @@
 ---@class (exact) colors
 ---@field private converter color_converter
 local colors = {
-	converter = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/color_converter.lua")
+	converter = dofile_once("mods/meta_leveling/files/scripts/lib/color_converter.lua")
 }
 
 ---@private

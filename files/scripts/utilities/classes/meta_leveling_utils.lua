@@ -3,31 +3,6 @@ local utils = {
 	set_content = ModTextFileSetContent
 }
 
----get global valuess of META_LEVELING_
----@return number
----@param key string
----@param default number
-function utils:get_global_number(key, default)
-	return tonumber(GlobalsGetValue(ML.const.globals_prefix .. key:upper(), tostring(default))) or default
-end
-
----set global valuess of META_LEVELING_
----@param key string
----@param value number
-function utils:set_global_number(key, value)
-	GlobalsSetValue(ML.const.globals_prefix .. key:upper(), tostring(value))
-end
-
----add value to global
----@param key string
----@param value number
----@param default? number
-function utils:add_to_global_number(key, value, default)
-	default = default or 0
-	local old = self:get_global_number(key, default)
-	self:set_global_number(key, old + value)
-end
-
 function utils:weighted_random(pool)
 	local poolsize = 0
 	for _, item in ipairs(pool) do
@@ -88,28 +63,7 @@ function utils:get_world_state_component()
 	return EntityGetFirstComponent(world_entity_id, "WorldStateComponent")
 end
 
----return number from mod settings
----@param id string id of setting
----@param default? number default number or 0
----@return number
-function utils:get_mod_setting_number(id, default)
-	default = default or 0
-	return tonumber(ModSettingGet("meta_leveling." .. id)) or default
-end
 
----return number from mod settings
----@param id string id of setting
----@param default? boolean default value or false
----@return boolean
-function utils:get_mod_setting_boolean(id, default)
-	default = default or false
-	local value = ModSettingGet("meta_leveling." .. id)
-	if type(value) == "boolean" then
-		return value
-	else
-		return default
-	end
-end
 
 function utils:spawn_spell(action_id)
 	CreateItemActionEntity(action_id, ML.player.x, ML.player.y)
@@ -129,60 +83,6 @@ function utils:merge_tables(table1, table2)
 	end
 end
 
----@param entity entity_id
----@param tag string
-function utils:entity_has_tag(entity, tag)
-	local tags = EntityGetTags(entity)
-	if not tags then return false end
-	if tags:find(tag) then return true end
-	return false
-end
 
----@param entity entity_id
----@return boolean
-function utils:entity_has_player_tag(entity)
-	local tags = EntityGetTags(entity)
-	if not tags then return false end
-	for _, tag in ipairs(ML.const.player_tags) do
-		if tags:find(tag) then return true end
-	end
-	return false
-end
-
----@param entity entity_id
----@return string
-function utils:get_herd_id(entity)
-	local genome_comp = EntityGetFirstComponentIncludingDisabled(entity, "GenomeDataComponent")
-	if not genome_comp then return "" end
-	local herd_id = ComponentGetValue2(genome_comp, "herd_id")
-	if not herd_id then return "" end
-	return HerdIdToString(herd_id)
-end
-
----@param entity entity_id
----@return boolean
-function utils:is_player_herd(entity)
-	return self:get_herd_id(entity) == "player"
-end
-
----@param entity entity_id
----@param effect game_effect
----@return boolean
-function utils:entity_has_effect(entity, effect)
-	if entity == 0 then return false end
-	local comp = GameGetGameEffect(entity, effect)
-	if not comp or comp == 0 then return false end
-	return true
-end
-
----returns true if entity is related to player (tag, herd, charm)
----@param entity entity_id
----@return boolean
-function utils:entity_is_player_related(entity)
-	if self:entity_has_player_tag(entity) or self:is_player_herd(entity) or self:entity_has_effect(entity, "CHARM") then
-		return true
-	end
-	return false
-end
 
 return utils

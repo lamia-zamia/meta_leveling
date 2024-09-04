@@ -23,7 +23,7 @@ local progress = {
 		description = "$ml_more_experience_tp",
 		description_var = { "5%" },
 		fn = function(count)
-			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.05 * count)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.05 * count)
 		end,
 		applied_bonus = function(count)
 			return "+" .. 5 * count .. "%"
@@ -37,7 +37,7 @@ local progress = {
 		description = "$ml_more_experience_trick_tp",
 		description_var = { "5%" },
 		fn = function(count)
-			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 0.05 * count)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 0.05 * count)
 		end,
 		applied_bonus = function(count)
 			return "+" .. 5 * count .. "%"
@@ -51,7 +51,7 @@ local progress = {
 		ui_name = "$ml_more_experience_betray",
 		description = "$ml_more_more_experience_betray_tp",
 		fn = function(count)
-			ML.utils:add_to_global_number(ML.const.globals.exp_betray, 0.25 * count)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_betray, 0.25 * count)
 		end,
 		applied_bonus = function(count)
 			return "+" .. 25 * count .. "%"
@@ -83,7 +83,7 @@ local progress = {
 		ui_name = "$ml_extra_reward_choice",
 		description = "$ml_meta_extra_reward_choice_tp",
 		fn = function(count)
-			ML.utils:add_to_global_number(ML.const.globals.draw_amount, count)
+			MLP.set:add_to_global_number(MLP.const.globals.draw_amount, count)
 		end,
 		applied_bonus = function(count)
 			return "+" .. count

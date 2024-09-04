@@ -122,7 +122,7 @@ function rewards_deck:initialize_reward_data(reward)
 		pick_count = self:get_specific_reward_pickup_amount(reward.id --[[@as ml_reward_id]]),
 		limit_before = reward.limit_before or nil,
 		custom_check = reward.custom_check or nil,
-		sound = reward.sound or ML.const.sounds.perk,
+		sound = reward.sound or MLP.const.sounds.perk,
 		no_sound = reward.no_sound,
 		min_level = reward.min_level or 1
 	}
@@ -252,14 +252,14 @@ end
 ---Returns the number of rewards to draw.
 ---@return number
 function rewards_deck:get_draw_amount()
-	return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 3
+	return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 3
 end
 
 ---Returns the current draw index.
 ---@private
 ---@return number
 function rewards_deck:get_draw_index()
-	return ML.utils:get_global_number(ML.const.globals.draw_index, 1)
+	return MLP.get:global_number(MLP.const.globals.draw_index, 1)
 end
 
 ---Returns the next valid draw index.
@@ -285,7 +285,7 @@ function rewards_deck:set_draw_index()
 	for _ = 1, self:get_draw_amount() + 1 do
 		index = self:get_next_draw_index(index + 1)
 	end
-	ML.utils:set_global_number(ML.const.globals.draw_index, index)
+	MLP.set:global_number(MLP.const.globals.draw_index, index)
 end
 
 ---Draws the next rewards from the list.
@@ -306,7 +306,7 @@ end
 ---@param reward_id ml_reward_id
 ---@return number pickup_count
 function rewards_deck:get_specific_reward_pickup_amount(reward_id)
-	return ML.utils:get_global_number(ML.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", 0)
+	return MLP.get:global_number(MLP.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", 0)
 end
 
 ---Increments the pickup count for a specific reward.
@@ -315,7 +315,7 @@ end
 function rewards_deck:add_specific_reward_pickup_amount(reward_id)
 	self.reward_data[reward_id].pick_count = self.reward_data[reward_id].pick_count + 1
 	self.groups_data[self.reward_data[reward_id].group_id].picked = true
-	ML.utils:set_global_number(ML.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
+	MLP.set:global_number(MLP.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
 		self.reward_data[reward_id].pick_count)
 end
 
@@ -348,20 +348,20 @@ end
 
 ---Retrieves the current reroll count.
 function rewards_deck:get_reroll_count()
-	self.reroll_count = ML.utils:get_global_number(ML.const.globals.reroll_count, 1)
+	self.reroll_count = MLP.get:global_number(MLP.const.globals.reroll_count, 1)
 end
 
 ---Adds to the reroll count.
 ---@param count number
 function rewards_deck:add_reroll(count)
 	self.reroll_count = self.reroll_count + count
-	ML.utils:set_global_number(ML.const.globals.reroll_count, self.reroll_count)
+	MLP.set:global_number(MLP.const.globals.reroll_count, self.reroll_count)
 end
 
 ---Performs a reroll, decrementing the reroll count and setting the next draw index.
 function rewards_deck:reroll()
 	self.reroll_count = self.reroll_count - 1
-	ML.utils:set_global_number(ML.const.globals.reroll_count, self.reroll_count)
+	MLP.set:global_number(MLP.const.globals.reroll_count, self.reroll_count)
 	self:set_draw_index()
 end
 

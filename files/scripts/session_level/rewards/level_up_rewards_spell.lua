@@ -94,7 +94,7 @@ local reward_spells = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_low" },
-		sound = ML.const.sounds.chest,
+		sound = MLP.const.sounds.chest,
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile.xml",
 		probability = 0.3,
 		fn = function()
@@ -450,7 +450,7 @@ local reward_spells = {
 }
 
 for _, reward in ipairs(reward_spells) do
-	reward.sound = ML.const.sounds.chest
+	reward.sound = MLP.const.sounds.chest
 end
 
 ML.rewards_deck:add_rewards(reward_spells)

@@ -1,4 +1,4 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/ui_lib.lua")
+local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua")
 
 ---@class EB.const.anim
 local anim_const = {

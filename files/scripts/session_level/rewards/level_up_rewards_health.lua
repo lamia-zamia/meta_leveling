@@ -9,7 +9,7 @@ local health_rewards = {
 		probability = 0.8,
 		max = 3,
 		description_var = { "25" },
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
@@ -25,7 +25,7 @@ local health_rewards = {
 		probability = 0.5,
 		description_var = { "50" },
 		max = 5,
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		limit_before = "health_extra_health1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
@@ -41,7 +41,7 @@ local health_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
 		description_var = { "100" },
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		limit_before = "health_extra_health2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
@@ -58,7 +58,7 @@ local health_rewards = {
 		probability = 0.3,
 		description_var = { "10%" },
 		max = 5,
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		limit_before = "health_extra_health2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
@@ -74,7 +74,7 @@ local health_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/simple_extra_health.xml",
 		probability = 0.3,
 		description_var = { "25%" },
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		limit_before = "health_extra_health_perc1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
@@ -93,7 +93,7 @@ local health_rewards = {
 		end,
 		max = 3,
 		description_var = { "75" },
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
 		end,
@@ -115,7 +115,7 @@ local health_rewards = {
 		max = 3,
 		description_var = { "150" },
 		limit_before = "health_heal_con1",
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
 		end,
@@ -136,7 +136,7 @@ local health_rewards = {
 		end,
 		description_var = { "300" },
 		limit_before = "health_heal_con2",
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
 		end,
@@ -158,7 +158,7 @@ local health_rewards = {
 		description_var = { "50 + 10%" },
 		max = 3,
 		min_level = 10,
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
 		end,
@@ -180,7 +180,7 @@ local health_rewards = {
 		end,
 		description_var = { "100 + 25%" },
 		limit_before = "health_heal_perc1",
-		sound = ML.const.sounds.heart,
+		sound = MLP.const.sounds.heart,
 		custom_check = function()
 			return ML.player.absent_hp_percent > 0.1
 		end,

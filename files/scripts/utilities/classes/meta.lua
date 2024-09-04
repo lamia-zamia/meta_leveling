@@ -1,14 +1,11 @@
----@class ml_meta
+---@class (exact) ml_meta
 ---@field private progress_list ml_progress_point[]
 ---@field private flag string
----@field private currency string
 ---@field progress ml_progress_point_run[]
 local meta = {
 	progress_list = {},
 	progress = {},
 	flag = "META_LEVELING_PROGRESS_APPLIED",
-	currency = "meta_leveling.currency_progress",
-	points = 0,
 }
 
 ---@alias progress_fn fun(count: number)
@@ -85,20 +82,6 @@ function meta:calculate_cost(price, multiplier, max)
 	return prices
 end
 
----Adds or subtracts from currency
----@param value number
-function meta:modify_current_currency(value)
-	local current = self:get_current_currency()
-	ModSettingSet(self.currency, current + value)
-end
-
----Returns current available points
----@private
----@return number
-function meta:get_current_currency()
-	return tonumber(ModSettingGet(self.currency)) or 0
-end
-
 ---Initialize progress list
 function meta:initialize()
 	dofile_once("mods/meta_leveling/files/scripts/progress/progress_appends.lua")
@@ -139,7 +122,7 @@ function meta:set_next_progress(index, amount)
 			currency = currency + price * -direction
 		end
 	end
-	meta:modify_current_currency(currency)
+	MLP.points:modify_current_currency(currency)
 	progress.next_value = next_value
 	ModSettingSetNextValue("meta_leveling.progress_" .. progress.id, next_value, false)
 end
@@ -193,14 +176,6 @@ function meta:append_points(points)
 	for _, point in ipairs(points) do
 		self:append_point(point)
 	end
-end
-
-function meta:toggle_progress()
-
-end
-
-function meta:update()
-	self.points = self:get_current_currency()
 end
 
 return meta

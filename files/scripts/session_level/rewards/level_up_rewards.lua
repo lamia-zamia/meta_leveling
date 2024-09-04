@@ -8,15 +8,15 @@ local reward_list = {
 		description_var = { "1" },
 		description2 = "$ml_extra_reward_choice_clarify",
 		description2_var = { function()
-			return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 1
+			return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 1
 		end },
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.5,
 		max = 4,
 		min_level = 5,
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.draw_amount, 1)
-			for _ = 1, ML.utils:get_global_number(ML.const.globals.draw_amount, 0) do
+			MLP.set:add_to_global_number(MLP.const.globals.draw_amount, 1)
+			for _ = 1, MLP.get:global_number(MLP.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
 		end
@@ -29,15 +29,15 @@ local reward_list = {
 		description_var = { "2" },
 		description2 = "$ml_extra_reward_choice_clarify",
 		description2_var = { function()
-			return ML.utils:get_global_number(ML.const.globals.draw_amount, 0) + 2
+			return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 2
 		end },
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.2,
 		max = 2,
 		limit_before = "extra_reward_choice1",
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.draw_amount, 2)
-			for _ = 1, ML.utils:get_global_number(ML.const.globals.draw_amount, 0) do
+			MLP.set:add_to_global_number(MLP.const.globals.draw_amount, 2)
+			for _ = 1, MLP.get:global_number(MLP.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
 		end
@@ -51,7 +51,7 @@ local reward_list = {
 		probability = 0.8,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
-		sound = ML.const.sounds.shop_item,
+		sound = MLP.const.sounds.shop_item,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
@@ -67,7 +67,7 @@ local reward_list = {
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
-		sound = ML.const.sounds.shop_item,
+		sound = MLP.const.sounds.shop_item,
 		limit_before = "gold_add1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
@@ -83,7 +83,7 @@ local reward_list = {
 		description_var = { "5000" },
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
-		sound = ML.const.sounds.shop_item,
+		sound = MLP.const.sounds.shop_item,
 		limit_before = "gold_add2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
@@ -200,7 +200,7 @@ local reward_list = {
 		probability = 0.5,
 		max = 5,
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.1)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.1)
 		end
 	},
 	{
@@ -214,7 +214,7 @@ local reward_list = {
 		max = 4,
 		limit_before = "more_experience1",
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.25)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.25)
 		end
 	},
 	{
@@ -227,7 +227,7 @@ local reward_list = {
 		probability = 0.1,
 		limit_before = "more_experience2",
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_multiplier, 0.5)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.5)
 		end
 	},
 	{
@@ -240,7 +240,7 @@ local reward_list = {
 		max = 5,
 		min_level = 5,
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_const, 1)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_const, 1)
 		end
 	},
 	{
@@ -253,7 +253,7 @@ local reward_list = {
 		probability = 0.3,
 		max = 3,
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 0.25)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 0.25)
 		end
 	},
 	{
@@ -267,7 +267,7 @@ local reward_list = {
 		max = 2,
 		limit_before = "more_experience_trick1",
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 0.5)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 0.5)
 		end
 	},
 	{
@@ -280,7 +280,7 @@ local reward_list = {
 		probability = 0.1,
 		limit_before = "more_experience_trick1",
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_trick, 1.0)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 1.0)
 		end
 	},
 	{
@@ -292,7 +292,7 @@ local reward_list = {
 		probability = 0.3,
 		max = 1,
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_betray, 0.25)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_betray, 0.25)
 		end
 	},
 	{
@@ -304,7 +304,7 @@ local reward_list = {
 		probability = 0.1,
 		limit_before = "more_experience_betray1",
 		fn = function()
-			ML.utils:add_to_global_number(ML.const.globals.exp_betray, 0.25)
+			MLP.set:add_to_global_number(MLP.const.globals.exp_betray, 0.25)
 		end
 	},
 	{
@@ -348,8 +348,8 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/permanent_concentrated_mana.xml",
 		probability = 0.2,
 		fn = function()
-			ML.player:add_lua_component_if_none("script_source_file", ML.const.files.mana_regen)
-			ML.utils:add_to_global_number(ML.const.globals.permanent_concentrated_mana, 0.25)
+			ML.player:add_lua_component_if_none("script_source_file", MLP.const.files.mana_regen)
+			MLP.set:add_to_global_number(MLP.const.globals.permanent_concentrated_mana, 0.25)
 		end
 	},
 	{
@@ -359,8 +359,8 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/projectile_damage.xml",
 		probability = 0.2,
 		fn = function()
-			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number(ML.const.globals.projectile_damage_increase, 0.1, 1)
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.projectile_damage_increase, 0.1, 1)
 		end
 	},
 	{
@@ -370,8 +370,8 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/elemental_damage.xml",
 		probability = 0.2,
 		fn = function()
-			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number(ML.const.globals.elemental_damage_increase, 0.3, 1)
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.elemental_damage_increase, 0.3, 1)
 		end
 	},
 	{
@@ -381,8 +381,8 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/drill_damage.xml",
 		probability = 0.1,
 		fn = function()
-			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number(ML.const.globals.drill_damage_increase, 0.4)
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.drill_damage_increase, 0.4)
 		end
 	},
 	{
@@ -392,8 +392,8 @@ local reward_list = {
 		ui_icon = "data/ui_gfx/gun_actions/critical_hit.png",
 		probability = 0.1,
 		fn = function()
-			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number(ML.const.globals.crit_chance_increase, 15)
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.crit_chance_increase, 15)
 		end
 	},
 	{
@@ -404,8 +404,8 @@ local reward_list = {
 		probability = 0.1,
 		max = 3,
 		fn = function()
-			ML.player:add_lua_component_if_none("script_shot", ML.const.files.shot_damage)
-			ML.utils:add_to_global_number(ML.const.globals.drill_destructibility, 1)
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.drill_destructibility, 1)
 		end
 	},
 	{

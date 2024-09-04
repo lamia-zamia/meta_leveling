@@ -4,7 +4,7 @@ local reward = {
 	ui_name = "$item_spell_refresh",
 	description = "$streamingeventdesc_spell_refresh",
 	ui_icon = "mods/meta_leveling/files/gfx/rewards/spell_refresh.xml",
-	sound = ML.const.sounds.refresh,
+	sound = MLP.const.sounds.refresh,
 	probability = 0.6,
 	fn = function()
 		GameRegenItemActionsInPlayer(ML.player.id)

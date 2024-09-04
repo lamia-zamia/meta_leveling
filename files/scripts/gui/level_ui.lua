@@ -103,7 +103,7 @@ end
 ---function to close menu
 ---@private
 function LU:CloseMenu()
-	GamePlaySound(ML.const.sounds.click.bank, ML.const.sounds.click.event, 0, 0)
+	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	ML.gui = false
 end
 
@@ -198,7 +198,7 @@ function LU:DrawMenuButtons()
 		x = x + prev.w + 10
 		return x
 	end
-	if ML.exp.percentage >= 1 then
+	if ML.pending_levels >= 1 then
 		self:Text(x, y, self:Locale("$ml_level_up"))
 		self:MakeButtonFromPrev(self:Locale("$ml_level_up_tp"), self.OpenLevelUpMenu, self.const.z,
 			self.const.ui_9p_button_important,
@@ -236,9 +236,9 @@ function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local third_width = self.const.width * 0.33
 	local section = 10
-	local experience = self:Locale("$ml_experience: ") .. ML.exp:format(ML.exp.current)
-	if ML.exp.current < 10 ^ 21 then
-		experience = experience .. "/" .. ML.exp:format(ML.exp.next)
+	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:get())
+	if MLP.exp:get() < 10 ^ 21 then
+		experience = experience .. "/" .. MLP.exp:format(ML.next_exp)
 	end
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
@@ -285,9 +285,9 @@ end
 ---gathers settings on pause update
 function LU:GetSetting()
 	self:UpdateDimensions()
-	self.data.CloseOnShot = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_shot")
-	self.data.CloseOnDamage = ML.utils:get_mod_setting_boolean("session_exp_close_ui_on_damage")
-	self.data.SkipMenuOnPending = ML.utils:get_mod_setting_boolean("session_exp_ui_open_auto")
+	self.data.CloseOnShot = MLP.get:mod_setting_boolean("session_exp_close_ui_on_shot")
+	self.data.CloseOnDamage = MLP.get:mod_setting_boolean("session_exp_close_ui_on_damage")
+	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
 	self.data.debug = ModIsEnabled("component-explorer")
 	self:CalculateProgressOffset()
 end
@@ -296,11 +296,11 @@ end
 ---@private
 function LU:DrawLevelUI()
 	GuiZSet(self.gui, self.const.z - 2)
-	if GameHasFlagRun(ML.const.flags.leveling_up) then
+	if GameHasFlagRun(MLP.const.flags.leveling_up) then
 		self:DrawPointSpender()
 	else
 		if self.data.SkipMenuOnPending and ML.pending_levels > 0 then
-			GameAddFlagRun(ML.const.flags.leveling_up)
+			GameAddFlagRun(MLP.const.flags.leveling_up)
 		end
 		self:DrawMainMenu()
 	end
