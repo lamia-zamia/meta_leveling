@@ -7,12 +7,12 @@ ML = dofile_once("mods/meta_leveling/files/scripts/meta_leveling.lua")
 ---@type ML_gui
 local gui = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui.lua")
 
-dofile_once("mods/meta_leveling/files/scripts/load_file_into_vfs.lua")
-dofile_once("mods/meta_leveling/files/scripts/appends.lua")
+dofile_once("mods/meta_leveling/files/scripts/on_init/load_file_into_vfs.lua")
+dofile_once("mods/meta_leveling/files/scripts/on_init/appends.lua")
 
 ---After OnModPostInit
 function OnMagicNumbersAndWorldSeedInitialized()
-	dofile_once("mods/meta_leveling/files/scripts/generate_icons.lua")
+	dofile_once("mods/meta_leveling/files/scripts/on_init/generate_icons.lua")
 end
 
 ---Idk why it's called before initialized
