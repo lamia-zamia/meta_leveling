@@ -83,6 +83,7 @@ end
 ---@param entity entity_id
 ---@return boolean
 function ML_get:entity_is_player_related(entity)
+	if not EntityGetIsAlive(entity) then return false end
 	if self:entity_has_player_tag(entity) or self:is_player_herd(entity) or self:entity_has_effect(entity, "CHARM") then
 		return true
 	end
