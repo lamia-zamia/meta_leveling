@@ -1,3 +1,5 @@
+local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
+
 ---@type ml_progress_point[]
 local progress = {
 	{
@@ -8,8 +10,8 @@ local progress = {
 			local component_id = ML.player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local health = 0.2 * count
-			ML.utils:add_value_to_component(component_id, "max_hp", health)
-			ML.utils:add_value_to_component(component_id, "hp", health)
+			components:add_value_to_component(component_id, "max_hp", health)
+			components:add_value_to_component(component_id, "hp", health)
 		end,
 		applied_bonus = function(count)
 			return "+" .. 5 * count .. " $ml_simple_extra_health"
@@ -67,9 +69,9 @@ local progress = {
 		fn = function(count)
 			local component_id = ML.player:get_component_by_name("CharacterPlatformingComponent")
 			if not component_id then return end
-			ML.utils:add_value_to_component(component_id, "velocity_max_x", 5 * count)
-			ML.utils:add_value_to_component(component_id, "fly_velocity_x", 5 * count)
-			ML.utils:add_value_to_component(component_id, "run_velocity", 5 * count)
+			components:add_value_to_component(component_id, "velocity_max_x", 5 * count)
+			components:add_value_to_component(component_id, "fly_velocity_x", 5 * count)
+			components:add_value_to_component(component_id, "run_velocity", 5 * count)
 		end,
 		applied_bonus = function(count)
 			return "+" .. 5 * count
