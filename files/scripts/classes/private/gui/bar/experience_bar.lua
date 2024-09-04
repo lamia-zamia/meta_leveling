@@ -1,5 +1,5 @@
 ---@class experience_bar
-local EB = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/experience_bar_class.lua")
+local EB = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/bar/experience_bar_class.lua")
 
 ---Helper function to format percentage
 ---@private

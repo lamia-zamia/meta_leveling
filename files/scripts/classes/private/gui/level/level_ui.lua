@@ -1,12 +1,12 @@
 ---@class level_ui
-local LU = dofile_once("mods/meta_leveling/files/scripts/utilities/classes/gui/level_ui_class.lua")
+local LU = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_class.lua")
 
 local modules = {
-	"mods/meta_leveling/files/scripts/gui/level_ui_debug.lua",
-	"mods/meta_leveling/files/scripts/gui/level_ui_level_up.lua",
-	"mods/meta_leveling/files/scripts/gui/level_ui_current.lua",
-	"mods/meta_leveling/files/scripts/gui/level_ui_stats.lua",
-	"mods/meta_leveling/files/scripts/gui/level_ui_meta.lua"
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_debug.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_level_up.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_current.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_stats.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_meta.lua"
 }
 
 for _, module_name in ipairs(modules) do

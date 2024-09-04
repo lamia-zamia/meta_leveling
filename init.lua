@@ -5,7 +5,7 @@ MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 ML = dofile_once("mods/meta_leveling/files/scripts/meta_leveling.lua")
 
 ---@type ML_gui
-local gui = dofile_once("mods/meta_leveling/files/scripts/gui/gui.lua")
+local gui = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui.lua")
 
 dofile_once("mods/meta_leveling/files/scripts/load_file_into_vfs.lua")
 dofile_once("mods/meta_leveling/files/scripts/appends.lua")
