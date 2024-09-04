@@ -16,7 +16,6 @@ AddFlagPersistent = function(key)
 		end
 		return 1
 	end
-	print(key)
 	local values = {
 		misc_chest_rain = 50,
 		misc_util_rain = 100,
@@ -29,7 +28,6 @@ AddFlagPersistent = function(key)
 		misc_fish_rain = 200,
 		misc_mimic_potion_rain = 200
 	}
-	print(key, values[key])
 	local entity_id = EntityGetWithTag("player_unit")[1]
 	if values[key] then
 		MLP:AddExpGlobal(values[key], entity_id, message .. ": ")
