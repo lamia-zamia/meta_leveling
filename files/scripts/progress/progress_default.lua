@@ -94,14 +94,6 @@ local progress = {
 		price = 50,
 		price_multiplier = 2
 	},
-	-- {
-	-- 	id = "meh",
-	-- 	ui_name = "Whatever",
-	-- 	fn = function()
-	-- 		-- print("kek")
-	-- 	end,
-	-- 	stack = 30,
-	-- }
 }
 
 
