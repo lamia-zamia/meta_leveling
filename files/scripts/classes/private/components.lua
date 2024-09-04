@@ -45,3 +45,5 @@ function components:get_world_state_component()
 	local world_entity_id = GameGetWorldStateEntity()
 	return EntityGetFirstComponent(world_entity_id, "WorldStateComponent")
 end
+
+return components

@@ -1,5 +1,7 @@
 ---@type MetaLevelingPublic
-MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+---@type ML_components_helper
+local cmp = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
 local elemental = {
 	"electricity", "fire", "ice", "radioactive", "poison", "curse", "holy"
 }
@@ -12,13 +14,13 @@ function shot(projectile_entity_id)
 	-- Crit
 	local crit_chance_add = MLP.get:global_number(MLP.const.globals.crit_chance_increase, 0)
 	if crit_chance_add > 0 then
-		ML.utils:add_value_to_component_object(projectile_component, "damage_critical", "chance", crit_chance_add)
+		cmp:add_value_to_component_object(projectile_component, "damage_critical", "chance", crit_chance_add)
 	end
 
 	-- Projectile
 	local projectile_multiplier = MLP.get:global_number(MLP.const.globals.projectile_damage_increase, 1)
 	if projectile_multiplier > 1 then
-		ML.utils:multiply_value_in_component(projectile_component, "damage", projectile_multiplier)
+		cmp:multiply_value_in_component(projectile_component, "damage", projectile_multiplier)
 	end
 
 	-- Elemental
@@ -46,11 +48,11 @@ function shot(projectile_entity_id)
 		-- destructability
 		local increment = MLP.get:global_number(MLP.const.globals.drill_destructibility, 0)
 		if increment > 0 then
-			ML.utils:add_value_to_component_object(projectile_component, "config_explosion",
+			cmp:add_value_to_component_object(projectile_component, "config_explosion",
 				"max_durability_to_destroy", increment)
-			ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
+				cmp:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
 				100000 * increment)
-			ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
+				cmp:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
 				increment)
 		end
 	end
