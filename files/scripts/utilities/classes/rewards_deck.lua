@@ -89,8 +89,8 @@ end
 ---Gathers reward data from a predefined list.
 function rewards_deck:GatherData()
 	self.reward_definition_list = dofile_once(
-		"mods/meta_leveling/files/scripts/session_level/rewards/level_up_rewards.lua")
-	dofile_once("mods/meta_leveling/files/scripts/session_level/rewards/rewards_append.lua")
+		"mods/meta_leveling/files/scripts/rewards/level_up_rewards.lua")
+	dofile_once("mods/meta_leveling/files/scripts/rewards/rewards_append.lua")
 
 	for _, reward in ipairs(self.reward_definition_list) do
 		if self.reward_data[reward.id] then
