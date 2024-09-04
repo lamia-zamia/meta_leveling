@@ -46,12 +46,12 @@ function shot(projectile_entity_id)
 		-- destructability
 		local increment = MLP.get:global_number(MLP.const.globals.drill_destructibility, 0)
 		if increment > 0 then
-				ML.utils:add_value_to_component_object(projectile_component, "config_explosion",
-					"max_durability_to_destroy", increment)
-				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
-					100000 * increment)
-				ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
-					increment)
+			ML.utils:add_value_to_component_object(projectile_component, "config_explosion",
+				"max_durability_to_destroy", increment)
+			ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
+				100000 * increment)
+			ML.utils:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
+				increment)
 		end
 	end
 end
