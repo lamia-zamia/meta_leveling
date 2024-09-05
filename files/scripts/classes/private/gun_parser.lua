@@ -52,28 +52,10 @@ local function ignore_action(action_id)
 	return false
 end
 
----Checks if action is in special category
----@private
----@param action_id string
----@return boolean
-local function action_in_special_category(action_id)
-	if guns.spells_no_spawn[action_id] or guns.locked_spells[action_id] then return true end
-	local categorized_spells = {
-		guns.trigger_death, guns.trigger_hit_world, guns.trigger_timer, guns.glimmers
-	}
-	for i = 1, #categorized_spells do
-		for j = 1, #categorized_spells[i] do
-			if categorized_spells[i][j] == action_id then return true end
-		end
-	end
-	return false
-end
-
 ---Categorizes action based on the numbers in their string fields.
 ---@param action action
 local function categorizeAction(action)
 	local action_id = action.id
-	if action_in_special_category(action_id) then return end
 	local action_type = action.type
 	local pattern_low = action.type == 4 and ",[1-3]," or ",[0-2],"
 	local pattern_mid = action.type == 4 and ",[4-6]," or ",[3-5],"
@@ -82,15 +64,12 @@ local function categorizeAction(action)
 	local action_data = guns.actions_data.types[action_type]
 	if spawn_level:find(pattern_low) then
 		action_data.low[#action_data.low + 1] = action_id
-		-- return
 	end
 	if spawn_level:find(pattern_high) or spawn_level:find(",10,") then
 		action_data.high[#action_data.high + 1] = action_id
-		-- return
 	end
 	if spawn_level:find(pattern_mid) then
 		action_data.mid[#action_data.mid + 1] = action_id
-		-- return
 	end
 end
 
@@ -100,23 +79,32 @@ end
 local function parse_action(action)
 	local action_id = action.id
 	guns.actions_data.icons[action_id] = action.sprite
-	if action.spawn_probability == "0" then guns.spells_no_spawn[action_id] = true end
+	if action.spawn_probability == "0" then
+		guns.spells_no_spawn[action_id] = true
+		return
+	end
 	local flag = action.spawn_requires_flag
-	if flag and not HasFlagPersistent(flag) then guns.locked_spells[action_id] = flag end
-	if action_id:find("COLOUR") then guns_insert("glimmers", action_id) end
+	if flag and not HasFlagPersistent(flag) then
+		guns.locked_spells[action_id] = flag
+		return
+	end
+	if action_id:find("COLOUR") then
+		guns_insert("glimmers", action_id)
+		return
+	end
 	if ignore_action(action.id) then return end
 	if action.type == 0 then
 		local success, err = pcall(action.action)
 		if success then
-			if buffer.type then guns_insert(buffer.type, action_id) end
+			if buffer.type then
+				guns_insert(buffer.type, action_id)
+				buffer = { type = nil }
+				return
+			end
 		elseif ModIsEnabled("component-explorer") then
 			print("[Gun Parser Error] during parsing action " .. action_id)
 			print(err)
 		end
-		-- shot_effects = { recoil_knockback = 0 } --copi, why?
-		buffer = {
-			type = nil
-		}
 	end
 	categorizeAction(action)
 end
