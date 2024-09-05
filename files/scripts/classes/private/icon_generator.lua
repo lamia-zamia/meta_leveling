@@ -60,7 +60,7 @@ end
 ---@param columns number
 ---@param speed? number
 function IG:generate_xml(path, columns, speed)
-	speed = speed or (1.8 / columns)
+	speed = speed or math.max((1.8 / columns), 0.225)
 	local png = path:gsub("%.xml$", ".png")
 	xml = nxml.new_element("Sprite", { filename = png }, {
 		nxml.new_element("RectAnimation", {
