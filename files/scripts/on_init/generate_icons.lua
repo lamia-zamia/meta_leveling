@@ -21,6 +21,7 @@ end
 ---Function to generate layers with random spells from table
 ---@param list string[]
 ---@return ml_icon_generator_layers?, number
+---@nodiscard
 local function generateSpellIconLayer(list)
 	local size = #list
 	local n = math.min(size - (size % 2), max_categorized_spells)
@@ -58,51 +59,9 @@ local spell_suffixes = {
 	["high"] = "_high.xml"
 }
 
----Icons to generate, manual
+---Icons to generate, manually specified
 ---@type ml_icon_generator_table[]
 local icons_to_generate = {
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_hit_world.xml",
-		layers = {
-			{
-				IG.spell_background.projectile
-			},
-			{
-				"data/ui_gfx/gun_actions/light_bullet_trigger.png",
-				"data/ui_gfx/gun_actions/grenade_trigger.png",
-				"data/ui_gfx/gun_actions/bubbleshot_trigger.png",
-				"data/ui_gfx/gun_actions/slow_bullet_trigger.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_death.xml",
-		layers = {
-			{
-				IG.spell_background.projectile
-			},
-			{
-				"data/ui_gfx/gun_actions/summon_hollow_egg.png",
-				"data/ui_gfx/gun_actions/pipe_bomb_death_trigger.png",
-				"data/ui_gfx/gun_actions/mine_death_trigger.png",
-				"data/ui_gfx/gun_actions/black_hole_timer.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_timer.xml",
-		layers = {
-			{
-				IG.spell_background.projectile
-			},
-			{
-				"data/ui_gfx/gun_actions/light_bullet_timer.png",
-				"data/ui_gfx/gun_actions/luminous_drill_timer.png",
-				"data/ui_gfx/gun_actions/spitter_timer.png",
-				"data/ui_gfx/gun_actions/bouncy_orb_timer.png",
-			}
-		}
-	},
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_teleport_bolt.png",
 		layers = {
@@ -182,24 +141,6 @@ local icons_to_generate = {
 			}
 		}
 	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/spell_random_glimmer.xml",
-		layers = {
-			{
-				IG.spell_background.modifier
-			},
-			{
-				"data/ui_gfx/gun_actions/colour_red.png",
-				"data/ui_gfx/gun_actions/colour_orange.png",
-				"data/ui_gfx/gun_actions/colour_green.png",
-				"data/ui_gfx/gun_actions/colour_yellow.png",
-				"data/ui_gfx/gun_actions/colour_purple.png",
-				"data/ui_gfx/gun_actions/colour_blue.png",
-				"data/ui_gfx/gun_actions/colour_rainbow.png",
-				"data/ui_gfx/gun_actions/colour_invis.png"
-			}
-		}
-	},
 }
 
 ---Categorized spells to generate
@@ -212,6 +153,30 @@ local random_categorized_spells = {
 	[5] = "mods/meta_leveling/vfs/gfx/rewards/random_other",
 	[6] = "mods/meta_leveling/vfs/gfx/rewards/random_utility",
 	[7] = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell"
+}
+
+local special_category_spells = {
+	{
+		list = ML.guns.trigger_hit_world,
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_hit_world.xml",
+		type = 0
+	},
+	{
+		list = ML.guns.trigger_death,
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_death.xml",
+		type = 0
+	},
+	{
+		list = ML.guns.trigger_timer,
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_timer.xml",
+		type = 0
+	},
+	{
+		list = ML.guns.glimmers,
+		path = "mods/meta_leveling/vfs/gfx/rewards/spell_random_glimmer.xml",
+		type = 2,
+		speed = 0.225
+	}
 }
 
 SetRandomSeed(1, 1)
@@ -249,6 +214,19 @@ for level, suffix in pairs(spell_suffixes) do
 		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell" .. suffix,
 		layers = random_spell_layers,
 		speed = 0.225
+	}
+end
+
+for i = 1, #special_category_spells do
+	local icons, size = generateSpellIconLayer(special_category_spells[i].list)
+	local layers = {
+		{ borders[special_category_spells[i].type] },
+		icons
+	}
+	icons_to_generate[#icons_to_generate + 1] = {
+		path = special_category_spells[i].path,
+		layers = layers,
+		speed = special_category_spells[i].speed or math.max((1.8 / size), 0.45)
 	}
 end
 
