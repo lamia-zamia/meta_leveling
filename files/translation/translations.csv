@@ -60,7 +60,7 @@ ml_random_draw_many_tp,Spawn a random multicast of $0 level,Создаёт сл�
 ml_passive_spell,Random passive spell,Случайное пассивное заклинание,,,,,,,,,,
 ml_passive_spell_tp,Spawn a random passive spell,Создаёт случайное пассивное заклинание,,,,,,,,,,
 ml_material_spell,Random material spell,Случайное заклинание материала,,,,,,,,,,
-ml_material_spell_tp,Spawn a random material spell,Создаёт случайное заклинание материала,,,,,,,,,,
+ml_material_spell_tp,Spawn a random material spell of $0 level,Создаёт случайное заклинание материала $0 уровня,,,,,,,,,,
 ml_random_utility,Random utility card,Случайное заклинание "полезное",,,,,,,,,,
 ml_random_utility_tp,Spawn a random utility card of $0 level,Создаёт случайное полезное $0 уровня,,,,,,,,,,
 ml_random_other,Random other card,Случайное заклинание "другое",,,,,,,,,,

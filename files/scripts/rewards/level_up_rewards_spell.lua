@@ -5,12 +5,12 @@ local reward_spells = {
 		group_id = "spell_random",
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_spell.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_spell_low.xml",
 		description_var = { "$ml_spell_low" },
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_spell(Random(0, 3))
+			local action_id = ML.guns:get_random_spell(Random(0, 2))
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -19,13 +19,13 @@ local reward_spells = {
 		group_id = "spell_random",
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_spell.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_spell_mid.xml",
 		description_var = { "$ml_spell_mid" },
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_spell(Random(2, 6))
+			local action_id = ML.guns:get_random_spell(Random(3, 5))
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -35,12 +35,12 @@ local reward_spells = {
 		ui_name = "$ml_random_spell",
 		description = "$ml_random_spell_tp",
 		description_var = { "$ml_spell_high" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_spell.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_spell_high.xml",
 		probability = 0.1,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_spell(Random(5, 10))
+			local action_id = ML.guns:get_random_spell(Random(6, 8))
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -50,11 +50,11 @@ local reward_spells = {
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		description_var = { "$ml_spell_low" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_projectile.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_projectile_low.xml",
 		probability = 0.4,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(0, 3), 0)
+			local action_id = ML.guns:get_random_typed_spell(Random(0, 2), 0)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -64,12 +64,12 @@ local reward_spells = {
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		description_var = { "$ml_spell_mid" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_projectile.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_projectile_mid.xml",
 		probability = 0.3,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(2, 6), 0)
+			local action_id = ML.guns:get_random_typed_spell(Random(3, 5), 0)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -79,12 +79,12 @@ local reward_spells = {
 		ui_name = "$ml_random_projectile",
 		description = "$ml_random_projectile_tp",
 		description_var = { "$ml_spell_high" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_projectile.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_projectile_high.xml",
 		probability = 0.2,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(5, 10), 0)
+			local action_id = ML.guns:get_random_typed_spell(Random(6, 8), 0)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -95,11 +95,11 @@ local reward_spells = {
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_low" },
 		sound = MLP.const.sounds.chest,
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile_low.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(0, 3), 1)
+			local action_id = ML.guns:get_random_typed_spell(Random(0, 2), 1)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -109,12 +109,12 @@ local reward_spells = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_mid" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile_mid.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(2, 6), 1)
+			local action_id = ML.guns:get_random_typed_spell(Random(3, 5), 1)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -124,12 +124,12 @@ local reward_spells = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_high" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile_high.xml",
 		probability = 0.1,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(5, 10), 1)
+			local action_id = ML.guns:get_random_typed_spell(Random(6, 8), 1)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -139,11 +139,11 @@ local reward_spells = {
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		description_var = { "$ml_spell_low" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_modifier.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_modifier_low.xml",
 		probability = 0.4,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(0, 3), 2)
+			local action_id = ML.guns:get_random_typed_spell(Random(0, 2), 2)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -153,12 +153,12 @@ local reward_spells = {
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		description_var = { "$ml_spell_mid" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_modifier.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_modifier_mid.xml",
 		probability = 0.3,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(2, 6), 2)
+			local action_id = ML.guns:get_random_typed_spell(Random(3, 5), 2)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -168,12 +168,12 @@ local reward_spells = {
 		ui_name = "$ml_random_modifier",
 		description = "$ml_random_modifier_tp",
 		description_var = { "$ml_spell_high" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_modifier.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_modifier_high.xml",
 		probability = 0.2,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(5, 10), 2)
+			local action_id = ML.guns:get_random_typed_spell(Random(6, 8), 2)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -181,24 +181,41 @@ local reward_spells = {
 		id = "spell_random_passive_spell1",
 		ui_name = "$ml_passive_spell",
 		description = "$ml_passive_spell_tp",
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell_low.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(0, 3), 7)
+			local action_id = ML.guns:get_random_typed_spell(Random(0, 2), 7)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
 	{
 		id = "spell_random_material_spell1",
+		group_id = "spell_random_material_spell",
 		ui_name = "$ml_material_spell",
 		description = "$ml_material_spell_tp",
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell.xml",
+		description_var = { "$ml_spell_low" },
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell_low.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(1, 6), 4)
+			local action_id = ML.guns:get_random_typed_spell(Random(1, 3), 4)
+			ML.utils:spawn_spell(action_id)
+		end
+	},
+	{
+		id = "spell_random_material_spell2",
+		group_id = "spell_random_material_spell",
+		ui_name = "$ml_material_spell",
+		description = "$ml_material_spell_tp",
+		description_var = { "$ml_spell_mid" },
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell_mid.xml",
+		probability = 0.2,
+		min_level = 20,
+		fn = function()
+			ML.utils:random_seed()
+			local action_id = ML.guns:get_random_typed_spell(Random(4, 6), 4)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -208,11 +225,11 @@ local reward_spells = {
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		description_var = { "$ml_spell_low" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_utility.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_utility_low.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(0, 3), 6)
+			local action_id = ML.guns:get_random_typed_spell(Random(0, 2), 6)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -222,12 +239,12 @@ local reward_spells = {
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		description_var = { "$ml_spell_mid" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_utility.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_utility_mid.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(2, 6), 6)
+			local action_id = ML.guns:get_random_typed_spell(Random(3, 5), 6)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -237,12 +254,12 @@ local reward_spells = {
 		ui_name = "$ml_random_utility",
 		description = "$ml_random_utility_tp",
 		description_var = { "$ml_spell_high" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_utility.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_utility_high.xml",
 		probability = 0.1,
 		min_level = 20,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(5, 10), 6)
+			local action_id = ML.guns:get_random_typed_spell(Random(6, 8), 6)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -252,12 +269,12 @@ local reward_spells = {
 		ui_name = "$ml_random_other",
 		description = "$ml_random_other_tp",
 		description_var = { "$ml_spell_mid" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_other.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_other_mid.xml",
 		probability = 0.1,
-		min_level = 10,
+		min_level = 30,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(2, 6), 5)
+			local action_id = ML.guns:get_random_typed_spell(Random(2, 4), 5)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -267,12 +284,12 @@ local reward_spells = {
 		ui_name = "$ml_random_other",
 		description = "$ml_random_other_tp",
 		description_var = { "$ml_spell_high" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_other.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_other_high.xml",
 		probability = 0.05,
-		min_level = 20,
+		min_level = 40,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(5, 10), 5)
+			local action_id = ML.guns:get_random_typed_spell(Random(5, 8), 5)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -282,11 +299,11 @@ local reward_spells = {
 		ui_name = "$ml_random_draw_many",
 		description = "$ml_random_draw_many_tp",
 		description_var = { "$ml_spell_low" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_multicast.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_multicast_low.xml",
 		probability = 0.3,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(0, 3), 3)
+			local action_id = ML.guns:get_random_typed_spell(Random(0, 2), 3)
 			ML.utils:spawn_spell(action_id)
 		end
 	},
@@ -296,12 +313,12 @@ local reward_spells = {
 		ui_name = "$ml_random_draw_many",
 		description = "$ml_random_draw_many_tp",
 		description_var = { "$ml_spell_mid" },
-		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_multicast.xml",
+		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_multicast_mid.xml",
 		probability = 0.2,
 		min_level = 10,
 		fn = function()
 			ML.utils:random_seed()
-			local action_id = ML.guns:get_random_typed_spell(Random(3, 6), 3)
+			local action_id = ML.guns:get_random_typed_spell(Random(3, 5), 3)
 			ML.utils:spawn_spell(action_id)
 		end
 	},

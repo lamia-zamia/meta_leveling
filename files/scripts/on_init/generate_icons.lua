@@ -1,6 +1,17 @@
 ---@type ml_icon_generator
 local IG = dofile_once("mods/meta_leveling/files/scripts/classes/private/icon_generator.lua")
 
+local borders = {
+	[0] = IG.spell_background.projectile,
+	[1] = IG.spell_background.static_projectile,
+	[2] = IG.spell_background.modifier,
+	[3] = IG.spell_background.draw_many,
+	[4] = IG.spell_background.material,
+	[5] = IG.spell_background.other,
+	[6] = IG.spell_background.utility,
+	[7] = IG.spell_background.passive,
+}
+
 ---@type ml_icon_generator_table[]
 local icons_to_generate = {
 	{
@@ -42,143 +53,6 @@ local icons_to_generate = {
 				"data/ui_gfx/gun_actions/luminous_drill_timer.png",
 				"data/ui_gfx/gun_actions/spitter_timer.png",
 				"data/ui_gfx/gun_actions/bouncy_orb_timer.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell.xml",
-		layers = {
-			{
-				IG.spell_background.projectile,
-				IG.spell_background.static_projectile,
-				IG.spell_background.other,
-				IG.spell_background.passive,
-				IG.spell_background.material,
-				IG.spell_background.draw_many,
-				IG.spell_background.modifier,
-				IG.spell_background.utility
-			},
-			{
-				"data/ui_gfx/gun_actions/light_bullet.png",
-				"data/ui_gfx/gun_actions/purple_explosion_field.png",
-				"data/ui_gfx/gun_actions/zeta.png",
-				"data/ui_gfx/gun_actions/torch.png",
-				"data/ui_gfx/gun_actions/material_oil.png",
-				"data/ui_gfx/gun_actions/burst_2.png",
-				"data/ui_gfx/gun_actions/light.png",
-				"data/ui_gfx/gun_actions/long_distance_cast.png"
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_projectile.xml",
-		layers = {
-			{
-				IG.spell_background.projectile
-			},
-			{
-				"data/ui_gfx/gun_actions/light_bullet.png",
-				"data/ui_gfx/gun_actions/bubbleshot.png",
-				"data/ui_gfx/gun_actions/buckshot.png",
-				"data/ui_gfx/gun_actions/disc_bullet.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile.xml",
-		layers = {
-			{
-				IG.spell_background.static_projectile
-			},
-			{
-				"data/ui_gfx/gun_actions/purple_explosion_field.png",
-				"data/ui_gfx/gun_actions/delayed_spell.png",
-				"data/ui_gfx/gun_actions/cloud_water.png",
-				"data/ui_gfx/gun_actions/teleportation_field.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_other.xml",
-		layers = {
-			{
-				IG.spell_background.other
-			},
-			{
-				"data/ui_gfx/gun_actions/zeta.png",
-				"data/ui_gfx/gun_actions/trigger.png",
-				"data/ui_gfx/gun_actions/divide_2.png",
-				"data/ui_gfx/gun_actions/duplicate.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell.xml",
-		layers = {
-			{
-				IG.spell_background.passive
-			},
-			{
-				"data/ui_gfx/gun_actions/torch.png",
-				"data/ui_gfx/gun_actions/torch_electric.png",
-				"data/ui_gfx/gun_actions/energy_shield.png",
-				"data/ui_gfx/gun_actions/tiny_ghost.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell.xml",
-		layers = {
-			{
-				IG.spell_background.material
-			},
-			{
-				"data/ui_gfx/gun_actions/material_oil.png",
-				"data/ui_gfx/gun_actions/material_blood.png",
-				"data/ui_gfx/gun_actions/material_water.png",
-				"data/ui_gfx/gun_actions/material_cement.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_multicast.xml",
-		layers = {
-			{
-				IG.spell_background.draw_many
-			},
-			{
-				"data/ui_gfx/gun_actions/burst_2.png",
-				"data/ui_gfx/gun_actions/circle_shape.png",
-				"data/ui_gfx/gun_actions/scatter_3.png",
-				"data/ui_gfx/gun_actions/scatter_4.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_modifier.xml",
-		layers = {
-			{
-				IG.spell_background.modifier
-			},
-			{
-				"data/ui_gfx/gun_actions/light.png",
-				"data/ui_gfx/gun_actions/mana.png",
-				"data/ui_gfx/gun_actions/freeze.png",
-				"data/ui_gfx/gun_actions/horizontal_arc.png",
-			}
-		}
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_utility.xml",
-		layers = {
-			{
-				IG.spell_background.utility
-			},
-			{
-				"data/ui_gfx/gun_actions/long_distance_cast.png",
-				"data/ui_gfx/gun_actions/i_shot.png",
-				"data/ui_gfx/gun_actions/reset.png",
-				"data/ui_gfx/gun_actions/caster_cast.png",
 			}
 		}
 	},
@@ -280,6 +154,110 @@ local icons_to_generate = {
 		}
 	},
 }
+
+---Generates a table of N unique random numbers within a specified range.
+---@param n number The number of unique random numbers to generate.
+---@param min number The minimum value of the range.
+---@param max number The maximum value of the range.
+---@return table A table containing N unique random numbers.
+local function generateUniqueRandomNumbers(n, min, max)
+	local numbers, result = {}, {}
+	while #result < n do
+		local rand = Random(min, max)
+		if not numbers[rand] then
+			numbers[rand] = true
+			result[#result + 1] = rand
+		end
+	end
+	return result
+end
+
+local spell_suffixes = {
+	["low"] = "_low.xml",
+	["mid"] = "_mid.xml",
+	["high"] = "_high.xml"
+}
+
+local random_categorized_spells = {
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_projectile",
+		type = 0
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile",
+		type = 1
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_modifier",
+		type = 2
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_multicast",
+		type = 3
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell",
+		type = 4
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_other",
+		type = 5
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_utility",
+		type = 6
+	},
+	{
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell",
+		type = 7
+	},
+}
+
+SetRandomSeed(1, 1)
+for _, category in ipairs(random_categorized_spells) do
+	for level, suffix in pairs(spell_suffixes) do
+		local data = ML.guns.actions_data.types[category.type][level]
+		local size = #data
+		local n = math.min(size - (size % 2), 8)
+		if n > 0 then
+			local indexes = generateUniqueRandomNumbers(n, 1, size)
+			---@type ml_icon_generator_layers
+			local icons = {}
+			for _, index in ipairs(indexes) do
+				icons[#icons + 1] = ML.guns.actions_data.icons[data[index]]
+			end
+			icons_to_generate[#icons_to_generate + 1] = {
+				path = category.path .. suffix,
+				layers = {
+					{
+						borders[category.type]
+					},
+					icons
+				},
+				speed = math.max((1.8 / n), 0.45)
+			}
+		end
+	end
+end
+
+for level, suffix in pairs(spell_suffixes) do
+	---@type ml_icon_generator_layers
+	local random_spell_layers = {
+		[1] = {},
+		[2] = {}
+	}
+	for _ = 1, 2 do
+		for type = 0, #borders do
+			local data = ML.guns.actions_data.types[type][level]
+			random_spell_layers[1][#random_spell_layers[1] + 1] = borders[type]
+			random_spell_layers[2][#random_spell_layers[2] + 1] = ML.guns.actions_data.icons[data[Random(1, #data)]]
+		end
+	end
+	icons_to_generate[#icons_to_generate + 1] = {
+		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell" .. suffix,
+		layers = random_spell_layers
+	}
+end
 
 for _, icon in ipairs(icons_to_generate) do
 	IG:generate(icon)
