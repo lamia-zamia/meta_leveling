@@ -12,6 +12,7 @@ dofile_once("mods/meta_leveling/files/scripts/on_init/appends.lua")
 
 ---After OnModPostInit
 function OnMagicNumbersAndWorldSeedInitialized()
+	ML.guns:parse_actions()
 	dofile_once("mods/meta_leveling/files/scripts/on_init/generate_icons.lua")
 end
 

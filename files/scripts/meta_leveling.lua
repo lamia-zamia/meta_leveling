@@ -68,7 +68,7 @@ end
 
 function ML:StartUp()
 	self.next_exp = self:get_next()
-	self.guns:parse_actions()
+	-- self.guns:parse_actions()
 	self.rewards_deck:GatherData()
 	self.rewards_deck:get_reroll_count()
 end
