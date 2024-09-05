@@ -41,6 +41,34 @@ function SM:Replace(pattern, replacement, n)
 	self.content = self.content:gsub(pattern, replacement, n)
 end
 
+---Inserts text before a specific line containing a search string.
+---@param searchString string The string to search for in each line.
+---@param textToInsert string The text to insert before the matching line.
+function SM:InsertBeforeLine(searchString, textToInsert)
+	local lines = {}
+	for line in self.content:gmatch("[^\r\n]+") do
+		if line:find(searchString, 1, true) then
+			lines[#lines + 1] = textToInsert
+		end
+		lines[#lines + 1] = line
+	end
+	self.content = table.concat(lines, "\n")
+end
+
+---Inserts text after a specific line containing a search string.
+---@param searchString string The string to search for in each line.
+---@param textToInsert string The text to insert after the matching line.
+function SM:InsertAfterLine(searchString, textToInsert)
+	local lines = {}
+	for line in self.content:gmatch("[^\r\n]+") do
+		lines[#lines + 1] = line
+		if line:find(searchString, 1, true) then
+			lines[#lines + 1] = textToInsert
+		end
+	end
+	self.content = table.concat(lines, "\n")
+end
+
 ---Writes the manipulated content back to the file.
 function SM:Write()
 	ModTextFileSetContent(self.file, self.content:gsub("\r", ""))
