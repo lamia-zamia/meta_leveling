@@ -56,6 +56,7 @@ local const = {
 	globals_prefix = "META_LEVELING_",
 	globals = { --globals name used by this mod
 		current_level = "CURRENT_LEVEL", --current level, default 1
+		exp_on_levelup = "EXP_ON_LEVELUP", --exp on levelup, required to calculate negative exp
 		draw_amount = "DRAW_AMOUNT", --how many extra options, default 0
 		draw_index = "DRAW_INDEX", --current index in reward deck
 		reroll_count = "REROLL_COUNT", --current available reroll count

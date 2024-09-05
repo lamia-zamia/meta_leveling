@@ -48,6 +48,7 @@ function ML:get_pending_levels()
 end
 
 function ML:level_up()
+	MLP.set:global_number(MLP.const.globals.exp_on_levelup, MLP.exp:current())
 	MLP.set:global_number(MLP.const.globals.current_level, self:get_level() + 1)
 	local level = self:get_level()
 	if level % 5 == 0 then
@@ -77,8 +78,6 @@ function ML:OnSpawn()
 	self.meta:initialize()
 end
 
-
-
 ---Gets the experience points required for the next level.
 ---@return number experience The experience points required for the next level.
 function ML:get_next()
@@ -86,15 +85,26 @@ function ML:get_next()
 end
 
 ---Calculates the current experience percentage towards the next level.
----Ensures the percentage is between 0.00001 and 1.
----@return number percentage The current experience percentage towards the next level.
+---@return number percentage, boolean inverted The current experience percentage towards the next level.
 function ML:get_percentage()
-	local current_level_exp = ML.level_curve[ML:get_level() - 1]
-	local next_level_exp = self:get_next()
-	local perc = (MLP.exp:current() - current_level_exp) / (next_level_exp - current_level_exp)
-	perc = math.min(perc, 1)
-	perc = math.max(perc, 0.00001)
-	return perc
+	local current_exp = MLP.exp:current()
+	local current_level_required_exp = ML.level_curve[ML:get_level() - 1]
+
+	-- If the player's experience is below the current level's required exp
+	-- Calculate how much experience is missing to reach the current level's required exp
+	if current_exp < current_level_required_exp then
+		-- Reverse percentage: How much EXP is needed to reach the required exp
+		local exp_on_skip = MLP.get:global_number(MLP.const.globals.exp_on_levelup, 0)
+		return (current_level_required_exp - current_exp) / (current_level_required_exp - exp_on_skip), true
+	end
+
+	-- Normal progress percentage toward the next level
+	local next_level_required_exp = self:get_next()
+	local next_dif = next_level_required_exp - current_level_required_exp
+	local current_dif = current_exp - current_level_required_exp
+
+	local perc = current_dif / next_dif
+	return perc, false
 end
 
 return ML

@@ -43,7 +43,9 @@ local data = {
 	},
 	tooltip_force = true,
 	reminder_in_inventory = true,
-	hotkey = 0
+	hotkey = 0,
+	exp_percentage = 0.00001,
+	exp_inverted = false,
 }
 
 ---@class EB.bar

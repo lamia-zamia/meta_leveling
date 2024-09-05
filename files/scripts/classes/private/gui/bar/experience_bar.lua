@@ -26,7 +26,7 @@ end
 ---@param x number
 ---@param y number
 function EB:DrawPercentage(x, y)
-	local percentage = ML:get_percentage()
+	local percentage = self.data.exp_percentage
 	if percentage < 1 then
 		self:Text(x + 1, y - 2, "%")
 		self:Color(1, 1, 1, 0.80)
@@ -41,9 +41,18 @@ end
 
 ---Adjust bar color based on multiplier
 ---@private
----@param m number
-function EB:BarColor(m)
-	self:Color(self.bar.red * m, self.bar.green * m, self.bar.blue * m)
+function EB:BarColorBackground()
+	self:Color(self.bar.red * 0.6, self.bar.green * 0.6, self.bar.blue * 0.6)
+end
+
+---Adjust bar color based on multiplier
+---@private
+function EB:BarColor()
+	if self.data.exp_inverted then
+		self:Color(1 - self.bar.red, 1 - self.bar.green, self.bar.blue)
+	else
+		self:Color(self.bar.red, self.bar.green, self.bar.blue)
+	end
 end
 
 ---Draw the background of the bar
@@ -54,7 +63,7 @@ end
 ---@param scale_y number
 function EB:DrawBackGround(x, y, scale_x, scale_y)
 	self:SetZ(3)
-	self:BarColor(0.6)
+	self:BarColorBackground()
 	self:Image(x, y, self.c.px, 0.85, scale_x, scale_y)
 end
 
@@ -62,7 +71,7 @@ end
 ---@private
 ---@return number
 function EB:ClampFiller()
-	local percent = ML:get_percentage()
+	local percent = self.data.exp_percentage
 	if percent < self.const.filler_clamp or percent == 1 then
 		return percent
 	else
@@ -133,7 +142,7 @@ function EB:DrawExpFiller(x, y, scale_x, scale_y, vertical)
 	end
 	local multiplier = self:ClampFiller()
 	self:SetZ(1)
-	self:BarColor(1)
+	self:BarColor()
 	local sx, sy = vertical and -(scale_y * multiplier) or scale_x * multiplier, vertical and scale_x or scale_y
 	self:Image(x, y + (vertical and scale_y or 0), self.c.px, 1, sx, sy)
 end
@@ -155,7 +164,11 @@ function EB:ToolTipUI()
 	if ML.pending_levels > 0 then
 		level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels
 	end
-	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current()) .. " / " .. MLP.exp:format(ML.next_exp)
+	if self.data.exp_inverted then
+		level = level .. self:Locale(", $ml_level_skipped")
+	end
+	local experience = self:Locale("$ml_experience: ") ..
+		MLP.exp:format(MLP.exp:current()) .. " / " .. MLP.exp:format(ML.next_exp)
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
@@ -306,7 +319,7 @@ function EB:UpdatePlayerStatus()
 		self.data.max_health = ML.player.max_hp
 		self:SetPlayerHealthLength()
 	end
-	if ML:get_percentage() >= 1 and not self.data.sound_played_level[ML:get_level()] then
+	if ML:get_pending_levels() >= 1 and not self.data.sound_played_level[ML:get_level()] then
 		self:LevelUpFX()
 	end
 end
@@ -362,6 +375,7 @@ end
 ---Draw the experience bar
 ---@private
 function EB:DrawExpBar()
+	self.data.exp_percentage, self.data.exp_inverted = ML:get_percentage()
 	self:UpdatePlayerStatus()
 	self:AddOption(2)
 	self:DrawBarFunction()
