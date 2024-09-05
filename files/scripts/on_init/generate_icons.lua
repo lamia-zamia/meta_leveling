@@ -1,6 +1,45 @@
+local max_categorized_spells = 16
+local random_random_spells_iterations = 4
+
+---Generates a table of N unique random numbers within a specified range.
+---@param n number The number of unique random numbers to generate.
+---@param min number The minimum value of the range.
+---@param max number The maximum value of the range.
+---@return table A table containing N unique random numbers.
+local function generateUniqueRandomNumbers(n, min, max)
+	local numbers, result = {}, {}
+	while #result < n do
+		local rand = Random(min, max)
+		if not numbers[rand] then
+			numbers[rand] = true
+			result[#result + 1] = rand
+		end
+	end
+	return result
+end
+
+---Function to generate layers with random spells from table
+---@param list string[]
+---@return ml_icon_generator_layers?, number
+local function generateSpellIconLayer(list)
+	local size = #list
+	local n = math.min(size - (size % 2), max_categorized_spells)
+	if n > 0 then
+		local indexes = generateUniqueRandomNumbers(n, 1, size)
+		---@type ml_icon_generator_layers
+		local icons = {}
+		for _, index in ipairs(indexes) do
+			icons[#icons + 1] = ML.guns.actions_data.icons[list[index]]
+		end
+		return icons, size
+	end
+	return nil, 0
+end
+
 ---@type ml_icon_generator
 local IG = dofile_once("mods/meta_leveling/files/scripts/classes/private/icon_generator.lua")
 
+---Spell border icons
 local borders = {
 	[0] = IG.spell_background.projectile,
 	[1] = IG.spell_background.static_projectile,
@@ -12,6 +51,14 @@ local borders = {
 	[7] = IG.spell_background.passive,
 }
 
+---Spell levels and suffixes for xml
+local spell_suffixes = {
+	["low"] = "_low.xml",
+	["mid"] = "_mid.xml",
+	["high"] = "_high.xml"
+}
+
+---Icons to generate, manual
 ---@type ml_icon_generator_table[]
 local icons_to_generate = {
 	{
@@ -155,98 +202,43 @@ local icons_to_generate = {
 	},
 }
 
----Generates a table of N unique random numbers within a specified range.
----@param n number The number of unique random numbers to generate.
----@param min number The minimum value of the range.
----@param max number The maximum value of the range.
----@return table A table containing N unique random numbers.
-local function generateUniqueRandomNumbers(n, min, max)
-	local numbers, result = {}, {}
-	while #result < n do
-		local rand = Random(min, max)
-		if not numbers[rand] then
-			numbers[rand] = true
-			result[#result + 1] = rand
-		end
-	end
-	return result
-end
-
-local spell_suffixes = {
-	["low"] = "_low.xml",
-	["mid"] = "_mid.xml",
-	["high"] = "_high.xml"
-}
-
+---Categorized spells to generate
 local random_categorized_spells = {
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_projectile",
-		type = 0
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile",
-		type = 1
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_modifier",
-		type = 2
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_multicast",
-		type = 3
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell",
-		type = 4
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_other",
-		type = 5
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_utility",
-		type = 6
-	},
-	{
-		path = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell",
-		type = 7
-	},
+	[0] = "mods/meta_leveling/vfs/gfx/rewards/random_projectile",
+	[1] = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile",
+	[2] = "mods/meta_leveling/vfs/gfx/rewards/random_modifier",
+	[3] = "mods/meta_leveling/vfs/gfx/rewards/random_multicast",
+	[4] = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell",
+	[5] = "mods/meta_leveling/vfs/gfx/rewards/random_other",
+	[6] = "mods/meta_leveling/vfs/gfx/rewards/random_utility",
+	[7] = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell"
 }
 
 SetRandomSeed(1, 1)
-for _, category in ipairs(random_categorized_spells) do
+
+---Generate spell icons for categorized spell rewards
+for category = 0, #random_categorized_spells do ---for each category
 	for level, suffix in pairs(spell_suffixes) do
-		local data = ML.guns.actions_data.types[category.type][level]
-		local size = #data
-		local n = math.min(size - (size % 2), 8)
-		if n > 0 then
-			local indexes = generateUniqueRandomNumbers(n, 1, size)
-			---@type ml_icon_generator_layers
-			local icons = {}
-			for _, index in ipairs(indexes) do
-				icons[#icons + 1] = ML.guns.actions_data.icons[data[index]]
-			end
-			icons_to_generate[#icons_to_generate + 1] = {
-				path = category.path .. suffix,
-				layers = {
-					{
-						borders[category.type]
-					},
-					icons
-				},
-				speed = math.max((1.8 / n), 0.45)
-			}
-		end
+		local icons, size = generateSpellIconLayer(ML.guns.actions_data.types[category][level])
+		if not icons then goto continue end
+		local layers = {
+			{ borders[category] },
+			icons
+		}
+		icons_to_generate[#icons_to_generate + 1] = {
+			path = random_categorized_spells[category] .. suffix,
+			layers = layers,
+			speed = math.max((1.8 / size), 0.45)
+		}
+		::continue::
 	end
 end
 
+---Generate random random spells
 for level, suffix in pairs(spell_suffixes) do
 	---@type ml_icon_generator_layers
-	local random_spell_layers = {
-		[1] = {},
-		[2] = {}
-	}
-	for _ = 1, 2 do
+	local random_spell_layers = { [1] = {}, [2] = {} }
+	for _ = 1, random_random_spells_iterations do
 		for type = 0, #borders do
 			local data = ML.guns.actions_data.types[type][level]
 			random_spell_layers[1][#random_spell_layers[1] + 1] = borders[type]
@@ -255,7 +247,8 @@ for level, suffix in pairs(spell_suffixes) do
 	end
 	icons_to_generate[#icons_to_generate + 1] = {
 		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell" .. suffix,
-		layers = random_spell_layers
+		layers = random_spell_layers,
+		speed = 0.225
 	}
 end
 
