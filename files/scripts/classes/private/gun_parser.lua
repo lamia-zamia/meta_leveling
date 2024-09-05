@@ -46,8 +46,8 @@ end
 ---@param action_id string
 ---@return boolean
 local function ignore_action(action_id)
-	for _, action in ipairs(ignore_list) do
-		if action_id == action then return true end
+	for i = 1, #ignore_list do
+		if action_id == ignore_list[i] then return true end
 	end
 	return false
 end
@@ -58,12 +58,12 @@ end
 ---@return boolean
 local function action_in_special_category(action_id)
 	if guns.spells_no_spawn[action_id] or guns.locked_spells[action_id] then return true end
-	local spells = {
+	local categorized_spells = {
 		guns.trigger_death, guns.trigger_hit_world, guns.trigger_timer, guns.glimmers
 	}
-	for i = 1, #spells do
-		for j = 1, #spells[i] do
-			if spells[i][j] == action_id then return true end
+	for i = 1, #categorized_spells do
+		for j = 1, #categorized_spells[i] do
+			if categorized_spells[i][j] == action_id then return true end
 		end
 	end
 	return false
@@ -109,7 +109,7 @@ local function parse_action(action)
 		local success, err = pcall(action.action)
 		if success then
 			if buffer.type then guns_insert(buffer.type, action_id) end
-		elseif ModSettingGet("meta_leveling.show_debug") then
+		elseif ModIsEnabled("component-explorer") then
 			print("[Gun Parser Error] during parsing action " .. action_id)
 			print(err)
 		end
@@ -191,11 +191,12 @@ local function shadow_functions()
 		"EntityGetAllChildren",
 		"dofile_once",
 		"EntityGetRootEntity",
-		"GlobalsGetValue"
+		"GlobalsGetValue",
+		"tonumber"
 	}
 
-	for _, fn in ipairs(functions_to_shadow) do
-		_G[fn] = nilfn
+	for i = 1, #functions_to_shadow do
+		_G[functions_to_shadow[i]] = nilfn
 	end
 end
 
@@ -229,8 +230,8 @@ function guns:parse_actions()
 	shot_effects = { recoil_knockback = 0 }
 
 
-	for _, action in ipairs(actions) do ---@diagnostic disable-line: undefined-global
-		parse_action(action)
+	for i = 1, #actions do ---@diagnostic disable-line: undefined-global
+		parse_action(actions[i])
 	end
 
 	buffer = nil
