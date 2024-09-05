@@ -7,6 +7,7 @@
 ---@field spells_no_spawn table
 ---@field locked_spells table
 ---@field glimmers string[]
+---@field actions_data table
 local guns = {
 	trigger_hit_world = {},
 	trigger_timer = {},
@@ -16,6 +17,10 @@ local guns = {
 	spells_no_spawn = {},
 	locked_spells = {},
 	glimmers = {},
+	actions_data = {
+		types = {},
+		icons = {}
+	}
 }
 
 ---List of actions to ignore
@@ -47,57 +52,73 @@ local function ignore_action(action_id)
 	return false
 end
 
---	i was trying to parse healing spells, but it's too complicated, maybe later
---[[
----@type nxml
-local nxml = dofile_once("mods/meta_leveling/files/scripts/utilities/lib/nxml.lua")
-
----Analize projectile component
----@param tree element
-local function analize_xml_projectile_component(action_id, tree)
-	for projectile_component in tree:each_of("ProjectileComponent") do
-		for element in projectile_component:each_of("damage_by_type") do
-			local heal_dmg = tonumber(element.attr.healing)
-			if heal_dmg then guns_insert("heal_spells", action_id) end
+---Checks if action is in special category
+---@private
+---@param action_id string
+---@return boolean
+local function action_in_special_category(action_id)
+	if guns.spells_no_spawn[action_id] or guns.locked_spells[action_id] then return true end
+	local spells = {
+		guns.trigger_death, guns.trigger_hit_world, guns.trigger_timer, guns.glimmers
+	}
+	for i = 1, #spells do
+		for j = 1, #spells[i] do
+			if spells[i][j] == action_id then return true end
 		end
 	end
+	return false
 end
 
----Analize projectiles xml
----@param xml_file string
-local function analize_xml(action_id, xml_file)
-	local xml = nxml.parse(ModTextFileGetContent(xml_file))
-	analize_xml_projectile_component(action_id, xml)
-	for base in xml:each_of("Base") do
-		analize_xml_projectile_component(action_id, base)
+---Categorizes action based on the numbers in their string fields.
+---@param action action
+local function categorizeAction(action)
+	local action_id = action.id
+	if action_in_special_category(action_id) then return end
+	local action_type = action.type
+	local pattern_low = action.type == 4 and ",[1-3]," or ",[0-2],"
+	local pattern_mid = action.type == 4 and ",[4-6]," or ",[3-5],"
+	local pattern_high = ",[67],"
+	local spawn_level = "," .. action.spawn_level .. ","
+	local action_data = guns.actions_data.types[action_type]
+	if spawn_level:find(pattern_low) then
+		action_data.low[#action_data.low + 1] = action_id
+		-- return
+	end
+	if spawn_level:find(pattern_high) or spawn_level:find(",10,") then
+		action_data.high[#action_data.high + 1] = action_id
+		-- return
+	end
+	if spawn_level:find(pattern_mid) then
+		action_data.mid[#action_data.mid + 1] = action_id
+		-- return
 	end
 end
-]]
 
 ---Parse action
 ---@private
 ---@param action action
 local function parse_action(action)
-	if action.spawn_probability == "0" then guns.spells_no_spawn[action.id] = true end
+	local action_id = action.id
+	guns.actions_data.icons[action_id] = action.sprite
+	if action.spawn_probability == "0" then guns.spells_no_spawn[action_id] = true end
 	local flag = action.spawn_requires_flag
-	if flag and not HasFlagPersistent(flag) then guns.locked_spells[action.id] = flag end
-	if action.id:find("COLOUR") then guns_insert("glimmers", action.id) end
+	if flag and not HasFlagPersistent(flag) then guns.locked_spells[action_id] = flag end
+	if action_id:find("COLOUR") then guns_insert("glimmers", action_id) end
 	if ignore_action(action.id) then return end
 	if action.type == 0 then
 		local success, err = pcall(action.action)
 		if success then
-			if buffer.type then guns_insert(buffer.type, action.id) end
-			-- if buffer.xml_file then analize_xml(action.id, buffer.xml_file) end
+			if buffer.type then guns_insert(buffer.type, action_id) end
 		elseif ModSettingGet("meta_leveling.show_debug") then
-			print("[Gun Parser Error] during parsing action " .. action.id)
+			print("[Gun Parser Error] during parsing action " .. action_id)
 			print(err)
 		end
 		-- shot_effects = { recoil_knockback = 0 } --copi, why?
 		buffer = {
-			-- xml_file = nil,
 			type = nil
 		}
 	end
+	categorizeAction(action)
 end
 
 ---Overwrites some functions
@@ -169,7 +190,8 @@ local function shadow_functions()
 		"EntityGetTransform",
 		"EntityGetAllChildren",
 		"dofile_once",
-		"EntityGetRootEntity"
+		"EntityGetRootEntity",
+		"GlobalsGetValue"
 	}
 
 	for _, fn in ipairs(functions_to_shadow) do
@@ -179,19 +201,25 @@ end
 
 ---Sandbox
 function guns:parse_actions()
-	local __G = {}
-	for key, value in pairs(_G) do
-		__G[key] = value
+	for i = 0, 7 do
+		self.actions_data.types[i] = {
+			low = {},
+			mid = {},
+			high = {}
+		}
 	end
-	dofile_once = dofile
+
+	---@type ML_sandbox
+	local sandbox = dofile_once("mods/meta_leveling/files/scripts/classes/private/sandbox.lua")
+	sandbox:start_sandbox()
 	-- ###############################################################
 	-- #################		SANDBOX START		##################
 	-- ###############################################################
+	dofile_once = dofile
 	dofile("data/scripts/gun/gunaction_generated.lua")
 	dofile("data/scripts/gun/gun_generated.lua")
 	dofile("data/scripts/gun/gunshoteffects_generated.lua")
 	dofile("data/scripts/gun/gun.lua")
-
 	shadow_functions()
 	overwrite_functions()
 
@@ -209,11 +237,7 @@ function guns:parse_actions()
 	-- ###############################################################
 	-- #################		SANDBOX END			##################
 	-- ###############################################################
-	for key, value in pairs(_G) do
-		if __G[key] ~= value then
-			_G[key] = __G[key]
-		end
-	end
+	sandbox:end_sandbox()
 end
 
 ---check if player can have this spell
