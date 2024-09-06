@@ -101,8 +101,6 @@ function LU_level_up:DrawPointSpenderRewards(x, y, data)
 			self.const.ui_9p_reward_hl)
 		local tp_offset = (data.width - data.width9_offset) / 2
 		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward, reward_data)
-		if not self.data.reward_list then return end
-		-- self:SetZ(self.const.z - 20)
 		self:Image(x_offset + (data.width - data.width9_offset - data.icon_size) / 2,
 			y + (data.height - data.icon_size) / 2, reward_icon)
 	end
@@ -141,9 +139,11 @@ function LU_level_up:CloseRewardUI()
 	if ML.pending_levels <= 0 then
 		GameRemoveFlagRun(MLP.const.flags.leveling_up)
 		ML:toggle_ui()
+		self.data.reward_list = nil
+	else
+		self.data.reward_list = ML.rewards_deck:draw_reward()
+		self:AnimReset("rewards")
 	end
-	self.data.reward_list = nil
-	self:AnimReset("rewards")
 end
 
 ---toggle level up menu, adds flag to run so you can't close it
