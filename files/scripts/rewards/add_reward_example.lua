@@ -40,7 +40,8 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better" },
-		probability = 0.49,
+		probability = 0.6,
+		border_color = ML.rewards_deck.borders.uncommon,
 		max = 3,
 		limit_before = "pickup_spawn_chest1",
 		fn = function()
@@ -60,13 +61,14 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better", "!" },
-		probability = 0.29,
+		probability = 0.6,
+		border_color = ML.rewards_deck.borders.rare,
 		max = 3,
 		limit_before = "pickup_spawn_chest2",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
-			if (rnd >= 1700) then
+			if (rnd >= 1800) then
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
 			else
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
@@ -80,13 +82,14 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better", "!!" },
-		probability = 0.09,
+		probability = 0.5,
+		border_color = ML.rewards_deck.borders.epic,
 		max = 3,
 		limit_before = "pickup_spawn_chest3",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
-			if (rnd >= 1600) then
+			if (rnd >= 1700) then
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
 			else
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
@@ -100,12 +103,13 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better", "!!!" },
-		probability = 0.029,
+		probability = 0.3,
+		border_color = ML.rewards_deck.borders.legendary,
 		limit_before = "pickup_spawn_chest4",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
-			if (rnd >= 1000) then
+			if (rnd >= 1500) then
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
 			else
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")

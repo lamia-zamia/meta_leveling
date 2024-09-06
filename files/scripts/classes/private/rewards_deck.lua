@@ -33,20 +33,19 @@
 ---@field private min_probability number min probability for single reward
 ---@field private list ml_reward_id[] table of rewards id
 ---@field private distance number minimum distance between rewards
----@field private borders ml_borders_data
+---@field borders ml_borders_data
 ---@field reroll_count number
 local rewards_deck = {
 	reward_data = {},
 	groups_data = {},
 	default_icon = "mods/meta_leveling/files/gfx/rewards/no_png.png",
 	borders = {
-		common = {0.5, 0.5, 0.5, 0.5},
+		common = {0.6, 0.6, 0.6, 0.6},
 		uncommon = {0.3, 1, 0.3, 0.6},
 		rare = {0, 1, 1, 0.6},
 		epic = {1, 0, 1, 0.7},
 		legendary = {1, 0.5, 0, 1},
 		relic  = {1, 0, 0, 1}
-
 	},
 	max_probability = 1,
 	min_probability = 0.01,
