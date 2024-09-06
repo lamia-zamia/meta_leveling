@@ -175,7 +175,7 @@ end
 ---@param probability number
 ---@return number
 function rewards_deck:probability_normalize(probability)
-	return math.max(self.min_probability + 0.01, math.min(self.max_probability, probability))
+	return math.max(self.min_probability + 0.001, math.min(self.max_probability, probability))
 end
 
 ---get normalized probability
