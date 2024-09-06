@@ -27,7 +27,12 @@ end
 ---@param y number
 function EB:DrawPercentage(x, y)
 	local percentage = self.data.exp_percentage
-	if percentage < 1 then
+	if self.data.exp_inverted then
+		self:BarColor()
+		self:Text(x + 1, y - 2, "<")
+		self:BarColor()
+		self:Text(x + 10, y, self:FloorPerc(percentage), "data/fonts/font_small_numbers.xml")
+	elseif percentage < 1 then
 		self:Text(x + 1, y - 2, "%")
 		self:Color(1, 1, 1, 0.80)
 		self:Text(x + 10, y, self:FloorPerc(percentage), "data/fonts/font_small_numbers.xml")
@@ -72,7 +77,7 @@ end
 ---@return number
 function EB:ClampFiller()
 	local percent = self.data.exp_percentage
-	if percent < self.const.filler_clamp or percent == 1 then
+	if percent < self.const.filler_clamp or percent == 1 or self.data.exp_inverted then
 		return percent
 	else
 		return self.const.filler_clamp
