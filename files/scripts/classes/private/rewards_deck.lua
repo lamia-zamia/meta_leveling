@@ -9,6 +9,7 @@
 ---@field max number max number of reward that you can pick
 ---@field sound ml_sound see sounds
 ---@field pick_count number
+---@field border ml_reward_border color of border
 
 ---@class (exact) ml_group_data
 ---@field rewards ml_reward_id[] list of rewards in group
@@ -20,20 +21,33 @@
 ---@class (exact) reward_data
 ---@field [string] ml_single_reward_data
 
+---@class (exact) ml_borders_data
+---@field [string] ml_reward_border
+
 ---@class (exact) rewards_deck
 ---@field private reward_definition_list ml_rewards list of rewards
 ---@field groups_data ml_groups_data
 ---@field reward_data reward_data data of rewards
----@field default_icon string
+---@field private default_icon string
 ---@field private max_probability number max probability for single reward
 ---@field private min_probability number min probability for single reward
 ---@field private list ml_reward_id[] table of rewards id
 ---@field private distance number minimum distance between rewards
+---@field private borders ml_borders_data
 ---@field reroll_count number
 local rewards_deck = {
 	reward_data = {},
 	groups_data = {},
 	default_icon = "mods/meta_leveling/files/gfx/rewards/no_png.png",
+	borders = {
+		common = {0.5, 0.5, 0.5, 0.5},
+		uncommon = {0.3, 1, 0.3, 0.6},
+		rare = {0, 1, 1, 0.6},
+		epic = {1, 0, 1, 0.7},
+		legendary = {1, 0.5, 0, 1},
+		relic  = {1, 0, 0, 1}
+
+	},
 	max_probability = 1,
 	min_probability = 0.01,
 	list = {},
@@ -107,9 +121,10 @@ end
 ---@private
 ---@param reward ml_reward
 function rewards_deck:initialize_reward_data(reward)
+	local reward_id = reward.id --[[@as ml_reward_id]]
 	local reward_entry = {
-		id = reward.id,
-		group_id = reward.group_id or reward.id,
+		id = reward_id,
+		group_id = reward.group_id or reward_id,
 		ui_name = reward.ui_name,
 		description = reward.description or nil,
 		description_var = reward.description_var or nil,
@@ -119,14 +134,14 @@ function rewards_deck:initialize_reward_data(reward)
 		probability = self:set_probability(reward.probability),
 		max = reward.max or 1280,
 		fn = reward.fn or self.function_error,
-		pick_count = self:get_specific_reward_pickup_amount(reward.id --[[@as ml_reward_id]]),
+		pick_count = self:get_specific_reward_pickup_amount(reward_id),
 		limit_before = reward.limit_before or nil,
 		custom_check = reward.custom_check or nil,
 		sound = reward.sound or MLP.const.sounds.perk,
 		no_sound = reward.no_sound,
 		min_level = reward.min_level or 1
 	}
-
+	reward_entry.border_color = self:set_borders(reward_id, reward_entry.probability, reward.border_color)
 	self.reward_data[reward.id] = reward_entry
 	self:initialize_group_data(reward_entry)
 end
@@ -171,6 +186,25 @@ end
 function rewards_deck:get_probability(probability)
 	if type(probability) == "number" then return probability end
 	return self:probability_normalize(probability())
+end
+
+---Determines and sets border icon
+---@param id ml_reward_id
+---@param probability number|fun():number
+---@param border? ml_reward_border
+---@return ml_reward_border
+---@nodiscard
+function rewards_deck:set_borders(id, probability, border)
+	if border then return border end
+	if type(probability) == "function" then
+		return self.borders.common
+	end
+	if probability < 0.03 then return self.borders.relic
+	elseif probability < 0.1 then return self.borders.legendary
+	elseif probability < 0.2 then return self.borders.epic
+	elseif probability < 0.3 then return self.borders.rare
+	elseif probability < 0.5 then return self.borders.uncommon end
+	return self.borders.common
 end
 
 ---Shuffles the list of rewards.

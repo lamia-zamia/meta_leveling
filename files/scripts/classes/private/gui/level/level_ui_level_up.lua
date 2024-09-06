@@ -90,14 +90,19 @@ end
 function LU_level_up:DrawPointSpenderRewards(x, y, data)
 	for i = 1, data.amount do
 		local x_offset = x + (data.width + data.width9_offset) * (i - 1)
-		local reward_icon = ML.rewards_deck.reward_data[self.data.reward_list[i]].ui_icon
+		local reward_id = self.data.reward_list[i]
+		local reward_data = ML.rewards_deck.reward_data[reward_id]
+		local reward_icon = reward_data.ui_icon
+
+		self:DrawRewardRarity(x_offset - 3, y - 3, self.const.z + 4, reward_data.border_color)
 		self:ForceFocusable()
-		self:Draw9Piece(x_offset, y, self.const.z, data.width - data.width9_offset, data.height, self.const.ui_9p_reward,
+		self:Draw9Piece(x_offset, y, self.const.z + 1, data.width - data.width9_offset, data.height,
+			self.const.ui_9p_reward,
 			self.const.ui_9p_reward_hl)
 		local tp_offset = (data.width - data.width9_offset) / 2
-		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward,
-			ML.rewards_deck.reward_data[self.data.reward_list[i]])
+		self:AddTooltipClickable(tp_offset, data.height * 2, self.RewardsTooltip, self.PickReward, reward_data)
 		if not self.data.reward_list then return end
+		-- self:SetZ(self.const.z - 20)
 		self:Image(x_offset + (data.width - data.width9_offset - data.icon_size) / 2,
 			y + (data.height - data.icon_size) / 2, reward_icon)
 	end
@@ -118,7 +123,7 @@ function LU_level_up:DrawPointSpender()
 	data.total_width = data.amount * (data.width + data.width9_offset) - data.width9_offset * 2
 	local x, y = self:CalculateCenterInScreen(data.total_width, data.height)
 
-	self:Draw9Piece(x, y, self.const.z + 1, data.total_width, data.height, self.const.ui_9piece)
+	self:Draw9Piece(x, y, self.const.z + 5, data.total_width, data.height, self.const.ui_9piece)
 	self:BlockInputOnPrevious()
 	self:DrawPointSpenderRewards(x, y, data)
 

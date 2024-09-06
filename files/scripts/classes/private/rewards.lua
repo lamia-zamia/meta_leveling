@@ -3,23 +3,30 @@
 ---@class (exact) reward_description
 ---@field [number] string|fun():string
 
----@class (exact) ml_reward
----@field id string id of reward
----@field ui_name string name to display in game
----@field fn? function function to run on pick
----@field group_id? string id of group if part of group
----@field description? string description
----@field description_var? reward_description variable for description
----@field description2? string additional description for clarifying things, second line in gray
----@field description2_var? reward_description variable for description
----@field ui_icon? string path to icon
----@field probability? number|fun():number should be between 0 and 1
----@field max? number max number of reward that you can pick
----@field custom_check? function custom check to perform before adding to reward deck, should return boolean.<br>True - add to deck, false - don't add
----@field limit_before? string don't spawn this reward before this reward was hit it's max
----@field sound? ml_sound see sounds
----@field no_sound? boolean if set to true no sound will be played
----@field min_level? number if set will not appear before this level
+---@class (exact) ml_reward_border
+---@field [1] number red
+---@field [2] number green
+---@field [3] number blue
+---@field [4] number alpha
+
+---@class ml_reward
+---@field id string A unique identifier for the reward.
+---@field ui_name string The name of the reward as displayed in the game UI.
+---@field fn function A function to run when the reward is picked.
+---@field description? string A brief description of the reward.
+---@field description_var? reward_description A variable for dynamic descriptions.
+---@field description2? string An additional, clarifying description (usually displayed as a second line in gray).
+---@field description2_var? reward_description A variable for the second description line.
+---@field ui_icon? string The file path to the reward's icon.
+---@field border_color? ml_reward_border Optional parameter for rarity outline color (would overwrite defaults)
+---@field group_id? string If part of a group, this is the group’s identifier.
+---@field probability? number|fun():number The likelihood of the reward appearing (should be between 0 and 1, can also be a function).
+---@field max? number The maximum number of times this reward can be picked.
+---@field min_level? number The minimum level at which this reward becomes available.
+---@field custom_check? fun():boolean A custom check function to determine if the reward should be added to the deck (returns `true` to add, `false` otherwise).
+---@field limit_before? string A string indicating a reward that must reach its maximum before this one can appear.
+---@field sound? ml_sound A reference to a sound to be played when the reward is picked.
+---@field no_sound? boolean Set to `true` to prevent sound from playing.
 
 ---@alias ml_rewards ml_reward[]
 

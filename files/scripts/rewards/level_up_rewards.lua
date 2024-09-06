@@ -317,7 +317,7 @@ local reward_list = {
 		probability = 0.3,
 		custom_check = function()
 			local comp_id = components:get_world_state_component()
-			if not comp_id then return end
+			if not comp_id then return false end
 			return ComponentGetValue2(comp_id, "global_genome_relations_modifier") < 100
 		end,
 		fn = function()
@@ -334,7 +334,7 @@ local reward_list = {
 		probability = 0.3,
 		custom_check = function()
 			local comp_id = components:get_world_state_component()
-			if not comp_id then return end
+			if not comp_id then return false end
 			return ComponentGetValue2(comp_id, "global_genome_relations_modifier") > -100
 		end,
 		fn = function()

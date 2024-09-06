@@ -101,8 +101,9 @@ function LU_debug:DrawDebugWindow()
 		self:Text(0, y + 23 - self.scroll.y, string.rep("_", 60))
 		y = y + 13 + distance_between
 		x = 3
+		distance_between = 30
 		for _, reward in self:orderedPairs(ML.rewards_deck.reward_data) do
-			if x + distance_between / 2 > self.const.width then
+			if x + distance_between > self.const.width then
 				x = 3
 				y = y + distance_between
 			end
@@ -111,13 +112,14 @@ function LU_debug:DrawDebugWindow()
 			end
 			self:Text(x, y - self.scroll.y, "")
 			local prev = self:GetPrevious()
+			self:DrawRewardRarity(x - 3, y - 3 - self.scroll.y, self.const.z + 4, reward.border_color)
 			self:ForceFocusable()
-			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward, self.const.ui_9p_reward_hl)
+			self:Draw9Piece(prev.x, prev.y, self.const.z, 18, 18, self.const.ui_9p_reward, self.const.ui_9p_reward_hl)
 			prev = self:GetPrevious()
 			if not prev.hovered then
-				self:ColorGray()
+				-- self:ColorGray()
 			end
-			self:Image(x, y - self.scroll.y, reward.ui_icon)
+			self:Image(x + 1, y + 1 - self.scroll.y, reward.ui_icon)
 			if self:ElementIsVisible(y, distance_between) then
 				prev = self:GetPrevious()
 				if prev.hovered then
@@ -177,7 +179,7 @@ end
 
 function LU_debug:DrawDebugMenu()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x - 1, self.data.y, self.const.width + 2, self.data.scrollbox_height, self.const.z + 1,
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.scrollbox_height, self.const.z + 5,
 		self.const.ui_9piece_gray,
 		self.DrawDebugWindow)
 end

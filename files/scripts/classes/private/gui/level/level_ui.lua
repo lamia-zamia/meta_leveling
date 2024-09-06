@@ -156,6 +156,20 @@ function LU:orderedPairs(tbl)
 	return iter, tbl
 end
 
+---Draws reward rarity glow
+---@private
+---@param x number
+---@param y number
+---@param z number
+---@param color ml_reward_border
+function LU:DrawRewardRarity(x, y, z, color)
+	self:AddOptionForNext(2)
+	self:SetZ(z)
+	local r, g, b, a = unpack(color)
+	self:Color(r, g, b)
+	self:Image(x, y, "mods/meta_leveling/files/gfx/ui/reward_glow.png", a)
+end
+
 -- ############################################
 -- ############		MAIN MENU		###########
 -- ############################################
