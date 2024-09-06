@@ -22,7 +22,7 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		probability = 0.6,
-		max = 5,
+		max = 3,
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
@@ -40,13 +40,13 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better" },
-		probability = 0.6,
-		max = 5,
+		probability = 0.49,
+		max = 3,
 		limit_before = "pickup_spawn_chest1",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
-			if (rnd >= 1800) then
+			if (rnd >= 1900) then
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
 			else
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
@@ -60,12 +60,52 @@ local rewards = {
 		description = "$ml_spawn_chest_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better", "!" },
-		probability = 0.6,
+		probability = 0.29,
+		max = 3,
 		limit_before = "pickup_spawn_chest2",
 		fn = function()
 			ML.utils:random_seed()
 			local rnd = Random(1, 2000)
-			if (rnd >= 1500) then
+			if (rnd >= 1700) then
+				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
+			else
+				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
+			end
+		end
+	},
+	{
+		id = "pickup_spawn_chest4",
+		group_id = "pickup_spawn_chest",
+		ui_name = "$ml_spawn_chest",
+		description = "$ml_spawn_chest_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
+		description_var = { "$ml_but_better", "!!" },
+		probability = 0.09,
+		max = 3,
+		limit_before = "pickup_spawn_chest3",
+		fn = function()
+			ML.utils:random_seed()
+			local rnd = Random(1, 2000)
+			if (rnd >= 1600) then
+				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
+			else
+				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
+			end
+		end
+	},
+	{
+		id = "pickup_spawn_chest5",
+		group_id = "pickup_spawn_chest",
+		ui_name = "$ml_spawn_chest",
+		description = "$ml_spawn_chest_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
+		description_var = { "$ml_but_better", "!!!" },
+		probability = 0.029,
+		limit_before = "pickup_spawn_chest4",
+		fn = function()
+			ML.utils:random_seed()
+			local rnd = Random(1, 2000)
+			if (rnd >= 1000) then
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
 			else
 				ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
@@ -80,7 +120,8 @@ local rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/spawn_chest.png",
 		description_var = { "$ml_but_better", "?" },
 		max = 1,
-		probability = 0.2,
+		probability = 0.5,
+		limit_before = "pickup_spawn_chest1",
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/chest_leggy.xml")
 		end
