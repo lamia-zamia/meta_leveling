@@ -3,17 +3,25 @@ local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.l
 local waters = dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua")
 local T = GameTextGetTranslatedOrNot
 
-local function not_visible(entity)
-	local offset = 20
+---Check if the entity is visible
+---@param entity entity_id
+---@return boolean
+local function is_entity_visible(entity)
 	local cam_x, cam_y, cam_w, cam_h = GameGetCameraBounds()
 	local ent_x, ent_y = EntityGetTransform(entity)
-	if ent_x + offset < cam_x or ent_x - offset > cam_x + cam_w then return true end
-	if ent_y + offset < cam_y or ent_y - offset > cam_y + cam_h then return true end
-	local fog = GameGetFogOfWarBilinear(ent_x, ent_y)
-	if fog > 230 then return true end
-	return false
+
+	-- Offset to account for some boundary around the camera
+	local offset = 20
+	if ent_x + offset < cam_x or ent_x - offset > cam_x + cam_w then return false end
+	if ent_y + offset < cam_y or ent_y - offset > cam_y + cam_h then return false end
+
+	-- Check if the entity is covered by fog
+	return GameGetFogOfWarBilinear(ent_x, ent_y) <= 230
 end
 
+---Check if the damage was done by water
+---@param damage_message string
+---@return boolean
 local function damage_done_by_water(damage_message)
 	for _, water in ipairs(waters) do
 		local text = GameTextGet("$damage_frommaterial", T(water))
@@ -35,29 +43,48 @@ damage_received = script_damage_received
 ---@type script_death
 local script_death = function(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
+
+	-- Return if entity belongs to the player's herd
 	if MLP.get:is_player_herd(died_entity) then return end
+
+	-- Calculate base experience from entity's max HP
 	local exp = MLP.exp:convert_max_hp_to_exp(died_entity)
-	if MLP.get:entity_has_tag(died_entity, "boss") then exp = exp * 2 end
-	local message = nil
 	local died_name = T(EntityGetName(died_entity))
+
+	-- Check for boss tag to double the experience
+	if MLP.get:entity_has_tag(died_entity, "boss") then exp = exp * 2 end
+
+	local current_frame = GameGetFrameNum()
+	local last_damage_by_player = GetValueInteger("ML_damaged_by_player", -900)
+	local message = nil
+
 	-- ######################### player kills ##########################
-	if GameGetFrameNum() - GetValueInteger("ML_damaged_by_player", -900) < 180 then
+	if current_frame - last_damage_by_player < 180 then
+		if damage_type_bit_field == 1 then exp = exp * 2 end -- Kicks
 		message = T("$ml_killed") .. " : " .. died_name .. ", " .. T("$ml_gained_xp") .. ": "
 	else
-		if not_visible(died_entity) then return end
+		-- Return if entity is off-screen
+		if not is_entity_visible(died_entity) then return end
+
 		local responsible_name = EntityGetName(entity_thats_responsible)
+
 		-- ######################### killed by someone ##########################
 		if responsible_name then
-			local multiplier = MLP.get:global_number(MLP.const.globals.exp_betray, 0)
-			if multiplier == 0 then return end
-			exp = exp * multiplier
-			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
-				.. T(responsible_name) .. ", " .. T("$ml_gained_xp") .. ": "
-		else -- ######################### trick kills ##########################
+			local betrayal_multiplier = MLP.get:global_number(MLP.const.globals.exp_betray, 0)
+			if betrayal_multiplier == 0 then return end
+
+			exp = exp * betrayal_multiplier
+			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") ..
+				": " .. responsible_name .. ", " .. T("$ml_gained_xp") .. ": "
+		else
+			-- ######################### trick kills ##########################
 			local cause = T(damage_message)
 			local multiplier = 0.25 + MLP.get:global_number(MLP.const.globals.exp_trick, 0)
-			if damage_message == "$damage_water" then multiplier = multiplier + 0.5 end
-			if damage_type_bit_field == 32 and damage_done_by_water(damage_message) then multiplier = multiplier + 0.5 end
+
+			-- Increase multiplier if water is involved in the kill
+			if damage_message == "$damage_water" or (damage_type_bit_field == 32 and damage_done_by_water(damage_message)) then
+				multiplier = multiplier + 0.5
+			end
 
 			exp = exp * multiplier
 			message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
