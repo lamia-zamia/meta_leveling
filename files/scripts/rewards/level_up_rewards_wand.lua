@@ -1,5 +1,16 @@
 local EZWand = dofile("mods/meta_leveling/files/scripts/lib/EZWand.lua")
 
+local function refresh_wand_if_in_inventory(wand_id)
+	-- Refresh the wand if it's being held by something
+	local parent = EntityGetRootEntity(wand_id)
+	local inventory2_comp = EntityGetFirstComponentIncludingDisabled(parent, "Inventory2Component")
+	if inventory2_comp then
+		ComponentSetValue2(inventory2_comp, "mDontLogNextItemEquip", true)
+		ComponentSetValue2(inventory2_comp, "mForceRefresh", true)
+		ComponentSetValue2(inventory2_comp, "mActualActiveItem", 0)
+	end
+end
+
 ---@type ml_rewards
 local wand_rewards = {
 	{
@@ -14,7 +25,8 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.castDelay = Randomf(wand.castDelay * 0.9 - 5, wand.castDelay - 2)
-			wand.rechargeTime = Randomf(wand.rechargeTime * 0.9 - 5, wand.rechargeTime -2)
+			wand.rechargeTime = Randomf(wand.rechargeTime * 0.9 - 5, wand.rechargeTime - 2)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -29,6 +41,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.castDelay = Randomf(wand.castDelay * 0.80 - 5, wand.castDelay - 2)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -43,6 +56,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.rechargeTime = Randomf(wand.rechargeTime * 0.80 - 5, wand.rechargeTime - 2)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -57,6 +71,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.manaMax = wand.manaMax + Random(5, 10) * Random(5, 20)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -71,6 +86,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.manaChargeSpeed = wand.manaChargeSpeed + Random(1, ML:get_level() * 5) + 10
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -86,6 +102,7 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.manaMax = wand.manaMax + Random(2, 5) * Random(2, 10)
 			wand.manaChargeSpeed = wand.manaChargeSpeed + Random(1, ML:get_level() * 3) + 5
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -106,6 +123,7 @@ local wand_rewards = {
 			local old_capacity = wand.capacity
 			local new_capacity = math.min(26, wand.capacity + Random(1, 3))
 			wand.capacity = math.max(old_capacity, new_capacity)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -122,6 +140,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.capacity = wand.capacity + Random(1, 3)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -135,6 +154,7 @@ local wand_rewards = {
 			if not wand_id then return end
 			local wand = EZWand(wand_id)
 			wand.shuffle = false
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 	{
@@ -149,6 +169,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			ML.utils:random_seed()
 			wand.spread = wand.spread - Random(2, 10)
+			refresh_wand_if_in_inventory(wand_id)
 		end
 	},
 }
