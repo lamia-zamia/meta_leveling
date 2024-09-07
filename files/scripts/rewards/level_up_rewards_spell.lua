@@ -466,8 +466,8 @@ local reward_spells = {
 	},
 }
 
-for _, reward in ipairs(reward_spells) do
-	reward.sound = MLP.const.sounds.chest
+for i = 1, #reward_spells do
+	reward_spells[i].sound = MLP.const.sounds.chest
 end
 
 ML.rewards_deck:add_rewards(reward_spells)
