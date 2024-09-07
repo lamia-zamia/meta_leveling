@@ -34,7 +34,7 @@ local meta = {
 
 ---Apply effect
 ---@private
----@param point_id string
+---@param point_id progress_id
 ---@param fn progress_fn
 ---@param count number
 function meta:apply_effect(point_id, fn, count)
@@ -47,21 +47,21 @@ end
 
 ---Apply setting
 ---@private
----@param point_id progress_id
----@return number count
-function meta:apply_setting(point_id)
-	local id = "meta_leveling.progress_" .. point_id
-	local next_value = tonumber(ModSettingGetNextValue(id)) or 0
-	ModSettingSet(id, next_value)
-	return next_value
+function meta:apply_settings_if_new_run()
+	if SessionNumbersGetValue("is_biome_map_initialized") ~= "0" then print("not new run") return end
+	for _, point in ipairs(self.progress_list) do
+		local id = "meta_leveling.progress_" .. point.id
+		local next_value = tonumber(ModSettingGetNextValue(id)) or 0
+		ModSettingSet(id, next_value)
+	end
 end
 
 ---Apply settings and bonuses if new run
----@private
 function meta:apply_if_new_run()
 	if GameHasFlagRun(self.flag) then return end
-	for _, point in ipairs(self.progress_list) do
-		local count = self:apply_setting(point.id --[[@as progress_id]])
+	for _, point in ipairs(self.progress) do
+		-- local count = self:apply_setting(point.id --[[@as progress_id]])
+		local count = tonumber(ModSettingGet("meta_leveling.progress_" .. point.id)) or 0
 		if count > 0 then self:apply_effect(point.id, point.fn, count) end
 	end
 	GameAddFlagRun(self.flag)
@@ -85,7 +85,7 @@ end
 ---Initialize progress list
 function meta:initialize()
 	dofile_once("mods/meta_leveling/files/scripts/progress/progress_appends.lua")
-	self:apply_if_new_run()
+	self:apply_settings_if_new_run()
 	for _, point in ipairs(self.progress_list) do
 		self:initialize_point(point --[[@as ml_progress_point_run]])
 	end

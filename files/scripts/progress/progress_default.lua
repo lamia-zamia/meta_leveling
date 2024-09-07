@@ -63,6 +63,18 @@ local progress = {
 		price_multiplier = 1.5,
 	},
 	{
+		id = "exp_slower_curve",
+		ui_name = "$ml_meta_exp_slower_curve",
+		description = "$ml_meta_exp_slower_curve_tp",
+		fn = function(count) end, --doesn't need
+		applied_bonus = function(count)
+			return "-" .. 0.001 * count .. "%"
+		end,
+		stack = 10,
+		price = 100,
+		price_multiplier = 1.5,
+	},
+	{
 		id = "movement_speed",
 		ui_name = "$perk_movement_faster",
 		description = "$perkdesc_movement_faster",

@@ -1,5 +1,6 @@
 local const_increment = 3
-
+local progress_exp_slower_curve = ModSettingGet("meta_leveling.progress_exp_slower_curve") or 0
+local multiplier = 1.1 - 0.001 * progress_exp_slower_curve
 ---Level curve for experience, level_curve[level] = experience
 ---@class ml_level_curve:table
 ---@field [number] number amount of experience needed
@@ -13,7 +14,7 @@ local function make_number_round(number)
 end
 
 local function next_level(level)
-	local new_exp = (level + const_increment) * 1.1
+	local new_exp = (level + const_increment) * multiplier
 	return make_number_round(new_exp)
 end
 

@@ -13,17 +13,16 @@
 ---@field pending_levels number
 ---@field next_exp number
 local ML = {
+	meta = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta.lua"),
 	gui = false,
 	gui_em_exit = true,
 	player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua"),
-	level_curve = dofile_once("mods/meta_leveling/files/scripts/classes/private/level_curve.lua"),
 	rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua"),
 	rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua"),
 	utils = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta_leveling_utils.lua"),
 	colors = dofile_once("mods/meta_leveling/files/scripts/classes/private/colors.lua"),
 	entity_scanner = dofile_once("mods/meta_leveling/files/scripts/classes/private/entity_scanner.lua"),
 	guns = dofile_once("mods/meta_leveling/files/scripts/classes/private/gun_parser.lua"),
-	meta = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta.lua"),
 	pending_levels = 0,
 	next_exp = 0,
 }
@@ -61,6 +60,13 @@ function ML:level_up()
 	self:UpdateCommonParameters()
 end
 
+function ML:OnMagicNumbersAndWorldSeedInitialized()
+	self.meta:initialize()
+	self.level_curve = dofile_once("mods/meta_leveling/files/scripts/classes/private/level_curve.lua")
+	ML.guns:parse_actions()
+	dofile_once("mods/meta_leveling/files/scripts/on_init/generate_icons.lua")
+end
+
 function ML:UpdateCommonParameters()
 	self.entity_scanner:check_entities()
 	self.player:update()
@@ -69,13 +75,12 @@ end
 
 function ML:StartUp()
 	self.next_exp = self:get_next()
-	-- self.guns:parse_actions()
 	self.rewards_deck:GatherData()
 	self.rewards_deck:get_reroll_count()
 end
 
 function ML:OnSpawn()
-	self.meta:initialize()
+	self.meta:apply_if_new_run()
 end
 
 ---Gets the experience points required for the next level.
