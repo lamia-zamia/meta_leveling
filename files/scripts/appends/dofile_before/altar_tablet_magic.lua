@@ -8,7 +8,8 @@ function meta_leveling_do_tablet_exp()
 	for _, variablestorage in ipairs(variablestorages) do
 		if ComponentGetValue2(variablestorage, "name") == "tablets_eaten" then
 			local count = tonumber(ComponentGetValue2(variablestorage, "value_int")) or 1
-			MLP:AddExpGlobal(15 * count, entity_id, message .. ": ")
+			local player_id = EntityGetWithTag("player_unit")[1]
+			MLP:AddExpGlobal(15 * count, player_id, message .. ": ")
 		end
 	end
 end
@@ -30,8 +31,8 @@ AddFlagPersistent = function(key)
 		misc_mimic_potion_rain = 200
 	}
 	if values[key] then
-		local entity_id = EntityGetWithTag("player_unit")[1]
-		MLP:AddExpGlobal(values[key], entity_id, message .. ": ")
+		local player_id = EntityGetWithTag("player_unit")[1]
+		MLP:AddExpGlobal(values[key], player_id, message .. ": ")
 	end
 
 	AddFlagPersistent_ML_Old(key)
