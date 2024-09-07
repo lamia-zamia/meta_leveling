@@ -71,8 +71,8 @@ end
 ---Adds an array of rewards to the reward list.
 ---@param table ml_rewards
 function rewards_deck:add_rewards(table)
-	for _, reward in ipairs(table) do
-		self:add_reward(reward)
+	for i = 1, #table do
+		self:add_reward(table[i])
 	end
 end
 
