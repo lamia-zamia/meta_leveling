@@ -15,7 +15,9 @@ local append_list = {
 	["data/scripts/magic/altar_tablet_magic.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/altar_tablet_magic.lua",
 	["data/scripts/buildings/meditation_cube.lua"] =
-	"mods/meta_leveling/files/scripts/appends/dofile_before/meditation_cube.lua"
+	"mods/meta_leveling/files/scripts/appends/dofile_before/meditation_cube.lua",
+	["data/scripts/buildings/receptacle_oil.lua"] =
+	"mods/meta_leveling/files/scripts/appends/dofile_before/receptacle_oil.lua"
 }
 
 for original_file, append_file in pairs(append_list) do
