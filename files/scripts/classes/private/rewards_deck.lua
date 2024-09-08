@@ -1,3 +1,6 @@
+---@type ml_error_printer
+local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_printer.lua")
+
 ---@class ml_reward_id
 
 ---@class (exact) ml_single_reward_data:ml_reward
@@ -54,14 +57,6 @@ local rewards_deck = {
 	reroll_count = 1,
 }
 
----Logs an error message with an optional custom text.
----@param text? string
----@private
-function rewards_deck:function_error(text)
-	print("\27[31m[Meta Leveling Error]\27[0m")
-	print("[Meta Leveling]: error - " .. (text or "unknown error"))
-end
-
 ---Adds a single reward to the reward list.
 ---@param table ml_reward
 function rewards_deck:add_reward(table)
@@ -82,11 +77,11 @@ function rewards_deck:ValidateData()
 	local reward_count = 0
 	for id, reward in pairs(self.reward_data) do
 		if reward.limit_before and not self.reward_data[reward.limit_before] then
-			self:function_error("invalid limit_before in reward: " .. id)
+			err:print("invalid limit_before in reward: " .. id)
 			self.reward_data[id].limit_before = nil
 		end
 		if reward.custom_check and type(reward.custom_check()) ~= "boolean" then
-			self:function_error("invalid custom_check in reward: " .. id)
+			err:print("invalid custom_check in reward: " .. id)
 			self.reward_data[id].custom_check = nil
 		end
 		reward_count = reward_count + 1
@@ -107,7 +102,7 @@ function rewards_deck:GatherData()
 
 	for _, reward in ipairs(self.reward_definition_list) do
 		if self.reward_data[reward.id] then
-			self:function_error("duplicate reward id " .. reward.id)
+			err:print("duplicate reward id " .. reward.id)
 		else
 			self:initialize_reward_data(reward)
 		end
@@ -132,7 +127,7 @@ function rewards_deck:initialize_reward_data(reward)
 		ui_icon = reward.ui_icon or self.default_icon,
 		probability = self:set_probability(reward.probability),
 		max = reward.max or 1280,
-		fn = reward.fn or self.function_error,
+		fn = reward.fn or err.print,
 		pick_count = self:get_specific_reward_pickup_amount(reward_id),
 		limit_before = reward.limit_before or nil,
 		custom_check = reward.custom_check or nil,
@@ -375,7 +370,7 @@ function rewards_deck:pick_reward(draw_id)
 		rewards_deck:play_sound(draw_id)
 		rewards_deck:add_specific_reward_pickup_amount(draw_id)
 	else
-		self:function_error("function of " .. draw_id .. " throw an error, error: " .. err)
+		err:print("function of " .. draw_id .. " throw an error, error: " .. err)
 	end
 end
 

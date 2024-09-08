@@ -1,3 +1,6 @@
+---@type ml_error_printer
+local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_printer.lua")
+
 ---@class (exact) ml_gun_parser
 ---@field trigger_hit_world string[]
 ---@field trigger_timer string[]
@@ -94,7 +97,7 @@ local function parse_action(action)
 	end
 	if ignore_action(action.id) then return end
 	if action.type == 0 then
-		local success, err = pcall(action.action)
+		local success, error = pcall(action.action)
 		if success then
 			if buffer.type then
 				guns_insert(buffer.type, action_id)
@@ -102,8 +105,8 @@ local function parse_action(action)
 				return
 			end
 		elseif ModIsEnabled("component-explorer") then
-			print("[Gun Parser Error] during parsing action " .. action_id)
-			print(err)
+			err:print("[Gun Parser Error] during parsing action " .. action_id)
+			print(error)
 		end
 	end
 	categorizeAction(action)
