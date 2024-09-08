@@ -43,7 +43,7 @@ local meta = {
 function meta:apply_effect(point_id, fn, count)
 	local success, error = pcall(fn, count)
 	if not success then
-		err:print("[Meta Leveling Error]: error during applying an effect for " .. point_id)
+		err:print("error during applying an effect for " .. point_id)
 		print(error)
 	end
 end
