@@ -108,7 +108,7 @@ function LU_debug:DrawDebugWindow()
 				y = y + distance_between
 			end
 			if self.data.scrollbox_height < y and self.data.scrollbox_height < self.const.height_max then
-				self.data.scrollbox_height = self.data.scrollbox_height + distance_between
+				self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
 			end
 			self:Text(x, y - self.scroll.y, "")
 			local prev = self:GetPrevious()
@@ -152,7 +152,7 @@ function LU_debug:DrawDebugWindow()
 				y = y + distance_between
 			end
 			if self.data.scrollbox_height < y and self.data.scrollbox_height < self.const.height_max then
-				self.data.scrollbox_height = self.data.scrollbox_height + distance_between
+				self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
 			end
 			self:Text(x, y - self.scroll.y, "")
 			local prev = self:GetPrevious()

@@ -298,7 +298,7 @@ function LU_meta:DrawMetaWindow()
 	for i, progress in ipairs(ML.meta.progress) do
 		self.meta.y = self.meta.y + self.meta.distance
 		if self.data.scrollbox_height < self.meta.y + self.meta.distance and self.data.scrollbox_height < self.const.height_max then
-			self.data.scrollbox_height = self.data.scrollbox_height + self.meta.distance
+			self.data.scrollbox_height = math.min(self.meta.y + self.meta.distance + 1, self.const.height_max)
 		end
 		self:DrawPointProgressElement(i, progress)
 	end

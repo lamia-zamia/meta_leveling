@@ -35,7 +35,7 @@ function LU_current:DrawCurrentRewardsItems()
 				y = y + distance_between
 			end
 			if self.data.scrollbox_height < y and self.data.scrollbox_height < self.const.height_max then
-				self.data.scrollbox_height = self.data.scrollbox_height + distance_between
+				self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
 			end
 			self:Image(x, y - self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
 			local prev = self:GetPrevious()
