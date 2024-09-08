@@ -1,3 +1,6 @@
+---@type ml_error_printer
+local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_printer.lua")
+
 ---@class (exact) ml_meta
 ---@field private progress_list ml_progress_point[]
 ---@field private flag string
@@ -38,17 +41,17 @@ local meta = {
 ---@param fn progress_fn
 ---@param count number
 function meta:apply_effect(point_id, fn, count)
-	local success, err = pcall(fn, count)
+	local success, error = pcall(fn, count)
 	if not success then
-		print("[Meta Leveling Error]: error during applying an effect for " .. point_id)
-		print(err)
+		err:print("[Meta Leveling Error]: error during applying an effect for " .. point_id)
+		print(error)
 	end
 end
 
 ---Apply setting
 ---@private
 function meta:apply_settings_if_new_run()
-	if SessionNumbersGetValue("is_biome_map_initialized") ~= "0" then print("not new run") return end
+	if SessionNumbersGetValue("is_biome_map_initialized") ~= "0" then return end
 	for _, point in ipairs(self.progress_list) do
 		local id = "meta_leveling.progress_" .. point.id
 		local next_value = tonumber(ModSettingGetNextValue(id)) or 0
