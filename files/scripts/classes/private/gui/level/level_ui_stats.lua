@@ -1,17 +1,56 @@
 ---@class level_ui
-local LU_stats = {}
+local LU_stats = {
+	stats_longest = 0
+}
 
-function LU_stats:DrawStatsWindow()
-	self:Text(0, 0, "Nope, still WIP")
+function LU_stats:DrawLine(x, y, width, height)
 	self:ColorGray()
-	self:Text(0, 8, "(i have no idea what to put here tbh)")
+	self:Image(x, y, self.c.px, 0.5, width, height)
 end
 
-function LU_stats:DrawStatsMenu()
+function LU_stats:DrawBorders()
+	self:DrawLine(0, 0, self.const.width)
+	self:DrawLine(0, 0, 1, self.const.height_max)
+	self:DrawLine(self.const.width - 1, 0, 1, self.const.height_max)
+end
+
+function LU_stats:Stats_DrawWindow()
+	local x = 3
+	local y = 0
+	local distance_between = 10
+	local x_offset = x + self.stats_longest + 10
+	self:AddOption(2)
+	self:DrawLine(x_offset - 3, 0, 1, self.const.height_max)
+	self:DrawBorders()
+	for i = 1, #ML.stats.list do
+		local stat = ML.stats.list[i]
+		if stat.check_before_show and not stat.check_before_show() then goto continue end
+		if self.data.scrollbox_height < y + distance_between and self.data.scrollbox_height < self.const.height_max then
+			self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
+		end
+		self:Text(x, y - self.scroll.y, self:Locale(stat.ui_name) .. ":", "data/fonts/font_pixel_noshadow.xml")
+		self:Text(x_offset, y - self.scroll.y, self:Locale(stat.value()), "data/fonts/font_pixel_noshadow.xml")
+		y = y + distance_between
+		self:DrawLine(0, y, self.const.width, 1)
+		::continue::
+	end
+	self:Text(0, y, "") -- set height for scrollbar, 9piece works weird
+	self:RemoveOption(2)
+end
+
+function LU_stats:Stats_DrawMenu()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.scrollbox_height, self.const.z + 1,
 		self.const.ui_9piece_gray,
-		self.DrawStatsWindow)
+		self.Stats_DrawWindow)
+end
+
+function LU_stats:Stats_FindLongest()
+	local longest = 0
+	for i = 1, #ML.stats.list do
+		longest = math.max(longest, self:GetTextDimension(self:Locale(ML.stats.list[i].ui_name)))
+	end
+	self.stats_longest = longest
 end
 
 return LU_stats

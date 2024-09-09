@@ -164,3 +164,5 @@ ml_spell_glimmers_tp,Spawn a random glimmer,Создаёт случайное с
 ml_polymorph_immunity,Polymorph immunity,Иммунитет полиморфизму,,,,,,,,,,
 ml_polymorph_immunity_tp,You will be immune to polymorph,Вы будете имунны к полиморфизму,,,,,,,,,,
 ml_polymorph_immunity_tp2,"Be careful, you may not be able to die","Будьте осторожны, возможно вы не сможете умереть",,,,,,,,,,
+ml_stats_exp_multiplier,Experience multiplier,Множитель опыта,,,,,,,,,,
+ml_stats_per_minute,per minute,в минуту,,,,,,,,,,

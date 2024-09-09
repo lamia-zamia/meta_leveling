@@ -225,7 +225,7 @@ function LU:DrawMenuButtons()
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
 		self.DrawCurrentRewards)
 
-	self:AddMenuSelector(x_off(), y, "Stats", "heh", self.DrawStatsMenu)
+	self:AddMenuSelector(x_off(), y, "Stats", "heh", self.Stats_DrawMenu)
 
 	self:AddMenuSelector(x_off(), y, "Meta", "mheh", self.DrawMetaMenu)
 
@@ -304,6 +304,7 @@ function LU:GetSetting()
 	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
 	self.data.debug = ModIsEnabled("component-explorer")
 	self:CalculateProgressOffset()
+	self:Stats_FindLongest()
 end
 
 ---main logic
