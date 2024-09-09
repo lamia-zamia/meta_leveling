@@ -672,6 +672,13 @@ function ui_class:AddOptionForNext(option)
 	GuiOptionsAddForNextWidget(self.gui, option)
 end
 
+---remove option for all next widgets
+---@protected
+---@param option gui_options_number
+function ui_class:RemoveOption(option)
+	GuiOptionsRemove(self.gui, option)
+end
+
 -- ############################################
 -- ############		IMAGES		###############
 -- ############################################
