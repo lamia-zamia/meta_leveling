@@ -45,27 +45,30 @@ end
 ---@private
 ---@param button_y number
 function LU_level_up:DrawButtonsCentered(button_y)
-	local texts = {
-		self:Locale("$ml_skip"),
-		self:Locale("$ml_close"),
-		self:Locale("$ml_reroll")
-	}
-	local longest = self:GetLongestText(texts, "LevelUpButtons")
-	local total_width = #texts * (longest + 10) - 10
+	local skip = self:Locale("$ml_skip")
+	local close = self:Locale("$ml_close")
+	local reroll = self:Locale("$ml_reroll")
+	local reroll_count = ML.rewards_deck.reroll_count
+	if reroll_count > 0 then
+		reroll = reroll .. " [" .. reroll_count .. "]"
+	end
+
+	local longest = self:GetLongestText({ skip, close, reroll }, "LevelUpButtons")
+	local total_width = 3 * (longest + 10) - 10
 	local button_x = self:CalculateCenterInScreen(total_width, self.const.reward_box_size)
 
 	local function add_button(name, tp, fn, check)
 		self:ForceFocusable()
 		if check then
-			self:Draw9Piece(button_x, button_y, self.const.z + 1, longest, 10, self.const.ui_9p_button,
+			self:Draw9Piece(button_x - 1, button_y, self.const.z + 1, longest, 10, self.const.ui_9p_button,
 				self.const.ui_9p_button_hl)
 		else
 			fn = nil
-			self:Draw9Piece(button_x, button_y, self.const.z + 1, longest, 10, self.const.ui_9p_button)
+			self:Draw9Piece(button_x - 1, button_y, self.const.z + 1, longest, 10, self.const.ui_9p_button)
 			self:ColorGray()
 		end
 		local prev = self:GetPrevious()
-		self:TextCentered(button_x, button_y, self:Locale(name), longest)
+		self:TextCentered(button_x, button_y, name, longest)
 		local tp_offset = math.abs(self:GetTextDimension(tp) - longest - 1.5) / -2
 		if prev.hovered then
 			self:ShowTooltip(prev.x + tp_offset, prev.y + prev.h * 2.2, tp)
@@ -76,10 +79,10 @@ function LU_level_up:DrawButtonsCentered(button_y)
 		button_x = button_x + longest + 10
 	end
 
-	add_button("$ml_skip", self:Locale("$ml_skip_tp"), self.SkipReward, true)
-	add_button("$ml_reroll", self:GameTextGet("$ml_reroll_tp", tostring(ML.rewards_deck.reroll_count)), self.Reroll,
-		ML.rewards_deck.reroll_count > 0)
-	add_button("$ml_close", self:Locale("$ml_close_tp"), self.CloseMenu, true)
+	add_button(skip, self:Locale("$ml_skip_tp"), self.SkipReward, true)
+	add_button(reroll, self:GameTextGet("$ml_reroll_tp", tostring(reroll_count)), self.Reroll,
+		reroll_count > 0)
+	add_button(close, self:Locale("$ml_close_tp"), self.CloseMenu, true)
 end
 
 ---Draw rewards in level up menu
