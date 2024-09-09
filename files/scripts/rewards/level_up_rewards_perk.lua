@@ -1,23 +1,6 @@
 ---@type ml_rewards
 local rewards_perk = {
 	{
-		id = "perk_extra_perk",
-		ui_name = "$perk_extra_perk",
-		description = "$perkdesc_extra_perk",
-		ui_icon = "data/items_gfx/perks/extra_perk.png",
-		probability = 0.05,
-		no_sound = true,
-		min_level = 5,
-		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("EXTRA_PERK")
-			if pickup_count < 5 then return true end
-			return false
-		end,
-		fn = function()
-			ML.rewards:grant_perk("EXTRA_PERK")
-		end
-	},
-	{
 		id = "perk_perks_lottery",
 		ui_name = "$perk_perks_lottery",
 		description = "$perkdesc_perks_lottery",

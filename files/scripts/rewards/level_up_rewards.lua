@@ -431,7 +431,19 @@ local reward_list = {
 		fn = function()
 			EntityAddTag(ML.player.id, "polymorphable_NOT")
 		end
-	}
+	},
+	{
+		id = "extra_perk",
+		ui_name = "$ml_slightly_more_perks",
+		description = "$ml_slightly_more_perks_tp",
+		ui_icon = "data/items_gfx/perks/extra_perk.png",
+		probability = 0.05,
+		min_level = 5,
+		max = 4,
+		fn = function()
+			MLP.set:add_to_global_number("EXTRA_PERK_IN_HM", 0.5, 0)
+		end
+	},
 }
 
 return reward_list
