@@ -441,7 +441,7 @@ local reward_list = {
 		min_level = 5,
 		max = 4,
 		fn = function()
-			MLP.set:add_to_global_number("EXTRA_PERK_IN_HM", 0.5, 0)
+			MLP.set:add_to_global_number("EXTRA_PERK_IN_HM", 1, 0)
 		end
 	},
 }
