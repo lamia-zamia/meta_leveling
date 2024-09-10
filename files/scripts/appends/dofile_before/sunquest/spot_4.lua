@@ -1,5 +1,5 @@
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
-GamePrintImportant_ML_Old = GamePrintImportant
+local GamePrintImportant_ML_Old = GamePrintImportant
 
 ---@param title string
 ---@param description string

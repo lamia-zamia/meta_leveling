@@ -1,6 +1,6 @@
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 
-EntitySetComponentIsEnabled_ML_Old = EntitySetComponentIsEnabled
+local EntitySetComponentIsEnabled_ML_Old = EntitySetComponentIsEnabled
 
 ---@param entity_id entity_id
 ---@param component_id component_id

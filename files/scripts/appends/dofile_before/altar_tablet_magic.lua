@@ -14,7 +14,7 @@ function meta_leveling_do_tablet_exp()
 	end
 end
 
-AddFlagPersistent_ML_Old = AddFlagPersistent
+local AddFlagPersistent_ML_Old = AddFlagPersistent
 
 ---@param key string
 AddFlagPersistent = function(key)
