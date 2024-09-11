@@ -47,11 +47,11 @@ do --helpers
 		return ModSettingGetNextValue("meta_leveling." .. setting_name)
 	end
 
-	---@param id setting_id
+	---@param cat_id setting_id
 	---@return number?
-	function U.get_settings_cat_index(id)
+	function U.get_settings_cat_index(cat_id)
 		for i, setting in ipairs(mod_settings) do
-			if setting.category_id and setting.category_id == id then
+			if setting.category_id and setting.category_id == cat_id then
 				return i
 			end
 		end
@@ -253,8 +253,8 @@ do --gui helpers
 		local format = setting.format or ""
 		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)) .. format)
 		GuiLayoutEnd(gui)
-		local _, _, _, x_end, _, w = GuiGetPreviousWidgetInfo(gui)
-		GuiImageNinePiece(gui, id(), x_start, y_start, x_end - x_start + w, 8, 0, U.empty, U.empty)
+		local _, _, _, x_end, _, t_w = GuiGetPreviousWidgetInfo(gui)
+		GuiImageNinePiece(gui, id(), x_start, y_start, x_end - x_start + t_w, 8, 0, U.empty, U.empty)
 		G.tooltip(gui, setting.id, setting.scope)
 		return value, value_new
 	end
