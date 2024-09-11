@@ -1,7 +1,14 @@
 local game_translation_file = "data/translations/common.csv"
-local mod_translation_file = "mods/meta_leveling/files/translation/translations.csv"
+local mod_translation_files = {
+	"mods/meta_leveling/files/translation/translation_ui.csv",
+	"mods/meta_leveling/files/translation/translation_rewards.csv",
+	"mods/meta_leveling/files/translation/translation_meta.csv",
+}
 local translations = ModTextFileGetContent(game_translation_file)
-local ml_translation = ModTextFileGetContent(mod_translation_file)
+local ml_translation = ""
+for i = 1, #mod_translation_files do
+	ml_translation = ml_translation .. "\n" .. ModTextFileGetContent(mod_translation_files[i])
+end
 local append_translation = nil
 local current_language = GameTextGetTranslatedOrNot("$current_language")
 local custom_languages = {
@@ -42,7 +49,8 @@ local function apply_to_custom_language(csv_column)
 		local locale_key = csv_get_value(line, 1)
 		local custom_language = csv_get_value(line, csv_column)
 		local english = csv_get_value(line, 2)
-		append_translation = append_translation .. locale_key .. "," .. custom_language .. "," .. english .. ",,,,,,,,,,\n"
+		append_translation = append_translation ..
+			locale_key .. "," .. custom_language .. "," .. english .. ",,,,,,,,,,\n"
 	end
 end
 
