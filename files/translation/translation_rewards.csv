@@ -130,3 +130,5 @@ ml_polymorph_immunity_tp,You will be immune to polymorph,Вы будете им�
 ml_polymorph_immunity_tp2,"Be careful, you may not be able to die","Будьте осторожны, возможно вы не сможете умереть",,,,,,,,,,
 ml_slightly_more_perks,Slightly more perks,Слегка больше перков,,,,,,,,,,
 ml_slightly_more_perks_tp,From now on you will find an extra perk in every other Holy Mountain,Теперь вы будете находить дополнительный перк на каждой второйСвятой горе,,,,,,,,,,
+ml_buff_temporary_tp,You will gain $0 effect for $1 seconds,Вы получите эффект $0 на $0 секунд,,,,,,,,,,
+ml_buff_oily,Oil makes you slippery and more cute,Нефть делает вас скользкими и милыми,,,,,,,,,,

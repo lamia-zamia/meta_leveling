@@ -13,6 +13,7 @@
 ---@field pending_levels number
 ---@field next_exp number
 ---@field stats ml_stats
+---@field gameEffect ML_gameEffect_parser
 local ML = {
 	meta = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta.lua"),
 	gui = false,
@@ -26,7 +27,8 @@ local ML = {
 	guns = dofile_once("mods/meta_leveling/files/scripts/classes/private/gun_parser.lua"),
 	pending_levels = 0,
 	next_exp = 0,
-	stats = dofile_once("mods/meta_leveling/files/scripts/classes/private/stats.lua")
+	stats = dofile_once("mods/meta_leveling/files/scripts/classes/private/stats.lua"),
+	gameEffect = dofile_once("mods/meta_leveling/files/scripts/classes/private/gameEffect_parser.lua")
 }
 
 function ML:toggle_ui()
@@ -80,6 +82,7 @@ function ML:StartUp()
 	self.rewards_deck:GatherData()
 	self.rewards_deck:get_reroll_count()
 	self.stats:gather_list()
+	self.gameEffect:parse()
 end
 
 function ML:OnSpawn()
