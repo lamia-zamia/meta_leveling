@@ -364,13 +364,13 @@ end
 ---Executes actions when a reward is picked.
 ---@param draw_id ml_reward_id
 function rewards_deck:pick_reward(draw_id)
-	local success, err = pcall(rewards_deck.reward_data[draw_id].fn)
+	local success, error = pcall(rewards_deck.reward_data[draw_id].fn)
 	if success then
 		rewards_deck:set_draw_index()
 		rewards_deck:play_sound(draw_id)
 		rewards_deck:add_specific_reward_pickup_amount(draw_id)
 	else
-		err:print("function of " .. draw_id .. " throw an error, error: " .. err)
+		err:print("function of " .. draw_id .. " throw an error, error: " .. error)
 	end
 end
 
