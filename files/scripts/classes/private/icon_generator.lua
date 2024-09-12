@@ -27,6 +27,8 @@ local IG = {
 ---@field speed? number
 
 ---Generates colored potion
+---@param path string
+---@param argb integer wang color (argb)
 function IG:make_potion(path, argb)
 	local abrg = self:argb_to_abgr(argb)
 	local source_id = ModImageMakeEditable(self.potion_darkened, 0, 0)
