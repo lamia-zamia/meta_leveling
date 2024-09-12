@@ -98,7 +98,7 @@ local pickups = {
 		id = "pickup_item_stonestone",
 		ui_name = "$item_stonestone",
 		description = "$itemdesc_stonestone",
-		ui_icon = "data/ui_gfx/items/stonestone.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/stonestone.png",
 		probability = 0.1,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/stonestone.xml")
