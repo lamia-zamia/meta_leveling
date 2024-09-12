@@ -13,7 +13,9 @@ local IG = {
 		static_projectile = "mods/meta_leveling/vfs/gfx/static_projectile.png",
 		utility = "mods/meta_leveling/vfs/gfx/utility.png",
 	},
+	potion_darkened = "mods/meta_leveling/vfs/gfx/potion_darkened.png",
 	spell_background_generated = false,
+	potion_darkened_generated = false,
 }
 
 ---@class ml_icon_generator_layers
@@ -23,6 +25,25 @@ local IG = {
 ---@field path string path to file
 ---@field layers ml_icon_generator_layers --layers of png
 ---@field speed? number
+
+---Generates colored potion
+function IG:make_potion(path, argb)
+	local abrg = self:argb_to_abgr(argb)
+	local source_id = ModImageMakeEditable(self.potion_darkened, 0, 0)
+	local dest_id = ModImageMakeEditable(path, 16, 16)
+	for i = 0, 15 do
+		for j = 0, 2 do
+			ModImageSetPixel(dest_id, i, j, ModImageGetPixel(source_id, i, j))
+		end
+		for j = 3, 15 do
+			local color_source = ModImageGetPixel(source_id, i, j)
+			if self:color_has_alhpa(color_source) then
+				local color = self:multiply_colors(abrg, color_source)
+				ModImageSetPixel(dest_id, i, j, color)
+			end
+		end
+	end
+end
 
 ---Generates 16x16 icon
 ---@param config ml_icon_generator_table
@@ -98,6 +119,16 @@ end
 ---@private
 function IG:generate_common_if_not()
 	if not self.spell_background_generated then self:steal_spell_background() end
+	if not self.potion_darkened_generated then
+		local source_id = ModImageMakeEditable("data/ui_gfx/items/potion.png", 16, 16)
+		local dest_id = ModImageMakeEditable(self.potion_darkened, 16, 16)
+		for x = 0, 15 do
+			for y = 0, 15 do
+				local color = ModImageGetPixel(source_id, x, y)
+				ModImageSetPixel(dest_id, x, y, self:darken_color(color, 0.85))
+			end
+		end
+	end
 end
 
 ---Copy background png from game and make them 16x16 instead of 20x20
@@ -186,6 +217,27 @@ function IG:blend_colors(color1, color2)
 	return self:color_abgr_merge(r, g, b, 255)
 end
 
+---Normalize colors
+---@private
+---@param color1 integer
+---@param color2 integer
+---@return integer
+function IG:multiply_colors(color1, color2)
+	local s_r, s_g, s_b, s_a = self:color_abgr_split(color1)
+	local d_r, d_g, d_b, d_a = self:color_abgr_split(color2)
+	return self:color_abgr_merge(s_r * d_r / 255, s_g * d_g / 255, s_b * d_b / 255, 255)
+end
+
+---Darkens color
+---@private
+---@param color integer
+---@param m number
+---@return integer
+function IG:darken_color(color, m)
+	local r, g, b, a = self:color_abgr_split(color)
+	return self:color_abgr_merge(math.ceil(r * m), math.ceil(g * m), math.ceil(b * m), a)
+end
+
 ---Returns true if color's alpha > 0
 ---@private
 ---@param abgr_int integer
@@ -193,6 +245,14 @@ end
 function IG:color_has_alhpa(abgr_int)
 	local _, _, _, alpha = self:color_abgr_split(abgr_int)
 	return alpha > 0
+end
+
+---Converts argb to abgr
+---@param argb integer argb
+---@return integer abgr
+function IG:argb_to_abgr(argb)
+	local b, g, r, a = self:color_abgr_split(argb)
+	return self:color_abgr_merge(r, g, b, a)
 end
 
 IG:generate_common_if_not()
