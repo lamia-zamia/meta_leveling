@@ -233,3 +233,28 @@ end
 for _, icon in ipairs(icons_to_generate) do
 	IG:generate(icon)
 end
+
+local potions_to_generate = {
+	["mods/meta_leveling/vfs/gfx/rewards/potion_hp_regen.png"] = 0x80a1f18c,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_urine.png"] = 0x33FFEE00,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_milk.png"] = 0xfffff6e5,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_lava.png"] = 0xffff6000,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_water.png"] = 0xA0376259,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_blood.png"] = 0xaa830000,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_magic_liquid_unstable_teleportation.png"] = 0x8000BEE4,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_magic_liquid_polymorph.png"] = 0x80f18beb,
+	["mods/meta_leveling/vfs/gfx/rewards/potion_magic_liquid_protection_all.png"] = 0x80df9828,
+}
+
+local random_potion = { ---@type ml_icon_generator_table
+	path = "mods/meta_leveling/vfs/gfx/rewards/random_potion.xml",
+	layers = { [1] = {} },
+	speed = 0.225
+}
+
+for path, argb in pairs(potions_to_generate) do
+	IG:make_potion(path, argb)
+	random_potion.layers[1][#random_potion.layers[1] + 1] = path
+end
+
+IG:generate(random_potion)
