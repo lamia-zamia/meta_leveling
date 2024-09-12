@@ -98,7 +98,7 @@ local pickups = {
 		id = "pickup_item_stonestone",
 		ui_name = "$item_stonestone",
 		description = "$itemdesc_stonestone",
-		ui_icon = "mods/meta_leveling/files/gfx/rewards/stonestone.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/stonestone.xml",
 		probability = 0.1,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/stonestone.xml")
@@ -119,7 +119,7 @@ local pickups = {
 		id = "pickup_item_safe_haven",
 		ui_name = "$item_safe_haven",
 		description = "$item_description_safe_haven",
-		ui_icon = "data/ui_gfx/items/safe_haven.png",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/safe_haven.xml",
 		probability = 0.05,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/safe_haven.xml")
