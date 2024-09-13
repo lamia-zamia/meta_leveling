@@ -512,6 +512,8 @@ local translations =
 		session_exp_play_sound_d = "Play sound when you got new level",
 		session_exp_play_fx = "Play FX",
 		session_exp_play_fx_d = "Show effects when you got new level",
+		session_exp_foot_particle = "Particles",
+		session_exp_foot_particle_d = "Create particles when you have pending levels",
 		session_exp_on_kills = "On kills",
 		session_exp_on_kills_d = "When you kill something",
 		session_exp_popup = "Show experience",
@@ -563,6 +565,8 @@ local translations =
 		session_exp_play_sound_d = "Проигрывать звук когда вы повышаете уровень",
 		session_exp_play_fx = "Эффекты",
 		session_exp_play_fx_d = "Показывать эффекты при повышении уровня",
+		session_exp_foot_particle = "Частицы",
+		session_exp_foot_particle_d = "Создавать частицы когда доступен новый уровень",
 		session_exp_on_kills = "При убийствах",
 		session_exp_on_kills_d = "Когда вы убиваете что-то",
 		session_exp_popup = "Показывать опыт",
@@ -609,6 +613,7 @@ D = {
 	session_exp_popup = true,
 	session_exp_ui_open_auto = true,
 	open_ui_hotkey = 0,
+	session_exp_foot_particle = true,
 }
 
 local function build_settings()
@@ -732,7 +737,7 @@ local function build_settings()
 					id = "session_exp_on_level_up",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_level_up,
-					checkboxes = { "session_exp_play_sound", "session_exp_play_fx" },
+					checkboxes = { "session_exp_play_sound", "session_exp_play_fx", "session_exp_foot_particle" },
 				},
 				{
 					not_setting = true,
