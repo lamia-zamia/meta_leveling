@@ -304,41 +304,20 @@ function EB:DrawExpBarOnRight()
 	self:AddToolTip(self.bar.x, self.bar.y, (2 + self.bar.thickness), self.bar.scale_y + 1)
 end
 
----Play level-up effects
----@private
-function EB:LevelUpFX()
-	if self.data.sound_played_level[ML:get_level()] or GameHasFlagRun(MLP.const.flags.fx_played) then return end
-	GameAddFlagRun(MLP.const.flags.fx_played)
-	if self.data.play_sound then
-		GamePlaySound(MLP.const.sound_banks.event_cues, "event_cues/wand/create", ML.player.x, ML.player.y)
-	end
-	if self.data.play_fx then
-		EntityLoad("data/entities/particles/image_emitters/wand_effect.xml", ML.player.x, ML.player.y)
-	end
-end
-
 ---Update player status and check for level-up
 ---@private
 function EB:UpdatePlayerStatus()
-	if self.data.max_health ~= ML.player.max_hp then
-		self.data.max_health = ML.player.max_hp
-		self:SetPlayerHealthLength()
-	end
-	if ML:get_pending_levels() >= 1 and not self.data.sound_played_level[ML:get_level()] then
-		self:LevelUpFX()
-	end
+	if self.data.max_health == ML.player.max_hp then return end
+	self.data.max_health = ML.player.max_hp
+	self:SetPlayerHealthLength()
 end
 
 ---Load and apply settings
 function EB:GetSettings()
 	self:UpdateDimensions()
-	self.data.play_sound = MLP.get:mod_setting_boolean("session_exp_play_sound", true)
-	self.data.play_fx = MLP.get:mod_setting_boolean("session_exp_play_fx", true)
 	self.data.animate_bar = MLP.get:mod_setting_boolean("session_exp_animate_bar", true)
 	self.bar.thickness = MLP.get:mod_setting_number("exp_bar_thickness")
-	self.bar.red = MLP.get:mod_setting_number("exp_bar_red")
-	self.bar.green = MLP.get:mod_setting_number("exp_bar_green")
-	self.bar.blue = MLP.get:mod_setting_number("exp_bar_blue")
+	self.bar.red, self.bar.green, self.bar.blue = MLP.get:exp_color()
 	self.data.max_health = ML.player.max_hp
 	self.data.perc.x = self.dim.x - 38
 	self.data.perc.y = 12

@@ -48,7 +48,6 @@ local const = {
 	},
 	flags = {
 		leveling_up = "META_LEVELING_LEVELING_UP",
-		fx_played = "META_LEVELING_FX_PLAYED"
 	},
 	player_tags = {
 		"player_unit", "player_projectile", "projectile_player"
@@ -57,6 +56,7 @@ local const = {
 	globals = { --globals name used by this mod
 		current_level = "CURRENT_LEVEL", --current level, default 1
 		exp_on_levelup = "EXP_ON_LEVELUP", --exp on levelup, required to calculate negative exp
+		fx_played = "EXP_FX_PLAYER", --level for which exp fx was played
 		draw_amount = "DRAW_AMOUNT", --how many extra options, default 0
 		draw_index = "DRAW_INDEX", --current index in reward deck
 		reroll_count = "REROLL_COUNT", --current available reroll count

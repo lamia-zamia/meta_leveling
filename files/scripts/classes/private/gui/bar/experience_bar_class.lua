@@ -30,9 +30,6 @@ local data = {
 		step = 0.0075,
 		size = 0.5
 	},
-	sound_played_level = {},
-	play_sound = true,
-	play_fx = true,
 	animate_bar = true,
 	health_length = 42,
 	max_health = 4,

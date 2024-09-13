@@ -14,6 +14,7 @@
 ---@field next_exp number
 ---@field stats ml_stats
 ---@field gameEffect ML_gameEffect_parser
+---@field level_up_effects ml_level_up_effects
 local ML = {
 	meta = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta.lua"),
 	gui = false,
@@ -28,7 +29,8 @@ local ML = {
 	pending_levels = 0,
 	next_exp = 0,
 	stats = dofile_once("mods/meta_leveling/files/scripts/classes/private/stats.lua"),
-	gameEffect = dofile_once("mods/meta_leveling/files/scripts/classes/private/gameEffect_parser.lua")
+	gameEffect = dofile_once("mods/meta_leveling/files/scripts/classes/private/gameEffect_parser.lua"),
+	level_up_effects = dofile_once("mods/meta_leveling/files/scripts/classes/private/level_up_effects.lua")
 }
 
 function ML:toggle_ui()
@@ -75,6 +77,7 @@ function ML:UpdateCommonParameters()
 	self.entity_scanner:check_entities()
 	self.player:update()
 	self.pending_levels = self:get_pending_levels()
+	self.level_up_effects:update()
 end
 
 function ML:StartUp()
@@ -87,6 +90,7 @@ end
 
 function ML:OnSpawn()
 	self.meta:apply_if_new_run()
+	self.level_up_effects:init()
 end
 
 ---Gets the experience points required for the next level.

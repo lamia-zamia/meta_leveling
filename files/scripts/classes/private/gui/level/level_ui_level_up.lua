@@ -138,7 +138,6 @@ end
 ---@private
 function LU_level_up:CloseRewardUI()
 	ML:level_up()
-	GameRemoveFlagRun(MLP.const.flags.fx_played)
 	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	if ML.pending_levels <= 0 then
 		GameRemoveFlagRun(MLP.const.flags.leveling_up)

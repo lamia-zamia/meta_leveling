@@ -4,6 +4,15 @@ local ML_get = {
 	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua"),
 }
 
+---returs exp red, green, blue color
+---@return number red, number blue, number green
+function ML_get:exp_color()
+	local r = MLP.get:mod_setting_number("exp_bar_red", 0)
+	local g = MLP.get:mod_setting_number("exp_bar_green", 128)
+	local b = MLP.get:mod_setting_number("exp_bar_blue", 0)
+	return r, g, b
+end
+
 ---get global valuess of META_LEVELING_
 ---@return number
 ---@param key string

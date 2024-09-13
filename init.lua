@@ -34,6 +34,7 @@ end
 
 ---Update settings when paused
 function OnPausedChanged()
+	ML.level_up_effects:update_settings()
 	gui:UpdateSettings()
 	if MLP.get:mod_setting_boolean("session_exp_close_ui_on_pause") then ML.gui = false end
 end
