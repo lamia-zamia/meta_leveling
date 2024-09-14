@@ -24,7 +24,7 @@ local rewards_perk = {
 		ui_icon = "data/items_gfx/perks/remove_fog_of_war.png",
 		probability = 0.02,
 		no_sound = true,
-		min_level = 30,
+		min_level = 50,
 		custom_check = function()
 			local pickup_count = ML.rewards:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
 			if pickup_count < 1 then return true end
@@ -41,7 +41,7 @@ local rewards_perk = {
 		ui_icon = "data/items_gfx/perks/edit_wands_everywhere.png",
 		probability = 0.01,
 		no_sound = true,
-		min_level = 50,
+		min_level = 80,
 		custom_check = function()
 			local pickup_count = ML.rewards:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
 			if pickup_count < 1 then return true end
@@ -58,7 +58,7 @@ local rewards_perk = {
 		ui_icon = "data/items_gfx/perks/respawn.png",
 		probability = 0.05,
 		no_sound = true,
-		min_level = 20,
+		min_level = 40,
 		fn = function()
 			ML.rewards:grant_perk("RESPAWN")
 		end
