@@ -1,61 +1,47 @@
 ---@type MetaLevelingPublic
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
----@type ML_components_helper
-local cmp = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
-local elemental = {
-	"electricity", "fire", "ice", "radioactive", "poison", "curse", "holy"
-}
+---@type ml_projectile_on_shot
+local POS = dofile_once("mods/meta_leveling/files/scripts/classes/private/projectile_on_shot.lua")
 
 ---@type script_shot
 local script_shot = function(projectile_entity_id)
 	local projectile_component = EntityGetFirstComponentIncludingDisabled(projectile_entity_id, "ProjectileComponent")
 	if not projectile_component then return end
+	local projectile = POS:new(projectile_component)
 
 	-- Crit
 	local crit_chance_add = MLP.get:global_number(MLP.const.globals.crit_chance_increase, 0)
 	if crit_chance_add > 0 then
-		cmp:add_value_to_component_object(projectile_component, "damage_critical", "chance", crit_chance_add)
+		projectile:increase_critical_chance(crit_chance_add)
 	end
 
 	-- Projectile
 	local projectile_multiplier = MLP.get:global_number(MLP.const.globals.projectile_damage_increase, 1)
 	if projectile_multiplier > 1 then
-		cmp:multiply_value_in_component(projectile_component, "damage", projectile_multiplier)
+		projectile:projectile_damage_multiply(projectile_multiplier)
 	end
 
 	-- Elemental
 	local elemental_multiplier = MLP.get:global_number(MLP.const.globals.elemental_damage_increase, 1)
 	if elemental_multiplier > 1 then
-		for _, type in ipairs(elemental) do
-			local current = ComponentObjectGetValue2(projectile_component, "damage_by_type", type)
-			if current > 0 then
-				local new_damage = (current + elemental_multiplier / 25) * elemental_multiplier
-				ComponentObjectSetValue2(projectile_component, "damage_by_type", type, new_damage)
-			end
-		end
+		projectile:projectile_elemental_increase(elemental_multiplier)
 	end
 
 	-- drills
-	local drill_damage = ComponentObjectGetValue2(projectile_component, "damage_by_type", "drill")
-	if drill_damage > 0 then
+	if projectile:projectile_is_drill() then
 		-- damage
 		local damage_value = MLP.get:global_number(MLP.const.globals.drill_damage_increase, 0)
 		if damage_value > 0 then
-			ComponentSetValue2(projectile_component, "collide_with_tag", "hittable")
-			ComponentObjectSetValue2(projectile_component, "damage_by_type", "drill", drill_damage + damage_value)
+			projectile:drill_increase_damage(damage_value)
 		end
-
 		-- destructability
 		local increment = MLP.get:global_number(MLP.const.globals.drill_destructibility, 0)
 		if increment > 0 then
-			cmp:add_value_to_component_object(projectile_component, "config_explosion",
-				"max_durability_to_destroy", increment)
-			cmp:add_value_to_component_object(projectile_component, "config_explosion", "ray_energy",
-				100000 * increment)
-			cmp:add_value_to_component_object(projectile_component, "config_explosion", "explosion_radius",
-				increment)
+			projectile:drill_increase_destruction(increment)
 		end
 	end
+
+	projectile:destroy()
 end
 
 shot = script_shot
