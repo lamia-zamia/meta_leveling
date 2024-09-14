@@ -6,9 +6,6 @@ local EntitySetComponentIsEnabled_ML_Old = EntitySetComponentIsEnabled
 ---@param component_id component_id
 ---@param is_enabled boolean
 EntitySetComponentIsEnabled = function(entity_id, component_id, is_enabled)
-	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
-	local player_id = EntityGetWithTag("player_unit")[1]
-	MLP:AddExpGlobal(30, player_id, message .. ": ")
-
+	MLP:QuestCompleted(30)
 	EntitySetComponentIsEnabled_ML_Old(entity_id, component_id, is_enabled)
 end

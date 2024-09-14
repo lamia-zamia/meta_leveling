@@ -24,11 +24,24 @@ function MLP:AddExpGlobal(exp, entity, message)
 		GamePrint(message)
 	end
 	if entity and EntityGetIsAlive(entity) and self.get:mod_setting_boolean("session_exp_popup") then
-		self.font:popup_exp(entity,	self.exp:format(exp), exp)
+		self.font:popup_exp(entity, self.exp:format(exp), exp)
 	end
 
 	self.exp:add(exp)
 end
 
-return MLP
+---@param exp number number of exp to add BEFORE applying multiplier
+---@param quest? string quest name
+function MLP:QuestCompleted(exp, quest)
+	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
+	local gained = GameTextGetTranslatedOrNot("$ml_gained_xp")
+	local player_id = EntityGetWithTag("player_unit")[1]
+	if quest then
+		quest = ": " .. quest
+	else
+		quest = ""
+	end
+	MLP:AddExpGlobal(exp, player_id, message .. quest .. ", " .. gained .. ": ")
+end
 
+return MLP

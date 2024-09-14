@@ -4,12 +4,10 @@ function meta_leveling_do_tablet_exp()
 	local entity_id = GetUpdatedEntityID()
 	local variablestorages = EntityGetComponent(entity_id, "VariableStorageComponent")
 	if not variablestorages then return end
-	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
 	for _, variablestorage in ipairs(variablestorages) do
 		if ComponentGetValue2(variablestorage, "name") == "tablets_eaten" then
 			local count = tonumber(ComponentGetValue2(variablestorage, "value_int")) or 1
-			local player_id = EntityGetWithTag("player_unit")[1]
-			MLP:AddExpGlobal(15 * count, player_id, message .. ": ")
+			MLP:QuestCompleted(15 * count)
 		end
 	end
 end
@@ -18,7 +16,6 @@ local AddFlagPersistent_ML_Old = AddFlagPersistent
 
 ---@param key string
 AddFlagPersistent = function(key)
-	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
 	local values = {
 		misc_chest_rain = 50,
 		misc_util_rain = 100,
@@ -31,8 +28,7 @@ AddFlagPersistent = function(key)
 		misc_mimic_potion_rain = 200
 	}
 	if values[key] then
-		local player_id = EntityGetWithTag("player_unit")[1]
-		MLP:AddExpGlobal(values[key], player_id, message .. ": ")
+		MLP:QuestCompleted(values[key])
 	end
 
 	AddFlagPersistent_ML_Old(key)

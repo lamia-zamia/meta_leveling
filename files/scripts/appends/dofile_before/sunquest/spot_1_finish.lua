@@ -5,8 +5,6 @@ local GamePrintImportant_ML_Old = GamePrintImportant
 ---@param description string
 ---@param ui_custom_decoration_file string
 GamePrintImportant = function(title, description, ui_custom_decoration_file)
-	local message = GameTextGetTranslatedOrNot("$ml_quest_done")
-	local player_id = EntityGetWithTag("player_unit")[1]
-	MLP:AddExpGlobal(1000, player_id, message .. ": ")
+	MLP:QuestCompleted(1000)
 	GamePrintImportant_ML_Old(title, description, ui_custom_decoration_file or "")
 end
