@@ -138,15 +138,14 @@ end
 ---@private
 function LU_level_up:CloseRewardUI()
 	ML:level_up()
-	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
+	-- GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	if ML.pending_levels <= 0 then
 		GameRemoveFlagRun(MLP.const.flags.leveling_up)
 		ML:toggle_ui()
-		self.data.reward_list = nil
 	else
-		self.data.reward_list = ML.rewards_deck:draw_reward()
 		self:AnimReset("rewards")
 	end
+	self.data.reward_list = nil
 end
 
 ---toggle level up menu, adds flag to run so you can't close it
