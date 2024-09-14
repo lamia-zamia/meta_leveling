@@ -87,7 +87,7 @@ end
 
 ---Initialize progress list
 function meta:initialize()
-	dofile_once("mods/meta_leveling/files/scripts/progress/progress_appends.lua")
+	dofile_once("mods/meta_leveling/files/for_modders/progress_appends.lua")
 	self:apply_settings_if_new_run()
 	for _, point in ipairs(self.progress_list) do
 		self:initialize_point(point --[[@as ml_progress_point_run]])

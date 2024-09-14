@@ -14,7 +14,7 @@ local ml_stats = {
 
 function ml_stats:gather_list()
 	self.list = dofile_once("mods/meta_leveling/files/scripts/stats/stats_list.lua")
-	dofile_once("mods/meta_leveling/files/scripts/stats/stats_append.lua")
+	dofile_once("mods/meta_leveling/files/for_modders/stats_append.lua")
 end
 
 ---Add entry to stat list

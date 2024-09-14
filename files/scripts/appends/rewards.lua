@@ -11,5 +11,5 @@ local files = {
 }
 
 for _, file in ipairs(files) do
-	ModLuaFileAppend("mods/meta_leveling/files/scripts/rewards/rewards_append.lua", file)
+	ModLuaFileAppend("mods/meta_leveling/files/for_modders/rewards_append.lua", file)
 end
