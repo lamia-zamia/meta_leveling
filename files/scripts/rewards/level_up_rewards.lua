@@ -444,6 +444,33 @@ local reward_list = {
 			MLP.set:add_to_global_number("EXTRA_PERK_IN_HM", 1, 0)
 		end
 	},
+	{
+		id = "buff_explosion_radius",
+		ui_name = "$ml_buff_explosion_radius",
+		description = "$ml_buff_explosion_radius_tp",
+		description_var = { "10%" },
+		description2 = "$ml_lag_warning",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/explosion.xml",
+		probability = 0.2,
+		max = 20,
+		fn = function()
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.projectile_explosion_radius, 0.10, 1)
+		end
+	},
+	{
+		id = "buff_explosion_damage",
+		ui_name = "$ml_buff_explosion_damage",
+		description = "$ml_buff_explosion_damage_tp",
+		description_var = { "15%" },
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/explosion_red.xml",
+		probability = 0.2,
+		max = 20,
+		fn = function()
+			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
+			MLP.set:add_to_global_number(MLP.const.globals.projectile_explosion_damage, 0.15, 1)
+		end
+	},
 }
 
 return reward_list

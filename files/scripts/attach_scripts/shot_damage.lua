@@ -41,6 +41,16 @@ local script_shot = function(projectile_entity_id)
 		end
 	end
 
+	-- explosions
+	local explosion_radius = MLP.get:global_number(MLP.const.globals.projectile_explosion_radius, 1)
+	if explosion_radius > 1 then
+		projectile:increase_explosion_radius(explosion_radius)
+	end
+	local explosion_damage = MLP.get:global_number(MLP.const.globals.projectile_explosion_damage, 1)
+	if explosion_damage > 1 then
+		projectile:increase_explosion_damage(explosion_damage)
+	end
+
 	projectile:destroy()
 end
 

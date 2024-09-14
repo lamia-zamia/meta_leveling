@@ -132,3 +132,7 @@ ml_slightly_more_perks,Slightly more perks,Слегка больше перко�
 ml_slightly_more_perks_tp,From now on you will find an extra perk in every other Holy Mountain,Теперь вы будете находить дополнительный перк на каждой второйСвятой горе,,,,,,,,,,
 ml_buff_temporary_tp,You will gain $0 effect for $1 seconds,Вы получите эффект $0 на $0 секунд,,,,,,,,,,
 ml_buff_oily,Oil makes you slippery and more cute,Нефть делает вас скользкими и милыми,,,,,,,,,,
+ml_buff_explosion_radius,Explosion radius,Радиус взрыва,,,,,,,,,,
+ml_buff_explosion_radius_tp,Increases explosion radius of your projectile by $0,Увеличивает радиус взрыва ваших снарядов на $0,,,,,,,,,,
+ml_buff_explosion_damage,Explosion damage,Урон взрыва,,,,,,,,,,
+ml_buff_explosion_damage_tp,Increase explosion damage of your projectile by $0,Увеличивает урон взрыва ваших снарядов на $0,,,,,,,,,,

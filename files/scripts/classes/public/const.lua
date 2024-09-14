@@ -71,6 +71,8 @@ local const = {
 		crit_chance_increase = "CRIT_CHANCE_INCREASE", --crit chance, percentage
 		elemental_damage_increase = "ELEMENTAL_DAMAGE_INCREASE", --elemental damage increase, const + percentage
 		projectile_damage_increase = "PROJECTILE_DAMAGE_INCREASE", --more projectile damage, percentage
+		projectile_explosion_radius = "PROJECTILE_EXPLOSION_RADIUS", --more explosion radius
+		projectile_explosion_damage = "PROJECTILE_EXPLOSION_DAMAGE", --more explosion damage
 	}
 }
 

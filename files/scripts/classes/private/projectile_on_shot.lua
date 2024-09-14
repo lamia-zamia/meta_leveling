@@ -71,6 +71,20 @@ function POS:drill_increase_destruction(value)
 		value)
 end
 
+---Increase explosion radius
+---@param value number
+function POS:increase_explosion_radius(value)
+	component:multiply_value_in_component_object(self.proj_comp, "config_explosion", "explosion_radius",
+		value)
+end
+
+---Increase explosion damage
+---@param value number
+function POS:increase_explosion_damage(value)
+	component:multiply_value_in_component_object(self.proj_comp, "config_explosion", "damage",
+		value)
+end
+
 ---Destroys the current instance by clearing its fields.
 function POS:destroy()
 	self.proj_comp = nil
