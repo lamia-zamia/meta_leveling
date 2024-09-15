@@ -54,7 +54,7 @@ end
 ---@private
 function EB:BarColor()
 	if self.data.exp_inverted then
-		self:Color(1 - self.bar.red, 1 - self.bar.green, self.bar.blue)
+		self:Color(1 - self.bar.red, 1 - self.bar.green, 1 - self.bar.blue)
 	else
 		self:Color(self.bar.red, self.bar.green, self.bar.blue)
 	end
