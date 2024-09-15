@@ -6,3 +6,7 @@ dofile_once("mods/meta_leveling/files/scripts/appends/strmanip_insert_before_lin
 --- Progress
 ModLuaFileAppend("mods/meta_leveling/files/for_modders/progress_appends.lua",
 	"mods/meta_leveling/files/scripts/progress/progress_default.lua")
+
+--- WIP
+-- ModLuaFileAppend("mods/component-explorer/menu_extensions.lua",
+-- 	"mods/meta_leveling/files/scripts/appends/component_explorer.lua")
