@@ -24,22 +24,23 @@ end
 ---function to draw rewards itself
 ---@private
 function LU_current:DrawCurrentRewardsItems()
-	local y = 2
-	local x = 2
-	local distance_between = 30
+	local y = 4
+	local x = 4
+	local distance_between = 29.585 -- don't question my sanity pls
 
 	for _, group in self:orderedPairs(ML.rewards_deck.groups_data) do
 		if group.picked then
 			if x + distance_between / 2 > self.const.width then
-				x = 2
+				x = 4
 				y = y + distance_between
 			end
-			if self.data.scrollbox_height < y and self.data.scrollbox_height < self.const.height_max then
+			if self.data.scrollbox_height < y + distance_between and self.data.scrollbox_height < self.const.height_max then
 				self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
 			end
+			self:DrawRewardRarity(x - 4, y - 4 - self.scroll.y, self.const.z, ML.rewards_deck.borders.common)
 			self:Image(x, y - self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
 			local prev = self:GetPrevious()
-			self:Draw9Piece(prev.x, prev.y, self.const.z, 16, 16, self.const.ui_9p_reward)
+			self:Draw9Piece(prev.x - 1, prev.y - 1, self.const.z, 18, 18, self.const.ui_9p_reward)
 			if self:ElementIsVisible(y, distance_between) then
 				local cache = self:GetTooltipData(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 				self:AddTooltip((cache.width - 16) / - 2, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
