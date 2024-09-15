@@ -7,6 +7,7 @@ local ML_points = {}
 function ML_points:modify_current_currency(value)
 	local current = self:get_current_currency()
 	ModSettingSet("meta_leveling.currency_progress", current + value)
+	ModSettingSetNextValue("meta_leveling.currency_progress", current + value, false)
 end
 
 ---Returns current available points
