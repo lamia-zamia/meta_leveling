@@ -2,6 +2,11 @@
 local SM = dofile_once("mods/meta_leveling/files/scripts/lib/stringmanip.lua")
 
 local append_list = {
+	["data/entities/animals/boss_centipede/ending/sampo_start_ending_sequence.lua"] =
+	"mods/meta_leveling/files/scripts/appends/dofile_before/sampo_start_ending_sequence.lua",
+}
+
+local append_list_once = {
 	["data/scripts/buildings/sun/spot_1_finish.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/sunquest/spot_1_finish.lua",
 	["data/scripts/buildings/sun/spot_2.lua"] =
@@ -10,8 +15,6 @@ local append_list = {
 	"mods/meta_leveling/files/scripts/appends/dofile_before/sunquest/spot_1_finish.lua",
 	["data/scripts/buildings/sun/spot_4.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/sunquest/spot_4.lua",
-	["data/entities/animals/boss_centipede/ending/sampo_start_ending_sequence.lua"] =
-	"mods/meta_leveling/files/scripts/appends/dofile_before/sampo_start_ending_sequence.lua",
 	["data/scripts/magic/altar_tablet_magic.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/altar_tablet_magic.lua",
 	["data/scripts/buildings/meditation_cube.lua"] =
@@ -61,6 +64,12 @@ local append_list = {
 	["data/biome_impl/static_tile/puzzle_logic_barren.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/templequest/puzzle_logic_potion_mimics.lua",
 }
+
+for original_file, append_file in pairs(append_list_once) do
+	local sm = SM:new(original_file)
+	sm:AppendDofileOnceBefore(append_file)
+	sm:WriteAndClose()
+end
 
 for original_file, append_file in pairs(append_list) do
 	local sm = SM:new(original_file)

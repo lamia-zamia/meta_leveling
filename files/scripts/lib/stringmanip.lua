@@ -22,8 +22,15 @@ end
 
 ---Appends dofile_once(file) before the current file content.
 ---@param file string The file path to dofile_once
-function SM:AppendDofileBefore(file)
+function SM:AppendDofileOnceBefore(file)
 	local text = "dofile_once(\"" .. file .. "\")"
+	self:AppendBefore(text)
+end
+
+---Appends dofile(file) before the current file content.
+---@param file string The file path to dofile_once
+function SM:AppendDofileBefore(file)
+	local text = "dofile(\"" .. file .. "\")"
 	self:AppendBefore(text)
 end
 
