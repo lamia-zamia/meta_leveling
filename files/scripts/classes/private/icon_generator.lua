@@ -68,7 +68,7 @@ end
 ---@param layers table<number, string[]>
 ---@param path string
 function IG:generate_png(columns, layers, path)
-	local destination_id = ModImageMakeEditable(path, columns * 16, #layers * 16)
+	local destination_id = ModImageMakeEditable(path, columns * 16, 16)
 	for _, layer in ipairs(layers) do
 		for j = 1, columns do
 			local source = layer[j] or layer[1]
