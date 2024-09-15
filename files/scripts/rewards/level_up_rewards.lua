@@ -425,8 +425,12 @@ local reward_list = {
 		ui_name = "$ml_polymorph_immunity",
 		description = "$ml_polymorph_immunity_tp",
 		description2 = "$ml_polymorph_immunity_tp2",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/poly_protection.xml",
 		probability = 0.05,
 		min_level = 100,
+		custom_check = function()
+			return not MLP.get:entity_has_tag(ML.player.id, "polymorphable_NOT")
+		end,
 		max = 1,
 		fn = function()
 			EntityAddTag(ML.player.id, "polymorphable_NOT")
