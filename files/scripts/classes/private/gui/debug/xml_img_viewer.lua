@@ -1,13 +1,15 @@
 ---@type nxml
 local nxml = dofile_once("mods/meta_leveling/files/scripts/lib/nxml.lua")
 
+local required_fields = { "frame_count", "frame_width", "frame_height", "name" }
+
 ---@class imgui_xml_img_viewer
 ---@field private __index imgui_xml_img_viewer
 ---@field private imgui ImGui
 ---@field private data imgui_xml_img_viewer_data
 ---@field private path string
 local xml_viewer = {
-	data = {}
+	data = setmetatable({}, { __mode = "k" }),
 }
 xml_viewer.__index = xml_viewer
 
@@ -55,26 +57,69 @@ function xml_viewer:xml_set_invalid(message)
 	}
 end
 
----Basic checks and init
----@private
+---@param xml element
 ---@return boolean
-function xml_viewer:init_xml()
-	if not ModDoesFileExist(self.path) or not self.path:find("%.xml$") then
-		self:xml_set_invalid(self.path .. " is invalid")
+function xml_viewer:verify_xml(xml)
+	if not xml.attr.filename then
+		self:xml_set_invalid("Couldn't find filename in " .. self.path)
 		return false
 	end
-	local content = ModTextFileGetContent(self.path)
-	local xml = nxml.parse(content)
 	local filename = xml.attr.filename
 	if not ModImageDoesExist(filename) then
 		self:xml_set_invalid("Image file " .. filename .. " is not found")
 		return false
 	end
+	local default_animation = xml.attr.default_animation
+	if not default_animation then
+		self:xml_set_invalid("There is no default_animation")
+		return false
+	end
+
+	local anim_count = 0
+	for rectAnimation in xml:each_of("RectAnimation") do
+		anim_count = anim_count + 1
+		for _, key in ipairs(required_fields) do
+			if not rectAnimation.attr[key] then
+				self:xml_set_invalid("Missing key " .. key .. " in rectAnimation")
+				return false
+			end
+		end
+		if tonumber(rectAnimation.attr.frame_wait) < 0.01 then
+			self:xml_set_invalid("frame_wait is too low, min: 0.01")
+			return false
+		end
+	end
+	if anim_count == 0 then
+		self:xml_set_invalid("Couldn't find any RectAnimation")
+		return false
+	end
+
+	return true
+end
+
+---Basic checks and init
+---@private
+---@return boolean
+function xml_viewer:init_xml()
+	if not self.path or not ModDoesFileExist(self.path) or not self.path:find("%.xml$") then
+		self:xml_set_invalid(self.path .. " is invalid")
+		return false
+	end
+	local content = ModTextFileGetContent(self.path)
+
+	local success, xml = pcall(nxml.parse, content)
+	if not success then
+		self:xml_set_invalid("Invalid xml, error: " .. xml)
+		return false
+	end
+
+	if not self:verify_xml(xml) then return false end
+
 	local animation_list, animation = self:parse(xml)
 	self.data[self.path] = {
 		animation_list = animation_list,
 		animation = animation,
-		spritesheet_path = filename,
+		spritesheet_path = xml.attr.filename,
 		default_animation = xml.attr.default_animation,
 		xml_content = content,
 		frame = 0,
@@ -83,11 +128,22 @@ function xml_viewer:init_xml()
 	return true
 end
 
----Checks and parses data for displaying
+---Checks and parses data for displaying from file
+---@param path string path to xml file
+---@param content string content of xml path
+function xml_viewer:set_content(path, content)
+	self.path = path
+	ModTextFileSetContent(path, content)
+end
+
+---Checks and parses data for displaying from file
+---@param path string path to xml file
+---@param no_cache? boolean default `nil`, set to `true` to ignore cache
 ---@return boolean can_display if true
 ---@nodiscard
-function xml_viewer:can_display_xml()
-	if not self.data[self.path] then return self:init_xml() end
+function xml_viewer:can_display_xml(path, no_cache)
+	self.path = path
+	if no_cache or not self.data[self.path] then return self:init_xml() end
 	return self.data[self.path].valid
 end
 
@@ -102,14 +158,13 @@ function xml_viewer:parse(xml)
 		local attr = rectAnimation.attr
 		local name = attr.name
 		animation_list[#animation_list + 1] = name
-		local frames = tonumber(attr.frame_count)
 		contents[name] = {
-			frame_count = frames,
+			frame_count = tonumber(attr.frame_count),
 			frame_width = tonumber(attr.frame_width),
 			frame_height = tonumber(attr.frame_height),
 			pos_x = tonumber(attr.pos_x) or 0,
 			pos_y = tonumber(attr.pos_y) or 0,
-			frame_wait = tonumber(attr.frame_wait) or 1
+			frame_wait = tonumber(attr.frame_wait) or 0.01
 		}
 	end
 	return animation_list, contents
