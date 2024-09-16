@@ -190,7 +190,7 @@ function xml_viewer:show(animation, width, height, frame)
 	local anim = data.animation[animation]
 	width = width or anim.frame_width
 	height = height or anim.frame_height
-	local img = imgui.LoadImage(data.spritesheet_path)
+	local img = self.imgui.LoadImage(data.spritesheet_path)
 	if img then
 		local current_frame = frame or self:get_frame(anim)
 		local frame_column = current_frame % anim.frame_count
