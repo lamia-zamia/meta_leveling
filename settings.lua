@@ -1,10 +1,10 @@
 dofile_once("data/scripts/lib/mod_settings.lua")
 
 local mod_id = "meta_leveling"
-mod_settings_version = 1
+local mod_prfx = mod_id .. "."
 local T = {}
 local D = {}
-local gui_id = 1
+local gui_id = 1000
 local function id()
 	gui_id = gui_id + 1
 	return gui_id
@@ -31,20 +31,20 @@ do --helpers
 	---@param setting_name setting_id
 	---@param value setting_value
 	function U.set_setting(setting_name, value)
-		ModSettingSet("meta_leveling." .. setting_name, value)
-		ModSettingSetNextValue("meta_leveling." .. setting_name, value, false)
+		ModSettingSet(mod_prfx .. setting_name, value)
+		ModSettingSetNextValue(mod_prfx .. setting_name, value, false)
 	end
 
 	---@param setting_name setting_id
 	---@return setting_value?
 	function U.get_setting(setting_name)
-		return ModSettingGet("meta_leveling." .. setting_name)
+		return ModSettingGet(mod_prfx .. setting_name)
 	end
 
 	---@param setting_name setting_id
 	---@return setting_value?
 	function U.get_setting_next(setting_name)
-		return ModSettingGetNextValue("meta_leveling." .. setting_name)
+		return ModSettingGetNextValue(mod_prfx .. setting_name)
 	end
 
 	---@param cat_id setting_id
@@ -771,7 +771,6 @@ end
 
 ---@param init_scope number
 function ModSettingsUpdate(init_scope)
-	-- local old_version = mod_settings_get_version(mod_id)
 	U.set_default(false)
 	U.waiting_for_input = false
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
@@ -790,12 +789,11 @@ end
 ---@param gui gui
 ---@param in_main_menu boolean
 function ModSettingsGui(gui, in_main_menu)
-	gui_id = 1
-	GuiIdPushString(gui, "META_LEVEING")
+	gui_id = 1000
+	GuiIdPushString(gui, mod_prfx)
 	if U.offset == 0 then U.offset = U.calculate_elements_offset(gui, mod_settings) end
 	mod_settings_gui(mod_id, mod_settings, gui, in_main_menu)
 	GuiIdPop(gui)
-	-- U.pending_input()
 end
 
 U.gather_key_codes()
