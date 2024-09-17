@@ -53,7 +53,7 @@ function LU_level_up:DrawButtonsCentered(button_y)
 		reroll = reroll .. " [" .. reroll_count .. "]"
 	end
 
-	local longest = self:GetLongestText({ skip, close, reroll }, "LevelUpButtons")
+	local longest = self:GetLongestText({ skip, close, reroll }, "LevelUpButtons_" .. reroll_count)
 	local total_width = 3 * (longest + 10) - 10
 	local button_x = self:CalculateCenterInScreen(total_width, self.const.reward_box_size)
 
