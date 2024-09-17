@@ -39,6 +39,7 @@ end
 ---@field error? string -- Error message if XML is invalid
 ---@field xml_content string -- Raw content of the XML file
 ---@field spritesheet_path string -- Path to the spritesheet image
+---@field sprite_offset? { x: number, y: number}
 ---@field default_animation string -- The default animation to display
 ---@field animation_list string[] -- List of animation names found in the XML
 ---@field animation { [string]: imgui_xml_img_viewer_content_animation } -- Table of animations, keyed by name
@@ -103,6 +104,25 @@ function xml_viewer:verify_xml(xml)
 	return true
 end
 
+---Sets sprite offset value if any
+---@param element element
+---@return { x: number, y: number}?
+function xml_viewer:set_offset(element)
+	local x = element.attr.offset_x or nil
+	local y = element.attr.offset_y or nil
+	if x or y then return {
+		x = x or 0,
+		y = y or 0
+	} end
+	return nil
+end
+
+---Returns sprite offset if any
+---@return { x: number, y: number}?
+function xml_viewer:get_offset()
+	return self.data[self.path].sprite_offset
+end
+
 ---Initialization and validation of the XML file
 ---@private
 ---@return boolean -- Returns true if initialization succeeds
@@ -132,6 +152,7 @@ function xml_viewer:init_xml()
 		spritesheet_path = xml.attr.filename,
 		default_animation = xml.attr.default_animation,
 		xml_content = content,
+		sprite_offset = self:set_offset(xml),
 		valid = true
 	}
 	return true
