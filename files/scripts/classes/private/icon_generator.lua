@@ -89,8 +89,6 @@ function IG:generate_xml(path, columns, speed)
 		nxml.new_element("RectAnimation", {
 			name = "default",
 			frame_count = tostring(columns),
-			pos_x = "0",
-			pos_y = "0",
 			frame_width = "16",
 			frame_height = "16",
 			frame_wait = tostring(speed)
