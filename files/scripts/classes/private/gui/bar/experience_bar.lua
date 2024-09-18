@@ -374,7 +374,8 @@ end
 
 ---Main loop function
 function EB:loop()
-	self:StartFrame(self.DrawExpBar, true)
+	self:StartFrame()
+	if ML.player.id then self:DrawExpBar() end
 end
 
 return EB

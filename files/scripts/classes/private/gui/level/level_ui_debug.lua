@@ -102,7 +102,7 @@ function LU_debug:DrawDebugWindow()
 		y = y + 13 + distance_between
 		x = 3
 		distance_between = 30
-		for _, reward in self:orderedPairs(ML.rewards_deck.reward_data) do
+		for _, reward in ipairs(ML.rewards_deck.ordered_rewards_data) do
 			if x + distance_between > self.const.width then
 				x = 3
 				y = y + distance_between

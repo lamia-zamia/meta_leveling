@@ -18,7 +18,7 @@ local const = {
 ---@field x_offset number
 ---@field y_offset number
 
----@class (exact) UI_class
+---@class UI_class
 ---@field protected gui gui
 ---@field private gui_tooltip gui
 ---@field private gui_id number
@@ -798,20 +798,12 @@ function ui_class:id()
 end
 
 ---start frame
----@param fn function
----@param bool boolean
 ---@protected
-function ui_class:StartFrame(fn, bool)
+function ui_class:StartFrame()
 	self:id_reset()
 	self.tooltip_reset = true
-	local player = EntityGetWithTag("player_unit")[1]
-	if player then --if player is even alive
-		if self.gui ~= nil then GuiStartFrame(self.gui) end
-		if self.gui_tooltip ~= nil then GuiStartFrame(self.gui_tooltip) end
-		if fn ~= nil and bool then
-			fn(self)
-		end
-	end
+	if self.gui then GuiStartFrame(self.gui) end
+	if self.gui_tooltip then GuiStartFrame(self.gui_tooltip) end
 end
 
 return ui_class

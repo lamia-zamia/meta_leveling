@@ -12,31 +12,24 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 ---@field max number max number of reward that you can pick
 ---@field sound ml_sound see sounds
 ---@field pick_count number
----@field border ml_reward_border color of border
+---@field border_color ml_reward_border color of border
 
 ---@class (exact) ml_group_data
 ---@field rewards ml_reward_id[] list of rewards in group
 ---@field picked boolean if something from group was picked
 
----@class (exact) ml_groups_data
----@field [string] ml_group_data
-
----@class (exact) reward_data
----@field [string] ml_single_reward_data
-
----@class (exact) ml_borders_data
----@field [string] ml_reward_border
-
----@class (exact) rewards_deck
+---@class rewards_deck
 ---@field private reward_definition_list ml_rewards list of rewards
----@field groups_data ml_groups_data
----@field reward_data reward_data data of rewards
+---@field groups_data { [string]: ml_group_data}
+---@field reward_data { [string]: ml_single_reward_data } data of rewards
+---@field ordered_groups_data ml_group_data[]
+---@field ordered_rewards_data ml_single_reward_data[]
 ---@field private default_icon string
 ---@field private max_probability number max probability for single reward
 ---@field private min_probability number min probability for single reward
 ---@field private list ml_reward_id[] table of rewards id
 ---@field private distance number minimum distance between rewards
----@field borders ml_borders_data
+---@field borders { [string]: ml_reward_border}
 ---@field reroll_count number
 local rewards_deck = {
 	reward_data = {},
@@ -56,6 +49,30 @@ local rewards_deck = {
 	distance = 4,
 	reroll_count = 1,
 }
+
+---Pairs sorted
+---@private
+---@generic T: table, K, V
+---@param tbl T
+---@return fun(table: table<K, V>, index?: K):K, V
+---@return T
+function rewards_deck.ordered_pairs(tbl)
+	local keys = {}
+	for k in pairs(tbl) do
+		table.insert(keys, k)
+	end
+	table.sort(keys)
+
+	local i = 0
+	local function iter()
+		i = i + 1
+		if keys[i] then
+			return keys[i], tbl[keys[i]]
+		end
+	end
+
+	return iter, tbl
+end
 
 ---Adds a single reward to the reward list.
 ---@param table ml_reward
@@ -94,6 +111,17 @@ function rewards_deck:ValidateData()
 	print("[Meta Leveling]: loaded " .. reward_count .. " rewards, " .. group_count .. " unique rewards group")
 end
 
+---Sorts pairs table
+---@param tbl {[string]: any}
+---@return any[]
+function rewards_deck:sort_data(tbl)
+	local sorted = {}
+	for _, entry in self.ordered_pairs(tbl) do
+		sorted[#sorted + 1] = entry
+	end
+	return sorted
+end
+
 ---Gathers reward data from a predefined list.
 function rewards_deck:GatherData()
 	self.reward_definition_list = dofile_once(
@@ -109,6 +137,8 @@ function rewards_deck:GatherData()
 	end
 
 	self:ValidateData()
+	self.ordered_groups_data = self:sort_data(self.groups_data)
+	self.ordered_rewards_data = self:sort_data(self.reward_data)
 end
 
 ---Initializes the reward data and group data based on the reward definition.
@@ -175,7 +205,7 @@ end
 
 ---get normalized probability
 ---@private
----@param probability number
+---@param probability number|fun():number
 ---@return number
 function rewards_deck:get_probability(probability)
 	if type(probability) == "number" then return probability end

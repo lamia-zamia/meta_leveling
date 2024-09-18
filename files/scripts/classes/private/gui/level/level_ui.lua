@@ -133,9 +133,6 @@ function LU:ResetScrollBox()
 	self:ResetScrollBoxHeight()
 end
 
----Pairs sorted
-LU.orderedPairs = dofile_once("mods/meta_leveling/files/scripts/classes/private/ordered_pairs.lua")
-
 ---Draws reward rarity glow
 ---@private
 ---@param x number
@@ -306,7 +303,8 @@ end
 ---main loop
 function LU:loop()
 	if ML.gui_em_exit then self:EmergencyExit() end
-	self:StartFrame(self.DrawLevelUI, ML.gui)
+	self:StartFrame()
+	if ML.gui then self:DrawLevelUI() end
 end
 
 return LU

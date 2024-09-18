@@ -28,7 +28,7 @@ function LU_current:DrawCurrentRewardsItems()
 	local x = 4
 	local distance_between = 29.585 -- don't question my sanity pls
 
-	for _, group in self:orderedPairs(ML.rewards_deck.groups_data) do
+	for _, group in ipairs(ML.rewards_deck.ordered_groups_data) do
 		if group.picked then
 			if x + distance_between / 2 > self.const.width then
 				x = 4
