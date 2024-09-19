@@ -26,16 +26,13 @@ end
 function LU_current:DrawCurrentRewardsItems()
 	local y = 4
 	local x = 4
-	local distance_between = 29.585 -- don't question my sanity pls
-
+	local horizontal_between = 29.585 -- don't question my sanity pls
+	local distance_between = 30
 	for _, group in ipairs(ML.rewards_deck.ordered_groups_data) do
 		if group.picked then
-			if x + distance_between / 2 > self.const.width then
+			if x + horizontal_between / 2 > self.const.width then
 				x = 4
 				y = y + distance_between
-			end
-			if self.data.scrollbox_height < y + distance_between and self.data.scrollbox_height < self.const.height_max then
-				self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
 			end
 			self:DrawRewardRarity(x - 4, y - 4 - self.scroll.y, self.const.z, ML.rewards_deck.borders.common)
 			self:Image(x, y - self.scroll.y, ML.rewards_deck.reward_data[group.rewards[1]].ui_icon)
@@ -43,20 +40,23 @@ function LU_current:DrawCurrentRewardsItems()
 			self:Draw9Piece(prev.x - 1, prev.y - 1, self.const.z, 18, 18, self.const.ui_9p_reward)
 			if self:ElementIsVisible(y, distance_between) then
 				local cache = self:GetTooltipData(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
-				self:AddTooltip((cache.width - 16) / - 2, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
+				self:AddTooltip((cache.width - 16) / -2, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 			end
-			x = x + distance_between
+			x = x + horizontal_between
 		end
 	end
-	self:Text(0, y, "") -- set height for scrollbar, 9piece works weird
+	-- local prev = self:GetPrevious()
+	-- print(prev.y, prev.h)
+	-- print(y, y % distance_between, y + y % distance_between)
+	-- self:DrawRewardRarity(0, y - 4 - self.scroll.y, self.const.z, ML.rewards_deck.borders.common)
+	self:Text(0, y + 21, "") -- set height for scrollbar, 9piece works weird
 end
 
 ---function to draw current rewards
 ---@private
 function LU_current:DrawCurrentRewards()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.scrollbox_height, self.const.z + 1,
-		self.const.ui_9piece_gray,
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray,
 		self.DrawCurrentRewardsItems)
 end
 

@@ -22,11 +22,13 @@ function LU_meta:ProgressPointTooltipText(point)
 		self:ColorGray()
 		self:TextCentered(0, 0, description, 0)
 	end
-	self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_current: " .. point.applied_bonus(point.current_value))),
+	self:TextCentered(0, 0,
+		ML.rewards_deck.FormatString(self:Locale("$ml_meta_current: " .. point.applied_bonus(point.current_value))),
 		0)
 	if changed then
 		self:Color(1, 1, 0.4)
-		self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))),
+		self:TextCentered(0, 0,
+			ML.rewards_deck.FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))),
 			0)
 	end
 end
@@ -294,13 +296,10 @@ end
 ---@private
 function LU_meta:DrawMetaWindow()
 	self:ProgressDisplayAvailablePoints()
-	self.meta.y = -self.meta.distance + 1
+	self.meta.y = 1
 	for i, progress in ipairs(ML.meta.progress) do
-		self.meta.y = self.meta.y + self.meta.distance
-		if self.data.scrollbox_height < self.meta.y + self.meta.distance and self.data.scrollbox_height < self.const.height_max then
-			self.data.scrollbox_height = math.min(self.meta.y + self.meta.distance + 1, self.const.height_max)
-		end
 		self:DrawPointProgressElement(i, progress)
+		self.meta.y = self.meta.y + self.meta.distance
 	end
 	self:Text(0, self.meta.y, "") -- set height for scrollbar, 9piece works weird
 end
@@ -319,9 +318,7 @@ end
 ---@private
 function LU_meta:DrawMetaMenu()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.scrollbox_height, self.const.z + 10,
-		self.const.ui_9piece_gray,
-		self.DrawMetaWindow)
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 10, self.const.ui_9piece_gray, self.DrawMetaWindow)
 end
 
 return LU_meta

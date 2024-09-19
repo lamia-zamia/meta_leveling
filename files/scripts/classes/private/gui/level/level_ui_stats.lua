@@ -9,9 +9,9 @@ function LU_stats:DrawLine(x, y, width, height)
 end
 
 function LU_stats:DrawBorders()
-	self:DrawLine(0, 0, self.const.width)
-	self:DrawLine(0, 0, 1, self.const.height_max)
-	self:DrawLine(self.const.width - 1, 0, 1, self.const.height_max)
+	self:DrawLine(0, 0 - self.scroll.y, self.const.width)
+	self:DrawLine(0, 0, 1, self.scroll.height_max)
+	self:DrawLine(self.const.width - 1, 0, 1, self.scroll.height_max)
 end
 
 function LU_stats:Stats_DrawWindow()
@@ -25,24 +25,19 @@ function LU_stats:Stats_DrawWindow()
 	for i = 1, #ML.stats.list do
 		local stat = ML.stats.list[i]
 		if stat.check_before_show and not stat.check_before_show() then goto continue end
-		if self.data.scrollbox_height < y + distance_between and self.data.scrollbox_height < self.const.height_max then
-			self.data.scrollbox_height = math.min(y + distance_between + 1, self.const.height_max)
-		end
 		self:Text(x, y - self.scroll.y, self:Locale(stat.ui_name) .. ":", "data/fonts/font_pixel_noshadow.xml")
 		self:Text(x_offset, y - self.scroll.y, self:Locale(stat.value()), "data/fonts/font_pixel_noshadow.xml")
 		y = y + distance_between
-		self:DrawLine(0, y, self.const.width, 1)
+		self:DrawLine(0, y - self.scroll.y, self.const.width, 1)
 		::continue::
 	end
-	self:Text(0, y, "") -- set height for scrollbar, 9piece works weird
 	self:RemoveOption(2)
+	self:Text(0, y + 1, "") -- set height for scrollbar, 9piece works weird
 end
 
 function LU_stats:Stats_DrawMenu()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.width, self.data.scrollbox_height, self.const.z + 1,
-		self.const.ui_9piece_gray,
-		self.Stats_DrawWindow)
+	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray, self.Stats_DrawWindow)
 end
 
 function LU_stats:Stats_FindLongest()
