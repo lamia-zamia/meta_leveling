@@ -1,5 +1,5 @@
----@class (exact) ml_player
----@field id entity_id|nil
+---@class ml_player
+---@field id? entity_id
 ---@field x number
 ---@field y number
 ---@field mLastDamageFrame number last frame when received damage
@@ -30,30 +30,18 @@ function player:get_id()
 	return EntityGetWithTag("player_unit")[1]
 end
 
----checks player id and return false if player is not found
----@return boolean
-function player:validate()
-	if self.id and EntityGetIsAlive(self.id) then
-		return true
-	else
-		self.id = self:get_id()
-		return EntityGetIsAlive(self.id)
-	end
-end
-
 ---returns player x, y
 ---@return number x, number y
 function player:get_pos()
-	if not self:validate() then return 0, 0 end
 	local x, y = EntityGetTransform(self.id)
-	return x, y
+	return x or 0, y or 0
 end
 
 ---returns player's component id of name
 ---@param name component_type
 ---@return component_id?
 function player:get_component_by_name(name)
-	if not self:validate() then return nil end
+	if not self.id then return nil end
 	return EntityGetFirstComponentIncludingDisabled(self.id, name)
 end
 
@@ -61,7 +49,7 @@ end
 ---@param value LuaComponent
 ---@param file string
 function player:add_lua_component_if_none(value, file)
-	if not self:validate() then return end
+	if not self.id then return end
 	local components = EntityGetComponentIncludingDisabled(self.id, "LuaComponent") or {}
 	for _, component in ipairs(components) do
 		if ComponentGetValue2(component, value) == file then return end
@@ -75,7 +63,7 @@ end
 ---@param file string
 ---@return component_id?
 function player:get_lua_component(value, file)
-	if not self:validate() then return end
+	if not self.id then return end
 	local components = EntityGetComponentIncludingDisabled(self.id, "LuaComponent") or {}
 	for _, component in ipairs(components) do
 		if ComponentGetValue2(component, value) == file then return component end
@@ -128,15 +116,16 @@ function player:get_mButtonLastFrameFire()
 end
 
 function player:has_effect(effect_name)
-	if not self:validate() then return false end
+	if not self.id then return false end
 	local comp = GameGetGameEffect(self.id, effect_name)
 	if not comp or comp == 0 then return false end
 	return true
 end
 
 function player:update()
-	if self:validate() then
-		self.x, self.y = self:get_pos()
+	self.id = self:get_id()
+	self.x, self.y = self:get_pos()
+	if self.id then
 		self.mLastDamageFrame = self:get_damagemodel_value_number("mLastDamageFrame", -120)
 		self.mButtonLastFrameFire = self:get_mButtonLastFrameFire()
 		self.max_hp = self:get_damagemodel_value_number("max_hp", 4)
