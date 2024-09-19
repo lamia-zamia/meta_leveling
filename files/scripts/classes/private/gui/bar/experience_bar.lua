@@ -203,16 +203,16 @@ end
 ---@param width number
 ---@param height number
 function EB:AddToolTip(x, y, width, height)
-	self:ForceFocusable()
+	self:AddOptionForNext(self.c.options.ForceFocusable)
 	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
 	local prev = self:GetPrevious()
 	if prev.hovered then
 		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
 		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
-		if InputIsMouseButtonJustDown(1) then -- mouse clicks
+		if self:is_left_clicked() then
 			ML:toggle_ui()
 		end
-		if InputIsMouseButtonJustDown(2) then
+		if self:is_right_clicked() then
 			GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 			ML:toggle_ui()
 			ML.gui_em_exit = false
@@ -360,7 +360,7 @@ end
 function EB:DrawExpBar()
 	self.data.exp_percentage, self.data.exp_inverted = ML:get_percentage()
 	self:UpdatePlayerStatus()
-	self:AddOption(2)
+	self:AddOption(self.c.options.NonInteractive)
 	self:DrawBarFunction()
 	if self.data.perc.show then self:DrawPercentage(self.data.perc.x, self.data.perc.y) end
 	if self.data.reminder_in_inventory and GameIsInventoryOpen() then self:InventoryReminder() end

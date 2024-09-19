@@ -38,7 +38,6 @@ end
 ---@private
 function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()
-	self:AddOptionForNext(6)
 	self:Draw9Piece(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, 100,
 		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
 	prev = self:GetPrevious()
@@ -113,7 +112,7 @@ end
 ---@param z number
 ---@param color ml_reward_border
 function LU:DrawRewardRarity(x, y, z, color)
-	self:AddOptionForNext(2)
+	self:AddOptionForNext(self.c.options.NonInteractive)
 	self:SetZ(z)
 	local r, g, b, a = unpack(color)
 	self:Color(r, g, b)
@@ -141,7 +140,7 @@ function LU:AddMenuSelector(x, y, text, tooltip, fn)
 	if self.DrawWindow == fn then
 		self:ColorGray()
 		self:Text(x, y, text)
-		self:ForceFocusable()
+		self:AddOptionForNext(self.c.options.ForceFocusable)
 		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button_hl, self.const.ui_9p_button_hl)
 		self:MakePreviousClickable(self.ToggleMenuWindow, fn)
 	else
@@ -290,7 +289,7 @@ function LU:IfDead()
 		self:AnimateE()
 	else
 		if ML.gui then GameAddFlagRun(MLP.const.flags.dead) end
-		if InputIsKeyJustDown(44) or InputIsKeyDown(40) or InputIsKeyDown(41) then
+		if self:control_chars_pressed() then
 			GameAddFlagRun(MLP.const.flags.dead)
 		end
 		local cause_of_death = StatsGetValue("killed_by") .. " " .. StatsGetValue("killed_by_extra")
@@ -303,7 +302,7 @@ function LU:IfDead()
 		self:Draw9Piece(x_yad, 142, 10, you_are_dead_len, 15, self.c.empty)
 		local prev_yad = self:GetPrevious()
 		if prev_cod.hovered or prev_yad.hovered then
-			if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then
+			if self:is_mouse_clicked() then
 				GameAddFlagRun(MLP.const.flags.dead)
 			end
 		end

@@ -1,11 +1,22 @@
+---@enum ui_options
+local options = {
+	ForceFocusable = 7,
+	NonInteractive = 2,
+	AlwaysClickable = 3,
+	NoPositionTween = 6
+}
+
 ---@class UI_const
 ---@field empty string empty png, 20x20
 ---@field default_9piece string default 9piece
 ---@field px string white pixel, 1x1
+---@field codes keycodes
 local const = {
 	empty = "data/ui_gfx/empty.png",
 	default_9piece = "data/ui_gfx/decorations/9piece0_gray.png",
 	px = "mods/meta_leveling/vfs/white.png", --white pixel
+	codes = dofile_once("mods/meta_leveling/files/scripts/lib/keycodes.lua"),
+	options = options
 }
 
 ---@class (exact) UI_dimensions
@@ -87,7 +98,7 @@ function ui_class:BlockInput()
 	local m_x, m_y = self:get_mouse_pos()
 	GuiAnimateBegin(self.gui)
 	GuiAnimateAlphaFadeIn(self.gui, 2, 0, 0, true)
-	GuiOptionsAddForNextWidget(self.gui, 3) --AlwaysClickable
+	GuiOptionsAddForNextWidget(self.gui, self.c.options.AlwaysClickable) --AlwaysClickable
 	GuiBeginScrollContainer(self.gui, 2, m_x - 25, m_y - 25, 50, 50, false, 0, 0)
 	GuiAnimateEnd(self.gui)
 	GuiEndScrollContainer(self.gui)
@@ -101,10 +112,36 @@ end
 function ui_class:MakePreviousClickable(click_fn, ...)
 	local prev = self:GetPrevious()
 	if prev.hovered then
-		if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
+		if self:is_mouse_clicked() then -- mouse clicks
 			click_fn(self, ...)
 		end
 	end
+end
+
+---Returns true if left mouse was clicked
+---@protected
+---@return boolean
+function ui_class:is_left_clicked()
+	return InputIsMouseButtonJustDown(self.c.codes.mouse.lc)
+end
+
+---Returns true if right mouse was clicked
+---@protected
+---@return boolean
+function ui_class:is_right_clicked()
+	return InputIsMouseButtonJustDown(self.c.codes.mouse.rc)
+end
+
+---Returns true if right or left mouse was clicked
+---@protected
+---@return boolean
+function ui_class:is_mouse_clicked()
+	return self:is_left_clicked() or self:is_right_clicked()
+end
+
+function ui_class:control_chars_pressed()
+	return InputIsKeyJustDown(self.c.codes.keyboard.enter) or InputIsKeyDown(self.c.codes.keyboard.escape) or
+		InputIsKeyDown(self.c.codes.keyboard.space)
 end
 
 -- ############################################
@@ -277,7 +314,7 @@ function ui_class:AddTooltipClickable(x, y, draw, click_fn, ...)
 	local prev = self:GetPrevious()
 	if prev.hovered then
 		self:ShowTooltip(prev.x + x, prev.y + y, draw, ...)
-		if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
+		if self:is_mouse_clicked() then -- mouse clicks
 			if click_fn then click_fn(self, ...) end
 		end
 	end
@@ -286,7 +323,7 @@ end
 ---@protected
 function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, ...)
 	local prev = self:GetPrevious()
-	self:ForceFocusable()
+	self:AddOptionForNext(self.c.options.ForceFocusable)
 	self:Add9PieceBackGroundText(z, sprite, highlight)
 	local tp_offset = (self:GetTextDimension(text) - prev.w - 1.5) / -2
 	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, ...)
@@ -400,11 +437,11 @@ end
 function ui_class:FakeScrollBox_MouseDrag(y)
 	local scroll_prev = self:GetPrevious()
 	if scroll_prev.hovered then
-		if InputIsMouseButtonJustDown(1) then
+		if self:is_left_clicked() then
 			self:FakeScrollBox_HandleClick(y, self.scroll.height)
 		end
 	end
-	if not InputIsMouseButtonDown(1) then
+	if not InputIsMouseButtonDown(self.c.codes.mouse.lc) then
 		self.scroll.move_triggered = false
 	end
 	if self.scroll.move_triggered then
@@ -427,10 +464,10 @@ end
 ---function to accept scroll wheels
 ---@private
 function ui_class:FakeScrollBox_AnswerToWheel()
-	if InputIsMouseButtonJustDown(4) then --up
+	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_up) then
 		self.scroll.target_y = self.scroll.target_y - 10
 	end
-	if InputIsMouseButtonJustDown(5) then --down
+	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_down) then 
 		self.scroll.target_y = self.scroll.target_y + 10
 	end
 end
@@ -668,21 +705,16 @@ function ui_class:ColorGray()
 	self:Color(0.6, 0.6, 0.6)
 end
 
----@protected
-function ui_class:ForceFocusable()
-	self:AddOptionForNext(7)
-end
-
 ---set option for all next widgets
 ---@protected
----@param option gui_options_number
+---@param option ui_options
 function ui_class:AddOption(option)
 	GuiOptionsAdd(self.gui, option)
 end
 
 ---set option for next widget
 ---@protected
----@param option gui_options_number
+---@param option ui_options
 function ui_class:AddOptionForNext(option)
 	GuiOptionsAddForNextWidget(self.gui, option)
 end

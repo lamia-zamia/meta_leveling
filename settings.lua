@@ -154,9 +154,9 @@ local G = {
 }
 do --gui helpers
 	function G.button_options(gui)
-		GuiOptionsAddForNextWidget(gui, 4)
-		GuiOptionsAddForNextWidget(gui, 7)
-		GuiOptionsAddForNextWidget(gui, 8)
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.ClickCancelsDoubleClick)
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.ForceFocusable)
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.HandleDoubleClickAsClick)
 	end
 
 	---@param gui gui

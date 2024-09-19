@@ -58,7 +58,7 @@ function LU_level_up:DrawButtonsCentered(button_y)
 	local button_x = self:CalculateCenterInScreen(total_width, self.const.reward_box_size)
 
 	local function add_button(name, tp, fn, check)
-		self:ForceFocusable()
+		self:AddOptionForNext(self.c.options.ForceFocusable)
 		if check then
 			self:Draw9Piece(button_x - 1, button_y, self.const.z + 1, longest, 10, self.const.ui_9p_button,
 				self.const.ui_9p_button_hl)
@@ -72,7 +72,7 @@ function LU_level_up:DrawButtonsCentered(button_y)
 		local tp_offset = math.abs(self:GetTextDimension(tp) - longest - 1.5) / -2
 		if prev.hovered then
 			self:ShowTooltip(prev.x + tp_offset, prev.y + prev.h * 2.2, tp)
-			if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then -- mouse clicks
+			if self:is_mouse_clicked() then
 				if fn then fn(self) end
 			end
 		end
@@ -98,7 +98,7 @@ function LU_level_up:DrawPointSpenderRewards(x, y, data)
 		local reward_icon = reward_data.ui_icon
 
 		self:DrawRewardRarity(x_offset - 3, y - 3, self.const.z + 4, reward_data.border_color)
-		self:ForceFocusable()
+		self:AddOptionForNext(self.c.options.ForceFocusable)
 		self:Draw9Piece(x_offset, y, self.const.z + 1, data.width - data.width9_offset, data.height,
 			self.const.ui_9p_reward,
 			self.const.ui_9p_reward_hl)
