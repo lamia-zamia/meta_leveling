@@ -153,6 +153,7 @@ end
 ---Check and play effects
 function LUE:update()
 	if not self.last_level then return end
+	if not ML.player.id then return end
 	local pending = ML.pending_levels
 	local max_level = ML:get_level() + pending
 	if max_level > self.last_level then
