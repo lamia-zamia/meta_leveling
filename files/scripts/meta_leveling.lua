@@ -1,4 +1,4 @@
----@class (exact) meta_leveling
+---@class meta_leveling
 ---@field player ml_player
 ---@field level_curve ml_level_curve
 ---@field gui boolean show gui or not
