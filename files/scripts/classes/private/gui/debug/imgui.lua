@@ -261,7 +261,7 @@ end
 ---@private
 ---:)
 function debug:fetch_current()
-	self.numbers.level = ML:get_level() + ML.pending_levels - 1
+	self.numbers.level = ML:get_level()
 	self.numbers.experience = MLP.exp:current()
 end
 
@@ -273,23 +273,24 @@ function debug:draw_numbers()
 		self:fetch_current()
 	end
 	_, self.numbers.level = imgui.InputInt("level", self.numbers.level, 1, 10)
-	imgui.SameLine()
-	if imgui.Button("Apply level") then
-		MLP.set:global_number(MLP.const.globals.current_exp, ML.level_curve[self.numbers.level])
+	if imgui.IsItemDeactivatedAfterEdit() then
+		MLP.set:global_number(MLP.const.globals.current_exp, ML.level_curve[self.numbers.level - 1])
+		MLP.set:global_number(MLP.const.globals.current_level, self.numbers.level - 1)
+		ML:level_up()
+		self:fetch_current()
 	end
 	_, self.numbers.experience = imgui.InputFloat("experience", self.numbers.experience, 10, 1000)
-	imgui.SameLine()
-	if imgui.Button("Apply exp") then
+	if imgui.IsItemDeactivatedAfterEdit() then
 		MLP.set:global_number(MLP.const.globals.current_exp, self.numbers.experience)
+		self:fetch_current()
 	end
-	imgui.SameLine()
 end
 
 ---Draws some trash
 ---@private
 ---:)
 function debug:draw_misc()
-	
+
 end
 
 ---Draws child windows
