@@ -2,7 +2,7 @@
 local LU = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_class.lua")
 
 local modules = {
-	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_debug.lua",
+	-- "mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_debug.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_level_up.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_current.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_stats.lua",
@@ -21,26 +21,6 @@ end
 -- #############		MISC		###########
 -- ############################################
 
----function to unpack variable descriptions
----@param description string
----@param variables reward_description
----@return string?
-function LU:UnpackDescription(description, variables)
-	if not description then return nil end
-	description = self:Locale(description)
-	if variables then
-		for i, variable in ipairs(variables) do
-			if type(variable) == "string" then
-				description = description:gsub("%$" .. i - 1, self:Locale(variable:gsub("%%", "%%%%")))
-			elseif type(variable) == "function" then
-				description = description:gsub("%$" .. i - 1, variable())
-			end
-		end
-	end
-	description = description:gsub("%$%d", "")
-	return self:FormatString(description)
-end
-
 ---close ui on triggers
 ---@private
 function LU:EmergencyExit()
@@ -52,12 +32,6 @@ function LU:EmergencyExit()
 		self.data.mButtonLastFrameFire = ML.player.mButtonLastFrameFire
 		ML.gui = false
 	end
-end
-
----beautiful rewards name
----@private
-function LU:FormatString(text)
-	return text:lower():gsub("^%l", string.upper)
 end
 
 ---invisible 9piece to block inputs on gui
@@ -212,13 +186,13 @@ function LU:DrawMenuButtons()
 		self.const.ui_9p_button_hl)
 	self:AnimateE()
 
-	if self.data.debug then
-		self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("DEBUG")),
-			y - self.const.sprite_offset * 2 - 10.5,
-			self:Locale("DEBUG"))
-		self:MakeButtonFromPrev("cheat menu", self.ToggleMenuWindow, self.const.z, self.const.ui_9p_button,
-			self.const.ui_9p_button_hl, self.DrawDebugMenu)
-	end
+	-- if self.data.debug then
+	-- 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("DEBUG")),
+	-- 		y - self.const.sprite_offset * 2 - 10.5,
+	-- 		self:Locale("DEBUG"))
+	-- 	self:MakeButtonFromPrev("cheat menu", self.ToggleMenuWindow, self.const.z, self.const.ui_9p_button,
+	-- 		self.const.ui_9p_button_hl, self.DrawDebugMenu)
+	-- end
 end
 
 ---draw header
@@ -279,7 +253,7 @@ function LU:GetSetting()
 	self.data.CloseOnShot = MLP.get:mod_setting_boolean("session_exp_close_ui_on_shot")
 	self.data.CloseOnDamage = MLP.get:mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
-	self.data.debug = ModIsEnabled("component-explorer")
+	-- self.data.debug = ModIsEnabled("component-explorer")
 	self:CalculateProgressOffset()
 	self:Stats_FindLongest()
 end

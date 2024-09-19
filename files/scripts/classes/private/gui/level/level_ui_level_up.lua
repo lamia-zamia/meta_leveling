@@ -6,9 +6,9 @@ local LU_level_up = {}
 ---@param reward ml_single_reward_data
 function LU_level_up:RewardsTooltip(reward)
 	local texts = {
-		name = self:FormatString(self:Locale(reward.ui_name)),
-		description = self:UnpackDescription(reward.description, reward.description_var),
-		description2 = self:UnpackDescription(reward.description2, reward.description2_var)
+		name = ML.rewards_deck.FormatString(self:Locale(reward.ui_name)),
+		description = ML.rewards_deck:UnpackDescription(reward.description, reward.description_var),
+		description2 = ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var)
 	}
 	self:TextCentered(0, 0, texts.name, 0)
 	if texts.description then self:TextCentered(0, 0, texts.description, 0) end

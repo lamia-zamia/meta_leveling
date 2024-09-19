@@ -16,17 +16,17 @@ local LU_meta = {
 ---@param point ml_progress_point_run
 function LU_meta:ProgressPointTooltipText(point)
 	local changed = point.current_value ~= point.next_value
-	self:TextCentered(0, 0, self:FormatString(self:Locale(point.ui_name)), 0)
-	local description = self:UnpackDescription(point.description, point.description_var)
+	self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale(point.ui_name)), 0)
+	local description = ML.rewards_deck:UnpackDescription(point.description, point.description_var)
 	if description then
 		self:ColorGray()
 		self:TextCentered(0, 0, description, 0)
 	end
-	self:TextCentered(0, 0, self:FormatString(self:Locale("$ml_meta_current: " .. point.applied_bonus(point.current_value))),
+	self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_current: " .. point.applied_bonus(point.current_value))),
 		0)
 	if changed then
 		self:Color(1, 1, 0.4)
-		self:TextCentered(0, 0, self:FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))),
+		self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))),
 			0)
 	end
 end
@@ -280,7 +280,7 @@ end
 ---@param index number
 ---@param point ml_progress_point_run
 function LU_meta:DrawPointProgressElement(index, point)
-	local progress_name = self:FormatString(self:Locale(point.ui_name))
+	local progress_name = ML.rewards_deck.FormatString(self:Locale(point.ui_name))
 	self:Text(0, self.meta.y - self.scroll.y, progress_name .. ":")
 	local prev = self:GetPrevious()
 	self:ProgressPointAddTooltip(prev.x, prev.y + 1, prev.w, prev.h - 2, self:GetTextDimension(progress_name) / 2,

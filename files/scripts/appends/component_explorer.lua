@@ -10,8 +10,8 @@ menu_extensions.list[#menu_extensions.list+1] = {
     end,
     -- These are optional. Please be careful with adding new shortcuts since
     -- it's easy to step on someone else's toes with this.
-    -- shortcut = "CTRL+SHIFT+N",
-    -- check_shortcut = function()
-    --     return imgui.IsKeyPressed(imgui.Key.N)
-    -- end
+    shortcut = "CTRL+SHIFT+M",
+    check_shortcut = function()
+        return imgui.IsKeyPressed(imgui.Key.M)
+    end
 }

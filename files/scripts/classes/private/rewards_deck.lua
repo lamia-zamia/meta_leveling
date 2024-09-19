@@ -50,6 +50,34 @@ local rewards_deck = {
 	reroll_count = 1,
 }
 
+---beautiful rewards name
+---@param text string
+---@return string
+function rewards_deck.FormatString(text)
+	return (text:lower():gsub("^%l", string.upper))
+end
+
+---function to unpack variable descriptions
+---@param description string
+---@param variables reward_description
+---@return string?
+function rewards_deck:UnpackDescription(description, variables)
+	if not description then return nil end
+	description = GameTextGetTranslatedOrNot(description)
+	if variables then
+		for i, variable in ipairs(variables) do
+			if type(variable) == "string" then
+				local text = variable:gsub("%%", "%%%%")
+				description = description:gsub("%$" .. i - 1, GameTextGetTranslatedOrNot(text))
+			elseif type(variable) == "function" then
+				description = description:gsub("%$" .. i - 1, variable())
+			end
+		end
+	end
+	description = description:gsub("%$%d", "")
+	return self.FormatString(description)
+end
+
 ---Pairs sorted
 ---@private
 ---@generic T: table, K, V

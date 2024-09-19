@@ -11,11 +11,11 @@ function LU_debug:debug_all_rewards_tooltip(reward)
 	self:Text(0, 0, "id: " .. reward.id)
 	self:Text(0, 0, "name: " .. self:Locale(reward.ui_name))
 	if reward.description then
-		self:Text(0, 0, "desk: " .. self:UnpackDescription(reward.description, reward.description_var))
+		self:Text(0, 0, "desk: " .. ML.rewards_deck:UnpackDescription(reward.description, reward.description_var))
 	end
 	if reward.description2 then
 		self:ColorGray()
-		self:Text(0, 0, "desk2: " .. self:UnpackDescription(reward.description2, reward.description2_var))
+		self:Text(0, 0, "desk2: " .. ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var))
 	end
 	self:Text(0, 0, "prob: " .. ML.rewards_deck:get_probability(reward.probability)) ---@diagnostic disable-line: invisible
 	if reward.max < 1280 then
