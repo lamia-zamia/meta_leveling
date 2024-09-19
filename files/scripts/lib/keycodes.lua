@@ -11,7 +11,8 @@ local mouse = {
 local keyboard = {
 	space = 44,
 	enter = 40,
-	escape = 41
+	escape = 41,
+	lshift = 225,
 }
 
 ---@class keycodes
