@@ -57,7 +57,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
-			components:add_value_to_component(component_id, "money", 200)
+			components:add_value_to_component(component_id, "money", 400)
 		end
 	},
 	{
@@ -74,7 +74,7 @@ local reward_list = {
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
-			components:add_value_to_component(component_id, "money", 1000)
+			components:add_value_to_component(component_id, "money", 1600)
 		end
 	},
 	{
