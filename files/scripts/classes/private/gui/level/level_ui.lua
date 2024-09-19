@@ -250,6 +250,7 @@ function LU:GetSetting()
 	self.data.CloseOnDamage = MLP.get:mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
 	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
+	self.data.on_death = MLP.get:mod_setting_boolean("show_ui_on_death")
 	self:CalculateProgressOffset()
 	self:Stats_FindLongest()
 end
@@ -269,6 +270,46 @@ function LU:PointSpenderCheck()
 	return false
 end
 
+---Draws button on death screen
+function LU:IfDead()
+	if StatsGetValue("dead") == "0" then return end
+	if self.data.on_death and GameHasFlagRun(MLP.const.flags.dead) then
+		local points = MLP.points:get_current_currency()
+		GuiZSet(self.gui, self.const.z - 2)
+		self:AnimateB()
+		self:AnimateAlpha(0.05, 0.1, false)
+		self:AnimateScale(0.05, false)
+		self:Color(0.8, 0.8, 0.8)
+		self:TextCentered(0, 10, "Meta Leveling", self.dim.x)
+		self:MakeButtonFromPrev(self:Locale("$ml_exp_bar_tooltip"), self.OpenMenu, self.const.z + 10,
+			self.const.ui_9p_button, self.const.ui_9p_button_hl)
+		if points > 0 then
+			self:Color(0.8, 0.8, 0.8)
+			self:TextCentered(0, 30, self:Locale("$ml_meta_available: ") .. points, self.dim.x)
+		end
+		self:AnimateE()
+	else
+		if ML.gui then GameAddFlagRun(MLP.const.flags.dead) end
+		if InputIsKeyJustDown(44) or InputIsKeyDown(40) or InputIsKeyDown(41) then
+			GameAddFlagRun(MLP.const.flags.dead)
+		end
+		local cause_of_death = StatsGetValue("killed_by") .. " " .. StatsGetValue("killed_by_extra")
+		local cause_of_death_len = self:GetTextDimension(self:Locale("$stat_cause_of_death " .. cause_of_death))
+		local x_cod = self:CalculateCenterInScreen(cause_of_death_len, self.dim.y)
+		local you_are_dead_len = self:GetTextDimension(self:Locale(" $menugameover_nextbutton "))
+		local x_yad = self:CalculateCenterInScreen(you_are_dead_len, self.dim.y)
+		self:Draw9Piece(x_cod, 132, 10, cause_of_death_len, 15, self.c.empty)
+		local prev_cod = self:GetPrevious()
+		self:Draw9Piece(x_yad, 142, 10, you_are_dead_len, 15, self.c.empty)
+		local prev_yad = self:GetPrevious()
+		if prev_cod.hovered or prev_yad.hovered then
+			if InputIsMouseButtonJustDown(1) or InputIsMouseButtonJustDown(2) then
+				GameAddFlagRun(MLP.const.flags.dead)
+			end
+		end
+	end
+end
+
 ---main logic
 ---@private
 function LU:DrawLevelUI()
@@ -280,14 +321,25 @@ function LU:DrawLevelUI()
 	self:CheckForAnim()
 end
 
+---Open menu
+---@private
+function LU:OpenMenu()
+	ML:toggle_ui()
+	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
+end
+
 ---main loop
 function LU:loop()
 	if ML.gui_em_exit then self:EmergencyExit() end
 	self:StartFrame()
-	if ML.gui then self:DrawLevelUI() end
+
+	if ML.gui then
+		self:DrawLevelUI()
+	else
+		self:IfDead()
+	end
 	if InputIsKeyJustDown(self.data.hotkey) then
-		ML:toggle_ui()
-		GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
+		self:OpenMenu()
 	end
 end
 

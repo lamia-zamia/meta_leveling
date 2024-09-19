@@ -505,6 +505,8 @@ local translations =
 		session_exp_ui_open = "Misc",
 		session_exp_ui_open_auto = "Open level-up menu when available",
 		session_exp_ui_open_auto_d = "Automatically open level-up menu when you open UI",
+		show_ui_on_death = "Show menu on death",
+		show_ui_on_death_d = "Shows open menu button on death screen",
 		gameplay_cat = "Gameplay", --cat
 		gameplay_cat_d = "In-game related settings",
 		session_exp_on_level_up = "On level up",
@@ -558,6 +560,8 @@ local translations =
 		session_exp_ui_open = "Прочее",
 		session_exp_ui_open_auto = "Автоматически открывать меню",
 		session_exp_ui_open_auto_d = "Автоматически открывать меню повышение уровня\nкогда вы открываете интерфейс",
+		show_ui_on_death = "Меню при смерти",
+		show_ui_on_death_d = "Показывать кнопку открытия меню после смерти",
 		gameplay_cat = "Геймплей", --cat
 		gameplay_cat_d = "Настройки связанные с геймплеем",
 		session_exp_on_level_up = "Новый уровень",
@@ -614,6 +618,7 @@ D = {
 	session_exp_ui_open_auto = true,
 	open_ui_hotkey = 0,
 	session_exp_foot_particle = true,
+	show_ui_on_death = true,
 }
 
 local function build_settings()
@@ -720,7 +725,7 @@ local function build_settings()
 					id = "session_exp_ui_open",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_ui_open,
-					checkboxes = { "session_exp_ui_open_auto" }
+					checkboxes = { "session_exp_ui_open_auto", "show_ui_on_death" }
 				}
 			}
 		},

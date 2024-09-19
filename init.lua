@@ -37,11 +37,6 @@ function OnPlayerSpawned()
 	gui:UpdateSettings()
 end
 
----Add flag on death
-function OnPlayerDied()
-	GameAddFlagRun(MLP.const.flags.dead)
-end
-
 ---Update settings when paused
 function OnPausedChanged()
 	ML.level_up_effects:update_settings()

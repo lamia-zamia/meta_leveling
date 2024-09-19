@@ -45,10 +45,6 @@ function LU_current:DrawCurrentRewardsItems()
 			x = x + horizontal_between
 		end
 	end
-	-- local prev = self:GetPrevious()
-	-- print(prev.y, prev.h)
-	-- print(y, y % distance_between, y + y % distance_between)
-	-- self:DrawRewardRarity(0, y - 4 - self.scroll.y, self.const.z, ML.rewards_deck.borders.common)
 	self:Text(0, y + 21, "") -- set height for scrollbar, 9piece works weird
 end
 

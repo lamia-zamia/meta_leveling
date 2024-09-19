@@ -28,8 +28,8 @@ local data = {
 	CloseOnShot = false,
 	CloseOnDamage = false,
 	SkipMenuOnPending = true,
-	debug = false,
 	hotkey = 0,
+	on_death = true
 }
 
 ---@class LU.anim
