@@ -10,11 +10,10 @@ local const = {
 	ui_9p_button_hl = "mods/meta_leveling/files/gfx/ui/ui_9piece_button_highlight.png",
 	ui_9p_button_important = "mods/meta_leveling/files/gfx/ui/ui_9piece_button_important.png",
 	height = 180,
-	height_max = 140,
 	width = 320,
 	sprite_offset = 20,
 	reward_box_size = 24,
-	z = -10,
+	z = -1000,
 }
 
 ---@class LU.data
@@ -23,7 +22,6 @@ local data = {
 	mLastDamageFrame = -120,
 	mButtonLastFrameFire = -2,
 	reward_list = nil,
-	scrollbox_height = const.sprite_offset,
 	DrawWindow = nil,
 	x = 0,
 	y = 0,
@@ -31,6 +29,7 @@ local data = {
 	CloseOnDamage = false,
 	SkipMenuOnPending = true,
 	debug = false,
+	hotkey = 0,
 }
 
 ---@class LU.anim
@@ -55,6 +54,7 @@ local anim = {
 ---@field private anim LU.anim
 ---@field private DrawWindow function?
 local LU = UI_class:new()
+LU.scroll.width = const.width
 LU.const = const
 LU.data = data
 LU.anim = anim

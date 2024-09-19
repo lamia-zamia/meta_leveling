@@ -326,7 +326,6 @@ function EB:GetSettings()
 		or MLP.get:mod_setting_boolean("session_exp_close_ui_on_shot")
 		or MLP.get:mod_setting_boolean("session_exp_close_ui_on_pause")
 	self.data.reminder_in_inventory = MLP.get:mod_setting_boolean("hud_reminder_in_inventory")
-	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
 	self.data.anim_bar.min, self.data.anim_bar.max, self.data.anim_bar.alpha = self:AnimateBarHSVFadeDetermineBoundaries()
 	local position = ModSettingGet("meta_leveling.exp_bar_position")
 	if position == "on_top" then
@@ -366,10 +365,6 @@ function EB:DrawExpBar()
 	if self.data.perc.show then self:DrawPercentage(self.data.perc.x, self.data.perc.y) end
 	if self.data.reminder_in_inventory and GameIsInventoryOpen() then self:InventoryReminder() end
 	self:AnimateTextFading()
-	if InputIsKeyJustDown(self.data.hotkey) then
-		ML:toggle_ui()
-		GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
-	end
 end
 
 ---Main loop function

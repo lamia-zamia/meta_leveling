@@ -48,6 +48,7 @@ local const = {
 	},
 	flags = {
 		leveling_up = "META_LEVELING_LEVELING_UP",
+		dead = "META_LEVELING_GAME_END"
 	},
 	player_tags = {
 		"player_unit", "player_projectile", "projectile_player"

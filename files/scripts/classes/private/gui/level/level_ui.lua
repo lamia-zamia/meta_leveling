@@ -87,7 +87,7 @@ end
 ---@param distance_between number
 ---@return boolean
 function LU:ElementIsVisible(y, distance_between)
-	if y - self.scroll.y + distance_between / 2 > 0 and y - self.scroll.y - distance_between / 2 < self.const.height_max then
+	if y - self.scroll.y + distance_between / 2 > 0 and y - self.scroll.y - distance_between / 2 < self.scroll.height_max then
 		return true
 	end
 	return false
@@ -97,7 +97,6 @@ end
 ---@private
 function LU:ResetScrollBoxHeight()
 	self:FakeScrollBox_Reset()
-	self.data.scrollbox_height = self.const.sprite_offset
 end
 
 ---function to reset scrollbox params to default
@@ -163,7 +162,7 @@ function LU:DrawMenuButtons()
 		x = x + prev.w + 10
 		return x
 	end
-	if ML.pending_levels >= 1 then
+	if ML.pending_levels >= 1 and not GameHasFlagRun(MLP.const.flags.dead) then
 		self:Text(x, y, self:Locale("$ml_level_up"))
 		self:MakeButtonFromPrev(self:Locale("$ml_level_up_tp"), self.OpenLevelUpMenu, self.const.z,
 			self.const.ui_9p_button_important,
@@ -185,14 +184,6 @@ function LU:DrawMenuButtons()
 	self:MakeButtonFromPrev(self:Locale("$ml_close_tp"), self.CloseMenu, self.const.z, self.const.ui_9p_button,
 		self.const.ui_9p_button_hl)
 	self:AnimateE()
-
-	-- if self.data.debug then
-	-- 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("DEBUG")),
-	-- 		y - self.const.sprite_offset * 2 - 10.5,
-	-- 		self:Locale("DEBUG"))
-	-- 	self:MakeButtonFromPrev("cheat menu", self.ToggleMenuWindow, self.const.z, self.const.ui_9p_button,
-	-- 		self.const.ui_9p_button_hl, self.DrawDebugMenu)
-	-- end
 end
 
 ---draw header
@@ -233,7 +224,12 @@ end
 ---@private
 function LU:DrawMainMenu()
 	self.data.x, self.data.y = self:CalculateCenterInScreen(self.const.width, self.const.height)
-	self:DrawMainHeader()
+	if GameHasFlagRun(MLP.const.flags.dead) then
+		self.scroll.height_max = 75
+		self.data.y = 10
+	else
+		self:DrawMainHeader()
+	end
 	self:DrawMenuButtons()
 	if self.DrawWindow then
 		self:DrawMenuConnector()
@@ -253,21 +249,31 @@ function LU:GetSetting()
 	self.data.CloseOnShot = MLP.get:mod_setting_boolean("session_exp_close_ui_on_shot")
 	self.data.CloseOnDamage = MLP.get:mod_setting_boolean("session_exp_close_ui_on_damage")
 	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
-	-- self.data.debug = ModIsEnabled("component-explorer")
+	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
 	self:CalculateProgressOffset()
 	self:Stats_FindLongest()
+end
+
+---Checks and runs point spender if needed
+---@private
+---@return boolean
+function LU:PointSpenderCheck()
+	if GameHasFlagRun(MLP.const.flags.dead) then return false end
+	if self.data.SkipMenuOnPending and ML.pending_levels > 0 then
+		GameAddFlagRun(MLP.const.flags.leveling_up)
+	end
+	if GameHasFlagRun(MLP.const.flags.leveling_up) then
+		self:DrawPointSpender()
+		return true
+	end
+	return false
 end
 
 ---main logic
 ---@private
 function LU:DrawLevelUI()
 	GuiZSet(self.gui, self.const.z - 2)
-	if GameHasFlagRun(MLP.const.flags.leveling_up) then
-		self:DrawPointSpender()
-	else
-		if self.data.SkipMenuOnPending and ML.pending_levels > 0 then
-			GameAddFlagRun(MLP.const.flags.leveling_up)
-		end
+	if not self:PointSpenderCheck() then
 		self:DrawMainMenu()
 	end
 
@@ -279,6 +285,10 @@ function LU:loop()
 	if ML.gui_em_exit then self:EmergencyExit() end
 	self:StartFrame()
 	if ML.gui then self:DrawLevelUI() end
+	if InputIsKeyJustDown(self.data.hotkey) then
+		ML:toggle_ui()
+		GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
+	end
 end
 
 return LU

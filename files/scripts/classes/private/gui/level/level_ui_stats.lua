@@ -20,7 +20,7 @@ function LU_stats:Stats_DrawWindow()
 	local distance_between = 10
 	local x_offset = x + self.stats_longest + 10
 	self:AddOption(2)
-	self:DrawLine(x_offset - 3, 0, 1, self.const.height_max)
+	self:DrawLine(x_offset - 3, 0, 1, self.scroll.height_max)
 	self:DrawBorders()
 	for i = 1, #ML.stats.list do
 		local stat = ML.stats.list[i]
