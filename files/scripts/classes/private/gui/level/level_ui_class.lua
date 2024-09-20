@@ -29,7 +29,8 @@ local data = {
 	CloseOnDamage = false,
 	SkipMenuOnPending = true,
 	hotkey = 0,
-	on_death = true
+	on_death = true,
+	credits_frame = 0
 }
 
 ---@class LU.anim
