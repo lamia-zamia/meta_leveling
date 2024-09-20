@@ -20,6 +20,7 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 
 ---@class rewards_deck
 ---@field private reward_definition_list ml_rewards list of rewards
+---@field reward_appended_by { [ml_reward_id]: string}
 ---@field groups_data { [string]: ml_group_data}
 ---@field reward_data { [string]: ml_single_reward_data } data of rewards
 ---@field ordered_groups_data ml_group_data[]
@@ -37,12 +38,12 @@ local rewards_deck = {
 	groups_data = {},
 	default_icon = "mods/meta_leveling/files/gfx/rewards/no_png.png",
 	borders = {
-		common = {0.6, 0.6, 0.6, 0.6},
-		uncommon = {0.3, 1, 0.3, 0.6},
-		rare = {0, 1, 1, 0.6},
-		epic = {1, 0, 1, 0.7},
-		legendary = {1, 0.5, 0, 1},
-		relic  = {1, 0, 0, 1}
+		common    = { 0.6, 0.6, 0.6, 0.6 },
+		uncommon  = { 0.3, 1, 0.3, 0.6 },
+		rare      = { 0, 1, 1, 0.6 },
+		epic      = { 1, 0, 1, 0.7 },
+		legendary = { 1, 0.5, 0, 1 },
+		relic     = { 1, 0, 0, 1 }
 	},
 	max_probability = 1,
 	min_probability = 0.01,
@@ -50,6 +51,7 @@ local rewards_deck = {
 	distance = 4,
 	reroll_count = 1,
 	picked_count = 0,
+	reward_appended_by = {}
 }
 
 ---beautiful rewards name
@@ -106,15 +108,18 @@ end
 
 ---Adds a single reward to the reward list.
 ---@param table ml_reward
-function rewards_deck:add_reward(table)
+---@param appended_by? string
+function rewards_deck:add_reward(table, appended_by)
 	self.reward_definition_list[#self.reward_definition_list + 1] = table
+	if appended_by then self.reward_appended_by[table.id] = appended_by end
 end
 
 ---Adds an array of rewards to the reward list.
 ---@param table ml_rewards
-function rewards_deck:add_rewards(table)
+---@param appended_by? string
+function rewards_deck:add_rewards(table, appended_by)
 	for i = 1, #table do
-		self:add_reward(table[i])
+		self:add_reward(table[i], appended_by)
 	end
 end
 
@@ -254,11 +259,17 @@ function rewards_deck:set_borders(id, probability, border)
 	if type(probability) == "function" then
 		return self.borders.common
 	end
-	if probability < 0.03 then return self.borders.relic
-	elseif probability < 0.1 then return self.borders.legendary
-	elseif probability < 0.2 then return self.borders.epic
-	elseif probability < 0.3 then return self.borders.rare
-	elseif probability < 0.5 then return self.borders.uncommon end
+	if probability < 0.03 then
+		return self.borders.relic
+	elseif probability < 0.1 then
+		return self.borders.legendary
+	elseif probability < 0.2 then
+		return self.borders.epic
+	elseif probability < 0.3 then
+		return self.borders.rare
+	elseif probability < 0.5 then
+		return self.borders.uncommon
+	end
 	return self.borders.common
 end
 
@@ -407,6 +418,7 @@ function rewards_deck:add_specific_reward_pickup_amount(reward_id)
 	MLP.set:global_number(MLP.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
 		self.reward_data[reward_id].pick_count)
 	self.picked_count = self.picked_count + 1
+	self:add_to_progress(reward_id)
 end
 
 ---Skips the current reward and advances the draw index.
@@ -453,6 +465,24 @@ function rewards_deck:reroll()
 	self.reroll_count = self.reroll_count - 1
 	MLP.set:global_number(MLP.const.globals.reroll_count, self.reroll_count)
 	self:set_draw_index()
+end
+
+---Add reward into progress
+---@param reward_id ml_reward_id
+---@private
+function rewards_deck:add_to_progress(reward_id)
+	local setting_id = "meta_leveling.reward_picked_" .. reward_id
+	local count = tonumber(ModSettingGet(setting_id)) or 0
+	ModSettingSet(setting_id, count + 1)
+	ModSettingSetNextValue(setting_id, count + 1, false)
+end
+
+---Returns picked up count
+---@param reward_id ml_reward_id
+---@return number
+function rewards_deck:reward_picked_up_count_all_time(reward_id)
+	local setting_id = "meta_leveling.reward_picked_" .. reward_id
+	return tonumber(ModSettingGet(setting_id)) or 0
 end
 
 return rewards_deck

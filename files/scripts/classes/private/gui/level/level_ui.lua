@@ -6,7 +6,8 @@ local modules = {
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_level_up.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_current.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_stats.lua",
-	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_meta.lua"
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_meta.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_list.lua"
 }
 
 for _, module_name in ipairs(modules) do
@@ -211,6 +212,8 @@ function LU:DrawMenuButtons()
 
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_meta"), self:Locale("$ml_meta_tp"), self.DrawMetaMenu)
 
+	self:AddMenuSelector(x_off(), y, self:Locale("$ml_rewards_progression"), self:Locale("$ml_rewards_progression_tp"), self.DrawRewardsList)
+	
 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("$ml_close")), y,
 		self:Locale("$ml_close"))
 	self:MakeButtonFromPrev(self:Locale("$ml_close_tp"), self.CloseMenu, self.const.z, self.const.ui_9p_button,
