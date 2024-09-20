@@ -273,7 +273,8 @@ end
 ---@return boolean
 ---@nodiscard
 function LU:IsCreditsPlaying()
-	if GameHasFlagRun("ending_game_completed") and self.data.credits_frame < 5200 then
+	if GameHasFlagRun("ending_game_completed") and self.data.credits_frame < 5150 then
+		print(self.data.credits_frame)
 		self.data.credits_frame = self.data.credits_frame + 1
 		if InputIsKeyDown(self.c.codes.keyboard.space) and self.data.credits_frame < 5000 then ---last few seconds doesn't accelerate with space
 			self.data.credits_frame = self.data.credits_frame + 15
