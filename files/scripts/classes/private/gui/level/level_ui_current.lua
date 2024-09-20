@@ -28,6 +28,12 @@ function LU_current:DrawCurrentRewardsItems()
 	local x = 4
 	local horizontal_between = 29.585 -- don't question my sanity pls
 	local distance_between = 30
+	local picked_count = ML.rewards_deck.picked_count
+	if picked_count < 1 then
+		self:ColorGray()
+		self:TextCentered(0, 0, self:Locale("$ml_current_none"), self.scroll.width)
+		return
+	end
 	for _, group in ipairs(ML.rewards_deck.ordered_groups_data) do
 		if group.picked then
 			if x + horizontal_between / 2 > self.const.width then
@@ -45,7 +51,7 @@ function LU_current:DrawCurrentRewardsItems()
 			x = x + horizontal_between
 		end
 	end
-	self:Text(0, y + 21, "") -- set height for scrollbar, 9piece works weird
+	self:TextCentered(0, y + 27 - self.scroll.y, self:Locale("$ml_current_rewards: ") .. picked_count, self.scroll.width)
 end
 
 ---function to draw current rewards

@@ -31,6 +31,7 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 ---@field private distance number minimum distance between rewards
 ---@field borders { [string]: ml_reward_border}
 ---@field reroll_count number
+---@field picked_count number how many rewards have been picked
 local rewards_deck = {
 	reward_data = {},
 	groups_data = {},
@@ -48,6 +49,7 @@ local rewards_deck = {
 	list = {},
 	distance = 4,
 	reroll_count = 1,
+	picked_count = 0,
 }
 
 ---beautiful rewards name
@@ -194,6 +196,7 @@ function rewards_deck:initialize_reward_data(reward)
 		min_level = reward.min_level or 1
 	}
 	reward_entry.border_color = self:set_borders(reward_id, reward_entry.probability, reward.border_color)
+	self.picked_count = self.picked_count + reward_entry.pick_count
 	self.reward_data[reward.id] = reward_entry
 	self:initialize_group_data(reward_entry)
 end
@@ -403,6 +406,7 @@ function rewards_deck:add_specific_reward_pickup_amount(reward_id)
 	self.groups_data[self.reward_data[reward_id].group_id].picked = true
 	MLP.set:global_number(MLP.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
 		self.reward_data[reward_id].pick_count)
+	self.picked_count = self.picked_count + 1
 end
 
 ---Skips the current reward and advances the draw index.

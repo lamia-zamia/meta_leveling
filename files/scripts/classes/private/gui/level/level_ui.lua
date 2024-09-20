@@ -207,9 +207,9 @@ function LU:DrawMenuButtons()
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
 		self.DrawCurrentRewards)
 
-	self:AddMenuSelector(x_off(), y, "Stats", "heh", self.Stats_DrawMenu)
+	self:AddMenuSelector(x_off(), y, self:Locale("$ml_stats"), self:Locale("$ml_stats_tp"), self.Stats_DrawMenu)
 
-	self:AddMenuSelector(x_off(), y, "Meta", "mheh", self.DrawMetaMenu)
+	self:AddMenuSelector(x_off(), y, self:Locale("$ml_meta"), self:Locale("$ml_meta_tp"), self.DrawMetaMenu)
 
 	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("$ml_close")), y,
 		self:Locale("$ml_close"))
