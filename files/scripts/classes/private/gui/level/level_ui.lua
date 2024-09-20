@@ -274,7 +274,6 @@ end
 ---@nodiscard
 function LU:IsCreditsPlaying()
 	if GameHasFlagRun("ending_game_completed") and self.data.credits_frame < 5150 then
-		print(self.data.credits_frame)
 		self.data.credits_frame = self.data.credits_frame + 1
 		if InputIsKeyDown(self.c.codes.keyboard.space) and self.data.credits_frame < 5000 then ---last few seconds doesn't accelerate with space
 			self.data.credits_frame = self.data.credits_frame + 15
@@ -296,8 +295,13 @@ function LU:DrawEndMenu()
 	self:MakeButtonFromPrev(self:Locale("$ml_exp_bar_tooltip"), self.OpenMenu, self.const.z + 10,
 		self.const.ui_9p_button, self.const.ui_9p_button_hl)
 	if points > 0 then
+		local acquired = MLP.get:global_number(MLP.const.globals.meta_point_acquired, 0)
+		local text = self:Locale("$ml_meta_available: ") .. points
+		if acquired > 0 then
+			text = text .. self:Locale(", $ml_meta_acquired_in_run: ") .. acquired
+		end
 		self:Color(0.8, 0.8, 0.8)
-		self:TextCentered(0, 30, self:Locale("$ml_meta_available: ") .. points, self.dim.x)
+		self:TextCentered(0, 30, text, self.dim.x)
 	end
 	self:AnimateE()
 end
