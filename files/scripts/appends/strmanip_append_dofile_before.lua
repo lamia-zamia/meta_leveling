@@ -63,6 +63,8 @@ local append_list_once = {
 	"mods/meta_leveling/files/scripts/appends/dofile_before/templequest/chest_darkness.lua",
 	["data/biome_impl/static_tile/puzzle_logic_barren.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/templequest/puzzle_logic_potion_mimics.lua",
+	["data/scripts/buildings/hourglass_material_check.lua"] =
+	"mods/meta_leveling/files/scripts/appends/dofile_before/hourglass_material_check.lua"
 }
 
 for original_file, append_file in pairs(append_list_once) do
