@@ -20,6 +20,7 @@ ml_skip_tp,Spend level on nothing,Потратить уровень ни на ч
 ml_meta_points,points,очков,,,,,,,,,,
 ml_meta_available,available points,доступно очков,,,,,,,,,,
 ml_meta_available_tp,Win the game or do cool stuff to get points,Победите в игре или сделайте что-то крутое чтобы получить очки,,,,,,,,,,
+ml_meta_acquired_in_run,acquired this run,получено в этом забеге,,,,,,,,,,
 ml_cost,Cost,Стоимость,,,,,,,,,,
 ml_cost_return,You will get back,Вы получите обратно,,,,,,,,,,
 ml_meta_current,Current bonus,Текущий бонус,,,,,,,,,,
