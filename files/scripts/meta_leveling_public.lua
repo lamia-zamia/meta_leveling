@@ -44,48 +44,15 @@ function MLP:QuestCompleted(exp, quest)
 	MLP:AddExpGlobal(exp, player_id, message .. quest .. ", " .. gained .. ": ")
 end
 
----Calculates bonus points for orbs
----@private
----@return number
-function MLP:CalculateMetaPointsOrbs()
-	---Points for basic win, orbs and NG
-	local newgame_n = tonumber(SessionNumbersGetValue("NEW_GAME_PLUS_COUNT"))
-	local orb_count = GameGetOrbCountThisRun()
-	local exponent = orb_count + newgame_n ^ 0.5
-	return 1.15 ^ exponent
-end
-
----Calculates bonus points for speedruns
----@private
----@return number
-function MLP:CalculateMetaPointsSpeedBonus()
-	local minutes = GameGetFrameNum() / 60 / 60
-	if minutes <= 5 then
-		return 20
-	else
-		return math.max(4 - minutes / 5, 0)
-	end
-end
-
----Calculates points for pacifist run
----@private
----@return number
-function MLP:CalculateMetaPointsPacifistBonus()
-	local kills = tonumber(StatsGetValue("enemies_killed"))
-	if kills == 0 then
-		return 50
-	else
-		return math.max(5 - kills / 10, 0)
-	end
-end
-
 ---Returns a number of points you will get for using a sampo
 ---@return number
 function MLP:CalculateMetaPointsOnSampo()
 	local points = 0
-	points = points + self:CalculateMetaPointsOrbs()
-	points = points + self:CalculateMetaPointsSpeedBonus()
-	points = points + self:CalculateMetaPointsPacifistBonus()
+	points = points + self.points:CalculateMetaPointsOrbs()
+	points = points + self.points:CalculateMetaPointsSpeedBonus()
+	points = points + self.points:CalculateMetaPointsPacifistBonus()
+	points = points + self.points:CalculateMetaPointsDamageTaken()
+	points = points + tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) / 2
 	return math.floor(points)
 end
 
