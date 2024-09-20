@@ -286,11 +286,41 @@ function debug:draw_numbers()
 	end
 end
 
+function debug:add_orb()
+	local orb_e = EntityCreateNew()
+	EntityAddComponent2(orb_e, "OrbComponent", {
+		orb_id = GameGetOrbCountThisRun() + 50
+	})
+	EntityAddComponent2(orb_e, "ItemComponent", {
+		enable_orb_hacks = true
+	})
+	GamePickUpInventoryItem(ML.player.id, orb_e, false)
+end
+
 ---Draws some trash
 ---@private
 ---:)
 function debug:draw_misc()
-
+	if imgui.Button("Add orbs") then
+		self:add_orb()
+	end
+	if imgui.Button("Pick Sampo") then
+		local sampo_e = EntityLoad("data/entities/animals/boss_centipede/sampo.xml", 10000, 10000)
+		GamePickUpInventoryItem(ML.player.id, sampo_e, false)
+	end
+	if imgui.Button("KYS") then
+		local gsc_id = ML.player:get_component_by_name("GameStatsComponent")
+		if gsc_id then
+			ComponentSetValue2(gsc_id, "extra_death_msg", "Killed by debug")
+		end
+		EntityKill(ML.player.id)
+	end
+	imgui.Text("Meta points")
+	imgui.Text("Speed bonus: " .. MLP.points:CalculateMetaPointsSpeedBonus())
+	imgui.Text("Pacifist bonus: " .. MLP.points:CalculateMetaPointsPacifistBonus())
+	imgui.Text("Orb bonus: " .. MLP.points:CalculateMetaPointsOrbs())
+	imgui.Text("Damage bonus: " .. MLP.points:CalculateMetaPointsDamageTaken())
+	imgui.Text("You will be rewarded for " .. MLP:CalculateMetaPointsOnSampo() .. " points")
 end
 
 ---Draws child windows
@@ -339,6 +369,9 @@ function debug:draw()
 		end
 		if imgui.Button("Numbers") then
 			self.numbers.show = not self.numbers.show
+		end
+		if imgui.Button("Misc") then
+			self.misc = not self.misc
 		end
 		imgui.End()
 	end
