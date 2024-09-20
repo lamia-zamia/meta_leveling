@@ -44,7 +44,7 @@ function MLP:QuestCompleted(exp, quest)
 	MLP:AddExpGlobal(exp, player_id, message .. quest .. ", " .. gained .. ": ")
 end
 
----Calculate bonus points for orbs
+---Calculates bonus points for orbs
 ---@private
 ---@return number
 function MLP:CalculateMetaPointsOrbs()
@@ -67,7 +67,7 @@ function MLP:CalculateMetaPointsSpeedBonus()
 	end
 end
 
----Calculate points for pacifist run
+---Calculates points for pacifist run
 ---@private
 ---@return number
 function MLP:CalculateMetaPointsPacifistBonus()
