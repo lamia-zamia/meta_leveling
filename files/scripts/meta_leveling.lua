@@ -59,7 +59,7 @@ function ML:level_up()
 	if level % 5 == 0 then
 		self.rewards_deck:add_reroll(1)
 	end
-	if level % 100 == 0 then
+	if level % 50 == 0 then
 		MLP.points:modify_current_currency(1)
 	end
 	self.next_exp = self:get_next()
