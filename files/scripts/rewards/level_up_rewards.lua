@@ -1,4 +1,4 @@
-local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
+local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua") ---@type ML_components_helper
 
 ---@type ml_rewards
 local reward_list = {
@@ -475,6 +475,21 @@ local reward_list = {
 			MLP.set:add_to_global_number(MLP.const.globals.projectile_explosion_damage, 0.15, 1)
 		end
 	},
+	{
+		id = "remove_hp_cap",
+		ui_name = "$ml_remove_hp_cap",
+		description = "$ml_remove_hp_cap_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/remove_hp_cap.png",
+		probability = 0.01,
+		custom_check = function()
+			return ML.player:get_damagemodel_value_number("max_hp_cap", 0) > 0
+		end,
+		fn = function()
+			local dmg_comp = ML.player:get_damagemodel()
+			if not dmg_comp then return end
+			ComponentSetValue2(dmg_comp, "max_hp_cap", 0)
+		end
+	}
 }
 
 return reward_list
