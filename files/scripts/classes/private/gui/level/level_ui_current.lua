@@ -26,8 +26,7 @@ end
 function LU_current:DrawCurrentRewardsItems()
 	local y = 4
 	local x = 4
-	local horizontal_between = 29.585 -- don't question my sanity pls
-	local distance_between = 30
+	local distance_between = 29.585 -- don't question my sanity pls
 	local picked_count = ML.rewards_deck.picked_count
 	if picked_count < 1 then
 		self:ColorGray()
@@ -36,7 +35,7 @@ function LU_current:DrawCurrentRewardsItems()
 	end
 	for _, group in ipairs(ML.rewards_deck.ordered_groups_data) do
 		if group.picked then
-			if x + horizontal_between / 2 > self.const.width then
+			if x + distance_between / 2 > self.const.width then
 				x = 4
 				y = y + distance_between
 			end
@@ -48,7 +47,7 @@ function LU_current:DrawCurrentRewardsItems()
 				local cache = self:GetTooltipData(0, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 				self:AddTooltip((cache.width - 16) / -2, distance_between, self.DrawCurrentRewardsTooltip, group.rewards)
 			end
-			x = x + horizontal_between
+			x = x + distance_between
 		end
 	end
 	self:TextCentered(0, y + 27 - self.scroll.y, self:Locale("$ml_current_rewards: ") .. picked_count, self.scroll.width)
