@@ -423,6 +423,7 @@ end
 
 ---Skips the current reward and advances the draw index.
 function rewards_deck:skip_reward()
+	self:add_reroll(0.51)
 	self:set_draw_index()
 end
 

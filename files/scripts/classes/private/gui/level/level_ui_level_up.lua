@@ -48,7 +48,7 @@ function LU_level_up:DrawButtonsCentered(button_y)
 	local skip = self:Locale("$ml_skip")
 	local close = self:Locale("$ml_close")
 	local reroll = self:Locale("$ml_reroll")
-	local reroll_count = ML.rewards_deck.reroll_count
+	local reroll_count = math.floor(ML.rewards_deck.reroll_count)
 	if reroll_count > 0 then
 		reroll = reroll .. " [" .. reroll_count .. "]"
 	end
