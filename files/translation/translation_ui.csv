@@ -17,7 +17,7 @@ ml_current_none,There is no rewards to show,Ещё нет никаких наг�
 ml_exp_bar_tooltip,click to open UI,нажмите для открытия меню,,,,,,,,,,
 ml_exp_bar_tooltip_force,right click to force open,нажмите правой кнопкой для принудительного открытия,,,,,,,,,,
 ml_skip,Skip,Пропустить,,,,,,,,,,
-ml_skip_tp,Spend level on nothing,Потратить уровень ни на что,,,,,,,,,,
+ml_skip_tp,You will gain 1 reroll per 2 skip,Вы получите 1 реролл за каждые 2 пропуска,,,,,,,,,,
 ml_meta,Meta,Мета,,,,,,,,,,
 ml_meta_tp,Open meta progression menu,Открыть меню мета прогрессии,,,,,,,,,,
 ml_meta_points,points,очков,,,,,,,,,,
