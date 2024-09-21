@@ -456,7 +456,7 @@ end
 ---Adds to the reroll count.
 ---@param count number
 function rewards_deck:add_reroll(count)
-	MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count)
+	MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count, 1)
 end
 
 ---Performs a reroll, decrementing the reroll count and setting the next draw index.
