@@ -3,3 +3,5 @@ ml_meta_starting_health_tp,You start with 5 more health,У вас будет н�
 ml_meta_extra_reward_choice_tp,Add more option to reward choice,Больше выбора в списке наград,,,,,,,,,,
 ml_meta_exp_slower_curve,Slower exp growth,Меньше роста опыта,,,,,,,,,,
 ml_meta_exp_slower_curve_tp,You will need less experience per level,Вам нужно будет меньше опыта для уровней,,,,,,,,,,
+ml_meta_extra_rerolls,Extra rerolls,Дополнительные рероллы,,,,,,,,,,
+ml_meta_extra_rerolls_tp,Gives you more rerolls at start,Даёт вам больше рероллов в начале,,,,,,,,,,

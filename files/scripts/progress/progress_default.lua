@@ -106,6 +106,20 @@ local progress = {
 		price = 50,
 		price_multiplier = 2
 	},
+	{
+		id = "extra_rerolls",
+		ui_name = "$ml_meta_extra_rerolls",
+		description = "$ml_meta_extra_rerolls_tp",
+		fn = function(count)
+			MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count)
+		end,
+		applied_bonus = function(count)
+			return "+" .. count
+		end,
+		stack = 4,
+		price = 5,
+		price_multiplier = 1.2
+	}
 }
 
 

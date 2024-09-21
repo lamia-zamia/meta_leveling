@@ -31,7 +31,6 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 ---@field private list ml_reward_id[] table of rewards id
 ---@field private distance number minimum distance between rewards
 ---@field borders { [string]: ml_reward_border}
----@field reroll_count number
 ---@field picked_count number how many rewards have been picked
 local rewards_deck = {
 	reward_data = {},
@@ -49,7 +48,6 @@ local rewards_deck = {
 	min_probability = 0.01,
 	list = {},
 	distance = 4,
-	reroll_count = 1,
 	picked_count = 0,
 	reward_appended_by = {}
 }
@@ -450,21 +448,20 @@ function rewards_deck:pick_reward(draw_id)
 end
 
 ---Retrieves the current reroll count.
+---@return number
 function rewards_deck:get_reroll_count()
-	self.reroll_count = MLP.get:global_number(MLP.const.globals.reroll_count, 1)
+	return MLP.get:global_number(MLP.const.globals.reroll_count, 1)
 end
 
 ---Adds to the reroll count.
 ---@param count number
 function rewards_deck:add_reroll(count)
-	self.reroll_count = self.reroll_count + count
-	MLP.set:global_number(MLP.const.globals.reroll_count, self.reroll_count)
+	MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count)
 end
 
 ---Performs a reroll, decrementing the reroll count and setting the next draw index.
 function rewards_deck:reroll()
-	self.reroll_count = self.reroll_count - 1
-	MLP.set:global_number(MLP.const.globals.reroll_count, self.reroll_count)
+	MLP.set:add_to_global_number(MLP.const.globals.reroll_count, -1)
 	self:set_draw_index()
 end
 
