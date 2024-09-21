@@ -7,7 +7,8 @@ local modules = {
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_current.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_stats.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_meta.lua",
-	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_list.lua"
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_list.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_menu.lua"
 }
 
 for _, module_name in ipairs(modules) do
@@ -156,70 +157,6 @@ end
 -- ############################################
 -- ############		MAIN MENU		###########
 -- ############################################
-
----toggle between different windows when buttons pressed
----@private
-function LU:ToggleMenuWindow(window)
-	self:ResetScrollBox()
-	if self.DrawWindow == window then
-		self.DrawWindow = nil
-	else
-		self.DrawWindow = window
-	end
-end
-
----buttons functions
----@private
-function LU:AddMenuSelector(x, y, text, tooltip, fn)
-	if self.DrawWindow == fn then
-		self:ColorGray()
-		self:Text(x, y, text)
-		self:AddOptionForNext(self.c.options.ForceFocusable)
-		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button_hl, self.const.ui_9p_button_hl)
-		self:MakePreviousClickable(self.ToggleMenuWindow, fn)
-	else
-		self:Text(x, y, text)
-		self:MakeButtonFromPrev(tooltip, self.ToggleMenuWindow, self.const.z, self.const.ui_9p_button,
-			self.const.ui_9p_button_hl, fn)
-	end
-end
-
----draw buttons under the header
----@private
-function LU:DrawMenuButtons()
-	self:MenuAnimS("header")
-	local y = self.data.y - 5.5
-	local x = self.data.x
-	local function x_off()
-		local prev = self:GetPrevious()
-		x = x + prev.w + 10
-		return x
-	end
-	if ML.pending_levels >= 1 and not GameHasFlagRun(MLP.const.flags.dead) then
-		self:Text(x, y, self:Locale("$ml_level_up"))
-		self:MakeButtonFromPrev(self:Locale("$ml_level_up_tp"), self.OpenLevelUpMenu, self.const.z,
-			self.const.ui_9p_button_important,
-			self.const.ui_9p_button_hl)
-	else
-		self:ColorGray()
-		self:Text(x, y, self:Locale("$ml_level_up"))
-		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
-	end
-	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
-		self.DrawCurrentRewards)
-
-	self:AddMenuSelector(x_off(), y, self:Locale("$ml_stats"), self:Locale("$ml_stats_tp"), self.Stats_DrawMenu)
-
-	self:AddMenuSelector(x_off(), y, self:Locale("$ml_meta"), self:Locale("$ml_meta_tp"), self.DrawMetaMenu)
-
-	self:AddMenuSelector(x_off(), y, self:Locale("$ml_rewards_progression"), self:Locale("$ml_rewards_progression_tp"), self.DrawRewardsList)
-	
-	self:Text(self.const.width + self.data.x - self:GetTextDimension(self:Locale("$ml_close")), y,
-		self:Locale("$ml_close"))
-	self:MakeButtonFromPrev(self:Locale("$ml_close_tp"), self.CloseMenu, self.const.z, self.const.ui_9p_button,
-		self.const.ui_9p_button_hl)
-	self:AnimateE()
-end
 
 ---draw header
 ---@private
