@@ -35,8 +35,10 @@ function LU_list:DrawRewardListEntry(x, y, reward, hovered)
 		bg = "mods/meta_leveling/files/gfx/ui/reward_list_bg.png"
 		self:SetZ(self.const.z - 3)
 		self:Image(x - offset_img, y - self.scroll.y - offset_img, reward.ui_icon, 1, scale_img, scale_img)
-		-- local r, g, b, a = unpack(reward.border_color)
-		-- self:Color(r , g, b, 0.01)
+		local r, g, b, a = unpack(reward.border_color)
+		self:Color(r, g, b)
+		self:SetZ(self.const.z - 2)
+		self:Image(x - offset_border, y - self.scroll.y - offset_border, bg, a, scale_border, scale_border)
 	end
 	self:SetZ(self.const.z - 1)
 	self:Image(x - offset_border, y - self.scroll.y - offset_border, bg, 1, scale_border, scale_border)
