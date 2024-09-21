@@ -112,10 +112,11 @@ function status:apply_status_to_player(effect, duration)
 	local effect_id = effect_data.id ---@type game_effect
 	local entity_name = "META_LEVELING_BUFF_" .. effect_id
 	local entity_id = EntityGetWithName(entity_name)
+	local multiplier = 1 + (ModSettingGet("meta_leveling.progress_longer_buff") or 0) / 10
 	if entity_id == 0 then
-		self:add_effect(player_id, effect_data, duration)
+		self:add_effect(player_id, effect_data, duration * multiplier)
 	else
-		self:extend_effect(entity_id, duration)
+		self:extend_effect(entity_id, duration * multiplier)
 	end
 end
 

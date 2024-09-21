@@ -132,6 +132,18 @@ local progress = {
 		price = 10,
 		price_multiplier = 1.1,
 	},
+	{
+		id = "longer_buff",
+		ui_name = "$ml_meta_longer_buff",
+		description = "$ml_meta_longer_buff_tp",
+		fn = function(count) end, --doesn't need
+		applied_bonus = function(count)
+			return "+" .. 10 * count .. "%"
+		end,
+		stack = 5,
+		price = 10,
+		price_multiplier = 1.1
+	}
 }
 
 
