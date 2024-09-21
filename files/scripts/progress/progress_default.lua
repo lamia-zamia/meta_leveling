@@ -111,7 +111,7 @@ local progress = {
 		ui_name = "$ml_meta_extra_rerolls",
 		description = "$ml_meta_extra_rerolls_tp",
 		fn = function(count)
-			MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count)
+			MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count, 1)
 		end,
 		applied_bonus = function(count)
 			return "+" .. count
@@ -119,7 +119,19 @@ local progress = {
 		stack = 4,
 		price = 5,
 		price_multiplier = 1.2
-	}
+	},
+	{
+		id = "rare_reward_less_rare",
+		ui_name = "$ml_meta_rare_reward_less_rare",
+		description = "$ml_meta_rare_reward_less_rare_tp",
+		fn = function(count) end, --doesn't need
+		applied_bonus = function(count)
+			return "+" .. 0.01 * count .. "%"
+		end,
+		stack = 10,
+		price = 10,
+		price_multiplier = 1.1,
+	},
 }
 
 

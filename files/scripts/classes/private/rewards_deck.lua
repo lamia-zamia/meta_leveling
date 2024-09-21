@@ -312,7 +312,8 @@ function rewards_deck:get_from_list()
 	self.distance = self:get_draw_amount() * 4
 	self.list = {}
 	for _, reward in pairs(self.reward_data) do
-		local probability = Randomf(self.min_probability, self:get_probability(reward.probability))
+		local meta_bonus = (ModSettingGet("meta_leveling.progress_reward_less_rare") or 0) / 100
+		local probability = Randomf(self.min_probability + meta_bonus, self:get_probability(reward.probability))
 		if self:checks_before_add(reward) then self:add_to_list(reward.id, probability * 100) end
 	end
 end
