@@ -249,10 +249,10 @@ function LU:loop()
 		self:IfDead()
 	end
 	if InputIsKeyJustDown(self.data.hotkey) then
+		self:OpenMenu()
 		if InputIsKeyDown(self.c.codes.keyboard.lshift) then
 			ML.gui_em_exit = false
 		end
-		self:OpenMenu()
 	end
 end
 
