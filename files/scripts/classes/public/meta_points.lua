@@ -7,10 +7,17 @@ local ML_points = {
 	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
 }
 
+---Adds meta point to player and writes it to global for stats
+function ML_points:add_meta_points(value)
+	self.set:add_to_global_number(self.const.globals.meta_point_acquired, value, 0)
+	local current = self:get_current_currency()
+	ModSettingSet("meta_leveling.currency_progress", current + value)
+	ModSettingSetNextValue("meta_leveling.currency_progress", current + value, false)
+end
+
 ---Adds or subtracts from currency
 ---@param value number
 function ML_points:modify_current_currency(value)
-	self.set:add_to_global_number(self.const.globals.meta_point_acquired, value, 0)
 	local current = self:get_current_currency()
 	ModSettingSet("meta_leveling.currency_progress", current + value)
 	ModSettingSetNextValue("meta_leveling.currency_progress", current + value, false)
