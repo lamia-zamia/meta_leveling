@@ -263,6 +263,7 @@ end
 function debug:fetch_current()
 	self.numbers.level = ML:get_level()
 	self.numbers.experience = MLP.exp:current()
+	self.numbers.meta = MLP.points:get_current_currency()
 end
 
 ---Draws number menu
@@ -282,6 +283,11 @@ function debug:draw_numbers()
 	_, self.numbers.experience = imgui.InputFloat("experience", self.numbers.experience, 10, 1000)
 	if imgui.IsItemDeactivatedAfterEdit() then
 		MLP.set:global_number(MLP.const.globals.current_exp, self.numbers.experience)
+		self:fetch_current()
+	end
+	_, self.numbers.meta = imgui.InputFloat("meta points", self.numbers.meta, 1, 10)
+	if imgui.IsItemDeactivatedAfterEdit() then
+		MLP.points:set_meta_points(self.numbers.meta)
 		self:fetch_current()
 	end
 end
@@ -320,6 +326,8 @@ function debug:draw_misc()
 	imgui.Text("Pacifist bonus: " .. MLP.points:CalculateMetaPointsPacifistBonus())
 	imgui.Text("Orb bonus: " .. MLP.points:CalculateMetaPointsOrbs())
 	imgui.Text("Damage bonus: " .. MLP.points:CalculateMetaPointsDamageTaken())
+	imgui.Text("Fungal shift bonus: " .. tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) / 2)
+	imgui.Text("Streak bonus: " .. MLP.points:CalculateMetaPointsWinStreakBonus())
 	imgui.Text("You will be rewarded for " .. MLP:CalculateMetaPointsOnSampo() .. " points")
 end
 

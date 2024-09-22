@@ -8,6 +8,7 @@ local ML_points = {
 }
 
 ---Adds meta point to player and writes it to global for stats
+---@param value number
 function ML_points:add_meta_points(value)
 	self.set:add_to_global_number(self.const.globals.meta_point_acquired, value, 0)
 	local current = self:get_current_currency()
@@ -15,12 +16,18 @@ function ML_points:add_meta_points(value)
 	ModSettingSetNextValue("meta_leveling.currency_progress", current + value, false)
 end
 
+---Set meta points
+---@param value number
+function ML_points:set_meta_points(value)
+	ModSettingSet("meta_leveling.currency_progress", value)
+	ModSettingSetNextValue("meta_leveling.currency_progress", value, false)
+end
+
 ---Adds or subtracts from currency
 ---@param value number
 function ML_points:modify_current_currency(value)
 	local current = self:get_current_currency()
-	ModSettingSet("meta_leveling.currency_progress", current + value)
-	ModSettingSetNextValue("meta_leveling.currency_progress", current + value, false)
+	self:set_meta_points(current + value)
 end
 
 ---Returns current available points
@@ -58,6 +65,12 @@ function ML_points:CalculateMetaPointsSpeedBonus()
 	else
 		return math.max(4 - minutes / 5, 0)
 	end
+end
+
+function ML_points:CalculateMetaPointsWinStreakBonus()
+	local streaks = tonumber(StatsGetValue("streaks"))
+	if streaks < 2 then return 0 end
+	return 1.4^streaks
 end
 
 ---Calculates points for pacifist run
