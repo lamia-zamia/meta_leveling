@@ -38,12 +38,13 @@ end
 
 ---Calculates bonus points for no hit
 function ML_points:CalculateMetaPointsDamageTaken()
-	local damage_taken = tonumber(StatsGetValue("damage_taken"))
+	local damage_taken = tonumber(StatsGetValue("damage_taken")) or 1
 	if damage_taken <= 0 then
 		return 30
-	else
-		return math.max(4 - damage_taken / 4)
+	elseif damage_taken <= 8 then
+		return 8 / math.max(damage_taken, 1)
 	end
+	return 0
 end
 
 ---Calculates bonus points for orbs
@@ -59,18 +60,18 @@ end
 ---Calculates bonus points for speedruns
 ---@return number
 function ML_points:CalculateMetaPointsSpeedBonus()
-	local minutes = GameGetFrameNum() / 60 / 60
+	local minutes = math.max(1, GameGetFrameNum() / 60 / 60)
 	if minutes <= 5 then
-		return (5 - minutes / 5) * 20
+		return 5 / minutes * 20
 	else
-		return math.max(4 - minutes / 5, 0)
+		return math.max(5 - minutes / 5, 0)
 	end
 end
 
 function ML_points:CalculateMetaPointsWinStreakBonus()
 	local streaks = tonumber(StatsGetValue("streaks"))
 	if streaks < 2 then return 0 end
-	return 1.4^streaks
+	return math.min(1.4^streaks, 200)
 end
 
 ---Calculates points for pacifist run
@@ -80,7 +81,7 @@ function ML_points:CalculateMetaPointsPacifistBonus()
 	if kills == 0 then
 		return 50
 	else
-		return math.max(5 - kills / 10, 0)
+		return math.max(5 - kills / 15, 0)
 	end
 end
 

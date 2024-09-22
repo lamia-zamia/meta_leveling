@@ -322,7 +322,9 @@ function debug:draw_misc()
 		EntityKill(ML.player.id)
 	end
 	imgui.Text("Meta points")
-	imgui.Text("Speed bonus: " .. MLP.points:CalculateMetaPointsSpeedBonus())
+	imgui.Text("Speed bonus: " ..
+		string.format("%.2f", MLP.points:CalculateMetaPointsSpeedBonus()) ..
+		", minutes: " .. string.format("%.2f", GameGetFrameNum() / 60 / 60))
 	imgui.Text("Pacifist bonus: " .. MLP.points:CalculateMetaPointsPacifistBonus())
 	imgui.Text("Orb bonus: " .. MLP.points:CalculateMetaPointsOrbs())
 	imgui.Text("Damage bonus: " .. MLP.points:CalculateMetaPointsDamageTaken())
