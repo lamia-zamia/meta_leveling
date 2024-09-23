@@ -58,6 +58,15 @@ local reward_list = {
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "money", 400)
+			local entity = EntityCreateNew()
+			EntitySetTransform(entity, ML.player.x, ML.player.y)
+			EntityAddComponent2(entity, "MagicConvertMaterialComponent", {
+				from_any_material = true,
+				to_material = CellFactory_GetType("gold"),
+				is_circle = true,
+				steps_per_frame = 1,
+				radius = 10
+			})
 		end
 	},
 	{
@@ -75,6 +84,15 @@ local reward_list = {
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "money", 1600)
+			local entity = EntityCreateNew()
+			EntitySetTransform(entity, ML.player.x, ML.player.y)
+			EntityAddComponent2(entity, "MagicConvertMaterialComponent", {
+				from_any_material = true,
+				to_material = CellFactory_GetType("gold"),
+				is_circle = true,
+				steps_per_frame = 1,
+				radius = 15,
+			})
 		end
 	},
 	{
@@ -91,6 +109,15 @@ local reward_list = {
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "money", 5000)
+			local entity = EntityCreateNew()
+			EntitySetTransform(entity, ML.player.x, ML.player.y)
+			EntityAddComponent2(entity, "MagicConvertMaterialComponent", {
+				from_any_material = true,
+				to_material = CellFactory_GetType("gold"),
+				is_circle = true,
+				steps_per_frame = 1,
+				radius = 20,
+			})
 		end
 	},
 	{
