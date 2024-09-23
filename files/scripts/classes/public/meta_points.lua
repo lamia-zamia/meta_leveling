@@ -36,6 +36,11 @@ function ML_points:get_current_currency()
 	return tonumber(ModSettingGet("meta_leveling.currency_progress")) or 0
 end
 
+---Calculates bonus points for fungal shift
+function ML_points:CalculateMetaPointsFungalShift()
+	return tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) / 2
+end
+
 ---Calculates bonus points for no hit
 function ML_points:CalculateMetaPointsDamageTaken()
 	local damage_taken = tonumber(StatsGetValue("damage_taken")) or 1

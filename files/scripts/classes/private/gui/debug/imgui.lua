@@ -328,7 +328,7 @@ function debug:draw_misc()
 	imgui.Text("Pacifist bonus: " .. MLP.points:CalculateMetaPointsPacifistBonus())
 	imgui.Text("Orb bonus: " .. MLP.points:CalculateMetaPointsOrbs())
 	imgui.Text("Damage bonus: " .. MLP.points:CalculateMetaPointsDamageTaken())
-	imgui.Text("Fungal shift bonus: " .. tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) / 2)
+	imgui.Text("Fungal shift bonus: " .. CalculateMetaPointsFungalShift())
 	imgui.Text("Streak bonus: " .. MLP.points:CalculateMetaPointsWinStreakBonus() .. ", streak: " .. ModSettingGet("meta_leveling.streak_count"))
 	imgui.Text("You will be rewarded for " .. MLP:CalculateMetaPointsOnSampo() .. " points")
 end

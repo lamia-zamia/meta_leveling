@@ -52,7 +52,7 @@ function MLP:CalculateMetaPointsOnSampo()
 	points = points + self.points:CalculateMetaPointsSpeedBonus()
 	points = points + self.points:CalculateMetaPointsPacifistBonus()
 	points = points + self.points:CalculateMetaPointsDamageTaken()
-	points = points + tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) / 2
+	points = points + self.points:CalculateMetaPointsFungalShift()
 	points = points + self.points:CalculateMetaPointsWinStreakBonus()
 	return math.floor(points)
 end
