@@ -451,7 +451,7 @@ end
 ---Retrieves the current reroll count.
 ---@return number
 function rewards_deck:get_reroll_count()
-	return MLP.get:global_number(MLP.const.globals.reroll_count, 1)
+	return math.max(0, MLP.get:global_number(MLP.const.globals.reroll_count, 1))
 end
 
 ---Adds to the reroll count.
