@@ -34,6 +34,67 @@ local list = {
 			return 0 + MLP.get:global_number(MLP.const.globals.exp_betray, 0) * 100 .. "%"
 		end,
 	},
+	{
+		ui_name = "$ml_stats_streak",
+		value = function()
+			return tostring(ModSettingGet("meta_leveling.streak_count"))
+		end,
+		check_before_show = function()
+			return ModSettingGet("meta_leveling.streak_count") > 0
+		end
+	},
+	{
+		ui_name = "$ml_stats_meta_points_on_win",
+		value = function()
+			return tostring(MLP:CalculateMetaPointsOnSampo())
+		end,
+	},
+	{
+		ui_name = "$ml_stats_bonus_point_speed",
+		value = function()
+			return tostring(math.floor(MLP.points:CalculateMetaPointsSpeedBonus()))
+		end,
+		check_before_show = function()
+			return MLP.points:CalculateMetaPointsSpeedBonus() > 0
+		end
+	},
+	{
+		ui_name = "$ml_stats_bonus_point_pacifist",
+		value = function()
+			return tostring(math.floor(MLP.points:CalculateMetaPointsPacifistBonus()))
+		end,
+		check_before_show = function()
+			return MLP.points:CalculateMetaPointsPacifistBonus() > 0
+		end
+	},
+	{
+		ui_name = "$ml_stats_bonus_point_no_hit",
+		value = function()
+			return tostring(math.floor(MLP.points:CalculateMetaPointsDamageTaken()))
+		end,
+		check_before_show = function()
+			return MLP.points:CalculateMetaPointsDamageTaken() > 0
+		end
+	},
+	{
+		ui_name = "$ml_stats_bonus_point_fungal_shift",
+		value = function()
+			return tostring(MLP.points:CalculateMetaPointsFungalShift())
+		end,
+		check_before_show = function()
+			return MLP.points:CalculateMetaPointsFungalShift() > 0
+		end
+	},
+	{
+		ui_name = "$ml_stats_bonus_point_win_streak",
+		value = function()
+			return tostring(MLP.points:CalculateMetaPointsWinStreakBonus())
+		end,
+		check_before_show = function()
+			return MLP.points:CalculateMetaPointsWinStreakBonus() > 0
+		end
+	}
+
 }
 
 return list

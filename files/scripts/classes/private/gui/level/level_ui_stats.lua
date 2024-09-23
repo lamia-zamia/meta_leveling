@@ -3,15 +3,11 @@ local LU_stats = {
 	stats_longest = 0
 }
 
-function LU_stats:DrawLine(x, y, width, height)
-	self:ColorGray()
-	self:Image(x, y, self.c.px, 0.5, width, height)
-end
-
-function LU_stats:DrawBorders()
-	self:DrawLine(0, 0 - self.scroll.y, self.const.width)
-	self:DrawLine(0, 0, 1, self.scroll.height_max)
-	self:DrawLine(self.const.width - 1, 0, 1, self.scroll.height_max)
+function LU_stats:Stats_DrawText(x, y, x_offset, stat, hovered)
+	if hovered then self:Color(1, 1, 0.7) end
+	self:Text(x, y - self.scroll.y, self:Locale(stat.ui_name) .. ":", "data/fonts/font_pixel_noshadow.xml")
+	if hovered then self:Color(1, 1, 0.7) end
+	self:Text(x_offset, y - self.scroll.y, self:Locale(stat.value()), "data/fonts/font_pixel_noshadow.xml")
 end
 
 function LU_stats:Stats_DrawWindow()
@@ -19,19 +15,17 @@ function LU_stats:Stats_DrawWindow()
 	local y = 0
 	local distance_between = 10
 	local x_offset = x + self.stats_longest + 10
-	self:AddOption(self.c.options.NonInteractive)
-	self:DrawLine(x_offset - 3, 0, 1, self.scroll.height_max)
-	self:DrawBorders()
 	for i = 1, #ML.stats.list do
 		local stat = ML.stats.list[i]
 		if stat.check_before_show and not stat.check_before_show() then goto continue end
-		self:Text(x, y - self.scroll.y, self:Locale(stat.ui_name) .. ":", "data/fonts/font_pixel_noshadow.xml")
-		self:Text(x_offset, y - self.scroll.y, self:Locale(stat.value()), "data/fonts/font_pixel_noshadow.xml")
+		self:Draw9Piece(self.data.x, self.data.y + y - self.scroll.y, 0, self.scroll.width, 10, self.c.empty, self.c.empty)
+		local prev = self:GetPrevious()
+		self:Stats_DrawText(x, y - self.scroll.y, x_offset, stat, prev.hovered)
+		-- self:Text(x, y - self.scroll.y, self:Locale(stat.ui_name) .. ":", "data/fonts/font_pixel_noshadow.xml")
+		-- self:Text(x_offset, y - self.scroll.y, self:Locale(stat.value()), "data/fonts/font_pixel_noshadow.xml")
 		y = y + distance_between
-		self:DrawLine(0, y - self.scroll.y, self.const.width, 1)
 		::continue::
 	end
-	self:RemoveOption(2)
 	self:Text(0, y + 1, "") -- set height for scrollbar, 9piece works weird
 end
 
