@@ -53,9 +53,6 @@ local list = {
 		ui_name = "$ml_stats_streak",
 		value = function()
 			return tostring(ModSettingGet("meta_leveling.streak_count"))
-		end,
-		check_before_show = function()
-			return ModSettingGet("meta_leveling.streak_count") > 0
 		end
 	},
 	{
@@ -70,9 +67,6 @@ local list = {
 		category = "meta",
 		value = function()
 			return tostring(math.floor(MLP.points:CalculateMetaPointsSpeedBonus()))
-		end,
-		check_before_show = function()
-			return MLP.points:CalculateMetaPointsSpeedBonus() > 0
 		end
 	},
 	{
@@ -80,9 +74,6 @@ local list = {
 		category = "meta",
 		value = function()
 			return tostring(math.floor(MLP.points:CalculateMetaPointsPacifistBonus()))
-		end,
-		check_before_show = function()
-			return MLP.points:CalculateMetaPointsPacifistBonus() > 0
 		end
 	},
 	{
@@ -90,9 +81,6 @@ local list = {
 		category = "meta",
 		value = function()
 			return tostring(math.floor(MLP.points:CalculateMetaPointsDamageTaken()))
-		end,
-		check_before_show = function()
-			return MLP.points:CalculateMetaPointsDamageTaken() > 0
 		end
 	},
 	{
@@ -100,9 +88,6 @@ local list = {
 		category = "meta",
 		value = function()
 			return tostring(MLP.points:CalculateMetaPointsFungalShift())
-		end,
-		check_before_show = function()
-			return MLP.points:CalculateMetaPointsFungalShift() > 0
 		end
 	},
 	{
@@ -110,9 +95,6 @@ local list = {
 		category = "meta",
 		value = function()
 			return tostring(MLP.points:CalculateMetaPointsWinStreakBonus())
-		end,
-		check_before_show = function()
-			return MLP.points:CalculateMetaPointsWinStreakBonus() > 0
 		end
 	}
 
