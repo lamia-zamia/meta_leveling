@@ -50,3 +50,5 @@ ml_stats_bonus_point_fungal_shift,Fungal shift bonus,Бонус за грибн�
 ml_stats_bonus_point_win_streak,Win streak bonus,Бонус за побед подряд,,,,,,,,,,
 ml_stats_misc,Misc,Прочее,,,,,,,,,,
 ml_stats_time,Time in game,Время в игре,,,,,,,,,,
+ml_grouped,Grouped,Сгрупировано,,,,,,,,,,
+ml_current_change_display,Change display mode,Поменять режим отображения,,,,,,,,,,

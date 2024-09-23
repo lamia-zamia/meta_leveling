@@ -50,7 +50,7 @@ function LU_menu:DrawMenuButtons()
 		self:Add9PieceBackGroundText(self.const.z, self.const.ui_9p_button)
 	end
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_current_rewards"), self:Locale("$ml_current_rewards_tp"),
-		self.DrawCurrentRewards)
+		self.Current_DrawRewards)
 
 	self:AddMenuSelector(x_off(), y, self:Locale("$ml_stats"), self:Locale("$ml_stats_tp"), self.Stats_DrawMenu)
 
