@@ -4,7 +4,7 @@
 ---@field private const ml_const
 local ML_points = {
 	set = dofile_once("mods/meta_leveling/files/scripts/classes/public/set.lua"),
-	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
+	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua"),
 }
 
 ---Adds meta point to player and writes it to global for stats
@@ -69,8 +69,8 @@ function ML_points:CalculateMetaPointsSpeedBonus()
 end
 
 function ML_points:CalculateMetaPointsWinStreakBonus()
-	local streaks = tonumber(StatsGetValue("streaks"))
-	if streaks < 2 then return 0 end
+	local streaks = ModSettingGet("meta_leveling.streak_count")
+	if streaks < 1 then return 0 end
 	return math.min(1.4^streaks, 200)
 end
 

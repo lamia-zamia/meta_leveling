@@ -64,7 +64,9 @@ local append_list_once = {
 	["data/biome_impl/static_tile/puzzle_logic_barren.lua"] =
 	"mods/meta_leveling/files/scripts/appends/dofile_before/templequest/puzzle_logic_potion_mimics.lua",
 	["data/scripts/buildings/hourglass_material_check.lua"] =
-	"mods/meta_leveling/files/scripts/appends/dofile_before/hourglass_material_check.lua"
+	"mods/meta_leveling/files/scripts/appends/dofile_before/hourglass_material_check.lua",
+	["data/entities/animals/boss_centipede/ending/sampo_start_ending_sequence.lua"] =
+	"mods/meta_leveling/files/scripts/appends/dofile_before/sampo_start_ending_sequence_winstreak.lua",
 }
 
 for original_file, append_file in pairs(append_list_once) do

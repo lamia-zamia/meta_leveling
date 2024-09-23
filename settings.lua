@@ -24,6 +24,19 @@ local U = {
 	waiting_for_input = false,
 }
 do --helpers
+	---Checks for winstreak flag and either resets or adds
+	function U.check_for_winstreak()
+		local win_flag_id = mod_prfx .. "streak_win"
+		local streak_id = mod_prfx .. "streak_count"
+		if ModSettingGet(win_flag_id) then
+			local current = ModSettingGet(streak_id)
+			ModSettingSet(streak_id, current + 1)
+			ModSettingRemove(win_flag_id)
+		else
+			ModSettingSet(streak_id, 0)
+		end
+	end
+
 	function U.setting_handle_callback(setting)
 		if setting.change_fn then setting.change_fn(setting) end
 	end
@@ -776,6 +789,9 @@ end
 
 ---@param init_scope number
 function ModSettingsUpdate(init_scope)
+	if init_scope == 0 then -- On new game
+		U.check_for_winstreak()
+	end
 	U.set_default(false)
 	U.waiting_for_input = false
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
