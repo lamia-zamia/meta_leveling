@@ -363,7 +363,7 @@ function ui_class:FakeScrollBox_Reset()
 	self.scroll.target_y = 0
 	self.scroll.max_y = 0
 	self.scroll.move_triggered = false
-	self.scroll.height = 0
+	-- self.scroll.height = 0
 	self.scroll.height_max = 140
 end
 
@@ -519,7 +519,7 @@ function ui_class:FakeScrollBox(x, y, z, sprite, draw_fn)
 	GuiAnimateEnd(self.gui)
 	draw_fn(self)
 	local prev = self:GetPrevious()
-	self.scroll.max_y = math.max(self.scroll.max_y, prev.y + prev.h - y)
+	self.scroll.max_y = prev.y + prev.h - y
 	self.scroll.height = math.min(self.scroll.max_y, self.scroll.height_max)
 	self:FakeScrollBox_ClumpAndMove()
 	GuiEndScrollContainer(self.gui)
