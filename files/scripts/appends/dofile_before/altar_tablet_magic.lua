@@ -1,6 +1,6 @@
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 
-function meta_leveling_do_tablet_exp()
+function MetaLevelingDoTabletExp()
 	local entity_id = GetUpdatedEntityID()
 	local variablestorages = EntityGetComponent(entity_id, "VariableStorageComponent")
 	if not variablestorages then return end

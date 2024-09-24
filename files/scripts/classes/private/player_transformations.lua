@@ -122,7 +122,7 @@ function angel:transform()
 	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold + 10))
 
-	child_id = EntityLoad("data/entities/misc/perks/player_halo_light.xml", ML.player.x, ML.player.y)
+	local child_id = EntityLoad("data/entities/misc/perks/player_halo_light.xml", ML.player.x, ML.player.y)
 	if child_id ~= nil then
 		EntityAddChild(ML.player.id, child_id)
 	end
@@ -160,7 +160,7 @@ function demon:transform()
 	if not ML.player.id then return end
 	GlobalsSetValue(self.value, tostring(self.threshold - 10))
 
-	child_id = EntityLoad("data/entities/misc/perks/player_halo_dark.xml", ML.player.x, ML.player.y)
+	local child_id = EntityLoad("data/entities/misc/perks/player_halo_dark.xml", ML.player.x, ML.player.y)
 	if child_id ~= nil then
 		EntityAddChild(ML.player.id, child_id)
 	end

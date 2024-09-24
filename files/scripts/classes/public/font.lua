@@ -76,7 +76,7 @@ function font:popup(source_entity, text, scale, r, g, b)
 
 	local path = self:get_path(r, g, b)
 
-	entity = EntityCreateNew("ml_popup")
+	local entity = EntityCreateNew("ml_popup")
 	EntityAddComponent2(entity, "SpriteComponent", {
 		image_file = path,
 		is_text_sprite = true,

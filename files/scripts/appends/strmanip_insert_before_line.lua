@@ -5,12 +5,12 @@ local inserts = {
 	{
 		file = "data/scripts/magic/altar_tablet_magic.lua",
 		search_line = "if (tablets_eaten > 2) then",
-		insert_line = "meta_leveling_do_tablet_exp()"
+		insert_line = "MetaLevelingDoTabletExp()"
 	},
 	{
 		file = "data/scripts/buildings/teleport_snowcave_buried_eye.lua",
 		search_line = "local teleport_back_y = from_y",
-		insert_line = "meta_leveling_buried_eye()"
+		insert_line = "MetaLevelingBuriedEye()"
 	},
 }
 

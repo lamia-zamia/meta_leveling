@@ -4,6 +4,7 @@ local mod_id = "meta_leveling"
 local mod_prfx = mod_id .. "."
 local T = {}
 local D = {}
+local current_language_last_frame = nil
 local gui_id = 1000
 local function id()
 	gui_id = gui_id + 1
@@ -100,7 +101,7 @@ do --helpers
 		local max_width = 10
 		for _, setting in ipairs(array) do
 			if setting.category_id then
-				cat_max_width = U.calculate_elements_offset(gui, setting.settings)
+				local cat_max_width = U.calculate_elements_offset(gui, setting.settings)
 				max_width = math.max(max_width, cat_max_width)
 			end
 			if setting.ui_name then

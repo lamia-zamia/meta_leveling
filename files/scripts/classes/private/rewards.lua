@@ -1,4 +1,4 @@
----@diagnostic disable: undefined-global
+
 
 ---@class (exact) reward_description
 ---@field [number] string|fun():string
@@ -67,12 +67,12 @@ end
 ---@param perk_id string
 function rewards:grant_perk(perk_id)
 	dofile_once("data/scripts/perks/perk.lua")
-	perk_pickup(0, ML.player.id, perk_id, true, false, true)
+	perk_pickup(0, ML.player.id, perk_id, true, false, true) ---@diagnostic disable-line: undefined-global
 end
 
 function rewards:force_fungal_shift()
 	dofile_once("data/scripts/magic/fungal_shift.lua")
-	fungal_shift(ML.player.id, ML.player.x, ML.player.y, true)
+	fungal_shift(ML.player.id, ML.player.x, ML.player.y, true) ---@diagnostic disable-line: undefined-global
 end
 
 return rewards
