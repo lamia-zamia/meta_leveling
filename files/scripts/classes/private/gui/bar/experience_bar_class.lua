@@ -1,4 +1,4 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua")
+local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") ---@type UI_class
 
 ---@class EB.const.anim
 local anim_const = {
@@ -62,7 +62,7 @@ local bar = {
 ---@field data EB.data
 ---@field bar EB.bar
 ---@field DrawBarFunction function?
-local EB = UI_class:new()
+local EB = UI_class:New()
 EB.const = const
 EB.data = data
 EB.bar = bar

@@ -1,4 +1,4 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua")
+local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") ---@type UI_class
 
 ---@class LU.const
 local const = {
@@ -54,7 +54,7 @@ local anim = {
 ---@field private data LU.data
 ---@field private anim LU.anim
 ---@field private DrawWindow function?
-local LU = UI_class:new()
+local LU = UI_class:New()
 LU.scroll.width = const.width
 LU.const = const
 LU.data = data

@@ -76,7 +76,6 @@ local ui_class = {
 ui_class.__index = ui_class
 
 ---Creates a new UI instance
----@protected
 ---@return UI_class
 function ui_class:New()
 	local o = {

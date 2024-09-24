@@ -4,8 +4,8 @@ local required_version = "1.24.0" -- 1.24.0 suppors vfs images now
 local imgui = load_imgui({ version = required_version, mod = "Meta Leveling" }) ---@type ImGui
 local imgui_xml_img_viewer = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/debug/xml_img_viewer.lua") ---@type imgui_xml_img_viewer
 local xml_viewer = imgui_xml_img_viewer:new(imgui)
-local UI_lib = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua")
-local UI = UI_lib:new() ---@class UI_class
+local UI_lib = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") ---@type UI_class
+local UI = UI_lib:New() ---@class UI_class
 
 ---@class ml_debug
 ---@field rewards? boolean
