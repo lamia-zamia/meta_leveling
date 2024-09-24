@@ -209,10 +209,10 @@ function EB:AddToolTip(x, y, width, height)
 	if prev.hovered then
 		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
 		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
-		if self:is_left_clicked() then
+		if self:IsLeftClicked() then
 			ML:toggle_ui()
 		end
-		if self:is_right_clicked() then
+		if self:IsRightClicked() then
 			GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 			ML:toggle_ui()
 			ML.gui_em_exit = false

@@ -72,7 +72,7 @@ function LU_level_up:DrawButtonsCentered(button_y)
 		local tp_offset = math.abs(self:GetTextDimension(tp) - longest - 1.5) / -2
 		if prev.hovered then
 			self:ShowTooltip(prev.x + tp_offset, prev.y + prev.h * 2.2, tp)
-			if self:is_mouse_clicked() then
+			if self:IsMouseClicked() then
 				if fn then fn(self) end
 			end
 		end

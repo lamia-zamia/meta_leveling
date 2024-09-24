@@ -75,8 +75,7 @@ function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()
 	self:Draw9Piece(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, 100,
 		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
-	prev = self:GetPrevious()
-	if prev.hovered then
+	if self:IsHovered() then
 		self:BlockInput()
 	end
 end

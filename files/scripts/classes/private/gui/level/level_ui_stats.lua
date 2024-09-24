@@ -28,11 +28,11 @@ function LU_stats:Stats_DrawCategory(category, category_name, folded)
 	local dim = self:GetTextDimension(category_text, "data/fonts/font_pixel_noshadow.xml")
 	self:Draw9Piece(self.data.x, self.data.y + self.stats.y - self.scroll.y, 0, self.scroll.width, 10, self.c
 		.empty)
-	local prev = self:GetPrevious()
-	self:Stats_Text(self.stats.x, self.stats.y - self.scroll.y, category_text, prev.hovered, 1, 1, 0.7)
-	if prev.hovered then self:Color(1, 1, 0.7) end
+	local hovered = self:IsHovered()
+	self:Stats_Text(self.stats.x, self.stats.y - self.scroll.y, category_text, hovered, 1, 1, 0.7)
+	if hovered then self:Color(1, 1, 0.7) end
 	self:Image(self.stats.x + dim, self.stats.y - self.scroll.y, img)
-	if prev.hovered and self:is_mouse_clicked() then
+	if hovered and self:IsMouseClicked() then
 		self.stats.displaying[category] = not self.stats.displaying[category]
 		GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	end
@@ -43,13 +43,13 @@ function LU_stats:Stats_DrawEntry(stat)
 	if self:Stats_HideEntry(stat) then return end
 	self:Draw9Piece(self.data.x, self.data.y + self.stats.y - self.scroll.y, 0, self.scroll.width, 10, self.c.empty,
 		self.c.empty)
-	local prev = self:GetPrevious()
+	local hovered = self:IsHovered()
 	self:ColorGray()
-	self:Stats_Text(self.stats.x + 5, self.stats.y - self.scroll.y, self:Locale(stat.ui_name) .. ":", prev.hovered, 0.6,
+	self:Stats_Text(self.stats.x + 5, self.stats.y - self.scroll.y, self:Locale(stat.ui_name) .. ":", hovered, 0.6,
 		0.9,
 		0.7)
 	self:Stats_Text(self.stats.x + self.stats.longest + 15, self.stats.y - self.scroll.y, self:Locale(stat.value()),
-		prev.hovered, 0.6, 0.9, 0.7)
+		hovered, 0.6, 0.9, 0.7)
 	self.stats.y = self.stats.y + self.stats.distance
 end
 

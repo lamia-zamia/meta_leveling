@@ -235,7 +235,7 @@ function LU_meta:DrawPointIncreaser(index, point)
 				available and self.const.ui_9p_button_hl or self.const.ui_9p_button)
 			if available then
 				-- self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
-				if self:is_left_clicked() then
+				if self:IsLeftClicked() then
 					ML.meta:set_next_progress(index, 1)
 					-- GamePlaySound("data/audio/Desktop/event_cues.bank", "event_cues/perk/create", ML.player.x, ML.player.y)
 					GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x,
@@ -266,7 +266,7 @@ function LU_meta:DrawPointDecreaser(index, point)
 			self:ShowTooltip(prev.x + 2.5, prev.y + self.meta.distance * 2, self.ProgressPointManipulatorTooltip, point,
 				return_value, true)
 			self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
-			if self:is_left_clicked() then
+			if self:IsLeftClicked() then
 				ML.meta:set_next_progress(index, -1)
 				GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x,
 					ML.player.y)

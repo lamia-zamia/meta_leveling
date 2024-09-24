@@ -99,21 +99,21 @@ end
 function LU_current:Current_DrawChangeButton()
 	local button = self:Locale("$ml_grouped")
 	local button_width = self:GetTextDimension(button)
-	local prev = { hovered = false }
+	local hovered = false
 	local button_box = self.const.ui_9p_button
 	if self:ElementIsVisible(self.current.y, self.current.distance) then
 		self:Draw9Piece(self.data.x + self.scroll.width - button_width - 16,
 			self.data.y + self.current.y + 27 - self.scroll.y, self.const.z, button_width + 17, 10, self.c.empty)
-		prev = self:GetPrevious()
+		hovered = self:IsHovered()
 	end
-	if prev.hovered then
+	if hovered then
 		button_box = self.const.ui_9p_button_hl
 		local tooltip = self:Locale("$ml_current_change_display")
 		local tooltip_width = self:GetTextDimension(tooltip)
 		self:Color(1, 1, 0.7)
 		self:ShowTooltip(self.data.x + self.scroll.width - button_width - tooltip_width / 2,
 			self.data.y + self.current.y + 49, tooltip)
-		if self:is_mouse_clicked() then
+		if self:IsMouseClicked() then
 			self.current.group_rewards = not self.current.group_rewards
 			GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 		end

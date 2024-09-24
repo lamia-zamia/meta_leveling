@@ -75,10 +75,10 @@ local ui_class = {
 }
 ui_class.__index = ui_class
 
----create new gui
+---Creates a new UI instance
 ---@protected
 ---@return UI_class
-function ui_class:new()
+function ui_class:New()
 	local o = {
 		gui = GuiCreate(),
 		gui_tooltip = GuiCreate()
@@ -91,57 +91,65 @@ end
 -- #########		FUNCTIONALS		###########
 -- ############################################
 
----creates invisible scrollbox to block clicks and scrolls
+---Creates an invisible scrollbox to block clicks and scrolls
 ---@protected
 function ui_class:BlockInput()
 	GuiIdPushString(self.gui, "STOP_FLICKERING_SCROLLBAR")
 	local m_x, m_y = self:get_mouse_pos()
 	GuiAnimateBegin(self.gui)
 	GuiAnimateAlphaFadeIn(self.gui, 2, 0, 0, true)
-	GuiOptionsAddForNextWidget(self.gui, self.c.options.AlwaysClickable) --AlwaysClickable
+	GuiOptionsAddForNextWidget(self.gui, self.c.options.AlwaysClickable)
 	GuiBeginScrollContainer(self.gui, 2, m_x - 25, m_y - 25, 50, 50, false, 0, 0)
 	GuiAnimateEnd(self.gui)
 	GuiEndScrollContainer(self.gui)
 	GuiIdPop(self.gui)
 end
 
----Make previous clickable
+---Makes previous clickable
 ---@protected
 ---@param click_fn function
 ---@param ... any
 function ui_class:MakePreviousClickable(click_fn, ...)
-	local prev = self:GetPrevious()
-	if prev.hovered then
-		if self:is_mouse_clicked() then -- mouse clicks
-			click_fn(self, ...)
-		end
+	if self:IsHovered() and self:IsMouseClicked() then
+		click_fn(self, ...)
 	end
 end
 
 ---Returns true if left mouse was clicked
 ---@protected
 ---@return boolean
-function ui_class:is_left_clicked()
+function ui_class:IsLeftClicked()
 	return InputIsMouseButtonJustDown(self.c.codes.mouse.lc)
 end
 
 ---Returns true if right mouse was clicked
 ---@protected
 ---@return boolean
-function ui_class:is_right_clicked()
+function ui_class:IsRightClicked()
 	return InputIsMouseButtonJustDown(self.c.codes.mouse.rc)
 end
 
 ---Returns true if right or left mouse was clicked
 ---@protected
 ---@return boolean
-function ui_class:is_mouse_clicked()
-	return self:is_left_clicked() or self:is_right_clicked()
+function ui_class:IsMouseClicked()
+	return self:IsLeftClicked() or self:IsRightClicked()
 end
 
-function ui_class:control_chars_pressed()
+---Returns true if enter, escape or space was pressed
+---@protected
+---@return boolean
+function ui_class:IsControlCharsPressed()
 	return InputIsKeyJustDown(self.c.codes.keyboard.enter) or InputIsKeyDown(self.c.codes.keyboard.escape) or
 		InputIsKeyDown(self.c.codes.keyboard.space)
+end
+
+---Returns true if previous widget is hovered
+---@protected
+---@return boolean
+function ui_class:IsHovered()
+	local _, _, hovered = GuiGetPreviousWidgetInfo(self.gui)
+	return hovered
 end
 
 -- ############################################
@@ -314,7 +322,7 @@ function ui_class:AddTooltipClickable(x, y, draw, click_fn, ...)
 	local prev = self:GetPrevious()
 	if prev.hovered then
 		self:ShowTooltip(prev.x + x, prev.y + y, draw, ...)
-		if self:is_mouse_clicked() then -- mouse clicks
+		if self:IsMouseClicked() then -- mouse clicks
 			if click_fn then click_fn(self, ...) end
 		end
 	end
@@ -437,7 +445,7 @@ end
 function ui_class:FakeScrollBox_MouseDrag(y)
 	local scroll_prev = self:GetPrevious()
 	if scroll_prev.hovered then
-		if self:is_left_clicked() then
+		if self:IsLeftClicked() then
 			self:FakeScrollBox_HandleClick(y, self.scroll.height)
 		end
 	end
@@ -467,7 +475,7 @@ function ui_class:FakeScrollBox_AnswerToWheel()
 	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_up) then
 		self.scroll.target_y = self.scroll.target_y - 10
 	end
-	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_down) then 
+	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_down) then
 		self.scroll.target_y = self.scroll.target_y + 10
 	end
 end
@@ -799,7 +807,7 @@ end
 -- #########		ANIMATIONS		###########
 -- ############################################
 
----GuiAnimateAlphaFadeIn
+---Adds alpha to animation
 ---@protected
 ---@param speed integer
 ---@param step integer
@@ -808,18 +816,21 @@ function ui_class:AnimateAlpha(speed, step, reset)
 	GuiAnimateAlphaFadeIn(self.gui, self:id(), speed, step, reset)
 end
 
+---Adds scale to animation
 ---@protected
+---@param acceleration number
+---@param reset boolean
 function ui_class:AnimateScale(acceleration, reset)
 	GuiAnimateScaleIn(self.gui, self:id(), acceleration, reset)
 end
 
----End animation
+---Ends an animation
 ---@protected
 function ui_class:AnimateE()
 	GuiAnimateEnd(self.gui)
 end
 
----Start animation
+---Begins an animation
 ---@protected
 function ui_class:AnimateB()
 	GuiAnimateBegin(self.gui)
@@ -829,14 +840,14 @@ end
 -- #############		MISC		###########
 -- ############################################
 
----reset gui id
+---Resets a gui id
 ---@protected
 function ui_class:id_reset()
 	self.gui_id = 100000
 	self.tooltip_gui_id = 1000
 end
 
----return id with increment
+---Returns an id with increment
 ---@private
 ---@return number gui_id
 function ui_class:id()

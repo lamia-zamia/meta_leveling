@@ -41,7 +41,7 @@ end
 ---Adds triggers for opening menu
 function LU_d:DrawTriggerEndMenu()
 	if ML.gui then GameAddFlagRun(MLP.const.flags.dead) end
-	if self:control_chars_pressed() then
+	if self:IsControlCharsPressed() then
 		GameAddFlagRun(MLP.const.flags.dead)
 	end
 	local cause_of_death = StatsGetValue("killed_by") .. " " .. StatsGetValue("killed_by_extra")
@@ -50,11 +50,11 @@ function LU_d:DrawTriggerEndMenu()
 	local you_are_dead_len = self:GetTextDimension(self:Locale(" $menugameover_nextbutton "))
 	local x_yad = self:CalculateCenterInScreen(you_are_dead_len, self.dim.y)
 	self:Draw9Piece(x_cod, 132, 10, cause_of_death_len, 15, self.c.empty)
-	local prev_cod = self:GetPrevious()
+	local hovered_cod = self:IsHovered()
 	self:Draw9Piece(x_yad, 142, 10, you_are_dead_len, 15, self.c.empty)
-	local prev_yad = self:GetPrevious()
-	if prev_cod.hovered or prev_yad.hovered then
-		if self:is_mouse_clicked() then
+	local hovered_yad = self:IsHovered()
+	if hovered_cod or hovered_yad then
+		if self:IsMouseClicked() then
 			GameAddFlagRun(MLP.const.flags.dead)
 		end
 	end
