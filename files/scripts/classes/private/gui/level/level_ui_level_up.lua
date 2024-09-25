@@ -94,6 +94,10 @@ function LU_level_up:LevelUpDrawButtonsCentered()
 	self:LevelUpDrawButton(close, self:Locale("$ml_close_tp"), self.CloseMenu, true, longest)
 end
 
+---Draws rewards
+---@private
+---@param reward_id ml_reward_id
+---@return boolean
 function LU_level_up:LevelUpDrawPointSpenderReward(reward_id)
 	local reward = ML.rewards_deck.reward_data[reward_id]
 	self:DrawRewardRarity(self.level_up.x - 3, self.level_up.y - 3, self.const.z + 4, reward.border_color)
@@ -102,7 +106,11 @@ function LU_level_up:LevelUpDrawPointSpenderReward(reward_id)
 	self:Draw9Piece(self.level_up.x, self.level_up.y, self.const.z + 1, 18, 18, self.const.ui_9p_reward,
 		self.const.ui_9p_reward_hl)
 	if self:IsHovered() then
-		self:ShowTooltip(self.level_up.x + 9, self.level_up.y + 36, self.LevelUpRewardsTooltip, reward)
+		self.tooltip_img = self.const.tooltip_img_levelup
+		local cache = self:GetTooltipData(0, 0, self.LevelUpRewardsTooltip, reward)
+		self:ShowTooltip(self.dim.x / 2, self.level_up.y - cache.height - 10, self.LevelUpRewardsTooltip, reward)
+		-- self:ShowTooltip(self.level_up.x + 9, self.level_up.y + 36, self.LevelUpRewardsTooltip, reward)
+		self.tooltip_img = self.const.tooltip_img
 		if self:IsLeftClicked() then return true end
 	end
 	self.level_up.x = self.level_up.x + 30

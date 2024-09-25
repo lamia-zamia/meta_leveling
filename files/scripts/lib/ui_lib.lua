@@ -38,6 +38,8 @@ local const = {
 ---@field private gui_tooltip_size_cache gui_tooltip_size_cache
 ---@field private tooltip_z number
 ---@field private tooltip_gui_id number
+---@field public tooltip_margin number
+---@field public tooltip_img string
 ---@field protected tooltip_reset boolean
 ---@field private tooltip_previous? table
 ---@field protected c UI_const constants
@@ -58,6 +60,7 @@ local ui_class = {
 	tooltip_reset = true,
 	tooltip_previous = nil,
 	tooltip_margin = 5,
+	tooltip_img = "data/ui_gfx/decorations/9piece0_gray.png",
 	scroll = {
 		y = 0,
 		target_y = 0,
@@ -281,7 +284,7 @@ function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
 	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
-	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin)
+	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img)
 	self:SetTooltipCache(x, y, key)
 	self.gui, self.gui_id = orig_gui, orig_id
 end
@@ -339,7 +342,7 @@ function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
 	GuiZSet(self.gui, self.tooltip_z + 1)
-	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin)
+	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img)
 	self:AnimateE()
 	GuiZSet(self.gui, 0)
 	self.gui, self.gui_id = orig_gui, orig_id
