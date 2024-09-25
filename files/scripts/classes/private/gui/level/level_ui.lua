@@ -32,7 +32,7 @@ function LU:PointSpenderCheck()
 		GameAddFlagRun(MLP.const.flags.leveling_up)
 	end
 	if GameHasFlagRun(MLP.const.flags.leveling_up) then
-		self:DrawPointSpender()
+		self:LevelUpDrawPointSpender()
 		return true
 	end
 	return false
@@ -41,11 +41,11 @@ end
 ---Draws button on death screen
 function LU:IfDead()
 	if StatsGetValue("dead") == "0" then return end
-	if self:IsCreditsPlaying() then return end
+	if self:DeathIsCreditsPlaying() then return end
 	if self.data.on_death and GameHasFlagRun(MLP.const.flags.dead) then
-		self:DrawEndMenu()
+		self:DeathDrawEndMenu()
 	else
-		self:DrawTriggerEndMenu()
+		self:DeathDrawTriggerEndMenu()
 	end
 end
 
@@ -73,9 +73,7 @@ end
 ---@private
 function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()
-	self:Draw9Piece(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, 100,
-		prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, self.c.empty)
-	if self:IsHovered() then
+	if self:IsHoverBoxHovered(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset) then
 		self:BlockInput()
 	end
 end
@@ -222,8 +220,8 @@ function LU:GetSetting()
 	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
 	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
 	self.data.on_death = MLP.get:mod_setting_boolean("show_ui_on_death")
-	self:CalculateProgressOffset()
-	self:Stats_FindLongest()
+	self:MetaCalculateProgressOffset()
+	self:StatsFindLongest()
 end
 
 ---main logic

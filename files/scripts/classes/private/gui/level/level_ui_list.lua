@@ -5,7 +5,7 @@ local LU_list = {}
 ---@private
 ---@param reward ml_single_reward_data
 ---@param count number
-function LU_list:DrawRewardsListTooltip(reward, count)
+function LU_list:ListDrawRewardsListTooltip(reward, count)
 	if count > 0 then
 		self:TextCentered(0, 0, self:Locale(reward.ui_name), 0)
 		self:TextCentered(0, 0, self:Locale("$ml_rewards_progression_picked: ") .. count, 0)
@@ -24,7 +24,7 @@ end
 ---@param y number
 ---@param reward ml_single_reward_data
 ---@param hovered boolean
-function LU_list:DrawRewardListEntry(x, y, reward, hovered)
+function LU_list:ListDrawRewardListEntry(x, y, reward, hovered)
 	local bg = "mods/meta_leveling/files/gfx/ui/reward_list_bg_unknown.png"
 	local scale_border = hovered and 1.1 or 1
 	local scale_img = hovered and 1.2 or 1
@@ -44,12 +44,13 @@ function LU_list:DrawRewardListEntry(x, y, reward, hovered)
 	self:Image(x - offset_border, y - self.scroll.y - offset_border, bg, 1, scale_border, scale_border)
 	if hovered then
 		local prev = self:GetPrevious()
-		self:ShowTooltip(prev.x + 11, prev.y + 30, self.DrawRewardsListTooltip, reward, count) end
+		self:ShowTooltip(prev.x + 11, prev.y + 30, self.ListDrawRewardsListTooltip, reward, count)
+	end
 end
 
 ---function to draw rewards itself
 ---@private
-function LU_list:DrawRewardsListInside()
+function LU_list:ListDrawRewardsListInside()
 	local y = 3
 	local x = 3
 	local distance_between = 21.3 -- don't question my sanity pls
@@ -64,10 +65,7 @@ function LU_list:DrawRewardsListInside()
 			self:Draw9Piece(self.data.x + x, self.data.y + y - self.scroll.y, 0, 16, 16, self.c.empty, self.c.empty)
 			hovered = self:IsHovered()
 		end
-		self:DrawRewardListEntry(x, y, reward, hovered)
-
-
-
+		self:ListDrawRewardListEntry(x, y, reward, hovered)
 		x = x + distance_between
 	end
 
@@ -76,10 +74,10 @@ end
 
 ---function to draw current rewards
 ---@private
-function LU_list:DrawRewardsList()
+function LU_list:ListDrawRewardsList()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray,
-		self.DrawRewardsListInside)
+		self.ListDrawRewardsListInside)
 end
 
 return LU_list

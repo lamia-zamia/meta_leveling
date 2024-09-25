@@ -55,6 +55,8 @@ local anim = {
 ---@field private anim LU.anim
 ---@field private DrawWindow function?
 local LU = UI_class:New()
+LU.buttons.img = const.ui_9p_button
+LU.buttons.img_hl = const.ui_9p_button_hl
 LU.scroll.width = const.width
 LU.const = const
 LU.data = data

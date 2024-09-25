@@ -43,6 +43,7 @@ local const = {
 ---@field protected c UI_const constants
 ---@field protected dim UI_dimensions
 ---@field protected scroll ui_fake_scroll
+---@field protected buttons {img:string, img_hl:string}
 local ui_class = {
 	c = const,
 	dim = {
@@ -56,6 +57,7 @@ local ui_class = {
 	tooltip_z = -10000,
 	tooltip_reset = true,
 	tooltip_previous = nil,
+	tooltip_margin = 5,
 	scroll = {
 		y = 0,
 		target_y = 0,
@@ -71,6 +73,10 @@ local ui_class = {
 		sprite_dim = 0,
 		visible_height = 0,
 		width = 320
+	},
+	buttons = {
+		img = "data/ui_gfx/decorations/9piece0_gray.png",
+		img_hl = "data/ui_gfx/decorations/9piece0.png"
 	}
 }
 ui_class.__index = ui_class
@@ -117,6 +123,7 @@ end
 ---Returns true if left mouse was clicked
 ---@protected
 ---@return boolean
+---@nodiscard
 function ui_class:IsLeftClicked()
 	return InputIsMouseButtonJustDown(self.c.codes.mouse.lc)
 end
@@ -124,6 +131,7 @@ end
 ---Returns true if right mouse was clicked
 ---@protected
 ---@return boolean
+---@nodiscard
 function ui_class:IsRightClicked()
 	return InputIsMouseButtonJustDown(self.c.codes.mouse.rc)
 end
@@ -131,6 +139,7 @@ end
 ---Returns true if right or left mouse was clicked
 ---@protected
 ---@return boolean
+---@nodiscard
 function ui_class:IsMouseClicked()
 	return self:IsLeftClicked() or self:IsRightClicked()
 end
@@ -138,17 +147,74 @@ end
 ---Returns true if enter, escape or space was pressed
 ---@protected
 ---@return boolean
+---@nodiscard
 function ui_class:IsControlCharsPressed()
 	return InputIsKeyJustDown(self.c.codes.keyboard.enter) or InputIsKeyDown(self.c.codes.keyboard.escape) or
 		InputIsKeyDown(self.c.codes.keyboard.space)
 end
 
+---Draws a button with text
+---@param x number
+---@param y number
+---@param z number
+---@param text string
+---@param tooltip_text string
+---@return boolean
+---@nodiscard
+function ui_class:IsButtonClicked(x, y, z, text, tooltip_text)
+	self:DrawButton(x, y, z, text, true)
+	if self:IsHovered() then
+		self:ShowTooltipTextCenteredX(0, 22, tooltip_text)
+		return self:IsMouseClicked()
+	end
+	return false
+end
+
+---Draws a disablable button with text
+---@param x number
+---@param y number
+---@param z number
+---@param text string
+---@param tooltip_text string
+---@param active boolean
+---@param inactive_tooltip_text? string
+---@return boolean
+---@nodiscard
+function ui_class:IsDisablableButtonClicked(x, y, z, text, tooltip_text, active, inactive_tooltip_text)
+	if active then
+		return self:IsButtonClicked(x, y, z, text, tooltip_text)
+	end
+	self:DrawButton(x, y, z, text, false)
+	if inactive_tooltip_text and self:IsHovered() then
+		self:ShowTooltipTextCenteredX(1, 20, inactive_tooltip_text)
+	end
+	return false
+end
+
 ---Returns true if previous widget is hovered
 ---@protected
 ---@return boolean
+---@nodiscard
 function ui_class:IsHovered()
 	local _, _, hovered = GuiGetPreviousWidgetInfo(self.gui)
 	return hovered
+end
+
+---Draws a invisible nine piece as a hoverbox, returns true if hovered
+---@protected
+---@param x number
+---@param y number
+---@param width number
+---@param height number
+---@param dont_focus? boolean
+---@return boolean
+---@nodiscard
+function ui_class:IsHoverBoxHovered(x, y, width, height, dont_focus)
+	if not dont_focus then
+		self:AddOptionForNext(self.c.options.ForceFocusable)
+	end
+	self:Draw9Piece(x, y, -10000, width, height, self.c.empty, self.c.empty)
+	return self:IsHovered()
 end
 
 -- ############################################
@@ -216,16 +282,19 @@ end
 ---@param key string
 ---@param ... any
 function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
+	local orig_gui, orig_id = self.gui, self.gui_id
+	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
 	local offscreen_offset = 1000
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
 	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
-	GuiEndAutoBoxNinePiece(self.gui)
+	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin)
 	self:SetTooltipCache(x, y, key)
+	self.gui, self.gui_id = orig_gui, orig_id
 end
 
----Retrieve tooltip data, drawing it off-screen if necessary
+---Retrieves a tooltip data, drawing it off-screen if necessary
 ---@param x number
 ---@param y number
 ---@param ui_fn function
@@ -278,7 +347,7 @@ function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
 	GuiZSet(self.gui, self.tooltip_z + 1)
-	GuiEndAutoBoxNinePiece(self.gui)
+	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin)
 	self:AnimateE()
 	GuiZSet(self.gui, 0)
 	self.gui, self.gui_id = orig_gui, orig_id
@@ -299,6 +368,28 @@ function ui_class:ShowTooltip(x, y, draw, ...)
 	end
 end
 
+---Adds a tooltip that centered around previous widget
+---@protected
+---@param x number offset
+---@param y number offset
+---@param draw function function to render in tooltip.
+---@param ... any optional parameter to pass to ui function.
+function ui_class:ShowTooltipCenteredX(x, y, draw, ...)
+	local prev = self:GetPrevious()
+	local cache = self:GetTooltipData(0, 0, draw, ...)
+	local center = prev.x + (prev.w - cache.width) / 2 + self.tooltip_margin -- 5 is margin from autobox
+	self:DrawToolTip(center + x, prev.y + y, draw, ...)
+end
+
+---Adds a text tooltip that centered around previous widget
+---@protected
+---@param x number offset
+---@param y number offset
+---@param text string text to show
+function ui_class:ShowTooltipTextCenteredX(x, y, text)
+	self:ShowTooltipCenteredX(x, y, self.TooltipText, text)
+end
+
 ---Custom tooltip with hovered check.
 ---@protected
 ---@param x number offset x.
@@ -308,32 +399,6 @@ end
 function ui_class:AddTooltip(x, y, draw, ...)
 	local prev = self:GetPrevious()
 	if prev.hovered then self:ShowTooltip(prev.x + x, prev.y + y, draw, ...) end
-end
-
----Custom tooltip with hovered check and make clickable.
----@protected
----@param x number offset x.
----@param y number offset y.
----@param draw function|string function to render in tooltip.
----@param click_fn function
----@param ... any optional parameter to pass to ui function.
-function ui_class:AddTooltipClickable(x, y, draw, click_fn, ...)
-	local prev = self:GetPrevious()
-	if prev.hovered then
-		self:ShowTooltip(prev.x + x, prev.y + y, draw, ...)
-		if self:IsMouseClicked() then -- mouse clicks
-			if click_fn then click_fn(self, ...) end
-		end
-	end
-end
-
----@protected
-function ui_class:MakeButtonFromPrev(text, click_fn, z, sprite, highlight, ...)
-	local prev = self:GetPrevious()
-	self:AddOptionForNext(self.c.options.ForceFocusable)
-	self:Add9PieceBackGroundText(z, sprite, highlight)
-	local tp_offset = (self:GetTextDimension(text) - prev.w - 1.5) / -2
-	self:AddTooltipClickable(tp_offset, prev.h * 2, text, click_fn, ...)
 end
 
 ---draw text at 0
@@ -365,6 +430,7 @@ end
 
 ---function to reset scrollbox cache
 ---@protected
+---:)
 function ui_class:FakeScrollBox_Reset()
 	self.scroll.y = 0
 	self.scroll.target_y = 0
@@ -470,6 +536,7 @@ end
 
 ---function to accept scroll wheels
 ---@private
+---:)
 function ui_class:FakeScrollBox_AnswerToWheel()
 	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_up) then
 		self.scroll.target_y = self.scroll.target_y - 10
@@ -481,6 +548,7 @@ end
 
 ---function to clump target and move content
 ---@private
+---:)
 function ui_class:FakeScrollBox_ClumpAndMove()
 	self.scroll.target_y = math.max(math.min(self.scroll.target_y, self.scroll.max_y_target), 0)
 	if math.abs(self.scroll.target_y - self.scroll.y) < 1 then
@@ -574,8 +642,7 @@ end
 ---@param font? string
 ---@return number, number
 function ui_class:GetTextDimension(text, font)
-	font = font or ""
-	return GuiGetTextDimensions(self.gui, text, 1, 2, font)
+	return GuiGetTextDimensions(self.gui, text, 1, 2, font or "")
 end
 
 ---Function to calculate the longest string in array
@@ -623,8 +690,27 @@ end
 ---@param x number
 ---@param y number
 function ui_class:Text(x, y, text, font)
-	font = font or ""
-	GuiText(self.gui, x, y, text, 1, font)
+	GuiText(self.gui, x, y, text, 1, font or "")
+end
+
+---GuiText with borders
+---@param x number
+---@param y number
+---@param z number
+---@param text string
+---@param active boolean
+---@param sprite? string
+---@param sprite_hl? string
+function ui_class:DrawButton(x, y, z, text, active, sprite, sprite_hl)
+	sprite = sprite or self.buttons.img
+	sprite_hl = sprite_hl or active and self.buttons.img_hl or self.buttons.img
+	self:SetZ(z - 1)
+	if not active then
+		self:ColorGray()
+	end
+	self:Text(x, y, text)
+	self:AddOptionForNext(self.c.options.ForceFocusable)
+	self:Draw9Piece(x - 1, y, z, self:GetTextDimension(text) + 1.5, 11, sprite, sprite_hl)
 end
 
 -- ############################################
@@ -667,13 +753,13 @@ end
 ---@field w number
 ---@field h number
 
----returns previous widget info
+---Returns a previous widget info
 ---@return PreviousInfo return hover, x, y, w, h
 ---@protected
 ---@nodiscard
 function ui_class:GetPrevious()
 	local lc, rc, prev_hovered, x, y, width, height = GuiGetPreviousWidgetInfo(self.gui)
-	local table = {
+	return {
 		lc = lc,
 		rc = rc,
 		hovered = prev_hovered,
@@ -682,7 +768,6 @@ function ui_class:GetPrevious()
 		w = width,
 		h = height
 	}
-	return table
 end
 
 -- ############################################
@@ -782,24 +867,6 @@ function ui_class:Draw9Piece(x, y, z, width, height, sprite, highlight)
 	highlight = highlight or sprite
 	GuiZSetForNextWidget(self.gui, z)
 	GuiImageNinePiece(self.gui, self:id(), x, y, width, height, 1, sprite, highlight)
-end
-
----add 9piece to previous widget
----@protected
----@param z number
----@param sprite? string
----@param highlight? string
-function ui_class:Add9PieceBackGround(z, sprite, highlight)
-	sprite = sprite or self.c.default_9piece
-	highlight = highlight or sprite
-	_, _, _, x, y, w, h = GuiGetPreviousWidgetInfo(self.gui)
-	self:Draw9Piece(x, y, z, w, h, sprite, highlight)
-end
-
----@protected
-function ui_class:Add9PieceBackGroundText(z, sprite, highlight)
-	local prev = self:GetPrevious()
-	self:Draw9Piece(prev.x - 1, prev.y, z, prev.w + 1.5, prev.h, sprite, highlight)
 end
 
 -- ############################################

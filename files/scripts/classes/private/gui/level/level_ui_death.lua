@@ -4,7 +4,7 @@ local LU_d = {}
 ---Returns true is credits is playing
 ---@return boolean
 ---@nodiscard
-function LU_d:IsCreditsPlaying()
+function LU_d:DeathIsCreditsPlaying()
 	if GameHasFlagRun("ending_game_completed") and self.data.credits_frame < 5150 then
 		self.data.credits_frame = self.data.credits_frame + 1
 		if InputIsKeyDown(self.c.codes.keyboard.space) and self.data.credits_frame < 5000 then ---last few seconds doesn't accelerate with space
@@ -16,16 +16,17 @@ function LU_d:IsCreditsPlaying()
 end
 
 ---Draws button on death screen
-function LU_d:DrawEndMenu()
+function LU_d:DeathDrawEndMenu()
 	local points = MLP.points:get_current_currency()
 	GuiZSet(self.gui, self.const.z - 2)
 	self:AnimateB()
 	self:AnimateAlpha(0.05, 0.1, false)
 	self:AnimateScale(0.05, false)
 	self:Color(0.8, 0.8, 0.8)
-	self:TextCentered(0, 10, "Meta Leveling", self.dim.x)
-	self:MakeButtonFromPrev(self:Locale("$ml_exp_bar_tooltip"), self.OpenMenu, self.const.z + 10,
-		self.const.ui_9p_button, self.const.ui_9p_button_hl)
+	local center = (self.dim.x - self:GetTextDimension("Meta Leveling")) / 2
+	if self:IsButtonClicked(center, 10, self.const.z -2, "Meta Leveling", self:Locale("$ml_exp_bar_tooltip")) then
+		self:OpenMenu()
+	end
 	if points > 0 then
 		local acquired = MLP.get:global_number(MLP.const.globals.meta_point_acquired, 0)
 		local text = self:Locale("$ml_meta_available: ") .. points
@@ -39,7 +40,7 @@ function LU_d:DrawEndMenu()
 end
 
 ---Adds triggers for opening menu
-function LU_d:DrawTriggerEndMenu()
+function LU_d:DeathDrawTriggerEndMenu()
 	if ML.gui then GameAddFlagRun(MLP.const.flags.dead) end
 	if self:IsControlCharsPressed() then
 		GameAddFlagRun(MLP.const.flags.dead)
@@ -49,10 +50,8 @@ function LU_d:DrawTriggerEndMenu()
 	local x_cod = self:CalculateCenterInScreen(cause_of_death_len, self.dim.y)
 	local you_are_dead_len = self:GetTextDimension(self:Locale(" $menugameover_nextbutton "))
 	local x_yad = self:CalculateCenterInScreen(you_are_dead_len, self.dim.y)
-	self:Draw9Piece(x_cod, 132, 10, cause_of_death_len, 15, self.c.empty)
-	local hovered_cod = self:IsHovered()
-	self:Draw9Piece(x_yad, 142, 10, you_are_dead_len, 15, self.c.empty)
-	local hovered_yad = self:IsHovered()
+	local hovered_cod = self:IsHoverBoxHovered(x_cod, 132, cause_of_death_len, 15, true)
+	local hovered_yad = self:IsHoverBoxHovered(x_yad, 142, you_are_dead_len, 15, true)
 	if hovered_cod or hovered_yad then
 		if self:IsMouseClicked() then
 			GameAddFlagRun(MLP.const.flags.dead)

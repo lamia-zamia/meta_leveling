@@ -203,12 +203,9 @@ end
 ---@param width number
 ---@param height number
 function EB:AddToolTip(x, y, width, height)
-	self:AddOptionForNext(self.c.options.ForceFocusable)
-	self:Draw9Piece(x, y, -1000, width, height, self.c.empty, self.c.empty)
-	local prev = self:GetPrevious()
-	if prev.hovered then
-		local cache = self:GetTooltipData(prev.x, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
-		self:ShowTooltip(prev.x - cache.width, prev.y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
+	if self:IsHoverBoxHovered(x, y, width, height) then
+		local cache = self:GetTooltipData(0, 0, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
+		self:ShowTooltip(x - cache.width, y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
 		if self:IsLeftClicked() then
 			ML:toggle_ui()
 		end
