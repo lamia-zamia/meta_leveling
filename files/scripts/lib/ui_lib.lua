@@ -72,7 +72,9 @@ local ui_class = {
 		scrollbar_pos = 0,
 		sprite_dim = 0,
 		visible_height = 0,
-		width = 320
+		width = 320,
+		scroll_img = "data/ui_gfx/decorations/9piece0_gray.png",
+		scroll_img_hl = "data/ui_gfx/decorations/9piece0.png",
 	},
 	buttons = {
 		img = "data/ui_gfx/decorations/9piece0_gray.png",
@@ -417,6 +419,8 @@ end
 ---@field package height number current height of scrollbox
 ---@field public height_max number maximum height of scrollbox
 ---@field public width number width of scrollbox
+---@field public scroll_img string path to scrollbox img
+---@field public scroll_img_hl string path to highlighted img
 
 ---function to reset scrollbox cache
 ---@protected
@@ -483,10 +487,14 @@ end
 ---@param y number y pos or scrollbox
 ---@param z number z of scrollbox
 function ui_class:FakeScrollBox_DrawScrollbarTrack(x, y, z)
+	local scroll_img = self.scroll.scroll_img
+	if self:IsHoverBoxHovered(x + self.scroll.width + self.scroll.sprite_dim / 3 - 7, y + self.scroll.scrollbar_pos, 5, self.scroll.scrollbar_height + 2, true) or self.scroll.move_triggered then
+		scroll_img = self.scroll.scroll_img_hl
+	end
 	-- Draw the scrollbar thumb
 	self:Draw9Piece(x + self.scroll.width + self.scroll.sprite_dim / 3 - 5, y + self.scroll.scrollbar_pos, z - 1, 0,
 		self.scroll
-		.scrollbar_height)
+		.scrollbar_height, scroll_img)
 
 	-- Draw the scrollbar track
 	self:Draw9Piece(x + self.scroll.width + self.scroll.sprite_dim / 3 - 8, y, z - 1, 6, self.scroll.height, self.c
@@ -498,11 +506,8 @@ end
 ---@private
 ---@param y number start position of scrollbar
 function ui_class:FakeScrollBox_MouseDrag(y)
-	local scroll_prev = self:GetPrevious()
-	if scroll_prev.hovered then
-		if self:IsLeftClicked() then
-			self:FakeScrollBox_HandleClick(y, self.scroll.height)
-		end
+	if self:IsHovered() and self:IsLeftClicked() then
+		self:FakeScrollBox_HandleClick(y, self.scroll.height)
 	end
 	if not InputIsMouseButtonDown(self.c.codes.mouse.lc) then
 		self.scroll.move_triggered = false
