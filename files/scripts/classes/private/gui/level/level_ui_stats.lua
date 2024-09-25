@@ -3,7 +3,6 @@
 local LU_stats = {
 	stats = {
 		longest = 0,
-		displaying = {},
 		distance = 10
 	},
 }
@@ -31,7 +30,7 @@ function LU_stats:StatsDrawCategory(category, category_name, folded)
 	if hovered then self:Color(1, 1, 0.7) end
 	self:Image(self.stats.x + dim, self.stats.y - self.scroll.y, img)
 	if hovered and self:IsLeftClicked() then
-		self.stats.displaying[category] = not self.stats.displaying[category]
+		ML.stats.unfolded[category] = not ML.stats.unfolded[category]
 	end
 	return true
 end
@@ -59,7 +58,7 @@ function LU_stats:StatsDrawWindow()
 	self.stats.x = 3
 	self.stats.y = 0
 	for category, category_name in pairs(ML.stats.categories) do
-		local show = self.stats.displaying[category]
+		local show = ML.stats.unfolded[category]
 		if self:StatsDrawCategory(category, category_name, show) then
 			self.stats.y = self.stats.y + self.stats.distance
 			if show then self:StatsDrawEntries(category) end

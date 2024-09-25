@@ -10,6 +10,10 @@ local ml_stats = {
 		default = "$ml_stats_misc",
 		experience = "$ml_experience",
 		meta = "$ml_meta",
+	},
+	unfolded = {
+		default = true,
+		experience = true
 	}
 }
 
@@ -70,8 +74,10 @@ end
 ---Adds category name
 ---@param category string
 ---@param name string
-function ml_stats:add_category(category, name)
+---@param unfolded_by_default boolean
+function ml_stats:add_category(category, name, unfolded_by_default)
 	self.categories[category] = name
+	self.unfolded[category] = unfolded_by_default
 end
 
 return ml_stats
