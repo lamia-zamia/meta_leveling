@@ -204,8 +204,9 @@ end
 ---@param height number
 function EB:AddToolTip(x, y, width, height)
 	if self:IsHoverBoxHovered(x, y, width, height) then
-		local cache = self:GetTooltipData(0, 0, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
-		self:ShowTooltip(x - cache.width, y, self.ToolTipUI, MLP.exp:floor(MLP.exp:current()))
+		local tp_key = MLP.exp:current() .. tostring(self.data.exp_inverted)
+		local cache = self:GetTooltipData(0, 0, self.ToolTipUI, tp_key)
+		self:ShowTooltip(x - cache.width, y, self.ToolTipUI, tp_key)
 		if self:IsLeftClicked() then
 			ML:toggle_ui()
 		end
