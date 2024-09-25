@@ -110,16 +110,6 @@ function ui_class:BlockInput()
 	GuiIdPop(self.gui)
 end
 
----Makes previous clickable
----@protected
----@param click_fn function
----@param ... any
-function ui_class:MakePreviousClickable(click_fn, ...)
-	if self:IsHovered() and self:IsMouseClicked() then
-		click_fn(self, ...)
-	end
-end
-
 ---Returns true if left mouse was clicked
 ---@protected
 ---@return boolean
@@ -613,24 +603,6 @@ function ui_class:Locale(string)
 	string = string:gsub(pattern, GameTextGetTranslatedOrNot, 1)
 	if string:find(pattern) then
 		return self:Locale(string)
-	else
-		return string
-	end
-end
-
----Returns GameTextGet with args replaced if input is valid
----@protected
----@param string string
----@param var0 string
----@param var1? string
----@param var2? string
----@return string
-function ui_class:GameTextGet(string, var0, var1, var2)
-	var0 = self:Locale(var0)
-	if var1 then var1 = self:Locale(var1) else var1 = "" end
-	if var2 then var2 = self:Locale(var2) else var2 = "" end
-	if string:find("^%$") then
-		return GameTextGet(string, var0, var1, var2)
 	else
 		return string
 	end
