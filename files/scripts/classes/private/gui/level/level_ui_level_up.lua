@@ -3,7 +3,9 @@
 local LU_level_up = {
 	level_up = {
 		x = 0,
-		y = 0
+		y = 0,
+		x_center = 0,
+		y_center = 0
 	}
 }
 
@@ -108,7 +110,7 @@ function LU_level_up:LevelUpDrawPointSpenderReward(reward_id)
 	if self:IsHovered() then
 		self.tooltip_img = self.const.tooltip_img_levelup
 		local cache = self:GetTooltipData(0, 0, self.LevelUpRewardsTooltip, reward)
-		self:ShowTooltip(self.dim.x / 2, self.level_up.y - cache.height - 10, self.LevelUpRewardsTooltip, reward)
+		self:ShowTooltip(self.dim.x / 2, self.level_up.y_center - cache.height - 10, self.LevelUpRewardsTooltip, reward)
 		-- self:ShowTooltip(self.level_up.x + 9, self.level_up.y + 36, self.LevelUpRewardsTooltip, reward)
 		self.tooltip_img = self.const.tooltip_img
 		if self:IsLeftClicked() then return true end
@@ -117,24 +119,45 @@ function LU_level_up:LevelUpDrawPointSpenderReward(reward_id)
 	return false
 end
 
+---Draws rewards row
+---@private
+---@param from number
+---@param to number
+function LU_level_up:LevelUpDrawPointSpenderRow(from, to)
+	for i = from, to do
+		if not self.data.reward_list then return end
+		local reward_id = self.data.reward_list[i]
+		if self:LevelUpDrawPointSpenderReward(reward_id) then
+			self:LevelUpPickReward(reward_id)
+			return
+		end
+	end
+end
+
 ---draw level up menu window
 ---@private
 function LU_level_up:LevelUpDrawPointSpender()
 	self:MenuAnimS("rewards")
 	if not self.data.reward_list then self.data.reward_list = ML.rewards_deck:draw_reward() end
 	local amount = #self.data.reward_list
-	local total_width = amount * 30 - 12
-	self.level_up.x, self.level_up.y = self:CalculateCenterInScreen(total_width, 18)
+	local split_rows = amount > 6
+	local rows = split_rows and 2 or 1
+	local amount_per_row = math.ceil(amount / rows)
+	local total_width = (amount_per_row * 30) - 12
+	local total_height = (30 * rows) - 12
+	self.level_up.x_center, self.level_up.y_center = self:CalculateCenterInScreen(total_width, total_height)
+	self.level_up.x, self.level_up.y = self.level_up.x_center, self.level_up.y_center
 
-	self:Draw9Piece(self.level_up.x, self.level_up.y, self.const.z + 5, total_width, 18, self.const.ui_9piece)
+	self:Draw9Piece(self.level_up.x, self.level_up.y, self.const.z + 5, total_width, total_height, self.const.ui_9piece)
 	self:BlockInputOnPrevious()
 
-	for i = 1, amount do
-		local reward_id = self.data.reward_list[i]
-		if self:LevelUpDrawPointSpenderReward(reward_id) then
-			self:LevelUpPickReward(reward_id)
-			return
-		end
+	if split_rows then
+		self:LevelUpDrawPointSpenderRow(1, amount_per_row)
+		self.level_up.x = self.level_up.x_center + (amount % 2 == 0 and 0 or 15)
+		self.level_up.y = self.level_up.y + 30
+		self:LevelUpDrawPointSpenderRow(amount_per_row + 1, amount)
+	else
+		self:LevelUpDrawPointSpenderRow(1, amount)
 	end
 
 	self.level_up.y = self.level_up.y + 36
