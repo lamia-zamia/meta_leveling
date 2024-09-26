@@ -1,6 +1,6 @@
 # Meta Leveling
 
-Welcome to the release candidate of Meta Leveling, a Noita mod that introduces RPG-inspired progression and rewards. Level up, gain meta rewards, and customize your experience!
+This is a Noita mod that introduces RPG-inspired progression and rewards. Level up, gain meta rewards, and customize your experience!
 
 ### Installation
 
