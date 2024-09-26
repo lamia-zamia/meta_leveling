@@ -59,3 +59,7 @@ Special thanks to the following people for their invaluable contributions:
 - Beta Testing & Feedback:
 
   Nathan, Sharpy796, Sp4m, Snek Gregory
+
+- Spriting advice and thumbnail:
+
+  Copi
