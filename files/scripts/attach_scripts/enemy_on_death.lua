@@ -54,6 +54,10 @@ local script_death = function(damage_type_bit_field, damage_message, entity_that
 	-- Check for boss tag to double the experience
 	if MLP.get:entity_has_tag(died_entity, "boss") then exp = exp * 2 end
 
+	-- Blessed beast integration
+	if MLP.get:entity_has_tag(died_entity, "blessed_beast") then exp = exp * 1.5 end
+	if MLP.get:entity_has_tag(died_entity, "blessed_miniboss") then exp = exp * 2 end
+
 	local current_frame = GameGetFrameNum()
 	local last_damage_by_player = GetValueInteger("ML_damaged_by_player", -900)
 	local message = nil
