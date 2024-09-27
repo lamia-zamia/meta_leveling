@@ -24,7 +24,8 @@ function LU_d:DeathDrawEndMenu()
 	self:AnimateScale(0.05, false)
 	self:Color(0.8, 0.8, 0.8)
 	local center = (self.dim.x - self:GetTextDimension("Meta Leveling")) / 2
-	if self:IsButtonClicked(center, 10, self.const.z -2, "Meta Leveling", self:Locale("$ml_exp_bar_tooltip")) then
+	if self:IsButtonClicked(center, self.data.y + 10, self.const.z - 2, "Meta Leveling", self:Locale("$ml_exp_bar_tooltip")) then
+		self:AnimReset("buttons")
 		self:OpenMenu()
 	end
 	if points > 0 then
@@ -34,16 +35,23 @@ function LU_d:DeathDrawEndMenu()
 			text = text .. self:Locale(", $ml_meta_acquired_in_run: ") .. acquired
 		end
 		self:Color(0.8, 0.8, 0.8)
-		self:TextCentered(0, 30, text, self.dim.x)
+		self:TextCentered(0, self.data.y + 25, text, self.dim.x)
 	end
 	self:AnimateE()
 end
 
+---Sets parameters
+---@private
+function LU_d:DeathMenuInit()
+	ML.gui = false
+	GameAddFlagRun(MLP.const.flags.dead)
+	self.DrawWindow = nil
+end
+
 ---Adds triggers for opening menu
 function LU_d:DeathDrawTriggerEndMenu()
-	if ML.gui then GameAddFlagRun(MLP.const.flags.dead) end
-	if self:IsControlCharsPressed() then
-		GameAddFlagRun(MLP.const.flags.dead)
+	if ML.gui or self:IsControlCharsPressed() then
+		self:DeathMenuInit()
 	end
 	local cause_of_death = StatsGetValue("killed_by") .. " " .. StatsGetValue("killed_by_extra")
 	local cause_of_death_len = self:GetTextDimension(self:Locale("$stat_cause_of_death " .. cause_of_death))
@@ -54,8 +62,23 @@ function LU_d:DeathDrawTriggerEndMenu()
 	local hovered_yad = self:IsHoverBoxHovered(x_yad, 142, you_are_dead_len, 15, true)
 	if hovered_cod or hovered_yad then
 		if self:IsMouseClicked() then
-			GameAddFlagRun(MLP.const.flags.dead)
+			self:DeathMenuInit()
 		end
+	end
+end
+
+function LU_d:DeathDrawMenu()
+	if not GameHasFlagRun(MLP.const.flags.dead) then
+		self:DeathDrawTriggerEndMenu()
+	end
+	self.scroll.height_max = 75
+	self.data.y = 10
+	if ML.gui then
+		self:DrawButtonsAndWindow()
+	elseif self.data.on_death and GameHasFlagRun(MLP.const.flags.dead) then
+		self:DeathDrawEndMenu()
+	else
+
 	end
 end
 

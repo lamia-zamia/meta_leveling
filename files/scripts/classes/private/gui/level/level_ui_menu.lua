@@ -30,7 +30,7 @@ end
 ---draw buttons under the header
 ---@private
 function LU_menu:DrawMenuButtons()
-	self:MenuAnimS("header")
+	self:MenuAnimS("buttons")
 	local y = self.data.y - 5.5
 	local x = self.data.x
 	local function x_off()
@@ -39,7 +39,7 @@ function LU_menu:DrawMenuButtons()
 		return x
 	end
 	local level_up_text = self:Locale("$ml_level_up")
-	if ML.pending_levels >= 1 and not GameHasFlagRun(MLP.const.flags.dead) then
+	if ML.pending_levels >= 1 and not self:IsDead() then
 		self:DrawButton(x, y, self.const.z, level_up_text, true, self.const.ui_9p_button_important, self.const.ui_9p_button_hl)
 		if self:IsHovered() then
 			self:ShowTooltipTextCenteredX(0, 22, self:Locale("$ml_level_up_tp"))
@@ -65,6 +65,7 @@ function LU_menu:DrawMenuButtons()
 	if self:IsButtonClicked(self.const.width + self.data.x - self:GetTextDimension(close_text), y, self.const.z, close_text, self:Locale("$ml_close_tp")) then
 		self:CloseMenu()
 	end
+	self:AnimateE()
 end
 
 return LU_menu

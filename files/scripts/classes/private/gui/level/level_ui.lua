@@ -27,7 +27,7 @@ end
 ---@private
 ---@return boolean
 function LU:PointSpenderCheck()
-	if GameHasFlagRun(MLP.const.flags.dead) then return false end
+	if not ML.player.id then return false end
 	if self.data.SkipMenuOnPending and ML.pending_levels > 0 then
 		GameAddFlagRun(MLP.const.flags.leveling_up)
 	end
@@ -38,15 +38,11 @@ function LU:PointSpenderCheck()
 	return false
 end
 
----Draws button on death screen
-function LU:IfDead()
-	if StatsGetValue("dead") == "0" then return end
-	if self:DeathIsCreditsPlaying() then return end
-	if self.data.on_death and GameHasFlagRun(MLP.const.flags.dead) then
-		self:DeathDrawEndMenu()
-	else
-		self:DeathDrawTriggerEndMenu()
-	end
+---Returns true if player is dead
+---@private
+---@return boolean
+function LU:IsDead()
+	return StatsGetValue("dead") == "1"
 end
 
 ---Open menu
@@ -73,7 +69,7 @@ end
 ---@private
 function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()
-	if self:IsHoverBoxHovered(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset) then
+	if self:IsHoverBoxHovered(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, true) then
 		self:BlockInput()
 	end
 end
@@ -189,16 +185,9 @@ function LU:DrawMenuConnector()
 	self:AnimateE()
 end
 
----main window
+---Draws menu buttons
 ---@private
-function LU:DrawMainMenu()
-	self.data.x, self.data.y = self:CalculateCenterInScreen(self.const.width, self.const.height)
-	if GameHasFlagRun(MLP.const.flags.dead) then
-		self.scroll.height_max = 75
-		self.data.y = 10
-	else
-		self:DrawMainHeader()
-	end
+function LU:DrawButtonsAndWindow()
 	self:DrawMenuButtons()
 	if self.DrawWindow then
 		self:DrawMenuConnector()
@@ -206,6 +195,14 @@ function LU:DrawMainMenu()
 		self:DrawWindow()
 		self:AnimateE()
 	end
+end
+
+---main window
+---@private
+function LU:DrawMainMenu()
+	if not ML.player.id then return end
+	self:DrawMainHeader()
+	self:DrawButtonsAndWindow()
 end
 
 -- ############################################
@@ -227,12 +224,9 @@ end
 ---main logic
 ---@private
 function LU:DrawLevelUI()
-	GuiZSet(self.gui, self.const.z - 2)
 	if not self:PointSpenderCheck() then
 		self:DrawMainMenu()
 	end
-
-	self:CheckForAnim()
 end
 
 ---main loop
@@ -240,17 +234,23 @@ function LU:loop()
 	if ML.gui_em_exit then self:EmergencyExit() end
 	self:StartFrame()
 
-	if ML.gui then
+	GuiZSet(self.gui, self.const.z - 2)
+	self.data.x, self.data.y = self:CalculateCenterInScreen(self.const.width, self.const.height)
+
+	if self:IsDead() then
+		if self:DeathIsCreditsPlaying() then return end
+		self:DeathDrawMenu()
+	elseif ML.gui then
 		self:DrawLevelUI()
-	else
-		self:IfDead()
 	end
+
 	if InputIsKeyJustDown(self.data.hotkey) then
 		self:OpenMenu()
 		if InputIsKeyDown(self.c.codes.keyboard.lshift) then
 			ML.gui_em_exit = false
 		end
 	end
+	self:CheckForAnim()
 end
 
 return LU

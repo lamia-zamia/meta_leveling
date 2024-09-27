@@ -48,6 +48,10 @@ local anim = {
 	window = {
 		reset = false,
 		frame = 0
+	},
+	buttons = {
+		reset = false,
+		frame = 0
 	}
 }
 
