@@ -357,7 +357,7 @@ function debug:draw_childs()
 	end
 	if self.misc then
 		local misc_show
-		misc_show, self.misc = imgui.Begin("ML Numbers", self.misc)
+		misc_show, self.misc = imgui.Begin("Misc", self.misc)
 		if misc_show then
 			self:draw_misc()
 			imgui.End()
