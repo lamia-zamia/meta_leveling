@@ -89,6 +89,7 @@ function ML:StartUp()
 end
 
 function ML:OnSpawn()
+	self.player:update()
 	self.meta:apply_if_new_run()
 	self.level_up_effects:init()
 end
