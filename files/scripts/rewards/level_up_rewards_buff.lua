@@ -93,7 +93,7 @@ local buffs = {
 	},
 	{
 		id = "buff_temporary_remove_fog",
-		ui_name = "perk_remove_fog_of_war",
+		ui_name = "$perk_remove_fog_of_war",
 		description = "$ml_buff_temporary_tp",
 		description_var = { "$perk_remove_fog_of_war", "60" },
 		description2 = "$perkdesc_remove_fog_of_war",
