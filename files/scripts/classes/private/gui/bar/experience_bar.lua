@@ -351,6 +351,7 @@ function EB:GetSettings()
 		self.bar.scale_x = self.data.health_length
 		self.bar.scale_y = 1
 	end
+	self:SetPlayerHealthLength()
 end
 
 ---Draw the experience bar
