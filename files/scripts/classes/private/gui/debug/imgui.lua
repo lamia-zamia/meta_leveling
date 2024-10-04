@@ -9,18 +9,21 @@ local UI = UI_lib:New() ---@class UI_class
 
 ---@class ml_debug
 ---@field rewards? boolean
+---@field deck? boolean
 ---@field numbers table
 ---@field misc? boolean
 ---@field gui gui
 local debug = {
 	scale = 3,
 	rewards = false,
+	rewards_search = "",
 	numbers = {
 		show = false,
 		level = 1,
 		experience = 0,
 	},
 	misc = false,
+	deck = false,
 	child_flags = bit.bor(
 		imgui.WindowFlags.NoBackground,
 		imgui.WindowFlags.NoScrollbar,
@@ -151,8 +154,9 @@ end
 ---Draws icon with borders
 ---@private
 ---@param reward ml_single_reward_data
+---@param id number window id
 ---@return boolean
-function debug:draw_reward_full_icon(reward)
+function debug:draw_reward_full_icon(reward, id)
 	local size = 16
 	local margin = 8
 	local cursor_offset = margin / 2 * self.scale
@@ -164,7 +168,7 @@ function debug:draw_reward_full_icon(reward)
 	local r, g, b, a = unpack(reward.border_color)
 	imgui.Image(border_img, border_img_size, border_img_size, 0, 0, 1, 1, r, g, b, a)
 	imgui.SetCursorPos(pos_x + cursor_offset, pos_y + cursor_offset)
-	if imgui.BeginChild(reward.id, size * self.scale, size * self.scale, 0, self.child_flags) then ---@diagnostic disable-line: param-type-mismatch
+	if imgui.BeginChild(reward.id .. id, size * self.scale, size * self.scale, 0, self.child_flags) then ---@diagnostic disable-line: param-type-mismatch
 		self:draw_reward_icon(size, reward.ui_icon)
 		imgui.EndChild()
 	end
@@ -234,7 +238,15 @@ end
 function debug:draw_rewards()
 	local interval = 30 * self.scale
 	local width = imgui.GetWindowWidth()
-	for _, reward in ipairs(ML.rewards_deck.ordered_rewards_data) do
+	_, self.rewards_search = imgui.InputText("search", self.rewards_search)
+	imgui.SameLine()
+	if imgui.Button("clear") then
+		self.rewards_search = ""
+	end
+	for i, reward in ipairs(ML.rewards_deck.ordered_rewards_data) do
+		if self.rewards_search ~= "" and not string.find(reward.id, self.rewards_search) then ---@diagnostic disable-line: param-type-mismatch
+			goto continue
+		end
 		local pos_x, pos_y = imgui.GetCursorPos()
 		if pos_x + interval * 2 >= width then
 			pos_y = pos_y + interval
@@ -242,7 +254,7 @@ function debug:draw_rewards()
 		else
 			pos_x = pos_x + interval
 		end
-		if self:draw_reward_full_icon(reward) then
+		if self:draw_reward_full_icon(reward, i) then
 			self:draw_icon_in_game(reward)
 			if imgui.BeginTooltip() then
 				self:reward_description(reward)
@@ -250,6 +262,39 @@ function debug:draw_rewards()
 			end
 			if imgui.IsMouseClicked(imgui.MouseButton.Left) then
 				ML.rewards_deck:pick_reward(reward.id)
+			end
+		end
+		imgui.SetCursorPos(pos_x, pos_y)
+		::continue::
+	end
+	xml_viewer:advance_frame()
+end
+
+---Draws deck
+---@private
+function debug:draw_deck()
+	if #ML.rewards_deck.list == 0 then ML.rewards_deck:refresh_reward_order() end ---@diagnostic disable-line: invisible
+	local list = ML.rewards_deck.list ---@diagnostic disable-line: invisible
+	local current_index = MLP.get:global_number(MLP.const.globals.draw_index, 1)
+	imgui.Text("Deck, current index: " .. current_index .. ", total number: " .. #list)
+
+	local interval = 30 * self.scale
+	local width = imgui.GetWindowWidth()
+
+	for i, reward_id in ipairs(list) do
+		local reward = ML.rewards_deck.reward_data[reward_id]
+		local pos_x, pos_y = imgui.GetCursorPos()
+		if pos_x + interval * 2 >= width then
+			pos_y = pos_y + interval
+			pos_x = 8
+		else
+			pos_x = pos_x + interval
+		end
+		if self:draw_reward_full_icon(reward, i) then
+			-- self:draw_icon_in_game(reward)
+			if imgui.BeginTooltip() then
+				self:reward_description(reward)
+				imgui.EndTooltip()
 			end
 		end
 		imgui.SetCursorPos(pos_x, pos_y)
@@ -329,7 +374,8 @@ function debug:draw_misc()
 	imgui.Text("Orb bonus: " .. MLP.points:CalculateMetaPointsOrbs())
 	imgui.Text("Damage bonus: " .. MLP.points:CalculateMetaPointsDamageTaken())
 	imgui.Text("Fungal shift bonus: " .. MLP.points:CalculateMetaPointsFungalShift())
-	imgui.Text("Streak bonus: " .. MLP.points:CalculateMetaPointsWinStreakBonus() .. ", streak: " .. ModSettingGet("meta_leveling.streak_count"))
+	imgui.Text("Streak bonus: " ..
+		MLP.points:CalculateMetaPointsWinStreakBonus() .. ", streak: " .. ModSettingGet("meta_leveling.streak_count"))
 	imgui.Text("You will be rewarded for " .. MLP:CalculateMetaPointsOnSampo() .. " points")
 end
 
@@ -344,6 +390,14 @@ function debug:draw_childs()
 			imgui.PushFont(imgui.GetNoitaFont1_4x())
 			self:draw_rewards()
 			imgui.PopFont()
+			imgui.End()
+		end
+	end
+	if self.deck then
+		local deck_show
+		deck_show, self.deck = imgui.Begin("ML Deck", self.deck)
+		if deck_show then
+			self:draw_deck()
 			imgui.End()
 		end
 	end
@@ -376,6 +430,9 @@ function debug:draw()
 		imgui.Text("Welcome to Meta Leveling Debug")
 		if imgui.Button("Rewards") then
 			self.rewards = not self.rewards
+		end
+		if imgui.Button("Deck") then
+			self.deck = not self.deck
 		end
 		if imgui.Button("Numbers") then
 			self.numbers.show = not self.numbers.show
