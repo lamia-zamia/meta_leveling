@@ -59,6 +59,12 @@ end
 ---@param action action
 local function categorizeAction(action)
 	local action_id = action.id
+	if not action.spawn_level then
+		if ModIsEnabled("component-explorer") then
+			err:print("[Gun Parser Error] There is no spawn_level for " .. action_id)
+		end
+		return
+	end
 	local action_type = action.type
 	local pattern_low = action.type == 4 and ",[1-3]," or ",[0-2],"
 	local pattern_mid = action.type == 4 and ",[4-6]," or ",[3-5],"
