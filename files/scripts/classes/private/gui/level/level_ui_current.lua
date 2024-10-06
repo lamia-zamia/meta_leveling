@@ -42,7 +42,7 @@ function LU_current:CurrentDrawGroupedReward(rewards)
 	end
 	self:DrawRewardRarity(self.current.x - 4, self.current.y - 4 - self.scroll.y, self.const.z,
 		ML.rewards_deck.borders.common)
-	self:Image(self.current.x, self.current.y - self.scroll.y, ML.rewards_deck.reward_data[rewards[1]].ui_icon)
+	self:DrawRewardIcon(self.current.x, self.current.y - self.scroll.y, ML.rewards_deck.reward_data[rewards[1]].ui_icon)
 	self:Draw9Piece(self.current.x + self.data.x - 1, self.current.y + self.data.y - 1 - self.scroll.y, self.const.z, 18,
 		18,
 		self.const.ui_9p_reward)
@@ -72,7 +72,8 @@ function LU_current:CurrentDrawSeparatedReward(reward)
 		self.current.y = self.current.y + self.current.distance
 	end
 	self:DrawRewardRarity(self.current.x - 4, self.current.y - 4 - self.scroll.y, self.const.z, reward.border_color)
-	self:Image(self.current.x, self.current.y - self.scroll.y, reward.ui_icon)
+	self:DrawRewardIcon(self.current.x, self.current.y - self.scroll.y, reward.ui_icon)
+	-- self:Image(self.current.x, self.current.y - self.scroll.y, reward.ui_icon)
 	self:Draw9Piece(self.current.x + self.data.x - 1, self.current.y + self.data.y - 1 - self.scroll.y, self.const.z, 18,
 		18,
 		self.const.ui_9p_reward, self.const.ui_9p_button_hl)

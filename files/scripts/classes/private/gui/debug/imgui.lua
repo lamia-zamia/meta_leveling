@@ -48,7 +48,14 @@ function debug:draw_icon_in_game(reward)
 		UI:Color(r, g, b)
 		UI:Image(x - 4, y - 4, "mods/meta_leveling/files/gfx/ui/reward_glow.png", a)
 		UI:SetZ(-7000)
-		UI:Image(x, y, reward.ui_icon)
+		if reward.ui_icon:find("%.xml") then
+			UI:Image(x, y, reward.ui_icon)
+		else
+			local width, height = GuiGetImageDimensions(self.gui, reward.ui_icon, 1)
+			local x_offset = (16 - width) / 2
+			local y_offset = (16 - height) / 2
+			UI:Image(x + x_offset, y + y_offset, reward.ui_icon)
+		end
 	end
 	local x = 610
 	local y = 330

@@ -150,6 +150,24 @@ function LU:DrawRewardRarity(x, y, z, color)
 	self:Image(x, y, "mods/meta_leveling/files/gfx/ui/reward_glow.png", a)
 end
 
+---Draws reward icon
+---@private
+---@param x number
+---@param y number
+---@param icon string
+---@param scale? number
+function LU:DrawRewardIcon(x, y, icon, scale)
+	scale = scale or 1
+	if icon:find("%.xml") then
+		self:Image(x, y, icon, 1, scale, scale)
+		return
+	end
+	local width, height = GuiGetImageDimensions(self.gui, icon, 1)
+	local x_offset = (16 - width) / 2 * scale
+	local y_offset = (16 - height) / 2 * scale
+	self:Image(x + x_offset, y + y_offset, icon, 1, scale, scale)
+end
+
 -- ############################################
 -- ############		MAIN MENU		###########
 -- ############################################

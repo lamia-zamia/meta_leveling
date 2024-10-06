@@ -103,7 +103,7 @@ end
 function LU_level_up:LevelUpDrawPointSpenderReward(reward_id)
 	local reward = ML.rewards_deck.reward_data[reward_id]
 	self:DrawRewardRarity(self.level_up.x - 3, self.level_up.y - 3, self.const.z + 4, reward.border_color)
-	self:Image(self.level_up.x + 1, self.level_up.y + 1, reward.ui_icon)
+	self:DrawRewardIcon(self.level_up.x + 1, self.level_up.y + 1, reward.ui_icon)
 	self:AddOptionForNext(self.c.options.ForceFocusable)
 	self:Draw9Piece(self.level_up.x, self.level_up.y, self.const.z + 1, 18, 18, self.const.ui_9p_reward,
 		self.const.ui_9p_reward_hl)
