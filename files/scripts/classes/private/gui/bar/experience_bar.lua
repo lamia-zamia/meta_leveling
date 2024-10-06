@@ -54,7 +54,7 @@ end
 ---@private
 function EB:BarColor()
 	if self.data.exp_inverted then
-		self:Color(1 - self.bar.red, 1 - self.bar.green, 1 - self.bar.blue)
+		self:Color(self.bar.red_inverted, self.bar.green_inverted, self.bar.blue_inverted)
 	else
 		self:Color(self.bar.red, self.bar.green, self.bar.blue)
 	end
@@ -310,12 +310,20 @@ function EB:UpdatePlayerStatus()
 	self:SetPlayerHealthLength()
 end
 
+---Sets colors for bar
+---@private
+function EB:SetColors()
+	self.bar.red, self.bar.green, self.bar.blue = MLP.get:exp_color()
+	local h, s, v = ML.colors:rgb2hsv(1 - self.bar.red, 1 - self.bar.green, 1 - self.bar.blue)
+	self.bar.red_inverted, self.bar.green_inverted, self.bar.blue_inverted = ML.colors:hsv2rgb(h, math.min(s, 0.55), math.min(v, 0.6))
+end
+
 ---Load and apply settings
 function EB:GetSettings()
 	self:UpdateDimensions()
 	self.data.animate_bar = MLP.get:mod_setting_boolean("session_exp_animate_bar", true)
 	self.bar.thickness = MLP.get:mod_setting_number("exp_bar_thickness")
-	self.bar.red, self.bar.green, self.bar.blue = MLP.get:exp_color()
+	self:SetColors()
 	self.data.max_health = ML.player.max_hp
 	self.data.perc.x = self.dim.x - 38
 	self.data.perc.y = 12
