@@ -13,3 +13,13 @@ local files = {
 for _, file in ipairs(files) do
 	ModLuaFileAppend("mods/meta_leveling/files/for_modders/rewards_append.lua", file)
 end
+
+local integration = {
+	bags_of_many = "mods/meta_leveling/files/scripts/rewards/integration_bags_of_many.lua"
+}
+
+for mod, file in pairs(integration) do
+	if ModIsEnabled(mod) then
+		ModLuaFileAppend("mods/meta_leveling/files/for_modders/rewards_append.lua", file)
+	end
+end
