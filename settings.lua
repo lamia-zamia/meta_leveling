@@ -132,7 +132,6 @@ do --helpers
 
 	---@param all boolean reset all
 	function U.set_default(all)
-		all = all or false
 		for setting, value in pairs(D) do
 			if U.get_setting(setting) == nil or all then
 				U.set_setting(setting, value)
@@ -158,6 +157,46 @@ do --helpers
 			end
 		end
 	end
+
+	---Resets settings
+	function U.reset_settings()
+		U.set_default(true)
+	end
+
+	---Resets progress
+	function U.reset_progress()
+		local count = ModSettingGetCount()
+		local progress_list = {}
+		for i = 0, count do
+			local setting_id = ModSettingGetAtIndex(i)
+			if setting_id and setting_id:find("^meta_leveling%.reward_picked_") then
+				progress_list[#progress_list + 1] = setting_id
+			end
+		end
+		for i = 1, #progress_list do
+			print(progress_list[i])
+			ModSettingRemove(progress_list[i])
+		end
+	end
+
+	---Resets meta
+	function U.reset_meta()
+		local count = ModSettingGetCount()
+		local meta_list = {}
+		for i = 0, count do
+			local setting_id = ModSettingGetAtIndex(i)
+			if setting_id and setting_id:find("^meta_leveling%.progress_") then
+				meta_list[#meta_list + 1] = setting_id
+			end
+		end
+		for i = 1, #meta_list do
+			local setting_id = meta_list[i]
+			ModSettingSet(setting_id, 0)
+			ModSettingSetNextValue(setting_id, 0, false)
+			ModSettingRemove(setting_id)
+		end
+		ModSettingRemove("meta_leveling.currency_progress")
+	end
 end
 -- ###########################################
 -- ##########		GUI Helpers		##########
@@ -180,26 +219,27 @@ do --gui helpers
 	end
 
 	---@param gui gui
-	---@param setting mod_setting
-	---@param value setting_value
-	---@param set_value setting_value
-	function G.display_fake_button(gui, setting, value, set_value)
-		local _, _, _, x, y, w = GuiGetPreviousWidgetInfo(gui)
-		local text = "[" .. T[set_value] .. "]"
-		if value == set_value then
-			GuiColorSetForNextWidget(gui, 0.7, 0.7, 0.7, 1)
-		else
-			local width, height = GuiGetTextDimensions(gui, text)
-			G.button_options(gui)
-			GuiImageNinePiece(gui, id(), x + w, y, width, height, 0)
-			local clicked, _, hovered = GuiGetPreviousWidgetInfo(gui)
-			G.yellow_if_hovered(gui, hovered)
-			if clicked then
-				U.set_setting(setting.id, set_value)
-				U.setting_handle_callback(setting)
-			end
+	---@param x_pos number
+	---@param text string
+	---@param color? table
+	---@return boolean
+	---@nodiscard
+	function G.button(gui, x_pos, text, color)
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
+		GuiText(gui, x_pos, 0, "")
+		local _, _, _, x, y = GuiGetPreviousWidgetInfo(gui)
+		text = "[" .. text .. "]"
+		local width, height = GuiGetTextDimensions(gui, text)
+		G.button_options(gui)
+		GuiImageNinePiece(gui, id(), x, y, width, height, 0)
+		local clicked, _, hovered = GuiGetPreviousWidgetInfo(gui)
+		if color then
+			local r, g, b = unpack(color)
+			GuiColorSetForNextWidget(gui, r, g, b, 1)
 		end
-		GuiText(gui, 0, 0, text)
+		G.yellow_if_hovered(gui, hovered)
+		GuiText(gui, x_pos, 0, text)
+		return clicked
 	end
 
 	---@param setting_name setting_id
@@ -414,14 +454,18 @@ do -- Settings GUI
 	end
 
 	function S.mod_setting_better_string(_, gui, _, _, setting)
-		local value = U.get_setting_next(setting.id)
-		if not value then return end
+		local value = tostring(U.get_setting_next(setting.id))
+		-- if not value then return end
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
 		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 8, 0, "")
 		for _, button in ipairs(setting.buttons) do
-			G.display_fake_button(gui, setting, value, button)
+			local color = value == button and { 0.7, 0.7, 0.7 } or nil
+			if G.button(gui, 0, T[button], color) then
+				U.set_setting(setting.id, button)
+				U.setting_handle_callback(setting)
+			end
 		end
 		GuiLayoutEnd(gui)
 	end
@@ -474,6 +518,17 @@ do -- Settings GUI
 		GuiText(gui, 0, 0, current_key)
 
 		GuiLayoutEnd(gui)
+	end
+
+	function S.reset_stuff(_, gui, _, _, setting)
+		local fn = U[setting.id]
+		if not fn then
+			GuiText(gui, mod_setting_group_x_offset, 0, "ERR")
+			return
+		end
+		if G.button(gui, mod_setting_group_x_offset, T.reset_cat, { 1, 0.4, 0.4 }) then
+			fn()
+		end
 	end
 end
 
@@ -537,7 +592,15 @@ local translations =
 		session_exp_log = "Create log",
 		session_exp_log_d = "Writes the name of killed entity and amount of XP",
 		session_exp_multiplier = "EXP multiplier",
-		session_exp_multiplier_d = "If you find default to be unsatisfying"
+		session_exp_multiplier_d = "If you find default to be unsatisfying",
+		reset_cat = "Reset",
+		reset_cat_d = "Reset various stuff",
+		reset_settings = "Reset settings",
+		reset_settings_d = "Sets all settings to default",
+		reset_progress = "Reset progress",
+		reset_progress_d = "Resets history of picked rewards",
+		reset_meta = "Reset meta",
+		reset_meta_d = "Resets meta point and all of it's progress",
 	},
 	["русский"] = {
 		show_debug = "Show debug button",
@@ -592,7 +655,15 @@ local translations =
 		session_exp_log = "Логировать",
 		session_exp_log_d = "Писать имя убитого и кол-во опыта",
 		session_exp_multiplier = "Множитель опыта",
-		session_exp_multiplier_d = "Если вас не устраивает по умолчанию"
+		session_exp_multiplier_d = "Если вас не устраивает по умолчанию",
+		reset_cat = "Сброс",
+		reset_cat_d = "Сброс разных вещей",
+		reset_settings = "Сброс настроек",
+		reset_settings_d = "Сбрасывает все настройки по умолчанию",
+		reset_progress = "Сброс прогресса",
+		reset_progress_d = "Сбросить историю выбранных наград",
+		reset_meta = "Сброс меты",
+		reset_meta_d = "Сбрасывает очки меты и весь его прогресс",
 	}
 }
 
@@ -779,6 +850,60 @@ local function build_settings()
 				},
 			},
 		},
+		{
+			category_id = "reset_cat",
+			ui_name = T.reset_cat,
+			ui_description = T.reset_cat_d,
+			foldable = true,
+			_folded = true,
+			settings = {
+				{
+					category_id = "reset_settings",
+					ui_name = T.reset_settings,
+					ui_description = T.reset_settings_d,
+					foldable = true,
+					_folded = true,
+					settings = {
+						{
+							not_setting = true,
+							id = "reset_settings",
+							ui_fn = S.reset_stuff,
+							ui_name = T.reset_settings
+						}
+					}
+				},
+				{
+					category_id = "reset_progress",
+					ui_name = T.reset_progress,
+					ui_description = T.reset_progress_d,
+					foldable = true,
+					_folded = true,
+					settings = {
+						{
+							not_setting = true,
+							id = "reset_progress",
+							ui_fn = S.reset_stuff,
+							ui_name = T.reset_progress
+						}
+					}
+				},
+				{
+					category_id = "reset_meta",
+					ui_name = T.reset_meta,
+					ui_description = T.reset_meta_d,
+					foldable = true,
+					_folded = true,
+					settings = {
+						{
+							not_setting = true,
+							id = "reset_meta",
+							ui_fn = S.reset_stuff,
+							ui_name = T.reset_meta
+						}
+					}
+				},
+			}
+		}
 	}
 	U.offset = 0
 	return settings
