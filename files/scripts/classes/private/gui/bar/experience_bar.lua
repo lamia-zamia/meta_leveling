@@ -47,7 +47,11 @@ end
 ---Adjust bar color based on multiplier
 ---@private
 function EB:BarColorBackground()
-	self:Color(self.bar.red * 0.6, self.bar.green * 0.6, self.bar.blue * 0.6)
+	if self.data.exp_inverted then
+		self:Color(self.bar.red_inverted * 0.6, self.bar.green_inverted * 0.6, self.bar.blue_inverted * 0.6)
+	else
+		self:Color(self.bar.red * 0.6, self.bar.green * 0.6, self.bar.blue * 0.6)
+	end
 end
 
 ---Adjust bar color based on multiplier
