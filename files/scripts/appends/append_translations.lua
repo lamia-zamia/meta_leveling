@@ -7,8 +7,9 @@ local mod_translation_files = {
 local translations = ModTextFileGetContent(game_translation_file)
 local ml_translation = ""
 for i = 1, #mod_translation_files do
-	ml_translation = ml_translation .. "\n" .. ModTextFileGetContent(mod_translation_files[i])
+	ml_translation = ml_translation .. ModTextFileGetContent(mod_translation_files[i]) .. "\n"
 end
+
 local append_translation = nil
 local current_language = GameTextGetTranslatedOrNot("$current_language")
 local custom_languages = {
