@@ -166,7 +166,7 @@ end
 
 ---Shadows functions so they won't do anything
 local function shadow_functions()
-	local nilfn = function() end
+	local nil_fn = function() end
 	local functions_to_shadow = {
 		"EndProjectile",
 		"StartReload",
@@ -193,7 +193,7 @@ local function shadow_functions()
 	}
 
 	for i = 1, #functions_to_shadow do
-		_G[functions_to_shadow[i]] = nilfn
+		_G[functions_to_shadow[i]] = nil_fn
 	end
 end
 

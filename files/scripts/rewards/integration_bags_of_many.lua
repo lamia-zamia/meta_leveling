@@ -1,4 +1,4 @@
----@type ml_rewards
+--- @type ml_rewards
 local bags = {}
 
 local sizes = { "small", "medium", "big" }

@@ -1,4 +1,4 @@
----@class level_ui
+--- @class level_ui
 local LU = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_class.lua")
 
 local modules = {
@@ -23,9 +23,9 @@ end
 -- #############		MISC		###########
 -- ############################################
 
----Checks and runs point spender if needed
----@private
----@return boolean
+--- Checks and runs point spender if needed
+--- @private
+--- @return boolean
 function LU:PointSpenderCheck()
 	if not ML.player.id then return false end
 	if self.data.SkipMenuOnPending and ML.pending_levels > 0 then
@@ -38,22 +38,22 @@ function LU:PointSpenderCheck()
 	return false
 end
 
----Returns true if player is dead
----@private
----@return boolean
+--- Returns true if player is dead
+--- @private
+--- @return boolean
 function LU:IsDead()
 	return StatsGetValue("dead") == "1"
 end
 
----Open menu
----@private
+--- Open menu
+--- @private
 function LU:OpenMenu()
 	ML:toggle_ui()
 	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 end
 
----close ui on triggers
----@private
+--- close ui on triggers
+--- @private
 function LU:EmergencyExit()
 	if self.data.CloseOnDamage and ML.player.mLastDamageFrame ~= self.data.mLastDamageFrame then
 		self.data.mLastDamageFrame = ML.player.mLastDamageFrame
@@ -65,8 +65,8 @@ function LU:EmergencyExit()
 	end
 end
 
----invisible 9piece to block inputs on gui
----@private
+--- invisible 9piece to block inputs on gui
+--- @private
 function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()
 	if self:IsHoverBoxHovered(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, true) then
@@ -74,15 +74,15 @@ function LU:BlockInputOnPrevious()
 	end
 end
 
----reset animation by key
----@private
+--- reset animation by key
+--- @private
 function LU:AnimReset(key)
 	self.anim[key].reset = true
 	self.anim[key].frame = GameGetFrameNum()
 end
 
----check if animation should be resetted, it's done so it could wait 1 frame, otherwise animations don't reset
----@private
+--- check if animation should be resetted, it's done so it could wait 1 frame, otherwise animations don't reset
+--- @private
 function LU:CheckForAnim()
 	for key, _ in pairs(self.anim) do
 		if self.anim[key].reset then
@@ -93,26 +93,26 @@ function LU:CheckForAnim()
 	end
 end
 
----set common parameters for menu animation
----@private
+--- set common parameters for menu animation
+--- @private
 function LU:MenuAnimS(key)
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, self.anim[key].reset)
 	self:AnimateScale(0.08, self.anim[key].reset)
 end
 
----function to close menu
----@private
+--- function to close menu
+--- @private
 function LU:CloseMenu()
 	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	ML.gui = false
 end
 
----check if element is visible within scrollbox
----@private
----@param y number
----@param distance_between number
----@return boolean
+--- check if element is visible within scrollbox
+--- @private
+--- @param y number
+--- @param distance_between number
+--- @return boolean
 function LU:ElementIsVisible(y, distance_between)
 	if
 		y - self.scroll.y + distance_between / 2 > 0 and
@@ -123,25 +123,25 @@ function LU:ElementIsVisible(y, distance_between)
 	return false
 end
 
----function to reset scrollbox height
----@private
+--- function to reset scrollbox height
+--- @private
 function LU:ResetScrollBoxHeight()
 	self:FakeScrollBox_Reset()
 end
 
----function to reset scrollbox params to default
----@private
+--- function to reset scrollbox params to default
+--- @private
 function LU:ResetScrollBox()
 	self:AnimReset("window")
 	self:ResetScrollBoxHeight()
 end
 
----Draws reward rarity glow
----@private
----@param x number
----@param y number
----@param z number
----@param color ml_reward_border
+--- Draws reward rarity glow
+--- @private
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param color ml_reward_border
 function LU:DrawRewardRarity(x, y, z, color)
 	self:AddOptionForNext(self.c.options.NonInteractive)
 	self:SetZ(z)
@@ -150,12 +150,12 @@ function LU:DrawRewardRarity(x, y, z, color)
 	self:Image(x, y, "mods/meta_leveling/files/gfx/ui/reward_glow.png", a)
 end
 
----Draws reward icon
----@private
----@param x number
----@param y number
----@param icon string
----@param scale? number
+--- Draws reward icon
+--- @private
+--- @param x number
+--- @param y number
+--- @param icon string
+--- @param scale? number
 function LU:DrawRewardIcon(x, y, icon, scale)
 	scale = scale or 1
 	if icon:find("%.xml") then
@@ -172,14 +172,14 @@ end
 -- ############		MAIN MENU		###########
 -- ############################################
 
----draw header
----@private
+--- draw header
+--- @private
 function LU:DrawMainHeader()
 	self:MenuAnimS("header")
 	local third_width = self.const.width * 0.33
 	local section = 10
 	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current())
-	if MLP.exp:current() < 10 ^ 21 then
+	if MLP.exp:current() < 10^21 then
 		experience = experience .. "/" .. MLP.exp:format(ML.next_exp)
 	end
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
@@ -194,8 +194,8 @@ function LU:DrawMainHeader()
 	self.data.y = self.data.y + section + self.const.sprite_offset
 end
 
----draw connector between header and window
----@private
+--- draw connector between header and window
+--- @private
 function LU:DrawMenuConnector()
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, self.anim["window"].reset)
@@ -206,8 +206,8 @@ function LU:DrawMenuConnector()
 	self:AnimateE()
 end
 
----Draws menu buttons
----@private
+--- Draws menu buttons
+--- @private
 function LU:DrawButtonsAndWindow()
 	self:DrawMenuButtons()
 	if self.DrawWindow then
@@ -218,8 +218,8 @@ function LU:DrawButtonsAndWindow()
 	end
 end
 
----main window
----@private
+--- main window
+--- @private
 function LU:DrawMainMenu()
 	if not ML.player.id then return end
 	self:DrawMainHeader()
@@ -230,7 +230,7 @@ end
 -- #############		LOGIC		###########
 -- ############################################
 
----gathers settings on pause update
+--- gathers settings on pause update
 function LU:GetSetting()
 	self:UpdateDimensions()
 	self.data.CloseOnShot = MLP.get:mod_setting_boolean("session_exp_close_ui_on_shot")
@@ -242,15 +242,15 @@ function LU:GetSetting()
 	self:StatsFindLongest()
 end
 
----main logic
----@private
+--- main logic
+--- @private
 function LU:DrawLevelUI()
 	if not self:PointSpenderCheck() then
 		self:DrawMainMenu()
 	end
 end
 
----main loop
+--- main loop
 function LU:loop()
 	if ML.gui_em_exit then self:EmergencyExit() end
 	self:StartFrame()

@@ -1,7 +1,7 @@
----@type ML_components_helper
+--- @type ML_components_helper
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
 
----@type ml_stats_entry[]
+--- @type ml_stats_entry[]
 local list = {
 	{
 		ui_name = "$ml_experience",

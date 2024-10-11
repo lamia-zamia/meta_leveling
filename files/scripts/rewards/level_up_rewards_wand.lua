@@ -11,7 +11,7 @@ local function refresh_wand_if_in_inventory(wand_id)
 	end
 end
 
----@type ml_rewards
+--- @type ml_rewards
 local wand_rewards = {
 	{
 		id = "wand_faster_delay_and_recharge",

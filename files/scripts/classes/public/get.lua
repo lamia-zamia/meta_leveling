@@ -107,9 +107,9 @@ end
 function ML_get:first_wand()
 	local entity_id = EntityGetWithName("inventory_quick")
 	if entity_id then
-		local childs = EntityGetAllChildren(entity_id)
-		if not childs then return nil end
-		for _, child in ipairs(childs) do
+		local children = EntityGetAllChildren(entity_id)
+		if not children then return nil end
+		for _, child in ipairs(children) do
 			if EntityHasTag(child, "wand") then return child end
 		end
 	end

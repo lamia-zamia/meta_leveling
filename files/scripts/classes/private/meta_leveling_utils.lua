@@ -4,12 +4,12 @@ local utils = {
 }
 
 function utils:weighted_random(pool)
-	local poolsize = 0
+	local pool_size = 0
 	for _, item in ipairs(pool) do
-		poolsize = poolsize + item.weight
+		pool_size = pool_size + item.weight
 	end
 	self:random_seed()
-	local selection = Random(1, poolsize)
+	local selection = Random(1, pool_size)
 	for _, item in ipairs(pool) do
 		selection = selection - item.weight
 		if (selection <= 0) then

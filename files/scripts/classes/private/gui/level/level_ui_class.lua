@@ -1,6 +1,6 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") ---@type UI_class
+local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") --- @type UI_class
 
----@class LU.const
+--- @class LU.const
 local const = {
 	ui_9piece = "mods/meta_leveling/files/gfx/ui/ui_9piece.png",
 	ui_9piece_gray = "mods/meta_leveling/files/gfx/ui/ui_9piece_gray.png",
@@ -18,8 +18,8 @@ local const = {
 	z = -1000,
 }
 
----@class LU.data
----@field reward_list? ml_reward_id[]
+--- @class LU.data
+--- @field reward_list? ml_reward_id[]
 local data = {
 	mLastDamageFrame = -120,
 	mButtonLastFrameFire = -2,
@@ -35,7 +35,7 @@ local data = {
 	credits_frame = 0
 }
 
----@class LU.anim
+--- @class LU.anim
 local anim = {
 	rewards = {
 		reset = false,
@@ -55,11 +55,11 @@ local anim = {
 	}
 }
 
----@class level_ui:UI_class
----@field private const LU.const
----@field private data LU.data
----@field private anim LU.anim
----@field private DrawWindow function?
+--- @class level_ui:UI_class
+--- @field private const LU.const
+--- @field private data LU.data
+--- @field private anim LU.anim
+--- @field private DrawWindow function?
 local LU = UI_class:New()
 LU.buttons.img = const.ui_9p_button
 LU.buttons.img_hl = const.ui_9p_button_hl

@@ -1,18 +1,18 @@
 if not load_imgui then return end
-local required_version = "1.24.0" -- 1.24.0 suppors vfs images now
+local required_version = "1.24.0"                                                                                         -- 1.24.0 suppors vfs images now
 
-local imgui = load_imgui({ version = required_version, mod = "Meta Leveling" }) ---@type ImGui
-local imgui_xml_img_viewer = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/debug/xml_img_viewer.lua") ---@type imgui_xml_img_viewer
+local imgui = load_imgui { version = required_version, mod = "Meta Leveling" }                                            --- @type ImGui
+local imgui_xml_img_viewer = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/debug/xml_img_viewer.lua") --- @type imgui_xml_img_viewer
 local xml_viewer = imgui_xml_img_viewer:new(imgui)
-local UI_lib = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") ---@type UI_class
-local UI = UI_lib:New() ---@class UI_class
+local ui_lib = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua")                                             --- @type UI_class
+local ui = ui_lib:New()                                                                                                   --- @class UI_class
 
----@class ml_debug
----@field rewards? boolean
----@field deck? boolean
----@field numbers table
----@field misc? boolean
----@field gui gui
+--- @class ml_debug
+--- @field rewards? boolean
+--- @field deck? boolean
+--- @field numbers table
+--- @field misc? boolean
+--- @field gui gui
 local debug = {
 	scale = 3,
 	rewards = false,
@@ -37,45 +37,45 @@ local debug = {
 	)
 }
 
----Render icon in real gui
----@private
----@param reward ml_single_reward_data
+--- Render icon in real gui
+--- @private
+--- @param reward ml_single_reward_data
 function debug:draw_icon_in_game(reward)
 	local function draw(x, y)
-		UI:Draw9Piece(x - 1, y - 1, -5000, 18, 18, "mods/meta_leveling/files/gfx/ui/ui_9piece_reward.png")
-		UI:SetZ(-6000)
+		ui:Draw9Piece(x - 1, y - 1, -5000, 18, 18, "mods/meta_leveling/files/gfx/ui/ui_9piece_reward.png")
+		ui:SetZ(-6000)
 		local r, g, b, a = unpack(reward.border_color)
-		UI:Color(r, g, b)
-		UI:Image(x - 4, y - 4, "mods/meta_leveling/files/gfx/ui/reward_glow.png", a)
-		UI:SetZ(-7000)
+		ui:Color(r, g, b)
+		ui:Image(x - 4, y - 4, "mods/meta_leveling/files/gfx/ui/reward_glow.png", a)
+		ui:SetZ(-7000)
 		if reward.ui_icon:find("%.xml") then
-			UI:Image(x, y, reward.ui_icon)
+			ui:Image(x, y, reward.ui_icon)
 		else
 			local width, height = GuiGetImageDimensions(self.gui, reward.ui_icon, 1)
 			local x_offset = (16 - width) / 2
 			local y_offset = (16 - height) / 2
-			UI:Image(x + x_offset, y + y_offset, reward.ui_icon)
+			ui:Image(x + x_offset, y + y_offset, reward.ui_icon)
 		end
 	end
 	local x = 610
 	local y = 330
-	UI:StartFrame()
-	UI:Draw9Piece(x - 41, y - 6, -3000, 28, 28)
+	ui:StartFrame()
+	ui:Draw9Piece(x - 41, y - 6, -3000, 28, 28)
 	draw(x, y)
 	draw(x - 35, y)
 end
 
----Close itself
----@private
----:)
+--- Close itself
+--- @private
+--- :)
 function debug:close()
 	ModSettingSet("meta_leveling.debug_window", false)
 end
 
----Draws image or xml
----@private
----@param size number
----@param icon string
+--- Draws image or xml
+--- @private
+--- @param size number
+--- @param icon string
 function debug:draw_reward_icon(size, icon)
 	if icon:find("%.xml$") then
 		if xml_viewer:can_display_xml(icon) then
@@ -96,11 +96,11 @@ function debug:draw_reward_icon(size, icon)
 	end
 end
 
----Draw a 9-slice sprite in ImGui with scaling support
----@private
----@param image any -- ImGui texture identifier (e.g., from imgui.LoadImage)
----@param width number -- Total width of the final drawn piece
----@param height number -- Total height of the final drawn piece
+--- Draw a 9-slice sprite in ImGui with scaling support
+--- @private
+--- @param image any -- ImGui texture identifier (e.g., from imgui.LoadImage)
+--- @param width number -- Total width of the final drawn piece
+--- @param height number -- Total height of the final drawn piece
 function debug:ImGui9Piece(image, width, height)
 	local img = imgui.LoadImage(image)
 	if not img then return end
@@ -158,11 +158,11 @@ function debug:ImGui9Piece(image, width, height)
 		uv.center[4])
 end
 
----Draws icon with borders
----@private
----@param reward ml_single_reward_data
----@param id number window id
----@return boolean
+--- Draws icon with borders
+--- @private
+--- @param reward ml_single_reward_data
+--- @param id number window id
+--- @return boolean
 function debug:draw_reward_full_icon(reward, id)
 	local size = 16
 	local margin = 8
@@ -175,7 +175,7 @@ function debug:draw_reward_full_icon(reward, id)
 	local r, g, b, a = unpack(reward.border_color)
 	imgui.Image(border_img, border_img_size, border_img_size, 0, 0, 1, 1, r, g, b, a)
 	imgui.SetCursorPos(pos_x + cursor_offset, pos_y + cursor_offset)
-	if imgui.BeginChild(reward.id .. id, size * self.scale, size * self.scale, 0, self.child_flags) then ---@diagnostic disable-line: param-type-mismatch
+	if imgui.BeginChild(reward.id .. id, size * self.scale, size * self.scale, 0, self.child_flags) then --- @diagnostic disable-line: param-type-mismatch
 		self:draw_reward_icon(size, reward.ui_icon)
 		imgui.EndChild()
 	end
@@ -187,20 +187,20 @@ function debug:draw_reward_full_icon(reward, id)
 	return hovered
 end
 
----Draws text in gray
----@private
----@param text any
+--- Draws text in gray
+--- @private
+--- @param text any
 function debug:gray_text(text)
 	imgui.PushStyleColor(0, 0.6, 0.6, 0.6)
 	imgui.Text(tostring(text))
 	imgui.PopStyleColor()
 end
 
----Draws text in gray and white
----@private
----@param gray any
----@param normal any
----@param addition? any
+--- Draws text in gray and white
+--- @private
+--- @param gray any
+--- @param normal any
+--- @param addition? any
 function debug:gray_normal_text(gray, normal, addition)
 	self:gray_text(gray)
 	imgui.SameLine()
@@ -211,12 +211,12 @@ function debug:gray_normal_text(gray, normal, addition)
 	end
 end
 
----Draws tooltip for reward
----@private
----@param reward ml_single_reward_data
+--- Draws tooltip for reward
+--- @private
+--- @param reward ml_single_reward_data
 function debug:reward_description(reward)
 	self:gray_normal_text("id: ", reward.id --[[@as string]])
-	self:gray_normal_text("name: ", ML.rewards_deck.FormatString(UI:Locale(reward.ui_name)),
+	self:gray_normal_text("name: ", ML.rewards_deck.FormatString(ui:Locale(reward.ui_name)),
 		" (" .. reward.ui_name .. ")")
 	if reward.description then
 		self:gray_normal_text("desk: ", ML.rewards_deck:UnpackDescription(reward.description, reward.description_var))
@@ -224,7 +224,7 @@ function debug:reward_description(reward)
 	if reward.description2 then
 		self:gray_normal_text("desk2: ", ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var))
 	end
-	self:gray_normal_text("prob: ", ML.rewards_deck:get_probability(reward.probability)) ---@diagnostic disable-line: invisible
+	self:gray_normal_text("prob: ", ML.rewards_deck:get_probability(reward.probability)) --- @diagnostic disable-line: invisible
 	if reward.max < 1280 then
 		self:gray_normal_text("max: ", reward.max)
 	end
@@ -239,19 +239,20 @@ function debug:reward_description(reward)
 	end
 end
 
----Draws reward menu
----@private
----:)
+--- Draws reward menu
+--- @private
+--- :)
 function debug:draw_rewards()
 	local interval = 30 * self.scale
 	local width = imgui.GetWindowWidth()
-	_, self.rewards_search = imgui.InputText("search", self.rewards_search)
+	local _, rewards_search = imgui.InputText("search", self.rewards_search)
+	self.rewards_search = rewards_search
 	imgui.SameLine()
 	if imgui.Button("clear") then
 		self.rewards_search = ""
 	end
 	for i, reward in ipairs(ML.rewards_deck.ordered_rewards_data) do
-		if self.rewards_search ~= "" and not string.find(reward.id, self.rewards_search) then ---@diagnostic disable-line: param-type-mismatch
+		if self.rewards_search ~= "" and not string.find(reward.id, self.rewards_search) then --- @diagnostic disable-line: param-type-mismatch
 			goto continue
 		end
 		local pos_x, pos_y = imgui.GetCursorPos()
@@ -277,11 +278,11 @@ function debug:draw_rewards()
 	xml_viewer:advance_frame()
 end
 
----Draws deck
----@private
+--- Draws deck
+--- @private
 function debug:draw_deck()
-	if #ML.rewards_deck.list == 0 then ML.rewards_deck:refresh_reward_order() end ---@diagnostic disable-line: invisible
-	local list = ML.rewards_deck.list ---@diagnostic disable-line: invisible
+	if #ML.rewards_deck.list == 0 then ML.rewards_deck:refresh_reward_order() end --- @diagnostic disable-line: invisible
+	local list = ML.rewards_deck.list                                          --- @diagnostic disable-line: invisible
 	local current_index = MLP.get:global_number(MLP.const.globals.draw_index, 1)
 	imgui.Text("Deck, current index: " .. current_index .. ", total number: " .. #list)
 
@@ -309,23 +310,24 @@ function debug:draw_deck()
 	xml_viewer:advance_frame()
 end
 
----Gets current data
----@private
----:)
+--- Gets current data
+--- @private
+--- :)
 function debug:fetch_current()
 	self.numbers.level = ML:get_level()
 	self.numbers.experience = MLP.exp:current()
 	self.numbers.meta = MLP.points:get_current_currency()
 end
 
----Draws number menu
----@private
----:)
+--- Draws number menu
+--- @private
+--- :)
 function debug:draw_numbers()
 	if imgui.Button("Reset to current") then
 		self:fetch_current()
 	end
-	_, self.numbers.level = imgui.InputInt("level", self.numbers.level, 1, 10)
+	local _, level = imgui.InputInt("level", self.numbers.level, 1, 10)
+	self.numbers.level = level
 	if imgui.IsItemDeactivatedAfterEdit() then
 		MLP.set:global_number(MLP.const.globals.current_exp, ML.level_curve[self.numbers.level - 1])
 		MLP.set:global_number(MLP.const.globals.current_level, self.numbers.level - 1)
@@ -355,9 +357,9 @@ function debug:add_orb()
 	GamePickUpInventoryItem(ML.player.id, orb_e, false)
 end
 
----Draws some trash
----@private
----:)
+--- Draws some trash
+--- @private
+--- :)
 function debug:draw_misc()
 	if imgui.Button("Add orbs") then
 		self:add_orb()
@@ -386,10 +388,10 @@ function debug:draw_misc()
 	imgui.Text("You will be rewarded for " .. MLP:CalculateMetaPointsOnSampo() .. " points")
 end
 
----Draws child windows
----@private
----:)
-function debug:draw_childs()
+--- Draws child windows
+--- @private
+--- :)
+function debug:draw_children()
 	if self.rewards then
 		local rewards_show
 		rewards_show, self.rewards = imgui.Begin("ML Rewards", self.rewards)
@@ -426,7 +428,7 @@ function debug:draw_childs()
 	end
 end
 
----Draws debug window
+--- Draws debug window
 function debug:draw()
 	if not self.gui then
 		self.gui = GuiCreate()
@@ -450,7 +452,7 @@ function debug:draw()
 		imgui.End()
 	end
 
-	self:draw_childs()
+	self:draw_children()
 
 	if not open then
 		self:close()

@@ -1,4 +1,4 @@
----@class ML_sandbox
+--- @class ML_sandbox
 local sandbox = {
 	old = {}
 }

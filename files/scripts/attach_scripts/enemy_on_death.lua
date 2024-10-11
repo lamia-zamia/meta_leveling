@@ -1,11 +1,11 @@
----@type MetaLevelingPublic
+--- @type MetaLevelingPublic
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 local waters = dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua")
 local T = GameTextGetTranslatedOrNot
 
----Check if the entity is visible
----@param entity entity_id
----@return boolean
+--- Check if the entity is visible
+--- @param entity entity_id
+--- @return boolean
 local function is_entity_visible(entity)
 	local cam_x, cam_y, cam_w, cam_h = GameGetCameraBounds()
 	local ent_x, ent_y = EntityGetTransform(entity)
@@ -19,9 +19,9 @@ local function is_entity_visible(entity)
 	return GameGetFogOfWarBilinear(ent_x, ent_y) <= 230
 end
 
----Check if the damage was done by water
----@param damage_message string
----@return boolean
+--- Check if the damage was done by water
+--- @param damage_message string
+--- @return boolean
 local function damage_done_by_water(damage_message)
 	for _, water in ipairs(waters) do
 		local text = GameTextGet("$damage_frommaterial", T(water))
@@ -32,7 +32,7 @@ local function damage_done_by_water(damage_message)
 	return false
 end
 
----@type script_damage_received
+--- @type script_damage_received
 local script_damage_received = function(damage, message, entity_thats_responsible, is_fatal, projectile_thats_responsible)
 	if MLP.get:entity_is_player_related(entity_thats_responsible) then
 		SetValueInteger("ML_damaged_by_player", GameGetFrameNum())
@@ -40,7 +40,7 @@ local script_damage_received = function(damage, message, entity_thats_responsibl
 end
 damage_received = script_damage_received
 
----@type script_death
+--- @type script_death
 local script_death = function(damage_type_bit_field, damage_message, entity_thats_responsible, drop_items)
 	local died_entity = GetUpdatedEntityID()
 

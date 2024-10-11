@@ -1,11 +1,11 @@
-local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+local meta = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 
-local EntitySetComponentIsEnabled_ML_Old = EntitySetComponentIsEnabled
+local set_component_old = EntitySetComponentIsEnabled
 
----@param entity_id entity_id
----@param component_id component_id
----@param is_enabled boolean
-EntitySetComponentIsEnabled = function(entity_id, component_id, is_enabled)
-	MLP:QuestCompleted(30)
-	EntitySetComponentIsEnabled_ML_Old(entity_id, component_id, is_enabled)
+--- @param entity_id entity_id
+--- @param component_id component_id
+--- @param is_enabled boolean
+function EntitySetComponentIsEnabled(entity_id, component_id, is_enabled)
+	meta:QuestCompleted(30)
+	set_component_old(entity_id, component_id, is_enabled)
 end

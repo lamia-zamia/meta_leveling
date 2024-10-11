@@ -1,9 +1,9 @@
-local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
+local meta = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
 
-local EntityKill_old_MP = EntityKill
+local entity_kill = EntityKill
 
----@param entity_id entity_id
-EntityKill = function(entity_id)
-	MLP:QuestCompleted(5)
-	EntityKill_old_MP(entity_id)
+--- @param entity_id entity_id
+function EntityKill(entity_id)
+	meta:QuestCompleted(5)
+	entity_kill(entity_id)
 end

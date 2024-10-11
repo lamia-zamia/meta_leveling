@@ -1,7 +1,6 @@
+local game_on_completed = GameOnCompleted
 
-local GameOnCompleted_old = GameOnCompleted
-
-GameOnCompleted = function() ---@diagnostic disable-line: missing-global-doc
+function GameOnCompleted() --- @diagnostic disable-line: missing-global-doc
 	ModSettingSet("meta_leveling.streak_win", true)
-	GameOnCompleted_old()
+	game_on_completed()
 end

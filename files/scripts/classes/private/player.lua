@@ -1,15 +1,15 @@
----@class ml_player
----@field id? entity_id
----@field x number
----@field y number
----@field mLastDamageFrame number last frame when received damage
----@field mButtonLastFrameFire number last frame when we shoot
----@field max_hp number max hp
----@field hp number
----@field absent_hp_percent number
----@field air_in_lungs number
----@field air_in_lungs_max number
----@field drowning boolean
+--- @class ml_player
+--- @field id? entity_id
+--- @field x number
+--- @field y number
+--- @field mLastDamageFrame number last frame when received damage
+--- @field mButtonLastFrameFire number last frame when we shoot
+--- @field max_hp number max hp
+--- @field hp number
+--- @field absent_hp_percent number
+--- @field air_in_lungs number
+--- @field air_in_lungs_max number
+--- @field drowning boolean
 local player = {
 	id = nil,
 	x = 0,
@@ -24,30 +24,30 @@ local player = {
 	drowning = false,
 }
 
----returns player id
----@return entity_id? player_id
+--- returns player id
+--- @return entity_id? player_id
 function player:get_id()
 	return EntityGetWithTag("player_unit")[1]
 end
 
----returns player x, y
----@return number x, number y
+--- returns player x, y
+--- @return number x, number y
 function player:get_pos()
 	local x, y = EntityGetTransform(self.id)
 	return x or 0, y or 0
 end
 
----returns player's component id of name
----@param name component_type
----@return component_id?
+--- returns player's component id of name
+--- @param name component_type
+--- @return component_id?
 function player:get_component_by_name(name)
 	if not self.id then return nil end
 	return EntityGetFirstComponentIncludingDisabled(self.id, name)
 end
 
----add lua component if absent
----@param value LuaComponent
----@param file string
+--- add lua component if absent
+--- @param value LuaComponent
+--- @param file string
 function player:add_lua_component_if_none(value, file)
 	if not self.id then return end
 	local components = EntityGetComponentIncludingDisabled(self.id, "LuaComponent") or {}
@@ -58,10 +58,10 @@ function player:add_lua_component_if_none(value, file)
 	ComponentSetValue2(comp, value, file)
 end
 
----get specific LuaComponent id
----@param value LuaComponent
----@param file string
----@return component_id?
+--- get specific LuaComponent id
+--- @param value LuaComponent
+--- @param file string
+--- @return component_id?
 function player:get_lua_component(value, file)
 	if not self.id then return end
 	local components = EntityGetComponentIncludingDisabled(self.id, "LuaComponent") or {}
@@ -71,23 +71,23 @@ function player:get_lua_component(value, file)
 	return nil
 end
 
----@return component_id?
+--- @return component_id?
 function player:get_damagemodel()
 	return self:get_component_by_name("DamageModelComponent")
 end
 
----return player's DamageModelComponent field value
----@param field DamageModelComponent
----@return any|nil
+--- return player's DamageModelComponent field value
+--- @param field DamageModelComponent
+--- @return any|nil
 function player:get_damagemodel_value(field)
 	local component = self:get_damagemodel()
 	if not component then return nil end
 	return ComponentGetValue2(component, field)
 end
 
----@param field DamageModelComponent
----@param default number
----@return number
+--- @param field DamageModelComponent
+--- @param default number
+--- @return number
 function player:get_damagemodel_value_number(field, default)
 	local value = self:get_damagemodel_value(field)
 	if type(value) == "number" then
@@ -97,15 +97,15 @@ function player:get_damagemodel_value_number(field, default)
 	end
 end
 
----@param field ControlsComponent
----@return any|nil
+--- @param field ControlsComponent
+--- @return any|nil
 function player:get_controlscomponent_value(field)
 	local component = self:get_component_by_name("ControlsComponent")
 	if not component then return nil end
 	return ComponentGetValue2(component, field)
 end
 
----@return number
+--- @return number
 function player:get_mButtonLastFrameFire()
 	local value = self:get_controlscomponent_value("mButtonLastFrameFire")
 	if type(value) == "number" then

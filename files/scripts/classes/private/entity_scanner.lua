@@ -1,13 +1,13 @@
----@class (exact) ml_entity_scanner
----@field private tags table
----@field private processed_entities table
+--- @class (exact) ml_entity_scanner
+--- @field private tags table
+--- @field private processed_entities table
 local entity_scanner = {
 	tags = { "enemy", "nest", "homing_target" },
 	processed_entities = setmetatable({}, { __mode = "k" }),
 }
 
----@param entity entity_id
----@private
+--- @param entity entity_id
+--- @private
 function entity_scanner:add_lua_component_if_none(entity)
 	local components = EntityGetComponent(entity, "LuaComponent") or {}
 	for _, component in ipairs(components) do
@@ -24,7 +24,7 @@ function entity_scanner:add_lua_component_if_none(entity)
 	self.processed_entities[entity] = true
 end
 
----scan entities and add death script if none
+--- scan entities and add death script if none
 function entity_scanner:check_entities()
 	local unprocessed_entities = {}
 	for _, tag in ipairs(self.tags) do

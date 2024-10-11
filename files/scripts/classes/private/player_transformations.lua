@@ -64,7 +64,6 @@ function ghost:transform()
 	EntityAddChild(ML.player.id, child_id)
 	EntityAddChild(ML.player.id, child_id2)
 
-
 	local component = EntityGetFirstComponentIncludingDisabled(ML.player.id, "CharacterDataComponent")
 	if (component ~= nil) then
 		local fly_time = ComponentGetValue2(component, "fly_recharge_spd") * 1.15
@@ -179,7 +178,7 @@ function demon:transform()
 	end
 end
 
----@class ml_transformations
+--- @class ml_transformations
 local transformations = {
 	rat = rat,
 	fungi = fungi,

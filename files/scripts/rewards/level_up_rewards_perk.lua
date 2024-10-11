@@ -1,4 +1,4 @@
----@type ml_rewards
+--- @type ml_rewards
 local rewards_perk = {
 	{
 		id = "perk_perks_lottery",

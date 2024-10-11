@@ -1,3 +1,4 @@
+---@diagnostic disable
 ---@alias int integer
 ---@alias bool boolean
 ---@alias str string

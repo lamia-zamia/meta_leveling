@@ -1,12 +1,12 @@
 local max_categorized_spells = 16
 local random_random_spells_iterations = 4
 
----Generates a table of N unique random numbers within a specified range.
----@param n number The number of unique random numbers to generate.
----@param min number The minimum value of the range.
----@param max number The maximum value of the range.
----@return table A table containing N unique random numbers.
-local function generateUniqueRandomNumbers(n, min, max)
+--- Generates a table of N unique random numbers within a specified range.
+--- @param n number The number of unique random numbers to generate.
+--- @param min number The minimum value of the range.
+--- @param max number The maximum value of the range.
+--- @return table A table containing N unique random numbers.
+local function generate_unique_random_numbers(n, min, max)
 	local numbers, result = {}, {}
 	while #result < n do
 		local rand = Random(min, max)
@@ -18,16 +18,16 @@ local function generateUniqueRandomNumbers(n, min, max)
 	return result
 end
 
----Function to generate layers with random spells from table
----@param list string[]
----@return ml_icon_generator_layers?, number
----@nodiscard
-local function generateSpellIconLayer(list)
+--- Function to generate layers with random spells from table
+--- @param list string[]
+--- @return ml_icon_generator_layers?, number
+--- @nodiscard
+local function generate_spell_icon_layer(list)
 	local size = #list
 	local n = math.min(size - (size % 2), max_categorized_spells)
 	if n > 0 then
-		local indexes = generateUniqueRandomNumbers(n, 1, size)
-		---@type ml_icon_generator_layers
+		local indexes = generate_unique_random_numbers(n, 1, size)
+		--- @type ml_icon_generator_layers
 		local icons = {}
 		for _, index in ipairs(indexes) do
 			icons[#icons + 1] = ML.guns.actions_data.icons[list[index]]
@@ -37,10 +37,10 @@ local function generateSpellIconLayer(list)
 	return nil, 0
 end
 
----@type ml_icon_generator
+--- @type ml_icon_generator
 local IG = dofile_once("mods/meta_leveling/files/scripts/classes/private/icon_generator.lua")
 
----Spell border icons
+--- Spell border icons
 local borders = {
 	[0] = IG.spell_background.projectile,
 	[1] = IG.spell_background.static_projectile,
@@ -52,15 +52,15 @@ local borders = {
 	[7] = IG.spell_background.passive,
 }
 
----Spell levels and suffixes for xml
+--- Spell levels and suffixes for xml
 local spell_suffixes = {
 	["low"] = "_low.xml",
 	["mid"] = "_mid.xml",
 	["high"] = "_high.xml"
 }
 
----Icons to generate, manually specified
----@type ml_icon_generator_table[]
+--- Icons to generate, manually specified
+--- @type ml_icon_generator_table[]
 local icons_to_generate = {
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_teleport_bolt.png",
@@ -143,7 +143,7 @@ local icons_to_generate = {
 	},
 }
 
----Categorized spells to generate
+--- Categorized spells to generate
 local random_categorized_spells = {
 	[0] = "mods/meta_leveling/vfs/gfx/rewards/random_projectile",
 	[1] = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile",
@@ -181,10 +181,10 @@ local special_category_spells = {
 
 SetRandomSeed(1, 1)
 
----Generate spell icons for categorized spell rewards
-for category = 0, #random_categorized_spells do ---for each category
+--- Generate spell icons for categorized spell rewards
+for category = 0, #random_categorized_spells do --- for each category
 	for level, suffix in pairs(spell_suffixes) do
-		local icons, size = generateSpellIconLayer(ML.guns.actions_data.types[category][level])
+		local icons, size = generate_spell_icon_layer(ML.guns.actions_data.types[category][level])
 		if not icons then goto continue end
 		local layers = {
 			{ borders[category] },
@@ -199,9 +199,9 @@ for category = 0, #random_categorized_spells do ---for each category
 	end
 end
 
----Generate random random spells
+--- Generate random random spells
 for level, suffix in pairs(spell_suffixes) do
-	---@type ml_icon_generator_layers
+	--- @type ml_icon_generator_layers
 	local random_spell_layers = { [1] = {}, [2] = {} }
 	for _ = 1, random_random_spells_iterations do
 		for type = 0, #borders do
@@ -218,7 +218,7 @@ for level, suffix in pairs(spell_suffixes) do
 end
 
 for i = 1, #special_category_spells do
-	local icons, size = generateSpellIconLayer(special_category_spells[i].list)
+	local icons, size = generate_spell_icon_layer(special_category_spells[i].list)
 	local layers = {
 		{ borders[special_category_spells[i].type] },
 		icons
@@ -246,7 +246,7 @@ local potions_to_generate = {
 	["mods/meta_leveling/vfs/gfx/rewards/potion_magic_liquid_protection_all.png"] = 0x80df9828,
 }
 
-local random_potion = { ---@type ml_icon_generator_table
+local random_potion = { --- @type ml_icon_generator_table
 	path = "mods/meta_leveling/vfs/gfx/rewards/random_potion.xml",
 	layers = { [1] = {} },
 	speed = 0.225

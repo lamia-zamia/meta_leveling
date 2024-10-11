@@ -39,7 +39,7 @@ function IG:make_potion(path, argb)
 		end
 		for j = 3, 15 do
 			local color_source = ModImageGetPixel(source_id, i, j)
-			if self:color_has_alhpa(color_source) then
+			if self:color_has_alpha(color_source) then
 				local color = self:multiply_colors(abrg, color_source)
 				ModImageSetPixel(dest_id, i, j, color)
 			end
@@ -107,7 +107,7 @@ function IG:copy_from_icon(image_id, x, source)
 	for i = 0, 15 do
 		for j = 0, 15 do
 			local color_source = ModImageGetPixel(source_id, i, j)
-			if self:color_has_alhpa(color_source) then
+			if self:color_has_alpha(color_source) then
 				local color = self:blend_colors(color_source, ModImageGetPixel(image_id, x + i, j))
 				ModImageSetPixel(image_id, x + i, j, color)
 			end
@@ -242,7 +242,7 @@ end
 ---@private
 ---@param abgr_int integer
 ---@return boolean
-function IG:color_has_alhpa(abgr_int)
+function IG:color_has_alpha(abgr_int)
 	local _, _, _, alpha = self:color_abgr_split(abgr_int)
 	return alpha > 0
 end

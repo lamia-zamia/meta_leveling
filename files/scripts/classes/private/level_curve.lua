@@ -1,9 +1,9 @@
 local const_increment = 3
 local progress_exp_slower_curve = ModSettingGet("meta_leveling.progress_exp_slower_curve") or 0
 local multiplier = 1.1 - 0.001 * progress_exp_slower_curve
----Level curve for experience, level_curve[level] = experience
----@class ml_level_curve:table
----@field [number] number amount of experience needed
+--- Level curve for experience, level_curve[level] = experience
+--- @class ml_level_curve:table
+--- @field [number] number amount of experience needed
 local levels = {
 	[0] = 0,
 	[1] = const_increment
@@ -22,9 +22,9 @@ for i = 1, 1000 do
 	levels[#levels + 1] = next_level(levels[i])
 end
 
----because fuck you that's why
+--- because fuck you that's why
 for i = 1, 20 do
-	levels[#levels + 1] = levels[#levels] * 10 ^ i
+	levels[#levels + 1] = levels[#levels] * 10^i
 end
 
 return levels

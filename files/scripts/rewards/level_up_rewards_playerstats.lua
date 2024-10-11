@@ -1,6 +1,6 @@
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
 
----@type ml_rewards
+--- @type ml_rewards
 local player_stats = {
 	{
 		id = "stats_movement_speed",
@@ -112,5 +112,5 @@ local player_stats = {
 		end
 	},
 }
--- 
+--
 ML.rewards_deck:add_rewards(player_stats)
