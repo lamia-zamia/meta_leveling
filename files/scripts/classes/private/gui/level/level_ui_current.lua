@@ -40,10 +40,10 @@ function LU_current:CurrentDrawGroupedReward(rewards)
 		self.current.x = 4
 		self.current.y = self.current.y + self.current.distance
 	end
-	self:DrawRewardRarity(self.current.x - 4, self.current.y - 4 - self.scroll.y, self.const.z,
+	self:DrawRewardRarity(self.current.x - 4, self.current.y - 4, self.const.z,
 		ML.rewards_deck.borders.common)
-	self:DrawRewardIcon(self.current.x, self.current.y - self.scroll.y, ML.rewards_deck.reward_data[rewards[1]].ui_icon)
-	self:Draw9Piece(self.current.x + self.data.x - 1, self.current.y + self.data.y - 1 - self.scroll.y, self.const.z, 18,
+	self:DrawRewardIcon(self.current.x, self.current.y, ML.rewards_deck.reward_data[rewards[1]].ui_icon)
+	self:Draw9Piece(self.current.x + self.data.x - 1, self.current.y + self.data.y - 1, self.const.z, 18,
 		18,
 		self.const.ui_9p_reward)
 	if self:ElementIsVisible(self.current.y, self.current.distance) and self:IsHovered() then
@@ -71,10 +71,9 @@ function LU_current:CurrentDrawSeparatedReward(reward)
 		self.current.x = 4
 		self.current.y = self.current.y + self.current.distance
 	end
-	self:DrawRewardRarity(self.current.x - 4, self.current.y - 4 - self.scroll.y, self.const.z, reward.border_color)
-	self:DrawRewardIcon(self.current.x, self.current.y - self.scroll.y, reward.ui_icon)
-	-- self:Image(self.current.x, self.current.y - self.scroll.y, reward.ui_icon)
-	self:Draw9Piece(self.current.x + self.data.x - 1, self.current.y + self.data.y - 1 - self.scroll.y, self.const.z, 18,
+	self:DrawRewardRarity(self.current.x - 4, self.current.y - 4, self.const.z, reward.border_color)
+	self:DrawRewardIcon(self.current.x, self.current.y, reward.ui_icon)
+	self:Draw9Piece(self.current.x + self.data.x - 1, self.current.y + self.data.y - 1, self.const.z, 18,
 		18,
 		self.const.ui_9p_reward, self.const.ui_9p_button_hl)
 	if self:ElementIsVisible(self.current.y, self.current.distance) and self:IsHovered() then
@@ -99,7 +98,7 @@ function LU_current:CurrentDrawChangeButton()
 	local button = self:Locale("$ml_grouped")
 	local button_width = self:GetTextDimension(button)
 	local text_x = self.scroll.width - button_width - 15
-	local text_y = self.current.y + 27 - self.scroll.y
+	local text_y = self.current.y + 27
 	local button_box = self.const.ui_9p_button
 	if self:ElementIsVisible(self.current.y, self.current.distance) then
 		if self:IsHoverBoxHovered(self.data.x + text_x - 1, self.data.y + text_y, button_width + 13, 10) then
@@ -119,14 +118,14 @@ function LU_current:CurrentDrawChangeButton()
 		self:Color(0.8, 0, 0)
 		self:Text(self.scroll.width - 10, text_y, "X")
 	end
-	self:Draw9Piece(self.data.x + self.scroll.width - 11, self.data.y + self.current.y + 27 - self.scroll.y + 2,
+	self:Draw9Piece(self.data.x + self.scroll.width - 11, self.data.y + self.current.y + 27 + 2,
 		self.const.z - 1, 6, 6, button_box)
 end
 
 --- Draws current reward window
 --- @private
 function LU_current:CurrentDrawRewardsWindow()
-	self.current.y = 4
+	self.current.y = 4 - self.scroll.y
 	self.current.x = 4
 	local picked_count = ML.rewards_deck.picked_count
 	if picked_count < 1 then
@@ -141,8 +140,9 @@ function LU_current:CurrentDrawRewardsWindow()
 	end
 
 	self:CurrentDrawChangeButton()
-	self:TextCentered(0, self.current.y + 27 - self.scroll.y, self:Locale("$ml_current_rewards: ") .. picked_count,
+	self:TextCentered(0, self.current.y + 27, self:Locale("$ml_current_rewards: ") .. picked_count,
 		self.scroll.width)
+	self:Text(0, self.current.y + self.scroll.y + 38, "")
 end
 
 --- function to draw current rewards

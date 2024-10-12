@@ -117,13 +117,13 @@ function LU_meta:MetaDrawPointProgressBarBorder()
 	local width = self.meta.bar.width
 	local height = self.meta.bar.height
 	-- Draw the top border
-	self:MetaPointProgressBarBorderColor(x, self.meta.y + 3 - self.scroll.y, width - 1, 1)
+	self:MetaPointProgressBarBorderColor(x, self.meta.y + 3, width - 1, 1)
 	-- Draw the bottom border
-	self:MetaPointProgressBarBorderColor(x, self.meta.y + height + 2 - self.scroll.y, width - 1, 1)
+	self:MetaPointProgressBarBorderColor(x, self.meta.y + height + 2, width - 1, 1)
 	-- Draw the left border
-	self:MetaPointProgressBarBorderColor(x - 1, self.meta.y + 3 - self.scroll.y, 1, height - 1)
+	self:MetaPointProgressBarBorderColor(x - 1, self.meta.y + 3, 1, height - 1)
 	-- Draw the right border
-	self:MetaPointProgressBarBorderColor(x + width - 1, self.meta.y + 4 - self.scroll.y, 1, height - 1)
+	self:MetaPointProgressBarBorderColor(x + width - 1, self.meta.y + 4, 1, height - 1)
 end
 
 --- Draws progress bar segment
@@ -147,14 +147,14 @@ function LU_meta:MetaDrawPointProgressBarSegment(index, current, next, x, width)
 		-- This part is unacquired
 		self:Color(0.6, 0.6, 0.6)
 	end
-	self:Image(x, self.meta.y + 4 - self.scroll.y, self.c.px, 0.8, width, self.meta.bar.height - 2)
+	self:Image(x, self.meta.y + 4, self.c.px, 0.8, width, self.meta.bar.height - 2)
 end
 
 --- Draws semitransparent black lines to add gradient to bar
 --- @private
 function LU_meta:MetaDrawPointProgressBarSegmentGradient()
 	local x = self.meta.bar.offset
-	local y = self.meta.y + 3 - self.scroll.y
+	local y = self.meta.y + 3
 	local gradient_step = 0.25
 	for i = 1, self.meta.bar.height - 1, gradient_step do
 		self:Color(0, 0, 0)
@@ -174,7 +174,7 @@ function LU_meta:MetaDrawPointProgressBar(point)
 
 		if i < stack then
 			self:SetZ(self.const.z - 5)
-			self:MetaPointProgressBarBorderColor(x_offset + segment_width - 1, self.meta.y + 4 - self.scroll.y, 1,
+			self:MetaPointProgressBarBorderColor(x_offset + segment_width - 1, self.meta.y + 4, 1,
 				self.meta.bar.height - 2)
 		end
 	end
@@ -185,12 +185,12 @@ end
 --- Draws bar background
 --- @private
 function LU_meta:MetaDrawPointProgressBarBackground()
-	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y - self.scroll.y + 2.5,
+	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y + 2.5,
 		self.meta.bar.width + 0.75, 1)
-	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y - self.scroll.y + 3.5,
+	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y + 3.5,
 		self.meta.bar.width + 1.75, self.meta.bar.height - 1.25)
 	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 0.25,
-		self.meta.y - self.scroll.y + self.meta.bar.height + 2.25, self.meta.bar.width + 0.75, 1)
+		self.meta.y + self.meta.bar.height + 2.25, self.meta.bar.width + 0.75, 1)
 end
 
 --- Draws progress element
@@ -218,7 +218,7 @@ end
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointIncreaser(index, point)
 	local x = self.meta.bar.offset + self.meta.bar.width + 3.5
-	local y = self.meta.y - self.scroll.y
+	local y = self.meta.y
 	local next_val = point.next_value
 	if next_val >= point.stack then return end
 	local price = point.price[next_val + 1]
@@ -255,7 +255,7 @@ end
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointDecreaser(index, point)
 	local x = self.meta.bar.offset - 9
-	local y = self.meta.y - self.scroll.y
+	local y = self.meta.y
 	local next_val = point.next_value
 	if next_val <= 0 then return end
 	local return_value = point.price[next_val]
@@ -285,7 +285,7 @@ end
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointProgressElement(index, point)
 	local progress_name = ML.rewards_deck.FormatString(self:Locale(point.ui_name))
-	self:Text(0, self.meta.y - self.scroll.y, progress_name .. ":")
+	self:Text(0, self.meta.y, progress_name .. ":")
 	local prev = self:GetPrevious()
 	self:MetaProgressPointAddTooltip(prev.x, prev.y + 1, prev.w, prev.h - 2, self:GetTextDimension(progress_name) / 2,
 		self.meta.distance * 2, self.MetaProgressPointTooltipText, point)
@@ -298,12 +298,12 @@ end
 --- @private
 function LU_meta:MetaDrawMetaWindow()
 	self:MetaProgressDisplayAvailablePoints()
-	self.meta.y = 1
+	self.meta.y = 1 - self.scroll.y
 	for i, progress in ipairs(ML.meta.progress) do
 		self:MetaDrawPointProgressElement(i, progress)
 		self.meta.y = self.meta.y + self.meta.distance
 	end
-	self:Text(0, self.meta.y, "") -- set height for scrollbar, 9piece works weird
+	self:Text(0, self.meta.y + self.scroll.y, "") -- set height for scrollbar, 9piece works weird
 end
 
 --- Calculates bar offset depending on the longest ui name

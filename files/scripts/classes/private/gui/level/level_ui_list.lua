@@ -34,14 +34,14 @@ function LU_list:ListDrawRewardListEntry(x, y, reward, hovered)
 	if count > 0 then
 		bg = "mods/meta_leveling/files/gfx/ui/reward_list_bg.png"
 		self:SetZ(self.const.z - 3)
-		self:DrawRewardIcon(x - offset_img, y - self.scroll.y - offset_img, reward.ui_icon, scale_img)
+		self:DrawRewardIcon(x - offset_img, y - offset_img, reward.ui_icon, scale_img)
 		local r, g, b, a = unpack(reward.border_color)
 		self:Color(r, g, b)
 		self:SetZ(self.const.z - 2)
-		self:Image(x - offset_border, y - self.scroll.y - offset_border, bg, a, scale_border, scale_border)
+		self:Image(x - offset_border, y - offset_border, bg, a, scale_border, scale_border)
 	end
 	self:SetZ(self.const.z - 1)
-	self:Image(x - offset_border, y - self.scroll.y - offset_border, bg, 1, scale_border, scale_border)
+	self:Image(x - offset_border, y - offset_border, bg, 1, scale_border, scale_border)
 	if hovered then
 		local prev = self:GetPrevious()
 		self:ShowTooltip(prev.x + 11, prev.y + 30, self.ListDrawRewardsListTooltip, reward, count)
@@ -51,7 +51,7 @@ end
 --- function to draw rewards itself
 --- @private
 function LU_list:ListDrawRewardsListInside()
-	local y = 3
+	local y = 3 - self.scroll.y
 	local x = 3
 	local distance_between = 21.3 -- don't question my sanity pls
 
@@ -62,14 +62,14 @@ function LU_list:ListDrawRewardsListInside()
 		end
 		local hovered = false
 		if self:ElementIsVisible(y, distance_between) then
-			self:Draw9Piece(self.data.x + x, self.data.y + y - self.scroll.y, 0, 16, 16, self.c.empty, self.c.empty)
+			self:Draw9Piece(self.data.x + x, self.data.y + y, 0, 16, 16, self.c.empty, self.c.empty)
 			hovered = self:IsHovered()
 		end
 		self:ListDrawRewardListEntry(x, y, reward, hovered)
 		x = x + distance_between
 	end
 
-	self:Text(0, y + 27, "")
+	self:Text(0, y + 20 + self.scroll.y, "")
 end
 
 --- function to draw current rewards

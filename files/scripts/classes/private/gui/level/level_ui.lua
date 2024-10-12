@@ -115,8 +115,8 @@ end
 --- @return boolean
 function LU:ElementIsVisible(y, distance_between)
 	if
-		y - self.scroll.y + distance_between / 2 > 0 and
-		y - self.scroll.y - distance_between / 2 < self.scroll.height_max
+		y + distance_between / 2 > 0 and
+		y - distance_between / 2 < self.scroll.height_max
 	then
 		return true
 	end

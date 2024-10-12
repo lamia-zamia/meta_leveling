@@ -25,10 +25,10 @@ function LU_stats:StatsDrawCategory(category, category_name, folded)
 	local img = folded and "data/ui_gfx/button_fold_close.png" or "data/ui_gfx/button_fold_open.png"
 	local category_text = self:Locale(category_name)
 	local dim = self:GetTextDimension(category_text, "data/fonts/font_pixel_noshadow.xml")
-	local hovered = self:IsHoverBoxHovered(self.data.x, self.data.y + self.stats.y - self.scroll.y, self.scroll.width, 10)
-	self:StatsText(self.stats.x, self.stats.y - self.scroll.y, category_text, hovered, 1, 1, 0.7)
+	local hovered = self:IsHoverBoxHovered(self.data.x, self.data.y + self.stats.y, self.scroll.width, 10)
+	self:StatsText(self.stats.x, self.stats.y, category_text, hovered, 1, 1, 0.7)
 	if hovered then self:Color(1, 1, 0.7) end
-	self:Image(self.stats.x + dim, self.stats.y - self.scroll.y, img)
+	self:Image(self.stats.x + dim, self.stats.y, img)
 	if hovered and self:IsLeftClicked() then
 		ML.stats.unfolded[category] = not ML.stats.unfolded[category]
 	end
@@ -37,12 +37,12 @@ end
 
 function LU_stats:StatsDrawEntry(stat)
 	if self:StatsHideEntry(stat) then return end
-	local hovered = self:IsHoverBoxHovered(self.data.x, self.data.y + self.stats.y - self.scroll.y, self.scroll.width, 10)
+	local hovered = self:IsHoverBoxHovered(self.data.x, self.data.y + self.stats.y, self.scroll.width, 10)
 	self:ColorGray()
-	self:StatsText(self.stats.x + 5, self.stats.y - self.scroll.y, self:Locale(stat.ui_name) .. ":", hovered, 0.6,
+	self:StatsText(self.stats.x + 5, self.stats.y, self:Locale(stat.ui_name) .. ":", hovered, 0.6,
 		0.9,
 		0.7)
-	self:StatsText(self.stats.x + self.stats.longest + 15, self.stats.y - self.scroll.y, self:Locale(stat.value()),
+	self:StatsText(self.stats.x + self.stats.longest + 15, self.stats.y, self:Locale(stat.value()),
 		hovered, 0.6, 0.9, 0.7)
 	self.stats.y = self.stats.y + self.stats.distance
 end
@@ -56,7 +56,7 @@ end
 
 function LU_stats:StatsDrawWindow()
 	self.stats.x = 3
-	self.stats.y = 0
+	self.stats.y = 0 - self.scroll.y
 	for category, category_name in pairs(ML.stats.categories) do
 		local show = ML.stats.unfolded[category]
 		if self:StatsDrawCategory(category, category_name, show) then
@@ -64,7 +64,7 @@ function LU_stats:StatsDrawWindow()
 			if show then self:StatsDrawEntries(category) end
 		end
 	end
-	self:Text(0, self.stats.y, "") -- set height for scrollbar, 9piece works weird
+	self:Text(0, self.stats.y + self.scroll.y, "") -- set height for scrollbar, 9piece works weird
 end
 
 function LU_stats:StatsDrawMenu()
