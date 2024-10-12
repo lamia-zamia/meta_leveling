@@ -1,5 +1,5 @@
----@class (exact) level_ui
----@field private current any
+--- @class (exact) level_ui
+--- @field private current any
 local LU_current = {
 	current = {
 		group_rewards = true,
@@ -11,9 +11,9 @@ local LU_current = {
 -- ########		CURRENT REWARDS		###########
 -- ############################################
 
----Draws tooltip for single reward
----@private
----@param reward ml_single_reward_data
+--- Draws tooltip for single reward
+--- @private
+--- @param reward ml_single_reward_data
 function LU_current:CurrentDrawRewardTooltip(reward)
 	local text = reward.pick_count .. "x [" .. ML.rewards_deck.FormatString(self:Locale(reward.ui_name)) .. "]"
 	local description = ML.rewards_deck:UnpackDescription(reward.description, reward.description_var)
@@ -22,9 +22,9 @@ function LU_current:CurrentDrawRewardTooltip(reward)
 	self:Text(0, 0, text)
 end
 
----Draws tooltip for groups
----@private
----@param rewards ml_reward_id[]
+--- Draws tooltip for groups
+--- @private
+--- @param rewards ml_reward_id[]
 function LU_current:CurrentDrawGroupRewardsTooltip(rewards)
 	for i = 1, #rewards do
 		local reward = ML.rewards_deck.reward_data[rewards[i]]
@@ -32,9 +32,9 @@ function LU_current:CurrentDrawGroupRewardsTooltip(rewards)
 	end
 end
 
----Draws individual reward group
----@private
----@param rewards ml_reward_id[]
+--- Draws individual reward group
+--- @private
+--- @param rewards ml_reward_id[]
 function LU_current:CurrentDrawGroupedReward(rewards)
 	if self.current.x + self.current.distance / 2 > self.const.width then
 		self.current.x = 4
@@ -52,9 +52,9 @@ function LU_current:CurrentDrawGroupedReward(rewards)
 	self.current.x = self.current.x + self.current.distance
 end
 
----Draws current rewards in groups
----@private
----:)
+--- Draws current rewards in groups
+--- @private
+--- :)
 function LU_current:CurrentDrawGroupedRewards()
 	for _, group in ipairs(ML.rewards_deck.ordered_groups_data) do
 		if group.picked then
@@ -63,9 +63,9 @@ function LU_current:CurrentDrawGroupedRewards()
 	end
 end
 
----Draws current reward in singular form
----@private
----@param reward ml_single_reward_data
+--- Draws current reward in singular form
+--- @private
+--- @param reward ml_single_reward_data
 function LU_current:CurrentDrawSeparatedReward(reward)
 	if self.current.x + self.current.distance / 2 > self.const.width then
 		self.current.x = 4
@@ -83,18 +83,18 @@ function LU_current:CurrentDrawSeparatedReward(reward)
 	self.current.x = self.current.x + self.current.distance
 end
 
----Draws current rewards in singular form
----@private
----:)
+--- Draws current rewards in singular form
+--- @private
+--- :)
 function LU_current:CurrentDrawSeparatedRewards()
 	for _, reward in ipairs(ML.rewards_deck.ordered_rewards_data) do
 		if reward.pick_count > 0 then self:CurrentDrawSeparatedReward(reward) end
 	end
 end
 
----Toggles display mode
----@private
----:)
+--- Toggles display mode
+--- @private
+--- :)
 function LU_current:CurrentDrawChangeButton()
 	local button = self:Locale("$ml_grouped")
 	local button_width = self:GetTextDimension(button)
@@ -123,8 +123,8 @@ function LU_current:CurrentDrawChangeButton()
 		self.const.z - 1, 6, 6, button_box)
 end
 
----Draws current reward window
----@private
+--- Draws current reward window
+--- @private
 function LU_current:CurrentDrawRewardsWindow()
 	self.current.y = 4
 	self.current.x = 4
@@ -145,12 +145,11 @@ function LU_current:CurrentDrawRewardsWindow()
 		self.scroll.width)
 end
 
----function to draw current rewards
----@private
+--- function to draw current rewards
+--- @private
 function LU_current:CurrentDrawRewards()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray,
-		self.CurrentDrawRewardsWindow)
+	self:ScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray, 0, 0, self.CurrentDrawRewardsWindow)
 end
 
 return LU_current

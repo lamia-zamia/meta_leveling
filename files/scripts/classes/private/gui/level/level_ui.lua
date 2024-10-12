@@ -126,7 +126,7 @@ end
 --- function to reset scrollbox height
 --- @private
 function LU:ResetScrollBoxHeight()
-	self:FakeScrollBox_Reset()
+	self:ScrollBoxReset()
 end
 
 --- function to reset scrollbox params to default

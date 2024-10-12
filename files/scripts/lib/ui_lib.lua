@@ -3,7 +3,8 @@ local options = {
 	ForceFocusable = 7,
 	NonInteractive = 2,
 	AlwaysClickable = 3,
-	NoPositionTween = 6
+	NoPositionTween = 6,
+	Layout_NextSameLine = 14
 }
 
 --- @class UI_const
@@ -56,10 +57,11 @@ local ui_class = {
 	tooltip_gui_id = 1000,
 	gui_longest_string_cache = setmetatable({}, { __mode = "k" }),
 	gui_tooltip_size_cache = setmetatable({}, { __mode = "k" }),
-	tooltip_z = -10000,
+	tooltip_z = -100000,
 	tooltip_reset = true,
 	tooltip_previous = nil,
 	tooltip_margin = 5,
+	tooltip_animation_id = 100,
 	tooltip_img = "data/ui_gfx/decorations/9piece0_gray.png",
 	scroll = {
 		y = 0,
@@ -68,7 +70,7 @@ local ui_class = {
 		click_offset = 0,
 		content_height = 0,
 		height = 0,
-		height_max = 0,
+		height_max = 140,
 		max_y_target = 0,
 		move_triggered = false,
 		scrollbar_height = 0,
@@ -277,8 +279,8 @@ end
 --- @param key string
 --- @param ... any
 function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
-	local orig_gui, orig_id = self.gui, self.gui_id
-	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
+	local orig_gui, orig_id, anim_id = self.gui, self.gui_id, self.animation_id
+	self.gui, self.gui_id, self.animation_id = self.gui_tooltip, self.tooltip_gui_id, self.tooltip_animation_id
 	local offscreen_offset = 1000
 	GuiBeginAutoBox(self.gui)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
@@ -286,7 +288,7 @@ function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
 	GuiLayoutEnd(self.gui)
 	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img)
 	self:SetTooltipCache(x, y, key)
-	self.gui, self.gui_id = orig_gui, orig_id
+	self.gui, self.gui_id, self.animation_id = orig_gui, orig_id, anim_id
 end
 
 --- Retrieves a tooltip data, drawing it off-screen if necessary
@@ -325,8 +327,8 @@ end
 --- @param ui_fn function
 --- @param ... any
 function ui_class:DrawToolTip(x, y, ui_fn, ...)
-	local orig_gui, orig_id = self.gui, self.gui_id
-	self.gui, self.gui_id = self.gui_tooltip, self.tooltip_gui_id
+	local orig_gui, orig_id, anim_id = self.gui, self.gui_id, self.animation_id
+	self.gui, self.gui_id, self.animation_id = self.gui_tooltip, self.tooltip_gui_id, self.tooltip_animation_id
 	local cache = self:GetTooltipData(x, y, ui_fn, ...)
 	if self.tooltip_previous ~= cache then
 		self.tooltip_previous = cache
@@ -345,7 +347,7 @@ function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img)
 	self:AnimateE()
 	GuiZSet(self.gui, 0)
-	self.gui, self.gui_id = orig_gui, orig_id
+	self.gui, self.gui_id, self.animation_id = orig_gui, orig_id, anim_id
 end
 
 --- Custom tooltip.
@@ -428,13 +430,11 @@ end
 --- function to reset scrollbox cache
 --- @protected
 --- :)
-function ui_class:FakeScrollBox_Reset()
+function ui_class:ScrollBoxReset()
 	self.scroll.y = 0
 	self.scroll.target_y = 0
 	self.scroll.max_y = 0
 	self.scroll.move_triggered = false
-	-- self.scroll.height = 0
-	self.scroll.height_max = 140
 end
 
 --- function to calculate target scroll pos for mouse drag
@@ -444,7 +444,7 @@ end
 --- @param height number height of scrollbar
 --- @param target number relative target position of bar thumb
 --- @return number
-function ui_class:FakeScrollBox_CalculateTargetScroll(mouse_y, y, height, target)
+function ui_class:ScrollBoxCalculateTargetScroll(mouse_y, y, height, target)
 	local target_pos = mouse_y - y - target
 	return (target_pos / (height - self.scroll.scrollbar_height)) *
 		(self.scroll.content_height - self.scroll.visible_height)
@@ -455,7 +455,7 @@ end
 --- @param mouse_y number position of mouse
 --- @param y number start position of scrollbar
 --- @return boolean
-function ui_class:FakeScrollBox_ClickedOnScrollBarThumb(mouse_y, y)
+function ui_class:ScrollBoxClickedOnScrollBarThumb(mouse_y, y)
 	return mouse_y < y + self.scroll.scrollbar_pos or
 		mouse_y > y + self.scroll.scrollbar_pos + self.scroll.scrollbar_height
 end
@@ -465,7 +465,7 @@ end
 --- @param target number y position from which to calculate
 --- @param height number height of scrollbox
 --- @return number position
-function ui_class:FakeScrollBox_CalculateScrallbarPos(target, height)
+function ui_class:ScrollBoxCalculateScrollbarPos(target, height)
 	return (target / (self.scroll.content_height - self.scroll.visible_height)) * (height - self.scroll.scrollbar_height)
 end
 
@@ -473,12 +473,12 @@ end
 --- @private
 --- @param y number start position of scrollbar
 --- @param height number height of scrollbox
-function ui_class:FakeScrollBox_HandleClick(y, height)
+function ui_class:ScrollBoxHandleClick(y, height)
 	local _, mouse_y = self:get_mouse_pos()
-	if self:FakeScrollBox_ClickedOnScrollBarThumb(mouse_y, y) then
-		local scroll_target = self:FakeScrollBox_CalculateTargetScroll(mouse_y, y, height,
+	if self:ScrollBoxClickedOnScrollBarThumb(mouse_y, y) then
+		local scroll_target = self:ScrollBoxCalculateTargetScroll(mouse_y, y, height,
 			self.scroll.scrollbar_height / 2)
-		self.scroll.scrollbar_pos = self:FakeScrollBox_CalculateScrallbarPos(scroll_target, height)
+		self.scroll.scrollbar_pos = self:ScrollBoxCalculateScrollbarPos(scroll_target, height)
 	end
 	self.scroll.move_triggered = true
 	self.scroll.click_offset = mouse_y - (y + self.scroll.scrollbar_pos)
@@ -489,18 +489,18 @@ end
 --- @param x number x pos for scrollbox
 --- @param y number y pos or scrollbox
 --- @param z number z of scrollbox
-function ui_class:FakeScrollBox_DrawScrollbarTrack(x, y, z)
+function ui_class:ScrollBoxDrawScrollbarTrack(x, y, z)
 	local scroll_img = self.scroll.scroll_img
 	if self:IsHoverBoxHovered(x + self.scroll.width + self.scroll.sprite_dim / 3 - 7, y + self.scroll.scrollbar_pos, 5, self.scroll.scrollbar_height + 2, true) or self.scroll.move_triggered then
 		scroll_img = self.scroll.scroll_img_hl
 	end
 	-- Draw the scrollbar thumb
-	self:Draw9Piece(x + self.scroll.width + self.scroll.sprite_dim / 3 - 5, y + self.scroll.scrollbar_pos, z - 1, 0,
+	self:Draw9Piece(x + self.scroll.width + self.scroll.sprite_dim / 3 - 5, y + self.scroll.scrollbar_pos, z - 10, 0,
 		self.scroll
 		.scrollbar_height, scroll_img)
 
 	-- Draw the scrollbar track
-	self:Draw9Piece(x + self.scroll.width + self.scroll.sprite_dim / 3 - 8, y, z - 1, 6, self.scroll.height, self.c
+	self:Draw9Piece(x + self.scroll.width + self.scroll.sprite_dim / 3 - 8, y, z - 10, 6, self.scroll.height, self.c
 		.empty,
 		self.c.empty)
 end
@@ -508,16 +508,16 @@ end
 --- function that make scrollbar draggable
 --- @private
 --- @param y number start position of scrollbar
-function ui_class:FakeScrollBox_MouseDrag(y)
+function ui_class:ScrollBoxMouseDrag(y)
 	if self:IsHovered() and self:IsLeftClicked() then
-		self:FakeScrollBox_HandleClick(y, self.scroll.height)
+		self:ScrollBoxHandleClick(y, self.scroll.height)
 	end
 	if not InputIsMouseButtonDown(self.c.codes.mouse.lc) then
 		self.scroll.move_triggered = false
 	end
 	if self.scroll.move_triggered then
 		local _, mouse_y = self:get_mouse_pos()
-		self.scroll.target_y = self:FakeScrollBox_CalculateTargetScroll(mouse_y, y, self.scroll.height,
+		self.scroll.target_y = self:ScrollBoxCalculateTargetScroll(mouse_y, y, self.scroll.height,
 			self.scroll.click_offset)
 	end
 end
@@ -525,17 +525,17 @@ end
 --- function to calculate internal dimensions of scrollbox
 --- @private
 --- @param y number
-function ui_class:FakeScrollBox_CalculateDims(y)
+function ui_class:ScrollBoxCalculateDims(y)
 	self.scroll.content_height = self.scroll.max_y
 	self.scroll.visible_height = self.scroll.height
 	self.scroll.scrollbar_height = (self.scroll.visible_height / self.scroll.content_height) * (self.scroll.height)
-	self.scroll.scrollbar_pos = self:FakeScrollBox_CalculateScrallbarPos(self.scroll.y, self.scroll.height)
+	self.scroll.scrollbar_pos = self:ScrollBoxCalculateScrollbarPos(self.scroll.y, self.scroll.height)
 end
 
 --- function to accept scroll wheels
 --- @private
 --- :)
-function ui_class:FakeScrollBox_AnswerToWheel()
+function ui_class:ScrollBoxAnswerToWheel()
 	if InputIsMouseButtonJustDown(self.c.codes.mouse.wheel_up) then
 		self.scroll.target_y = self.scroll.target_y - 10
 	end
@@ -547,7 +547,7 @@ end
 --- function to clump target and move content
 --- @private
 --- :)
-function ui_class:FakeScrollBox_ClumpAndMove()
+function ui_class:ScrollBoxClumpAndMove()
 	self.scroll.target_y = math.max(math.min(self.scroll.target_y, self.scroll.max_y_target), 0)
 	if math.abs(self.scroll.target_y - self.scroll.y) < 1 then
 		self.scroll.y = self.scroll.target_y
@@ -562,26 +562,32 @@ end
 --- @param y number position y
 --- @param z number z of scrollbox
 --- @param sprite string 9piece for scrollbox
+--- @param margin_x number margin to add to width
+--- @param margin_y number margin to add to height
 --- @param draw_fn function function to draw inside scrollbox, position is relative
-function ui_class:FakeScrollBox(x, y, z, sprite, draw_fn)
+function ui_class:ScrollBox(x, y, z, sprite, margin_x, margin_y, draw_fn)
 	local id = self:id()
 	self.scroll.sprite_dim = GuiGetImageDimensions(self.gui, sprite, 1)
 	self.scroll.max_y_target = self.scroll.max_y - self.scroll.height
-	self:Draw9Piece(x, y, z, self.scroll.width, self.scroll.height, sprite)
+	local box_x = x - margin_x
+	local box_y = y - margin_y
+	local box_width = self.scroll.width + margin_x * 2
+	local box_height = self.scroll.height + margin_y * 2
+	self:Draw9Piece(box_x, box_y, z, box_width, box_height, sprite)
 
 	--- phantom 9piece with corrent hitbox
-	self:Draw9Piece(x - self.scroll.sprite_dim / 3, y - self.scroll.sprite_dim / 3, z,
-		self.scroll.width + self.scroll.sprite_dim / 1.5, self.scroll.height + self.scroll.sprite_dim / 1.5,
-		self.c.empty, self.c.empty)
-	local main_window = self:GetPrevious()
-	if main_window.hovered then
+	local hovered = self:IsHoverBoxHovered(box_x - self.scroll.sprite_dim / 3, box_y - self.scroll.sprite_dim / 3,
+		box_width + self.scroll.sprite_dim / 1.5, box_height + self.scroll.sprite_dim / 1.5, true)
+
+	if hovered then
 		self:BlockInput()
 	end
+
 	if self.scroll.max_y > self.scroll.height then
-		self:FakeScrollBox_CalculateDims(y)
-		self:FakeScrollBox_DrawScrollbarTrack(x, y, z)
-		self:FakeScrollBox_MouseDrag(y)
-		self:FakeScrollBox_AnswerToWheel()
+		self:ScrollBoxCalculateDims(y)
+		self:ScrollBoxDrawScrollbarTrack(x + margin_x, y, z)
+		self:ScrollBoxMouseDrag(y)
+		if hovered then self:ScrollBoxAnswerToWheel() end
 	end
 
 	GuiAnimateBegin(self.gui)
@@ -594,7 +600,7 @@ function ui_class:FakeScrollBox(x, y, z, sprite, draw_fn)
 	local prev = self:GetPrevious()
 	self.scroll.max_y = prev.y + prev.h - y
 	self.scroll.height = math.min(self.scroll.max_y, self.scroll.height_max)
-	self:FakeScrollBox_ClumpAndMove()
+	self:ScrollBoxClumpAndMove()
 	GuiEndScrollContainer(self.gui)
 end
 
@@ -827,10 +833,7 @@ end
 --- @param scale_x? number
 --- @param scale_y? number
 function ui_class:Image(x, y, sprite, alpha, scale_x, scale_y)
-	alpha = alpha or 1
-	scale_x = scale_x or 1
-	scale_y = scale_y or 1
-	GuiImage(self.gui, self:id(), x, y, sprite, alpha, scale_x, scale_y, 0, 2)
+	GuiImage(self.gui, self:id(), x, y, sprite, alpha or 1, scale_x or 1, scale_y or scale_x or 1, 0, 2)
 end
 
 --- draw 9piece
@@ -859,7 +862,8 @@ end
 --- @param step integer
 --- @param reset boolean
 function ui_class:AnimateAlpha(speed, step, reset)
-	GuiAnimateAlphaFadeIn(self.gui, self:id(), speed, step, reset)
+	GuiAnimateAlphaFadeIn(self.gui, self.animation_id, speed, step, reset)
+	self.animation_id = self.animation_id + 1
 end
 
 --- Adds scale to animation
@@ -867,7 +871,8 @@ end
 --- @param acceleration number
 --- @param reset boolean
 function ui_class:AnimateScale(acceleration, reset)
-	GuiAnimateScaleIn(self.gui, self:id(), acceleration, reset)
+	GuiAnimateScaleIn(self.gui, self.animation_id, acceleration, reset)
+	self.animation_id = self.animation_id + 1
 end
 
 --- Ends an animation
@@ -891,6 +896,8 @@ end
 function ui_class:id_reset()
 	self.gui_id = 100000
 	self.tooltip_gui_id = 1000
+	self.animation_id = 100
+	self.tooltip_animation_id = 100
 end
 
 --- Returns an id with increment

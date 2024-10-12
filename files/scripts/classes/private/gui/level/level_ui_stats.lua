@@ -1,5 +1,5 @@
----@class (exact) level_ui
----@field private stats any
+--- @class (exact) level_ui
+--- @field private stats any
 local LU_stats = {
 	stats = {
 		longest = 0,
@@ -16,11 +16,11 @@ function LU_stats:StatsHideEntry(stat)
 	return stat.check_before_show and not stat.check_before_show()
 end
 
----Draws category
----@param category string
----@param category_name string
----@param folded boolean
----@return boolean
+--- Draws category
+--- @param category string
+--- @param category_name string
+--- @param folded boolean
+--- @return boolean
 function LU_stats:StatsDrawCategory(category, category_name, folded)
 	local img = folded and "data/ui_gfx/button_fold_close.png" or "data/ui_gfx/button_fold_open.png"
 	local category_text = self:Locale(category_name)
@@ -69,7 +69,7 @@ end
 
 function LU_stats:StatsDrawMenu()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray, self.StatsDrawWindow)
+	self:ScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray, 0, 0, self.StatsDrawWindow)
 end
 
 function LU_stats:StatsFindLongest()

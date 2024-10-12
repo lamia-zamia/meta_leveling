@@ -1,10 +1,10 @@
----@class level_ui
+--- @class level_ui
 local LU_list = {}
 
----Draws tooltip
----@private
----@param reward ml_single_reward_data
----@param count number
+--- Draws tooltip
+--- @private
+--- @param reward ml_single_reward_data
+--- @param count number
 function LU_list:ListDrawRewardsListTooltip(reward, count)
 	if count > 0 then
 		self:TextCentered(0, 0, self:Locale(reward.ui_name), 0)
@@ -18,12 +18,12 @@ function LU_list:ListDrawRewardsListTooltip(reward, count)
 	end
 end
 
----Draws an individual reward
----@private
----@param x number
----@param y number
----@param reward ml_single_reward_data
----@param hovered boolean
+--- Draws an individual reward
+--- @private
+--- @param x number
+--- @param y number
+--- @param reward ml_single_reward_data
+--- @param hovered boolean
 function LU_list:ListDrawRewardListEntry(x, y, reward, hovered)
 	local bg = "mods/meta_leveling/files/gfx/ui/reward_list_bg_unknown.png"
 	local scale_border = hovered and 1.1 or 1
@@ -48,8 +48,8 @@ function LU_list:ListDrawRewardListEntry(x, y, reward, hovered)
 	end
 end
 
----function to draw rewards itself
----@private
+--- function to draw rewards itself
+--- @private
 function LU_list:ListDrawRewardsListInside()
 	local y = 3
 	local x = 3
@@ -72,12 +72,11 @@ function LU_list:ListDrawRewardsListInside()
 	self:Text(0, y + 27, "")
 end
 
----function to draw current rewards
----@private
+--- function to draw current rewards
+--- @private
 function LU_list:ListDrawRewardsList()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray,
-		self.ListDrawRewardsListInside)
+	self:ScrollBox(self.data.x, self.data.y, self.const.z + 1, self.const.ui_9piece_gray, 0, 0, self.ListDrawRewardsListInside)
 end
 
 return LU_list

@@ -1,16 +1,16 @@
----@type ml_error_printer
+--- @type ml_error_printer
 local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_printer.lua")
 
----@class (exact) ml_gun_parser
----@field trigger_hit_world string[]
----@field trigger_timer string[]
----@field trigger_death string[]
----@field heal_spells table
----@field drill_spells string[]
----@field spells_no_spawn table
----@field locked_spells table
----@field glimmers string[]
----@field actions_data table
+--- @class (exact) ml_gun_parser
+--- @field trigger_hit_world string[]
+--- @field trigger_timer string[]
+--- @field trigger_death string[]
+--- @field heal_spells table
+--- @field drill_spells string[]
+--- @field spells_no_spawn table
+--- @field locked_spells table
+--- @field glimmers string[]
+--- @field actions_data table
 local guns = {
 	trigger_hit_world = {},
 	trigger_timer = {},
@@ -26,28 +26,28 @@ local guns = {
 	}
 }
 
----List of actions to ignore
+--- List of actions to ignore
 local ignore_list = {
 	"RANDOM_PROJECTILE"
 }
 
----Temporary variable for passing action types
+--- Temporary variable for passing action types
 local buffer = {
 	xml_file = nil,
 	type = nil
 }
 
----Inserts action into according table
----@param key string
----@param action_id string
+--- Inserts action into according table
+--- @param key string
+--- @param action_id string
 local function guns_insert(key, action_id)
 	guns[key][#guns[key] + 1] = action_id
 end
 
----Checks if action should be ignored
----@private
----@param action_id string
----@return boolean
+--- Checks if action should be ignored
+--- @private
+--- @param action_id string
+--- @return boolean
 local function ignore_action(action_id)
 	for i = 1, #ignore_list do
 		if action_id == ignore_list[i] then return true end
@@ -55,8 +55,8 @@ local function ignore_action(action_id)
 	return false
 end
 
----Categorizes action based on the numbers in their string fields.
----@param action action
+--- Categorizes action based on the numbers in their string fields.
+--- @param action action
 local function categorizeAction(action)
 	local action_id = action.id
 	if not action.spawn_level then
@@ -82,9 +82,9 @@ local function categorizeAction(action)
 	end
 end
 
----Parse action
----@private
----@param action action
+--- Parse action
+--- @private
+--- @param action action
 local function parse_action(action)
 	local action_id = action.id
 	guns.actions_data.icons[action_id] = action.sprite
@@ -93,7 +93,8 @@ local function parse_action(action)
 		return
 	end
 	local flag = action.spawn_requires_flag
-	if flag and not HasFlagPersistent(flag) then
+	-- if flag and not HasFlagPersistent(flag) then
+	if flag then -- HasFlagPersistent breaks with EW at this stage
 		guns.locked_spells[action_id] = flag
 		return
 	end
@@ -118,53 +119,59 @@ local function parse_action(action)
 	categorizeAction(action)
 end
 
----Overwrites some functions
+--- Overwrites some functions
 local function overwrite_functions()
-	---@param entity_filename string
+	--- @param entity_filename string
 	function BeginProjectile(entity_filename)
 		-- buffer.xml_file = entity_filename
 	end
 
-	---Timer
+	--- Timer
 	function BeginTriggerTimer()
 		buffer.type = "trigger_timer"
 	end
 
-	---On death
+	--- On death
 	function BeginTriggerDeath()
 		buffer.type = "trigger_death"
 	end
 
-	---Regular trigger
+	--- Regular trigger
 	function BeginTriggerHitWorld()
 		buffer.type = "trigger_hit_world"
 	end
 
-	---@param entity_filename string
+	--- @param entity_filename string
 	function add_projectile(entity_filename)
 		BeginProjectile(entity_filename)
 	end
 
-	---@param entity_filename string
+	--- @param entity_filename string
 	function add_projectile_trigger_timer(entity_filename)
 		BeginProjectile(entity_filename)
 		BeginTriggerTimer()
 	end
 
-	---@param entity_filename string
+	--- @param entity_filename string
 	function add_projectile_trigger_hit_world(entity_filename)
 		BeginProjectile(entity_filename)
 		BeginTriggerHitWorld()
 	end
 
-	---@param entity_filename string
+	--- @param entity_filename string
 	function add_projectile_trigger_death(entity_filename)
 		BeginProjectile(entity_filename)
 		BeginTriggerDeath()
 	end
+
+	--- @param ... any
+	--- @return number, number
+	function EntityGetTransform(...)
+		return 0, 0
+	end
 end
 
----Shadows functions so they won't do anything
+--- Shadows functions so they won't do anything
 local function shadow_functions()
 	local nil_fn = function() end
 	local functions_to_shadow = {
@@ -184,7 +191,7 @@ local function shadow_functions()
 		"GamePlaySound",
 		"GamePrint",
 		"GamePrintImportant",
-		"EntityGetTransform",
+		-- "EntityGetTransform",
 		"EntityGetAllChildren",
 		"dofile_once",
 		"EntityGetRootEntity",
@@ -197,7 +204,7 @@ local function shadow_functions()
 	end
 end
 
----Sandbox
+--- Sandbox
 function guns:parse_actions()
 	for i = 0, 7 do
 		self.actions_data.types[i] = {
@@ -207,7 +214,7 @@ function guns:parse_actions()
 		}
 	end
 
-	---@type ML_sandbox
+	--- @type ML_sandbox
 	local sandbox = dofile_once("mods/meta_leveling/files/scripts/classes/private/sandbox.lua")
 	sandbox:start_sandbox()
 	-- ###############################################################
@@ -221,13 +228,12 @@ function guns:parse_actions()
 	shadow_functions()
 	overwrite_functions()
 
-	root_shot = create_shot(1) ---@diagnostic disable-line: undefined-global
+	root_shot = create_shot(1) --- @diagnostic disable-line: undefined-global
 	c = root_shot.state
 
 	shot_effects = { recoil_knockback = 0 }
 
-
-	for i = 1, #actions do ---@diagnostic disable-line: undefined-global
+	for i = 1, #actions do --- @diagnostic disable-line: undefined-global
 		parse_action(actions[i])
 	end
 
@@ -238,9 +244,9 @@ function guns:parse_actions()
 	sandbox:end_sandbox()
 end
 
----check if player can have this spell
----@param action_id string
----@return boolean
+--- check if player can have this spell
+--- @param action_id string
+--- @return boolean
 function guns:spell_is_valid(action_id)
 	if self.spells_no_spawn[action_id] then return false end
 	if self.locked_spells[action_id] and not HasFlagPersistent(self.locked_spells[action_id]) then
@@ -249,9 +255,9 @@ function guns:spell_is_valid(action_id)
 	return true
 end
 
----returns a valid spell from list
----@param list string[]
----@return string action_id
+--- returns a valid spell from list
+--- @param list string[]
+--- @return string action_id
 function guns:get_random_from_list(list)
 	local length = #list
 	local index = Random(1, length)
@@ -262,9 +268,9 @@ function guns:get_random_from_list(list)
 	return "OCARINA_A"
 end
 
----return random spells of level
----@param level number
----@return string action_id
+--- return random spells of level
+--- @param level number
+--- @return string action_id
 function guns:get_random_spell(level)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
@@ -276,10 +282,10 @@ function guns:get_random_spell(level)
 	return "OCARINA_A"
 end
 
----return random typed spells of level
----@param level number
----@param type number
----@return string action_id
+--- return random typed spells of level
+--- @param level number
+--- @param type number
+--- @return string action_id
 function guns:get_random_typed_spell(level, type)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do

@@ -320,7 +320,7 @@ end
 --- @private
 function LU_meta:MetaDrawMetaMenu()
 	self.data.y = self.data.y + self.const.sprite_offset
-	self:FakeScrollBox(self.data.x, self.data.y, self.const.z + 10, self.const.ui_9piece_gray, self.MetaDrawMetaWindow)
+	self:ScrollBox(self.data.x, self.data.y, self.const.z + 10, self.const.ui_9piece_gray, 0, 0, self.MetaDrawMetaWindow)
 end
 
 return LU_meta
