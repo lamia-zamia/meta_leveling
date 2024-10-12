@@ -108,6 +108,19 @@ function LU:CloseMenu()
 	ML.gui = false
 end
 
+--- Draws 9piece with offset in scrollbox
+--- @private
+--- @param x number
+--- @param y number
+--- @param z number
+--- @param width number
+--- @param height number
+--- @param sprite? string
+--- @param highlight? string
+function LU:Draw9PieceInScrollBox(x, y, z, width, height, sprite, highlight)
+	self:Draw9Piece(x + self.data.x, y + self.data.y, z, width, height, sprite, highlight)
+end
+
 --- check if element is visible within scrollbox
 --- @private
 --- @param y number
@@ -119,6 +132,23 @@ function LU:ElementIsVisible(y, distance_between)
 		y - distance_between / 2 < self.scroll.height_max
 	then
 		return true
+	end
+	return false
+end
+
+--- Checks if element in scrollbox is hovered
+--- @private
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @param dont_focus? boolean
+--- @return boolean
+--- @nodiscard
+function LU:IsElementHovered(x, y, width, height, dont_focus)
+	local offset = height / 2
+	if y + offset > 0 and y + offset < self.scroll.height_max then
+		return self:IsHoverBoxHovered(self.data.x + x, self.data.y + y, width, height, dont_focus)
 	end
 	return false
 end

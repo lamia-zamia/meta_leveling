@@ -1,4 +1,4 @@
---- @class (exact) ml_entity_scanner
+--- @class ml_entity_scanner
 --- @field private tags table
 --- @field private processed_entities table
 local entity_scanner = {
@@ -9,10 +9,10 @@ local entity_scanner = {
 --- @param entity entity_id
 --- @private
 function entity_scanner:add_lua_component_if_none(entity)
+	self.processed_entities[entity] = true
 	local components = EntityGetComponent(entity, "LuaComponent") or {}
 	for _, component in ipairs(components) do
 		if ComponentGetValue2(component, "script_death") == "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua" then
-			self.processed_entities[entity] = true
 			return
 		end
 	end
@@ -21,7 +21,6 @@ function entity_scanner:add_lua_component_if_none(entity)
 		script_death = "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua",
 		script_damage_received = "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua",
 	})
-	self.processed_entities[entity] = true
 end
 
 --- scan entities and add death script if none

@@ -60,11 +60,7 @@ function LU_list:ListDrawRewardsListInside()
 			x = 3
 			y = y + distance_between
 		end
-		local hovered = false
-		if self:ElementIsVisible(y, distance_between) then
-			self:Draw9Piece(self.data.x + x, self.data.y + y, 0, 16, 16, self.c.empty, self.c.empty)
-			hovered = self:IsHovered()
-		end
+		local hovered = self:IsElementHovered(x, y, 16, 16)
 		self:ListDrawRewardListEntry(x, y, reward, hovered)
 		x = x + distance_between
 	end
