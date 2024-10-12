@@ -93,8 +93,8 @@ local function parse_action(action)
 		return
 	end
 	local flag = action.spawn_requires_flag
-	-- if flag and not HasFlagPersistent(flag) then
-	if flag then -- HasFlagPersistent breaks with EW at this stage
+	if flag and not HasFlagPersistent(flag) then
+		-- if flag then -- HasFlagPersistent breaks with EW at this stage
 		guns.locked_spells[action_id] = flag
 		return
 	end
