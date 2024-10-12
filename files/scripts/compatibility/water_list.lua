@@ -1,4 +1,5 @@
-local waters = {
+---@enum WaterMaterials
+WaterMaterials = {
 	"$mat_water",
 	"$mat_mud",
 	"$mat_water_swamp",
@@ -8,4 +9,3 @@ local waters = {
 	"$mat_water_ice"
 }
 
-return waters

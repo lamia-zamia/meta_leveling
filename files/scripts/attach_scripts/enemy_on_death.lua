@@ -1,6 +1,6 @@
---- @type MetaLevelingPublic
-local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua")
-local waters = dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua")
+dofile_once("mods/meta_leveling/files/scripts/compatibility/experience_custom.lua") --- importing CustomExpEntities
+dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua") --- importing WaterMaterials
+local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua") --- @type MetaLevelingPublic
 local T = GameTextGetTranslatedOrNot
 
 --- Check if the entity is visible
@@ -23,7 +23,7 @@ end
 --- @param damage_message string
 --- @return boolean
 local function damage_done_by_water(damage_message)
-	for _, water in ipairs(waters) do
+	for _, water in ipairs(WaterMaterials) do
 		local text = GameTextGet("$damage_frommaterial", T(water))
 		if text == damage_message then
 			return true
@@ -47,8 +47,8 @@ local script_death = function(damage_type_bit_field, damage_message, entity_that
 	-- Return if entity belongs to the player's herd
 	if MLP.get:is_player_herd(died_entity) then return end
 
-	-- Calculate base experience from entity's max HP
-	local exp = MLP.exp:convert_max_hp_to_exp(died_entity)
+	-- Calculate base experience from entity's max HP or using custom exp mapping
+	local exp = CustomExpEntities[EntityGetFilename(died_entity)] or MLP.exp:convert_max_hp_to_exp(died_entity)
 	local died_name = T(EntityGetName(died_entity))
 
 	-- Check for boss tag to double the experience
