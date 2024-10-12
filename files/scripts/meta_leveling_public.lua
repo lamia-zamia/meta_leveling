@@ -20,7 +20,7 @@ local MLP = {
 function MLP:AddExpGlobal(exp, entity, message)
 	exp = self.exp:apply_multiplier(exp)
 	if message and self.get:mod_setting_boolean("session_exp_log") then
-		message = message .. exp
+		message = message .. self.exp:format(exp)
 		GamePrint(message)
 	end
 	if entity and EntityGetIsAlive(entity) and self.get:mod_setting_boolean("session_exp_popup") then
