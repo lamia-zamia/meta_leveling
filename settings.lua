@@ -23,9 +23,10 @@ local U = {
 	keycodes = {},
 	keycodes_file = "data/scripts/debug/keycodes.lua",
 	waiting_for_input = false,
+	gui = nil
 }
-do --helpers
-	---Checks for winstreak flag and either resets or adds
+do -- helpers
+	--- Checks for winstreak flag and either resets or adds
 	function U.check_for_winstreak()
 		local win_flag_id = mod_prfx .. "streak_win"
 		local streak_id = mod_prfx .. "streak_count"
@@ -38,70 +39,37 @@ do --helpers
 		end
 	end
 
-	function U.setting_handle_callback(setting)
-		if setting.change_fn then setting.change_fn(setting) end
-	end
-
-	---@param setting_name setting_id
-	---@param value setting_value
+	--- @param setting_name setting_id
+	--- @param value setting_value
 	function U.set_setting(setting_name, value)
 		ModSettingSet(mod_prfx .. setting_name, value)
 		ModSettingSetNextValue(mod_prfx .. setting_name, value, false)
 	end
 
-	---@param setting_name setting_id
-	---@return setting_value?
+	--- @param setting_name setting_id
+	--- @return setting_value?
 	function U.get_setting(setting_name)
 		return ModSettingGet(mod_prfx .. setting_name)
 	end
 
-	---@param setting_name setting_id
-	---@return setting_value?
+	--- @param setting_name setting_id
+	--- @return setting_value?
 	function U.get_setting_next(setting_name)
 		return ModSettingGetNextValue(mod_prfx .. setting_name)
 	end
 
-	---@param cat_id setting_id
-	---@return number?
-	function U.get_settings_cat_index(cat_id)
-		for i, setting in ipairs(mod_settings) do
-			if setting.category_id and setting.category_id == cat_id then
-				return i
-			end
+	--- @param array mod_settings_global|mod_settings
+	--- @param gui? gui
+	--- @return number
+	function U.calculate_elements_offset(array, gui)
+		if not gui then
+			gui = GuiCreate()
+			GuiStartFrame(gui)
 		end
-	end
-
-	---@param table mod_settings
-	---@param setting_id setting_id
-	---@return number?
-	function U.get_setting_index(table, setting_id)
-		for i, setting in ipairs(table) do
-			if setting.id and setting.id == setting_id then
-				return i
-			end
-		end
-	end
-
-	---@param cat_id mod_category_id
-	---@param set_id setting_id
-	---@return { cat: number, set: number }
-	function U.get_cat_and_setting_index(cat_id, set_id)
-		local cat_index = U.get_settings_cat_index(cat_id)
-		local set_index = U.get_setting_index(mod_settings[cat_index].settings, set_id)
-		return {
-			cat = cat_index,
-			set = set_index
-		}
-	end
-
-	---@param gui gui
-	---@param array mod_settings_global|mod_settings
-	---@return number
-	function U.calculate_elements_offset(gui, array)
 		local max_width = 10
 		for _, setting in ipairs(array) do
 			if setting.category_id then
-				local cat_max_width = U.calculate_elements_offset(gui, setting.settings)
+				local cat_max_width = U.calculate_elements_offset(setting.settings, gui)
 				max_width = math.max(max_width, cat_max_width)
 			end
 			if setting.ui_name then
@@ -109,28 +77,11 @@ do --helpers
 				max_width = math.max(max_width, name_length)
 			end
 		end
+		GuiDestroy(gui)
 		return max_width + 3
 	end
 
-	---@param value? string
-	---@return number
-	function U.get_thickness_limit(value)
-		local max = 4
-		local position = value or U.get_setting_next("exp_bar_position")
-		if position == "under_health" then
-			max = 2
-		end
-		return max
-	end
-
-	function U.set_thickness_limit(setting)
-		local value = tostring(U.get_setting_next("exp_bar_position"))
-		local max = U.get_thickness_limit(value)
-		local index = U.get_cat_and_setting_index("exp_bar_cat", "exp_bar_thickness")
-		mod_settings[index.cat].settings[index.set].value_max = max
-	end
-
-	---@param all boolean reset all
+	--- @param all boolean reset all
 	function U.set_default(all)
 		for setting, value in pairs(D) do
 			if U.get_setting(setting) == nil or all then
@@ -139,7 +90,7 @@ do --helpers
 		end
 	end
 
-	---gather keycodes from game file
+	--- gather keycodes from game file
 	function U.gather_key_codes()
 		U.keycodes = {}
 		U.keycodes[0] = GameTextGetTranslatedOrNot("$menuoptions_configurecontrols_action_unbound")
@@ -158,12 +109,12 @@ do --helpers
 		end
 	end
 
-	---Resets settings
+	--- Resets settings
 	function U.reset_settings()
 		U.set_default(true)
 	end
 
-	---Resets progress
+	--- Resets progress
 	function U.reset_progress()
 		local count = ModSettingGetCount()
 		local progress_list = {}
@@ -174,12 +125,11 @@ do --helpers
 			end
 		end
 		for i = 1, #progress_list do
-			print(progress_list[i])
 			ModSettingRemove(progress_list[i])
 		end
 	end
 
-	---Resets meta
+	--- Resets meta
 	function U.reset_meta()
 		local count = ModSettingGetCount()
 		local meta_list = {}
@@ -205,25 +155,25 @@ end
 local G = {
 
 }
-do --gui helpers
+do -- gui helpers
 	function G.button_options(gui)
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.ClickCancelsDoubleClick)
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.ForceFocusable)
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.HandleDoubleClickAsClick)
 	end
 
-	---@param gui gui
-	---@param hovered boolean
+	--- @param gui gui
+	--- @param hovered boolean
 	function G.yellow_if_hovered(gui, hovered)
 		if hovered then GuiColorSetForNextWidget(gui, 1, 1, 0.7, 1) end
 	end
 
-	---@param gui gui
-	---@param x_pos number
-	---@param text string
-	---@param color? table
-	---@return boolean
-	---@nodiscard
+	--- @param gui gui
+	--- @param x_pos number
+	--- @param text string
+	--- @param color? table
+	--- @return boolean
+	--- @nodiscard
 	function G.button(gui, x_pos, text, color)
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
 		GuiText(gui, x_pos, 0, "")
@@ -242,9 +192,9 @@ do --gui helpers
 		return clicked
 	end
 
-	---@param setting_name setting_id
-	---@param value setting_value
-	---@param default setting_value
+	--- @param setting_name setting_id
+	--- @param value setting_value
+	--- @param default setting_value
 	function G.on_clicks(setting_name, value, default)
 		if InputIsMouseButtonJustDown(1) then
 			U.set_setting(setting_name, value)
@@ -255,8 +205,8 @@ do --gui helpers
 		end
 	end
 
-	---@param gui gui
-	---@param setting_name setting_id
+	--- @param gui gui
+	--- @param setting_name setting_id
 	function G.toggle_checkbox_boolean(gui, setting_name)
 		local text = T[setting_name]
 		local _, _, _, prev_x, y, prev_w = GuiGetPreviousWidgetInfo(gui)
@@ -266,10 +216,10 @@ do --gui helpers
 
 		GuiZSetForNextWidget(gui, -1)
 		G.button_options(gui)
-		GuiImageNinePiece(gui, id(), x + 2, y, offset_w, 10, 10, U.empty, U.empty) --hover box
+		GuiImageNinePiece(gui, id(), x + 2, y, offset_w, 10, 10, U.empty, U.empty) -- hover box
 		local _, _, hovered = GuiGetPreviousWidgetInfo(gui)
 		GuiZSetForNextWidget(gui, 1)
-		GuiImageNinePiece(gui, id(), x + 2, y + 2, 6, 6) --check box
+		GuiImageNinePiece(gui, id(), x + 2, y + 2, 6, 6) -- check box
 
 		GuiText(gui, 4, 0, "")
 		if value then
@@ -290,9 +240,9 @@ do --gui helpers
 		end
 	end
 
-	---@param gui gui
-	---@param setting mod_setting_number
-	---@return number, number
+	--- @param gui gui
+	--- @param setting mod_setting_number
+	--- @return number, number
 	function G.mod_setting_number(gui, setting)
 		GuiLayoutBeginHorizontal(gui, 0, 0, false, 0, 0)
 		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
@@ -313,9 +263,9 @@ do --gui helpers
 		return value, value_new
 	end
 
-	---@param gui gui
-	---@param setting_name setting_id
-	---@param scope? mod_setting_scopes
+	--- @param gui gui
+	--- @param setting_name setting_id
+	--- @param scope? mod_setting_scopes
 	function G.tooltip(gui, setting_name, scope)
 		local description = T[setting_name .. "_d"]
 		local value = U.get_setting_next(setting_name)
@@ -344,13 +294,13 @@ do --gui helpers
 		end
 	end
 
-	---@param gui gui
-	---@param x number
-	---@param y number
-	---@param width number
-	---@param height number
-	---@param fn fun(gui:gui, width:number, height:number, ...:any)
-	---@param ... any
+	--- @param gui gui
+	--- @param x number
+	--- @param y number
+	--- @param width number
+	--- @param height number
+	--- @param fn fun(gui:gui, width:number, height:number, ...:any)
+	--- @param ... any
 	function G.ImageClip(gui, x, y, width, height, fn, ...)
 		GuiText(gui, x, y, " ")
 		local _, _, _, _, prev_y = GuiGetPreviousWidgetInfo(gui)
@@ -401,7 +351,7 @@ local S = {
 
 }
 do -- Settings GUI
-	function S.draw_bar_position(_, gui, _, _, setting)
+	function S.draw_bar_position(_, gui, _, _, _)
 		GuiOptionsAdd(gui, GUI_OPTION.Layout_NextSameLine)
 
 		local thickness = 1 + tonumber(U.get_setting_next("exp_bar_thickness")) or D.exp_bar_thickness
@@ -434,8 +384,28 @@ do -- Settings GUI
 		GuiOptionsRemove(gui, GUI_OPTION.Layout_NextSameLine)
 	end
 
-	---@param setting mod_setting_number
-	---@param gui gui
+	--- @param setting mod_setting_number
+	--- @param gui gui
+	function S.draw_bar_thickness(_, gui, _, _, setting)
+		local position = U.get_setting_next("exp_bar_position")
+		if position == "under_health" then
+			setting.value_max = 2
+			if U.get_setting_next(setting.id) > 2 then
+				U.set_setting(setting.id, 2)
+			end
+		else
+			setting.value_max = 4
+		end
+		-- setting.value_max = U.get_setting_next("exp_bar_position") == "under_health" and 2 or 4
+		local value, value_new = G.mod_setting_number(gui, setting)
+		value_new = math.floor(value_new + 0.5)
+		if value ~= value_new then
+			U.set_setting(setting.id, value_new)
+		end
+	end
+
+	--- @param setting mod_setting_number
+	--- @param gui gui
 	function S.mod_setting_number_float(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
 		if value ~= value_new then
@@ -443,8 +413,8 @@ do -- Settings GUI
 		end
 	end
 
-	---@param setting mod_setting_number
-	---@param gui gui
+	--- @param setting mod_setting_number
+	--- @param gui gui
 	function S.mod_setting_number_integer(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
 		value_new = math.floor(value_new + 0.5)
@@ -455,7 +425,6 @@ do -- Settings GUI
 
 	function S.mod_setting_better_string(_, gui, _, _, setting)
 		local value = tostring(U.get_setting_next(setting.id))
-		-- if not value then return end
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
 		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
@@ -464,7 +433,6 @@ do -- Settings GUI
 			local color = value == button and { 0.7, 0.7, 0.7 } or nil
 			if G.button(gui, 0, T[button], color) then
 				U.set_setting(setting.id, button)
-				U.setting_handle_callback(setting)
 			end
 		end
 		GuiLayoutEnd(gui)
@@ -540,7 +508,7 @@ local translations =
 {
 	["English"] = {
 		show_debug = "Show debug button",
-		exp_bar_cat = "HUD", --cat
+		exp_bar_cat = "HUD", -- cat
 		exp_bar_cat_d = "Settings for experience bar and misc",
 		exp_bar_position = "Position",
 		exp_bar_position_d = "Position of experience bar",
@@ -559,7 +527,7 @@ local translations =
 		session_exp_animate_bar_d = "Animate bar when there are pending levels",
 		hud_reminder_in_inventory = "Reminder in inventory",
 		hud_reminder_in_inventory_d = "Notifies you about pending levels in inventory",
-		ui_cat = "UI", --cat
+		ui_cat = "UI", -- cat
 		ui_cat_d = "Settings related to UI",
 		open_ui_hotkey = "Hotkey",
 		open_ui_hotkey_d = "Key for quick access to UI",
@@ -576,7 +544,7 @@ local translations =
 		session_exp_ui_open_auto_d = "Automatically open level-up menu when you open UI",
 		show_ui_on_death = "Show menu on death",
 		show_ui_on_death_d = "Shows open menu button on death screen",
-		gameplay_cat = "Gameplay", --cat
+		gameplay_cat = "Gameplay", -- cat
 		gameplay_cat_d = "In-game related settings",
 		session_exp_on_level_up = "On level up",
 		session_exp_play_sound = "Play sound",
@@ -623,7 +591,7 @@ local translations =
 		session_exp_animate_bar_d = "Анимировать бар при доступных уровнях",
 		hud_reminder_in_inventory = "Напоминание",
 		hud_reminder_in_inventory_d = "Напоминать о доступных уровнях в инвентаре",
-		ui_cat = "UI", --cat
+		ui_cat = "UI", -- cat
 		ui_cat_d = "Настройки связанные с интерфейсом",
 		open_ui_hotkey = "Горячая клавиша",
 		open_ui_hotkey_d = "Клавиша для быстрого открытия меню",
@@ -639,7 +607,7 @@ local translations =
 		session_exp_ui_open_auto_d = "Автоматически открывать меню повышение уровня\nкогда вы открываете интерфейс",
 		show_ui_on_death = "Меню при смерти",
 		show_ui_on_death_d = "Показывать кнопку открытия меню после смерти",
-		gameplay_cat = "Геймплей", --cat
+		gameplay_cat = "Геймплей", -- cat
 		gameplay_cat_d = "Настройки связанные с геймплеем",
 		session_exp_on_level_up = "Новый уровень",
 		session_exp_play_sound = "Звук",
@@ -682,7 +650,7 @@ setmetatable(T, mt)
 -- #########		Settings		##########
 -- ###########################################
 
----@class ml_settings_default
+--- @class ml_settings_default
 D = {
 	exp_bar_position = "under_health",
 	exp_bar_thickness = 2,
@@ -707,7 +675,7 @@ D = {
 }
 
 local function build_settings()
-	---@type mod_settings_global
+	--- @type mod_settings_global
 	local settings = {
 		{
 			category_id = "exp_bar_cat",
@@ -727,8 +695,6 @@ local function build_settings()
 					ui_description = T.exp_bar_position_d,
 					value_default = D.exp_bar_position,
 					buttons = { "under_health", "on_left", "on_right", "on_top" },
-					scope = MOD_SETTING_SCOPE_RUNTIME,
-					change_fn = U.set_thickness_limit,
 					ui_fn = S.mod_setting_better_string,
 				},
 				{
@@ -737,10 +703,7 @@ local function build_settings()
 					ui_description = T.exp_bar_thickness_d,
 					value_default = D.exp_bar_thickness,
 					value_min = 1,
-					value_max = U.get_thickness_limit(),
-					scope = MOD_SETTING_SCOPE_RUNTIME,
-					ui_fn = S.mod_setting_number_integer,
-					parent = "exp_bar_cat",
+					ui_fn = S.draw_bar_thickness,
 				},
 				{
 					id = "exp_bar_red",
@@ -749,9 +712,7 @@ local function build_settings()
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
 					ui_fn = S.mod_setting_number_float,
-					parent = "exp_bar_cat",
 				},
 				{
 					id = "exp_bar_green",
@@ -760,9 +721,7 @@ local function build_settings()
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
 					ui_fn = S.mod_setting_number_float,
-					parent = "exp_bar_cat",
 				},
 				{
 					id = "exp_bar_blue",
@@ -771,9 +730,7 @@ local function build_settings()
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
 					ui_fn = S.mod_setting_number_float,
-					parent = "exp_bar_cat",
 				},
 				{
 					not_setting = true,
@@ -842,10 +799,8 @@ local function build_settings()
 					value_default = D.session_exp_multiplier,
 					value_min = 0.1,
 					value_max = 3,
-					scope = MOD_SETTING_SCOPE_RUNTIME,
 					value_display_multiplier = 100,
 					ui_fn = S.mod_setting_number_float,
-					parent = "gameplay_cat",
 					format = "%"
 				},
 			},
@@ -905,7 +860,7 @@ local function build_settings()
 			}
 		}
 	}
-	U.offset = 0
+	U.offset = U.calculate_elements_offset(settings)
 	return settings
 end
 
@@ -913,7 +868,7 @@ end
 -- #############		Meh		##############
 -- ###########################################
 
----@param init_scope number
+--- @param init_scope number
 function ModSettingsUpdate(init_scope)
 	if init_scope == 0 then -- On new game
 		U.check_for_winstreak()
@@ -925,25 +880,24 @@ function ModSettingsUpdate(init_scope)
 		mod_settings = build_settings()
 	end
 	current_language_last_frame = current_language
-	mod_settings_update(mod_id, mod_settings, init_scope)
+	-- mod_settings_update(mod_id, mod_settings, init_scope)
 end
 
----@return number
+--- @return number
 function ModSettingsGuiCount()
 	return mod_settings_gui_count(mod_id, mod_settings)
 end
 
----@param gui gui
----@param in_main_menu boolean
+--- @param gui gui
+--- @param in_main_menu boolean
 function ModSettingsGui(gui, in_main_menu)
 	gui_id = 1000
 	GuiIdPushString(gui, mod_prfx)
-	if U.offset == 0 then U.offset = U.calculate_elements_offset(gui, mod_settings) end
 	mod_settings_gui(mod_id, mod_settings, gui, in_main_menu)
 	GuiIdPop(gui)
 end
 
 U.gather_key_codes()
 
----@type mod_settings_global
+--- @type mod_settings_global
 mod_settings = build_settings()
