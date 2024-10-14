@@ -97,24 +97,13 @@ function LU_current:CurrentDrawChangeButton()
 	local button_width = self:GetTextDimension(button)
 	local text_x = self.scroll.width - button_width - 15
 	local text_y = self.current.y + 27
-	local button_box = self.const.ui_9p_button
-	if self:IsElementHovered(text_x - 1, text_y, button_width + 13, 10) then
-		button_box = self.const.ui_9p_button_hl
-		self:ShowTooltipTextCenteredX(0, 20, self:Locale("$ml_current_change_display"))
+
+	if self:IsCheckboxInScrollBoxHovered(text_x, text_y, button, self.current.group_rewards) then
+		self:ShowTooltipTextCenteredX(-button_width / 2, 20, self:Locale("$ml_current_change_display"))
 		if self:IsLeftClicked() then
 			self.current.group_rewards = not self.current.group_rewards
 		end
-		self:Color(1, 1, 0.7)
 	end
-	self:Text(text_x, text_y, button)
-	if self.current.group_rewards then
-		self:Color(0, 0.8, 0)
-		self:Text(self.scroll.width - 10, text_y, "V")
-	else
-		self:Color(0.8, 0, 0)
-		self:Text(self.scroll.width - 10, text_y, "X")
-	end
-	self:Draw9PieceInScrollBox(self.scroll.width - 11, self.current.y + 27 + 2, self.const.z - 1, 6, 6, button_box)
 end
 
 --- Draws current reward window

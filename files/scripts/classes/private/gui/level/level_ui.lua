@@ -121,19 +121,26 @@ function LU:Draw9PieceInScrollBox(x, y, z, width, height, sprite, highlight)
 	self:Draw9Piece(x + self.data.x, y + self.data.y, z, width, height, sprite, highlight)
 end
 
---- check if element is visible within scrollbox
---- @private
+--- Draws checbox
+--- @param x number
 --- @param y number
---- @param distance_between number
---- @return boolean
-function LU:ElementIsVisible(y, distance_between)
-	if
-		y + distance_between / 2 > 0 and
-		y - distance_between / 2 < self.scroll.height_max
-	then
-		return true
+--- @param text string
+--- @param value boolean
+--- @return boolean hovered
+function LU:IsCheckboxInScrollBoxHovered(x, y, text, value)
+	local text_dim = self:GetTextDimension(text)
+	local hovered = self:IsHoverBoxHovered(x + self.data.x, y + 1 + self.data.y, text_dim + 13, 9)
+	if hovered then self:Color(1, 1, 0.7) end
+	self:Text(x, y, text)
+	self:Draw9PieceInScrollBox(x + text_dim + 4, y + 2, self.const.z, 6, 6, hovered and self.buttons.img_hl or self.buttons.img)
+	if value then
+		self:Color(0, 0.8, 0)
+		self:Text(x + text_dim + 5, y, "V")
+	else
+		self:Color(0.8, 0, 0)
+		self:Text(x + text_dim + 5, y, "X")
 	end
-	return false
+	return hovered
 end
 
 --- Checks if element in scrollbox is hovered

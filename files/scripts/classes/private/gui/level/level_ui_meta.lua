@@ -71,23 +71,6 @@ function LU_meta:MetaProgressDisplayAvailablePoints()
 	self:AddTooltip(text_dim / 2, self.meta.distance * 2, self.MetaProgressDisplayAvailablePointsTooltip, text)
 end
 
---- Add hoverbox and tooltip if element is visible
---- @private
---- @param x number
---- @param y number
---- @param w number
---- @param h number
---- @param x_off number
---- @param y_off number
---- @param fn function
---- @param ... any
-function LU_meta:MetaProgressPointAddTooltip(x, y, w, h, x_off, y_off, fn, ...)
-	if self:ElementIsVisible(self.meta.y, self.meta.distance) then
-		self:Draw9Piece(x, y, 50, w, h, self.c.empty)
-		self:AddTooltip(x_off, y_off, fn, ...)
-	end
-end
-
 --- Color for bar border
 --- @private
 --- @param x number
@@ -199,9 +182,11 @@ end
 function LU_meta:MetaDrawPointProgress(point)
 	self:AddOption(self.c.options.NonInteractive)
 	self:MetaDrawPointProgressBarBackground()
-	local prev = self:GetPrevious()
-	self:MetaProgressPointAddTooltip(prev.x, prev.y - 4, prev.w, self.meta.bar.height, self.meta.bar.width / 2,
-		self.meta.distance * 2, self.MetaProgressPointTooltipBar, point)
+	local x = self.meta.bar.offset - 0.25
+	if self:IsElementHovered(x, self.meta.y + 3.35, self.meta.bar.width + 0.75, self.meta.bar.height) then
+		self:ShowTooltip(self.data.x + x + self.meta.bar.width / 2, self.data.y + self.meta.y + self.meta.distance * 2,
+			self.MetaProgressPointTooltipBar, point)
+	end
 	GuiZSet(self.gui, self.const.z - 3)
 	self:MetaDrawPointProgressBar(point)
 
@@ -217,31 +202,22 @@ end
 --- @param index number
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointIncreaser(index, point)
-	local x = self.meta.bar.offset + self.meta.bar.width + 3.5
+	local x = self.meta.bar.offset + self.meta.bar.width + 4.5
 	local y = self.meta.y
 	local next_val = point.next_value
 	if next_val >= point.stack then return end
 	local price = point.price[next_val + 1]
 	local available = MLP.points:get_current_currency() >= price
 	local color = available and { 0.5, 0.8, 0.5 } or { 0.5, 0.5, 0.5 }
-	self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.c.empty)
-	if self:ElementIsVisible(self.meta.y, self.meta.distance) then
-		local prev = self:GetPrevious()
-		if prev.hovered then
-			self.tooltip_reset = false
-			self:ShowTooltip(prev.x + 2.5, prev.y + self.meta.distance * 2, self.MetaProgressPointManipulatorTooltip,
-				point,
-				price, false)
-			self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5,
-				available and self.const.ui_9p_button_hl or self.const.ui_9p_button)
-			if available then
-				-- self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
-				if self:IsLeftClicked() then
-					ML.meta:set_next_progress(index, 1)
-					-- GamePlaySound("data/audio/Desktop/event_cues.bank", "event_cues/perk/create", ML.player.x, ML.player.y)
-					GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x,
-						ML.player.y)
-				end
+	if self:IsElementHovered(x, y + 3, 5, 5) then
+		self.tooltip_reset = false
+		self:ShowTooltip(x + self.data.x + 2.5, y + self.data.y + self.meta.distance * 2, self.MetaProgressPointManipulatorTooltip, point, price, false)
+		self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5,
+			available and self.const.ui_9p_button_hl or self.const.ui_9p_button)
+		if available then
+			if self:IsLeftClicked() then
+				ML.meta:set_next_progress(index, 1)
+				GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x, ML.player.y)
 			end
 		end
 	end
@@ -254,25 +230,19 @@ end
 --- @param index number
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointDecreaser(index, point)
-	local x = self.meta.bar.offset - 9
+	local x = self.meta.bar.offset - 10
 	local y = self.meta.y
 	local next_val = point.next_value
 	if next_val <= 0 then return end
 	local return_value = point.price[next_val]
-	self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.c.empty)
-	if self:ElementIsVisible(self.meta.y, self.meta.distance) then
-		local prev = self:GetPrevious()
-		if prev.hovered then
-			self.tooltip_reset = false
-			self:ShowTooltip(prev.x + 2.5, prev.y + self.meta.distance * 2, self.MetaProgressPointManipulatorTooltip,
-				point,
-				return_value, true)
-			self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
-			if self:IsLeftClicked() then
-				ML.meta:set_next_progress(index, -1)
-				GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x,
-					ML.player.y)
-			end
+	if self:IsElementHovered(x, y + 3, 5, 5) then
+		self.tooltip_reset = false
+		self:ShowTooltip(x + self.data.x + 2.5, y + self.data.y + self.meta.distance * 2, self.MetaProgressPointManipulatorTooltip, point, return_value,
+			true)
+		self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
+		if self:IsLeftClicked() then
+			ML.meta:set_next_progress(index, -1)
+			GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x, ML.player.y)
 		end
 	end
 	self:Color(0.5, 0.5, 0.8)
@@ -286,9 +256,11 @@ end
 function LU_meta:MetaDrawPointProgressElement(index, point)
 	local progress_name = ML.rewards_deck.FormatString(self:Locale(point.ui_name))
 	self:Text(0, self.meta.y, progress_name .. ":")
-	local prev = self:GetPrevious()
-	self:MetaProgressPointAddTooltip(prev.x, prev.y + 1, prev.w, prev.h - 2, self:GetTextDimension(progress_name) / 2,
-		self.meta.distance * 2, self.MetaProgressPointTooltipText, point)
+	local text_dim = self:GetTextDimension(progress_name)
+	if self:IsElementHovered(0, self.meta.y, text_dim, 10, true) then
+		self:ShowTooltip(self.data.x + text_dim / 2, self.data.y + self.meta.y + self.meta.distance * 2,
+			self.MetaProgressPointTooltipText, point)
+	end
 	self:MetaDrawPointProgress(point)
 	self:MetaDrawPointDecreaser(index, point)
 	self:MetaDrawPointIncreaser(index, point)
