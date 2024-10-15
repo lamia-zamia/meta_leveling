@@ -519,4 +519,6 @@ local reward_list = {
 	}
 }
 
-return reward_list
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(reward_list)
+-- return reward_list

@@ -26,4 +26,5 @@ for bag_type, probability in pairs(types) do
 	end
 end
 
-ML.rewards_deck:add_rewards(bags, "Bags of many Integration")
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(bags, "Bags of many Integration")

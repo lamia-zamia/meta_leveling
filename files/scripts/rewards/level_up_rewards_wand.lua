@@ -173,5 +173,5 @@ local wand_rewards = {
 		end
 	},
 }
-
-ML.rewards_deck:add_rewards(wand_rewards)
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(wand_rewards)

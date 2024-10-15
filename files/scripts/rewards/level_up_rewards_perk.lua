@@ -65,4 +65,5 @@ local rewards_perk = {
 	},
 }
 
-ML.rewards_deck:add_rewards(rewards_perk)
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(rewards_perk)

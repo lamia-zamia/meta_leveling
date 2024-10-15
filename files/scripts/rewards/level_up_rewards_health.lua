@@ -189,4 +189,5 @@ for i = 1, #health_rewards do
 	health_rewards[i].sound = MLP.const.sounds.heart
 end
 
-ML.rewards_deck:add_rewards(health_rewards)
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(health_rewards)

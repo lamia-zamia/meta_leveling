@@ -19,6 +19,9 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 --- @field picked boolean if something from group was picked
 
 --- @class rewards_deck
+--- @field private get ML_get
+--- @field private const ml_const
+--- @field private set ML_set
 --- @field private reward_definition_list ml_rewards list of rewards
 --- @field reward_appended_by { [ml_reward_id]: string}
 --- @field groups_data { [string]: ml_group_data}
@@ -33,6 +36,9 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 --- @field borders { [string]: ml_reward_border}
 --- @field picked_count number how many rewards have been picked
 local rewards_deck = {
+	get = dofile_once("mods/meta_leveling/files/scripts/classes/public/get.lua"),
+	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua"),
+	set = dofile_once("mods/meta_leveling/files/scripts/classes/public/set.lua"),
 	reward_data = {},
 	groups_data = {},
 	default_icon = "mods/meta_leveling/files/gfx/rewards/no_png.png",
@@ -157,8 +163,7 @@ end
 
 --- Gathers reward data from a predefined list.
 function rewards_deck:GatherData()
-	self.reward_definition_list = dofile_once(
-		"mods/meta_leveling/files/scripts/rewards/level_up_rewards.lua")
+	self.reward_definition_list = {}
 	dofile_once("mods/meta_leveling/files/for_modders/rewards_append.lua")
 
 	for _, reward in ipairs(self.reward_definition_list) do
@@ -194,7 +199,7 @@ function rewards_deck:initialize_reward_data(reward)
 		pick_count = self:get_specific_reward_pickup_amount(reward_id),
 		limit_before = reward.limit_before or nil,
 		custom_check = reward.custom_check or nil,
-		sound = reward.sound or MLP.const.sounds.perk,
+		sound = reward.sound or self.const.sounds.perk,
 		no_sound = reward.no_sound,
 		min_level = reward.min_level or 1
 	}
@@ -351,14 +356,14 @@ end
 --- Returns the number of rewards to draw.
 --- @return number
 function rewards_deck:get_draw_amount()
-	return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 3
+	return self.get:global_number(self.const.globals.draw_amount, 0) + 3
 end
 
 --- Returns the current draw index.
 --- @private
 --- @return number
 function rewards_deck:get_draw_index()
-	return MLP.get:global_number(MLP.const.globals.draw_index, 1)
+	return self.get:global_number(self.const.globals.draw_index, 1)
 end
 
 --- Returns the next valid draw index.
@@ -384,7 +389,7 @@ function rewards_deck:set_draw_index()
 	for _ = 1, self:get_draw_amount() + 1 do
 		index = self:get_next_draw_index(index + 1)
 	end
-	MLP.set:global_number(MLP.const.globals.draw_index, index)
+	self.set:global_number(self.const.globals.draw_index, index)
 end
 
 --- Draws the next rewards from the list.
@@ -405,7 +410,7 @@ end
 --- @param reward_id ml_reward_id
 --- @return number pickup_count
 function rewards_deck:get_specific_reward_pickup_amount(reward_id)
-	return MLP.get:global_number(MLP.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", 0)
+	return self.get:global_number(self.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", 0)
 end
 
 --- Increments the pickup count for a specific reward.
@@ -414,7 +419,7 @@ end
 function rewards_deck:add_specific_reward_pickup_amount(reward_id)
 	self.reward_data[reward_id].pick_count = self.reward_data[reward_id].pick_count + 1
 	self.groups_data[self.reward_data[reward_id].group_id].picked = true
-	MLP.set:global_number(MLP.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
+	self.set:global_number(self.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
 		self.reward_data[reward_id].pick_count)
 	self.picked_count = self.picked_count + 1
 	self:add_to_progress(reward_id)
@@ -431,7 +436,10 @@ end
 function rewards_deck:play_sound(draw_id)
 	local reward = self.reward_data[draw_id]
 	if not reward.no_sound then
-		GamePlaySound(reward.sound.bank, reward.sound.event, ML.player.x, ML.player.y)
+		local player_id = EntityGetWithTag("player_unit")[1]
+		if not player_id then return end
+		local x, y = EntityGetTransform(player_id)
+		GamePlaySound(reward.sound.bank, reward.sound.event, x, y)
 	end
 end
 
@@ -451,18 +459,18 @@ end
 --- Retrieves the current reroll count.
 --- @return number
 function rewards_deck:get_reroll_count()
-	return math.max(0, MLP.get:global_number(MLP.const.globals.reroll_count, 1))
+	return math.max(0, self.get:global_number(self.const.globals.reroll_count, 1))
 end
 
 --- Adds to the reroll count.
 --- @param count number
 function rewards_deck:add_reroll(count)
-	MLP.set:add_to_global_number(MLP.const.globals.reroll_count, count, 1)
+	self.set:add_to_global_number(self.const.globals.reroll_count, count, 1)
 end
 
 --- Performs a reroll, decrementing the reroll count and setting the next draw index.
 function rewards_deck:reroll()
-	MLP.set:add_to_global_number(MLP.const.globals.reroll_count, -1)
+	self.set:add_to_global_number(self.const.globals.reroll_count, -1)
 	self:set_draw_index()
 end
 

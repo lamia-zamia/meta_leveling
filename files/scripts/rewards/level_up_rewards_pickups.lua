@@ -182,4 +182,5 @@ for i = 1, #pickups do
 	pickups[i].sound = MLP.const.sounds.chest
 end
 
-ML.rewards_deck:add_rewards(pickups)
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(pickups)

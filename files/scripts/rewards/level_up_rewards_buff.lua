@@ -204,4 +204,5 @@ local buffs = {
 }
 -- PROTECTION_POLYMORPH
 -- FRIEND_FIREMAGE
-ML.rewards_deck:add_rewards(buffs)
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(buffs)

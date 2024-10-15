@@ -1,4 +1,5 @@
 local files = {
+	"mods/meta_leveling/files/scripts/rewards/level_up_rewards.lua",
 	"mods/meta_leveling/files/scripts/rewards/add_reward_example.lua",
 	"mods/meta_leveling/files/scripts/rewards/level_up_rewards_wand.lua",
 	"mods/meta_leveling/files/scripts/rewards/level_up_rewards_spell.lua",

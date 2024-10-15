@@ -112,5 +112,6 @@ local player_stats = {
 		end
 	},
 }
---
-ML.rewards_deck:add_rewards(player_stats)
+
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+rewards_deck:add_rewards(player_stats)
