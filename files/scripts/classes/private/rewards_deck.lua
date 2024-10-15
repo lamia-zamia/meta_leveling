@@ -165,6 +165,7 @@ end
 function rewards_deck:GatherData()
 	self.reward_definition_list = {}
 	dofile_once("mods/meta_leveling/files/for_modders/rewards_append.lua")
+	dofile_once("mods/meta_leveling/files/for_modders/rewards_modify.lua")
 
 	for _, reward in ipairs(self.reward_definition_list) do
 		if self.reward_data[reward.id] then
