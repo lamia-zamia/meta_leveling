@@ -1,5 +1,8 @@
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua") ---@type ML_components_helper
-
+local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
+local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua")
+local get = dofile_once("mods/meta_leveling/files/scripts/classes/public/get.lua")
+local player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua") --- @type ml_player
 ---@type ml_rewards
 local reward_list = {
 	{
@@ -53,7 +56,7 @@ local reward_list = {
 		probability = 0.8,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
-		sound = MLP.const.sounds.shop_item,
+		sound = const.sounds.shop_item,
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
 			if not component_id then return end
@@ -78,7 +81,7 @@ local reward_list = {
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
 		max = 3,
-		sound = MLP.const.sounds.shop_item,
+		sound = const.sounds.shop_item,
 		limit_before = "gold_add1",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
@@ -103,7 +106,7 @@ local reward_list = {
 		description_var = { "5000" },
 		probability = 0.5,
 		ui_icon = "data/ui_gfx/items/goldnugget.png",
-		sound = MLP.const.sounds.shop_item,
+		sound = const.sounds.shop_item,
 		limit_before = "gold_add2",
 		fn = function()
 			local component_id = ML.player:get_component_by_name("WalletComponent")
@@ -444,7 +447,7 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/fungal_shift.xml",
 		probability = 0.1,
 		fn = function()
-			ML.rewards:force_fungal_shift()
+			rewards:force_fungal_shift()
 		end
 	},
 	{
@@ -456,7 +459,9 @@ local reward_list = {
 		probability = 0.05,
 		min_level = 100,
 		custom_check = function()
-			return not MLP.get:entity_has_tag(ML.player.id, "polymorphable_NOT")
+			local player_id = EntityGetWithTag("player_unit")
+			if not player_id then return false end
+			return not get:entity_has_tag(player_id, "polymorphable_NOT")
 		end,
 		max = 1,
 		fn = function()
@@ -509,10 +514,12 @@ local reward_list = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/remove_hp_cap.png",
 		probability = 0.01,
 		custom_check = function()
-			return ML.player:get_damagemodel_value_number("max_hp_cap", 0) > 0
+			player:update()
+			return player:get_damagemodel_value_number("max_hp_cap", 0) > 0
 		end,
 		fn = function()
-			local dmg_comp = ML.player:get_damagemodel()
+			player:update()
+			local dmg_comp = player:get_damagemodel()
 			if not dmg_comp then return end
 			ComponentSetValue2(dmg_comp, "max_hp_cap", 0)
 		end

@@ -1,5 +1,3 @@
-
-
 ---@class (exact) reward_description
 ---@field [number] string|fun():string
 
@@ -30,17 +28,19 @@
 
 ---@alias ml_rewards ml_reward[]
 
----@class (exact) ml_rewards_util
----@field transformation ml_transformations
+---@class ml_rewards_util
+---@field get ML_get
+---@field player ml_player
 local rewards = {
-	transformation = dofile_once("mods/meta_leveling/files/scripts/classes/private/player_transformations.lua")
+	get = dofile_once("mods/meta_leveling/files/scripts/classes/public/get.lua"),
+	player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua")
 }
 
 ---get reward_id picked count
 ---@param reward_id string
 ---@return number
 function rewards:get_reward_picked_count(reward_id)
-	return MLP.get:global_number(reward_id .. "_PICKUP_COUNT", 0)
+	return self.get:global_number(reward_id .. "_PICKUP_COUNT", 0)
 end
 
 ---returns true if reward_id was picked more then number
@@ -67,12 +67,14 @@ end
 ---@param perk_id string
 function rewards:grant_perk(perk_id)
 	dofile_once("data/scripts/perks/perk.lua")
-	perk_pickup(0, ML.player.id, perk_id, true, false, true) ---@diagnostic disable-line: undefined-global
+	self.player:update()
+	perk_pickup(0, self.player.id, perk_id, true, false, true) ---@diagnostic disable-line: undefined-global
 end
 
 function rewards:force_fungal_shift()
 	dofile_once("data/scripts/magic/fungal_shift.lua")
-	fungal_shift(ML.player.id, ML.player.x, ML.player.y, true) ---@diagnostic disable-line: undefined-global
+	self.player:update()
+	fungal_shift(self.player.id, self.player.x, self.player.y, true) ---@diagnostic disable-line: undefined-global
 end
 
 return rewards

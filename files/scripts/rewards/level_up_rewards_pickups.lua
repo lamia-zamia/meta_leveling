@@ -1,3 +1,4 @@
+local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
 ---@type ml_rewards
 local pickups = {
 	{
@@ -179,7 +180,7 @@ local pickups = {
 }
 
 for i = 1, #pickups do
-	pickups[i].sound = MLP.const.sounds.chest
+	pickups[i].sound = const.sounds.chest
 end
 
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")

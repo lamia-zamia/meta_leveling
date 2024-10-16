@@ -1,5 +1,6 @@
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
-
+local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
+local player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua") --- @type ml_player
 ---@type ml_rewards
 local health_rewards = {
 	{
@@ -12,7 +13,8 @@ local health_rewards = {
 		max = 3,
 		description_var = { "25" },
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "max_hp", 1)
 		end
@@ -28,7 +30,8 @@ local health_rewards = {
 		max = 5,
 		limit_before = "health_extra_health1",
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "max_hp", 2)
 		end
@@ -43,7 +46,8 @@ local health_rewards = {
 		description_var = { "100" },
 		limit_before = "health_extra_health2",
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "max_hp", 4)
 		end
@@ -59,7 +63,8 @@ local health_rewards = {
 		max = 5,
 		limit_before = "health_extra_health2",
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:multiply_value_in_component(component_id, "max_hp", 1.1)
 		end
@@ -74,7 +79,8 @@ local health_rewards = {
 		description_var = { "25%" },
 		limit_before = "health_extra_health_perc1",
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:multiply_value_in_component(component_id, "max_hp", 1.25)
 		end
@@ -86,15 +92,18 @@ local health_rewards = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = function()
-			return ML.player.absent_hp_percent + 0.1
+			player:update()
+			return player.absent_hp_percent + 0.1
 		end,
 		max = 3,
 		description_var = { "75" },
 		custom_check = function()
-			return ML.player.absent_hp_percent > 0.1
+			player:update()
+			return player.absent_hp_percent > 0.1
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "hp", 3)
 		end
@@ -106,16 +115,19 @@ local health_rewards = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = function()
-			return ML.player.absent_hp_percent + 0.1
+			player:update()
+			return player.absent_hp_percent + 0.1
 		end,
 		max = 3,
 		description_var = { "150" },
 		limit_before = "health_heal_con1",
 		custom_check = function()
-			return ML.player.absent_hp_percent > 0.1
+			player:update()
+			return player.absent_hp_percent > 0.1
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "hp", 6)
 		end
@@ -127,15 +139,18 @@ local health_rewards = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = function()
-			return ML.player.absent_hp_percent + 0.1
+			player:update()
+			return player.absent_hp_percent + 0.1
 		end,
 		description_var = { "300" },
 		limit_before = "health_heal_con2",
 		custom_check = function()
-			return ML.player.absent_hp_percent > 0.1
+			player:update()
+			return player.absent_hp_percent > 0.1
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "hp", 12)
 		end
@@ -147,16 +162,19 @@ local health_rewards = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = function()
-			return ML.player.absent_hp_percent + 0.1
+			player:update()
+			return player.absent_hp_percent + 0.1
 		end,
 		description_var = { "50 + 10%" },
 		max = 3,
 		min_level = 10,
 		custom_check = function()
-			return ML.player.absent_hp_percent > 0.1
+			player:update()
+			return player.absent_hp_percent > 0.1
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
 			components:add_value_to_component(component_id, "hp", 2 + (value * 0.1))
@@ -169,15 +187,18 @@ local health_rewards = {
 		description = "$ml_heal_con_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/heal.xml",
 		probability = function()
-			return ML.player.absent_hp_percent + 0.1
+			player:update()
+			return player.absent_hp_percent + 0.1
 		end,
 		description_var = { "100 + 25%" },
 		limit_before = "health_heal_perc1",
 		custom_check = function()
-			return ML.player.absent_hp_percent > 0.1
+			player:update()
+			return player.absent_hp_percent > 0.1
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			local value = ComponentGetValue2(component_id, "max_hp")
 			components:add_value_to_component(component_id, "hp", 4 + (value * 0.25))
@@ -186,7 +207,7 @@ local health_rewards = {
 }
 
 for i = 1, #health_rewards do
-	health_rewards[i].sound = MLP.const.sounds.heart
+	health_rewards[i].sound = const.sounds.heart
 end
 
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")

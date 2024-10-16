@@ -112,9 +112,7 @@ local wand_rewards = {
 		description = "$ml_wand_more_capacity_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_capacity.png",
 		probability = 0.3,
-		custom_check = function()
-			return ML:get_level() < 40
-		end,
+		max = 5,
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
@@ -133,6 +131,7 @@ local wand_rewards = {
 		description = "$ml_wand_more_capacity_tp_no_limit",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_capacity.png",
 		probability = 0.3,
+		limit_before = "wand_more_capacity1",
 		min_level = 41,
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)

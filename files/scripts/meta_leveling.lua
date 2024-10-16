@@ -4,7 +4,6 @@
 ---@field gui boolean show gui or not
 ---@field gui_em_exit boolean
 ---@field rewards_deck rewards_deck
----@field rewards ml_rewards_util
 ---@field utils ML_utils
 ---@field colors colors
 ---@field entity_scanner ml_entity_scanner
@@ -21,7 +20,6 @@ local ML = {
 	gui_em_exit = true,
 	player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua"),
 	rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua"),
-	rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua"),
 	utils = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta_leveling_utils.lua"),
 	colors = dofile_once("mods/meta_leveling/files/scripts/classes/private/colors.lua"),
 	entity_scanner = dofile_once("mods/meta_leveling/files/scripts/classes/private/entity_scanner.lua"),

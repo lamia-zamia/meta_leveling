@@ -1,3 +1,4 @@
+local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
 ---@type ml_rewards
 local reward_spells = {
 	{
@@ -94,7 +95,7 @@ local reward_spells = {
 		ui_name = "$ml_random_static_projectile",
 		description = "$ml_random_static_projectile_tp",
 		description_var = { "$ml_spell_low" },
-		sound = MLP.const.sounds.chest,
+		sound = const.sounds.chest,
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_static_projectile_low.xml",
 		probability = 0.3,
 		fn = function()
@@ -467,7 +468,7 @@ local reward_spells = {
 }
 
 for i = 1, #reward_spells do
-	reward_spells[i].sound = MLP.const.sounds.chest
+	reward_spells[i].sound = const.sounds.chest
 end
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
 rewards_deck:add_rewards(reward_spells)

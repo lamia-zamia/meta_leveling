@@ -1,5 +1,5 @@
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
-
+local player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua") --- @type ml_player
 --- @type ml_rewards
 local player_stats = {
 	{
@@ -9,7 +9,8 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/movement_speed.png",
 		probability = 0.5,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("CharacterPlatformingComponent")
+			player:update()
+			local component_id = player:get_component_by_name("CharacterPlatformingComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "velocity_max_x", 20)
 			components:add_value_to_component(component_id, "fly_velocity_x", 20)
@@ -23,7 +24,8 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_speed.png",
 		probability = 0.4,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("CharacterPlatformingComponent")
+			player:update()
+			local component_id = player:get_component_by_name("CharacterPlatformingComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "fly_speed_max_up", 20)
 			components:add_value_to_component(component_id, "pixel_gravity", 8)
@@ -36,7 +38,8 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_energy.png",
 		probability = 0.3,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("CharacterDataComponent")
+			player:update()
+			local component_id = player:get_component_by_name("CharacterDataComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "fly_time_max", 1)
 		end
@@ -48,7 +51,8 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/hover_recharge.png",
 		probability = 0.2,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("CharacterDataComponent")
+			player:update()
+			local component_id = player:get_component_by_name("CharacterDataComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "fly_recharge_spd", 0.1)
 			components:add_value_to_component(component_id, "fly_recharge_spd_ground", 1.5)
@@ -61,10 +65,12 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/bigger_lungs.png",
 		probability = 0.3,
 		custom_check = function()
-			return not ML.player:has_effect("BREATH_UNDERWATER")
+			player:update()
+			return not player:has_effect("BREATH_UNDERWATER")
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component(component_id, "air_in_lungs_max", 3)
 		end
@@ -76,7 +82,8 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/projectile_resistance.png",
 		probability = 0.2,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component_object(component_id, "damage_multipliers", "projectile", -0.1)
 		end
@@ -88,10 +95,12 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/explosion_resistance.png",
 		probability = 0.2,
 		custom_check = function()
-			return not ML.player:has_effect("PROTECTION_EXPLOSION")
+			player:update()
+			return not player:has_effect("PROTECTION_EXPLOSION")
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component_object(component_id, "damage_multipliers", "explosion", -0.05)
 		end
@@ -103,10 +112,12 @@ local player_stats = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/melee_resistance.png",
 		probability = 0.2,
 		custom_check = function()
-			return not ML.player:has_effect("PROTECTION_MELEE")
+			player:update()
+			return not player:has_effect("PROTECTION_MELEE")
 		end,
 		fn = function()
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
 			if not component_id then return end
 			components:add_value_to_component_object(component_id, "damage_multipliers", "melee", -0.1)
 		end

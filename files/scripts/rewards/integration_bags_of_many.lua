@@ -1,3 +1,4 @@
+local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
 --- @type ml_rewards
 local bags = {}
 
@@ -21,7 +22,7 @@ for bag_type, probability in pairs(types) do
 			fn = function()
 				ML.utils:load_entity_to_player(string.format("mods/bags_of_many/files/entities/bags/%s.xml", bag))
 			end,
-			sound = MLP.const.sounds.chest
+			sound = const.sounds.chest
 		}
 	end
 end

@@ -1,3 +1,4 @@
+local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua")
 ---@type ml_rewards
 local buffs = {
 	{
@@ -71,7 +72,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_invis.png",
 		probability = 0.2,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("INVISIBILITY")
+			local pickup_count = rewards:get_perk_pickup_count("INVISIBILITY")
 			if pickup_count < 1 then return true end
 			return false
 		end,
@@ -100,7 +101,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_remove_fog.png",
 		probability = 0.02,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
+			local pickup_count = rewards:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
 			if pickup_count < 1 then return true end
 			return false
 		end,
@@ -143,7 +144,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_tinker.png",
 		probability = 0.15,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
+			local pickup_count = rewards:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
 			if pickup_count < 1 then return true end
 			return false
 		end,
@@ -167,7 +168,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_homing.png",
 		probability = 0.2,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("PROJECTILE_HOMING")
+			local pickup_count = rewards:get_perk_pickup_count("PROJECTILE_HOMING")
 			if pickup_count < 1 then return true end
 			return false
 		end,

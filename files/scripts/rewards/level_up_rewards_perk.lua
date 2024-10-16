@@ -1,3 +1,4 @@
+local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua")
 --- @type ml_rewards
 local rewards_perk = {
 	{
@@ -9,12 +10,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 5,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("PERKS_LOTTERY")
+			local pickup_count = rewards:get_perk_pickup_count("PERKS_LOTTERY")
 			if pickup_count < 7 then return true end
 			return false
 		end,
 		fn = function()
-			ML.rewards:grant_perk("PERKS_LOTTERY")
+			rewards:grant_perk("PERKS_LOTTERY")
 		end
 	},
 	{
@@ -26,12 +27,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 50,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
+			local pickup_count = rewards:get_perk_pickup_count("REMOVE_FOG_OF_WAR")
 			if pickup_count < 1 then return true end
 			return false
 		end,
 		fn = function()
-			ML.rewards:grant_perk("REMOVE_FOG_OF_WAR")
+			rewards:grant_perk("REMOVE_FOG_OF_WAR")
 		end
 	},
 	{
@@ -43,12 +44,12 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 80,
 		custom_check = function()
-			local pickup_count = ML.rewards:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
+			local pickup_count = rewards:get_perk_pickup_count("EDIT_WANDS_EVERYWHERE")
 			if pickup_count < 1 then return true end
 			return false
 		end,
 		fn = function()
-			ML.rewards:grant_perk("EDIT_WANDS_EVERYWHERE")
+			rewards:grant_perk("EDIT_WANDS_EVERYWHERE")
 		end
 	},
 	{
@@ -60,7 +61,7 @@ local rewards_perk = {
 		no_sound = true,
 		min_level = 40,
 		fn = function()
-			ML.rewards:grant_perk("RESPAWN")
+			rewards:grant_perk("RESPAWN")
 		end
 	},
 }
