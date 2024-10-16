@@ -193,7 +193,7 @@ function rewards_deck:initialize_reward_data(reward)
 		description_var = reward.description_var or nil,
 		description2 = reward.description2 or nil,
 		description2_var = reward.description2_var or nil,
-		ui_icon = reward.ui_icon or self.default_icon,
+		ui_icon = self:set_icon(reward.ui_icon),
 		probability = self:set_probability(reward.probability),
 		max = reward.max or 1280,
 		fn = reward.fn or err.print,
@@ -241,6 +241,17 @@ end
 --- @return number
 function rewards_deck:probability_normalize(probability)
 	return math.max(self.min_probability + 0.001, math.min(self.max_probability, probability))
+end
+
+--- Sets icon for reward
+--- @param ui_icon string?
+--- @return string
+--- @nodiscard
+function rewards_deck:set_icon(ui_icon)
+	if not ui_icon then return self.default_icon end
+	if ui_icon:find("%.xml") and ModDoesFileExist(ui_icon) then return ui_icon end
+	if ui_icon:find("%.png") and ModImageDoesExist(ui_icon) then return ui_icon end
+	return self.default_icon
 end
 
 --- get normalized probability
