@@ -2,7 +2,10 @@
 Append you rewards file to this file on init, see example at:
 mods/meta_leveling/files/scripts/rewards/add_reward_example.lua
 
-Use ML.rewards_deck:add_rewards(rewards) for multiple rewards or ML.rewards_deck:add_reward(reward) for single rewards
+Use rewards_deck:add_rewards(rewards) for multiple rewards or rewards_deck:add_reward(reward) for single rewards
+
+Don't forget to do dofile:
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
 
 You can pass an additional string variable and it will be shown in progress menu:
 It also can be a translate string ("$greatestme")
