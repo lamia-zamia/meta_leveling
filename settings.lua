@@ -217,6 +217,7 @@ do -- gui helpers
 		GuiZSetForNextWidget(gui, -1)
 		G.button_options(gui)
 		GuiImageNinePiece(gui, id(), x + 2, y, offset_w, 10, 10, U.empty, U.empty) -- hover box
+		G.tooltip(gui, setting_name)
 		local _, _, hovered = GuiGetPreviousWidgetInfo(gui)
 		GuiZSetForNextWidget(gui, 1)
 		GuiImageNinePiece(gui, id(), x + 2, y + 2, 6, 6) -- check box
@@ -234,7 +235,6 @@ do -- gui helpers
 			G.yellow_if_hovered(gui, hovered)
 		end
 		GuiText(gui, 0, 0, text)
-		G.tooltip(gui, setting_name)
 		if hovered then
 			G.on_clicks(setting_name, not value, D[setting_name])
 		end
