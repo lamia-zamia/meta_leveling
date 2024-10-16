@@ -5,7 +5,17 @@ local mod_prfx = mod_id .. "."
 local T = {}
 local D = {}
 local current_language_last_frame = nil
-local gui_id = 1000
+
+local mod_list = ModGetActiveModIDs()
+local this_mod_order = 1000
+for i = 1, #mod_list do
+	if mod_list[i] == mod_id then
+		this_mod_order = i
+		break
+	end
+end
+
+local gui_id = this_mod_order * 1000
 local function id()
 	gui_id = gui_id + 1
 	return gui_id
@@ -891,7 +901,7 @@ end
 --- @param gui gui
 --- @param in_main_menu boolean
 function ModSettingsGui(gui, in_main_menu)
-	gui_id = 1000
+	gui_id = this_mod_order * 1000
 	GuiIdPushString(gui, mod_prfx)
 	mod_settings_gui(mod_id, mod_settings, gui, in_main_menu)
 	GuiIdPop(gui)
