@@ -275,6 +275,7 @@ function guns:get_random_spell(level)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
 		local action_id = GetRandomAction(ML.player.x, ML.player.y, level, i)
+		if action_id == "" then break end
 		if self:spell_is_valid(action_id) then
 			return action_id
 		end
@@ -290,6 +291,7 @@ function guns:get_random_typed_spell(level, type)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
 		local action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, i)
+		if action_id == "" then break end
 		if self:spell_is_valid(action_id) then
 			return action_id
 		end
