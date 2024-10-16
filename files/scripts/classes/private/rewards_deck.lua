@@ -272,7 +272,7 @@ end
 function rewards_deck:set_borders(id, probability, border)
 	if border then return border end
 	if type(probability) == "function" then
-		return self.borders.common
+		probability = probability()
 	end
 	if probability < 0.03 then
 		return self.borders.relic

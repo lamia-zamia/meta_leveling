@@ -1,6 +1,7 @@
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
 local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
 local player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua") --- @type ml_player
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua") --- @type rewards_deck
 ---@type ml_rewards
 local health_rewards = {
 	{
@@ -95,6 +96,7 @@ local health_rewards = {
 			player:update()
 			return player.absent_hp_percent + 0.1
 		end,
+		border_color = rewards_deck.borders.common,
 		max = 3,
 		description_var = { "75" },
 		custom_check = function()
@@ -118,6 +120,7 @@ local health_rewards = {
 			player:update()
 			return player.absent_hp_percent + 0.1
 		end,
+		border_color = rewards_deck.borders.common,
 		max = 3,
 		description_var = { "150" },
 		limit_before = "health_heal_con1",
@@ -142,6 +145,7 @@ local health_rewards = {
 			player:update()
 			return player.absent_hp_percent + 0.1
 		end,
+		border_color = rewards_deck.borders.common,
 		description_var = { "300" },
 		limit_before = "health_heal_con2",
 		custom_check = function()
@@ -165,6 +169,7 @@ local health_rewards = {
 			player:update()
 			return player.absent_hp_percent + 0.1
 		end,
+		border_color = rewards_deck.borders.uncommon,
 		description_var = { "50 + 10%" },
 		max = 3,
 		min_level = 10,
@@ -190,6 +195,7 @@ local health_rewards = {
 			player:update()
 			return player.absent_hp_percent + 0.1
 		end,
+		border_color = rewards_deck.borders.uncommon,
 		description_var = { "100 + 25%" },
 		limit_before = "health_heal_perc1",
 		custom_check = function()
@@ -210,5 +216,4 @@ for i = 1, #health_rewards do
 	health_rewards[i].sound = const.sounds.heart
 end
 
-local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
 rewards_deck:add_rewards(health_rewards)
