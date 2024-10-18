@@ -1,6 +1,13 @@
 --- @type ML_components_helper
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
 
+local function return_resistance(type)
+	local dmc = ML.player:get_damagemodel()
+	if not dmc then return "0%" end
+	local value = math.floor(ComponentObjectGetValue2(dmc, "damage_multipliers", type) * 100)
+	return string.format("%d%%", 100 - value)
+end
+
 --- @type ml_stats_entry[]
 local list = {
 	{
@@ -63,6 +70,13 @@ local list = {
 		end,
 	},
 	{
+		ui_name = "$ml_stats_meta_bonus",
+		category = "meta",
+		value = function()
+			return tostring(MLP.get:global_number(MLP.const.globals.meta_point_acquired, 0))
+		end
+	},
+	{
 		ui_name = "$ml_stats_bonus_point_speed",
 		category = "meta",
 		value = function()
@@ -96,7 +110,29 @@ local list = {
 		value = function()
 			return tostring(MLP.points:CalculateMetaPointsWinStreakBonus())
 		end
-	}
+	},
+	{
+		ui_name = "$ml_projectile_resistance",
+		category = "resistance",
+		value = function()
+			return return_resistance("projectile")
+		end
+	},
+	{
+		ui_name = "$ml_explosion_resistance",
+		category = "resistance",
+		value = function()
+			return return_resistance("explosion")
+		end
+
+	},
+	{
+		ui_name = "$ml_melee_resistance",
+		category = "resistance",
+		value = function()
+			return return_resistance("melee")
+		end
+	},
 
 }
 
