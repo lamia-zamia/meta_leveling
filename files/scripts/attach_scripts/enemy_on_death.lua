@@ -34,7 +34,8 @@ end
 
 --- @type script_damage_received
 local script_damage_received = function(damage, message, entity_thats_responsible, is_fatal, projectile_thats_responsible)
-	if MLP.get:entity_is_player_related(entity_thats_responsible) then
+	local parent = EntityGetRootEntity(entity_thats_responsible)
+	if MLP.get:entity_is_player_related(parent) then
 		SetValueInteger("ML_damaged_by_player", GameGetFrameNum())
 	end
 end
