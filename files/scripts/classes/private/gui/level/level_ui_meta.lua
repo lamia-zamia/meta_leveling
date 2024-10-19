@@ -217,7 +217,6 @@ function LU_meta:MetaDrawPointIncreaser(index, point)
 		if available then
 			if self:IsLeftClicked() then
 				ML.meta:set_next_progress(index, 1)
-				GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x, ML.player.y)
 			end
 		end
 	end
@@ -242,7 +241,6 @@ function LU_meta:MetaDrawPointDecreaser(index, point)
 		self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
 		if self:IsLeftClicked() then
 			ML.meta:set_next_progress(index, -1)
-			GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", ML.player.x, ML.player.y)
 		end
 	end
 	self:Color(0.5, 0.5, 0.8)
