@@ -16,6 +16,17 @@ local function id()
 	gui_id = gui_id + 1
 	return gui_id
 end
+
+local bg_alpha = 0.7098039215686275
+local bg_red = 0.47513812154696133
+local bg_green = 0.2762430939226519
+local bg_blue = 0.22099447513812157
+
+local border_alpha = 0.8509803921568627
+local border_red = 0.47465437788018433
+local border_green = 0.2764976958525346
+local border_blue = 0.22119815668202766
+
 -- ###########################################
 -- ############		Helpers		##############
 -- ###########################################
@@ -330,33 +341,41 @@ do -- gui helpers
 		GuiEndScrollContainer(gui)
 	end
 
+	--- EXP BAR BULLSHIT
+
+	--- Draw borders
+	--- @param gui gui
+	--- @param width number
+	--- @param height number
 	function G.draw_outline(gui, width, height)
-		GuiColorSetForNextWidget(gui, 0.4752, 0.2768, 0.2215, 1)
+		GuiColorSetForNextWidget(gui, border_red, border_green, border_blue, 1)
 		GuiZSetForNextWidget(gui, 4)
-		GuiImage(gui, id(), 0, 0, U.whitebox, 0.85, width / 20, height / 20)
+		GuiImage(gui, id(), 0, 0, U.whitebox, border_alpha, width / 20, height / 20)
 	end
 
-	function G.draw_bar_color(gui, width, height, health)
-		if health then
-			GuiColorSetForNextWidget(gui, 0.53, 0.75, 0.1, 1)
-		else
-			local r = tonumber(U.get_setting_next("exp_bar_red")) or D.exp_bar_red
-			local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
-			local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
-			GuiColorSetForNextWidget(gui, r, g, b, 1)
-		end
-		GuiZSetForNextWidget(gui, 3)
-		GuiImage(gui, id(), 0, 0, U.whitebox, 1, width / 20, height / 20)
+	--- Draw bar
+	--- @param gui gui
+	--- @param width number
+	--- @param height number
+	--- @param z number
+	--- @param r number
+	--- @param g number
+	--- @param b number
+	--- @param a number
+	function G.draw_bar_color(gui, width, height, z, r, g, b, a)
+		GuiColorSetForNextWidget(gui, r, g, b, 1)
+		GuiZSetForNextWidget(gui, z)
+		GuiImage(gui, id(), 0, 0, U.whitebox, a, width / 20, height / 20)
 	end
 end
 -- ###########################################
 -- ########		Settings GUI		##########
 -- ###########################################
 
-local S = {
-
-}
+local S = {}
 do -- Settings GUI
+
+	--- Draws experience bar
 	function S.draw_bar_position(_, gui, _, _, _)
 		GuiOptionsAdd(gui, GUI_OPTION.Layout_NextSameLine)
 
@@ -364,26 +383,53 @@ do -- Settings GUI
 		local position = U.get_setting_next("exp_bar_position")
 		local x = mod_setting_group_x_offset + U.offset + 92
 		local y = 8
+		local r = tonumber(U.get_setting_next("exp_bar_red")) or D.exp_bar_red
+		local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
+		local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
+		local no_bg = U.get_setting_next("exp_bar_default_bg")
+
 		GuiText(gui, x, y + 5, " ")
 		local _, _, _, x_no_layout, y_no_layout = GuiGetPreviousWidgetInfo(gui)
 
 		GuiZSetForNextWidget(gui, 5)
 		GuiImageNinePiece(gui, id(), x_no_layout, y_no_layout, 74, 38)
+
+		--- Draw health
 		G.ImageClip(gui, x + 15, y + 14, 44, 7, G.draw_outline)
-		G.ImageClip(gui, x + 16, y + 15, 42, 5, G.draw_bar_color, true)
+		G.ImageClip(gui, x + 16, y + 15, 42, 5, G.draw_bar_color, 3, 0.53, 0.75, 0.1, 1)
 
 		if position == "under_health" then
 			G.ImageClip(gui, x + 15, y + 20.5, 44, thickness + 1, G.draw_outline)
-			G.ImageClip(gui, x + 16, y + 20.5, 42, thickness, G.draw_bar_color)
+			G.ImageClip(gui, x + 16, y + 20.5, 15, thickness, G.draw_bar_color, 2, r, g, b, 1)
+			if no_bg then
+				G.ImageClip(gui, x + 16, y + 20.5, 42, thickness, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
+			else
+				G.ImageClip(gui, x + 16, y + 20.5, 42, thickness, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
+			end
 		elseif position == "on_top" then
 			G.ImageClip(gui, x + 15, y + 7, 44, thickness + 2, G.draw_outline)
-			G.ImageClip(gui, x + 16, y + 8, 42, thickness, G.draw_bar_color)
+			G.ImageClip(gui, x + 16, y + 8, 15, thickness, G.draw_bar_color, 2, r, g, b, 1)
+			if no_bg then
+				G.ImageClip(gui, x + 16, y + 8, 42, thickness, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
+			else
+				G.ImageClip(gui, x + 16, y + 8, 42, thickness, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
+			end
 		elseif position == "on_left" then
 			G.ImageClip(gui, x + 2, y + 14, thickness + 2, 29.25, G.draw_outline)
-			G.ImageClip(gui, x + 3, y + 15, thickness, 27.25, G.draw_bar_color)
+			G.ImageClip(gui, x + 3, y + 32, thickness, 10.25, G.draw_bar_color, 2, r, g, b, 1)
+			if no_bg then
+				G.ImageClip(gui, x + 3, y + 15, thickness, 27.25, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
+			else
+				G.ImageClip(gui, x + 3, y + 15, thickness, 27.25, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
+			end
 		else
 			G.ImageClip(gui, x + 66, y + 14, thickness + 2, 29.25, G.draw_outline)
-			G.ImageClip(gui, x + 67, y + 15, thickness, 27.25, G.draw_bar_color)
+			G.ImageClip(gui, x + 67, y + 32, thickness, 10.25, G.draw_bar_color, 2, r, g, b, 1)
+			if no_bg then
+				G.ImageClip(gui, x + 67, y + 15, thickness, 27.25, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
+			else
+				G.ImageClip(gui, x + 67, y + 15, thickness, 27.25, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
+			end
 		end
 
 		if U.get_setting_next("exp_bar_show_perc") then GuiText(gui, x + 66, y + 5, "%") end
@@ -575,6 +621,9 @@ local translations =
 		reset_progress_d = "Resets history of picked rewards",
 		reset_meta = "Reset meta",
 		reset_meta_d = "Resets meta point and all of it's progress",
+		exp_bar_visual = "Bar visual",
+		exp_bar_default_bg = "Don't color background",
+		exp_bar_default_bg_d = "Use vanilla background color for exp bar",
 	},
 	["русский"] = {
 		show_debug = "Show debug button",
@@ -638,6 +687,9 @@ local translations =
 		reset_progress_d = "Сбросить историю выбранных наград",
 		reset_meta = "Сброс меты",
 		reset_meta_d = "Сбрасывает очки меты и весь его прогресс",
+		exp_bar_visual = "Вид полосы",
+		exp_bar_default_bg = "Не красить фон",
+		exp_bar_default_bg_d = "Использовать стандартный фон для полосы опыта",
 	}
 }
 
@@ -663,6 +715,7 @@ D = {
 	exp_bar_red = 0,
 	exp_bar_green = 0.5,
 	exp_bar_blue = 0,
+	exp_bar_default_bg = false,
 	session_exp_play_sound = true,
 	session_exp_play_fx = true,
 	session_exp_animate_bar = true,
@@ -740,10 +793,17 @@ local function build_settings()
 				},
 				{
 					not_setting = true,
+					id = "exp_bar_visual",
+					ui_name = T.exp_bar_visual,
+					ui_fn = S.mod_setting_better_boolean,
+					checkboxes = { "session_exp_animate_bar", "exp_bar_default_bg" },
+				},
+				{
+					not_setting = true,
 					id = "exp_bar_misc",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.exp_bar_misc,
-					checkboxes = { "exp_bar_show_perc", "session_exp_animate_bar", "hud_reminder_in_inventory" },
+					checkboxes = { "exp_bar_show_perc", "hud_reminder_in_inventory" },
 				}
 			},
 		},
