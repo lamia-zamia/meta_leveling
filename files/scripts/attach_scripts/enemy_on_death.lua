@@ -87,8 +87,8 @@ end
 --- @return number
 local function process_boss(multiplier, died_entity)
 	-- Check for boss tag to double the experience
-	if MLP.get:entity_has_tag(died_entity, "boss") then 
-		multiplier = multiplier * 2 
+	if MLP.get:entity_has_tag(died_entity, "boss") then
+		multiplier = multiplier * 2
 		MLP.points:add_meta_points(1)
 	end
 
