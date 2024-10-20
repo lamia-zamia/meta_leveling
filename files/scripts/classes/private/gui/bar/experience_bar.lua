@@ -15,17 +15,14 @@ local border_blue = 0.22119815668202766
 --- @private
 --- @param value number
 --- @return string
-function EB:FloorPerc(value)
-	return tostring(math.floor(value * 100))
-end
+function EB:FloorPerc(value) return tostring(math.floor(value * 100)) end
 
 --- Helper function to handle text color animation
 --- @private
 --- @param fn function
 --- @param ... any
 function EB:TextColorAnim(fn, ...)
-	self:Color(self.bar.red, self.bar.green, self.bar.blue,
-		math.min(self.const.anim.max_alpha, self.data.anim_text.alpha))
+	self:Color(self.bar.red, self.bar.green, self.bar.blue, math.min(self.const.anim.max_alpha, self.data.anim_text.alpha))
 	self:SetZ(-1)
 	fn(self, ...)
 	fn(self, ...)
@@ -118,9 +115,7 @@ end
 function EB:AnimateBarLogic(data)
 	self:Color(self:AnimateBarHSVFade(data.alpha))
 	self:SetZ(1)
-	if data.alpha >= self.data.anim_bar.max or data.alpha <= self.data.anim_bar.min then
-		data.direction = data.direction * -1
-	end
+	if data.alpha >= self.data.anim_bar.max or data.alpha <= self.data.anim_bar.min then data.direction = data.direction * -1 end
 	data.alpha = data.alpha + (self.data.anim_bar.step * data.direction)
 end
 
@@ -128,7 +123,7 @@ end
 function EB:AnimateBar(x, y, width, height)
 	local data = {
 		alpha = self.data.anim_bar.alpha,
-		direction = self.data.anim_bar.direction
+		direction = self.data.anim_bar.direction,
 	}
 	if width > height then
 		for i = 0, width, self.data.anim_bar.size do
@@ -185,14 +180,9 @@ end
 --- @private
 function EB:ToolTipUI()
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
-	if ML.pending_levels > 0 then
-		level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels
-	end
-	if self.data.exp_inverted then
-		level = level .. self:Locale(", $ml_level_skipped")
-	end
-	local experience = self:Locale("$ml_experience: ") ..
-		MLP.exp:format(MLP.exp:current()) .. " / " .. MLP.exp:format(ML.next_exp)
+	if ML.pending_levels > 0 then level = level .. self:Locale(", $ml_pending: ") .. ML.pending_levels end
+	if self.data.exp_inverted then level = level .. self:Locale(", $ml_level_skipped") end
+	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current()) .. " / " .. MLP.exp:format(ML.next_exp)
 	local tooltip = self:Locale("$ml_exp_bar_tooltip")
 	local tooltip_force = EB.data.tooltip_force and self:Locale("$ml_exp_bar_tooltip_force") or nil
 	local longest = self:GetLongestText({ level, experience, tooltip, tooltip_force }, "exp_bar_tooltip." .. experience)
@@ -209,9 +199,7 @@ end
 --- Animate text fading effect
 --- @private
 function EB:AnimateTextFading()
-	if self.data.anim_text.alpha > 0.75 or self.data.anim_text.alpha < 0 then
-		self.data.anim_text.direction = -self.data.anim_text.direction
-	end
+	if self.data.anim_text.alpha > 0.75 or self.data.anim_text.alpha < 0 then self.data.anim_text.direction = -self.data.anim_text.direction end
 	self.data.anim_text.alpha = self.data.anim_text.alpha + self.const.anim.step * self.data.anim_text.direction
 end
 
@@ -226,9 +214,7 @@ function EB:AddToolTip(x, y, width, height)
 		local tp_key = MLP.exp:current() .. tostring(self.data.exp_inverted)
 		local cache = self:GetTooltipData(0, 0, self.ToolTipUI, tp_key)
 		self:ShowTooltip(x - cache.width, y, self.ToolTipUI, tp_key)
-		if self:IsLeftClicked() then
-			ML:toggle_ui()
-		end
+		if self:IsLeftClicked() then ML:toggle_ui() end
 		if self:IsRightClicked() then
 			GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 			ML:toggle_ui()
@@ -259,9 +245,9 @@ end
 --- Draw experience bar on top of the screen
 --- @private
 function EB:DrawExpBarOnTop()
-	self:DrawBorder(self.bar.x, self.bar.y - 1, self.bar.scale_x + 0.25, self.bar.scale_y)                       -- top
-	self:DrawBorder(self.bar.x, self.bar.y, self.bar.scale_y, 1 + self.bar.thickness)                            -- left
-	self:DrawBorder(self.bar.x, self.bar.y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y)      -- bottom
+	self:DrawBorder(self.bar.x, self.bar.y - 1, self.bar.scale_x + 0.25, self.bar.scale_y) -- top
+	self:DrawBorder(self.bar.x, self.bar.y, self.bar.scale_y, 1 + self.bar.thickness) -- left
+	self:DrawBorder(self.bar.x, self.bar.y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y) -- bottom
 	self:DrawBorder(self.bar.x + self.bar.scale_x - 0.75, self.bar.y - 1, self.bar.scale_y, 2 + self.bar.thickness) -- right
 
 	self:DrawBackGround(self.bar.x + 1, self.bar.y, self.bar.scale_x - 1.75, self.bar.thickness)
@@ -276,8 +262,8 @@ function EB:DrawExpBarUnderHP()
 	self.bar.scale_x = self.data.health_length
 	local y = self.bar.y
 	if ML.player.drowning then y = y + 8 end
-	self:DrawBorder(self.bar.x, y, self.bar.scale_y, 1 + self.bar.thickness)                        -- left
-	self:DrawBorder(self.bar.x, y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y)  -- bottom
+	self:DrawBorder(self.bar.x, y, self.bar.scale_y, 1 + self.bar.thickness) -- left
+	self:DrawBorder(self.bar.x, y + self.bar.thickness, self.bar.scale_x + 0.25, self.bar.scale_y) -- bottom
 	self:DrawBorder(self.bar.x + self.bar.scale_x - 0.75, y, self.bar.scale_y, 1 + self.bar.thickness) -- right
 
 	self:DrawBackGround(self.bar.x + 1, y, self.bar.scale_x - 1.75, self.bar.thickness)
@@ -289,20 +275,17 @@ end
 --- @private
 --- @param y number
 function EB:DrawVerticalBorders(y)
-	self:DrawBorder(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, 1)                 -- top
-	self:DrawBorder(self.bar.x, y + 1, 1 * self.bar.scale_x, self.bar.scale_y)                     -- left
+	self:DrawBorder(self.bar.x, y, (2 + self.bar.thickness) * self.bar.scale_x, 1) -- top
+	self:DrawBorder(self.bar.x, y + 1, 1 * self.bar.scale_x, self.bar.scale_y) -- left
 	self:DrawBorder(self.bar.x, y + self.bar.scale_y, (2 + self.bar.thickness) * self.bar.scale_x, 1) -- bottom
-	self:DrawBorder(self.bar.x + (1 + self.bar.thickness) * self.bar.scale_x, y, 1 * self.bar.scale_x,
-		self.bar.scale_y + 1)                                                                      -- right
+	self:DrawBorder(self.bar.x + (1 + self.bar.thickness) * self.bar.scale_x, y, 1 * self.bar.scale_x, self.bar.scale_y + 1) -- right
 end
 
 --- Draw experience bar on the left of the screen
 --- @private
 function EB:DrawExpBarOnLeft()
 	local y = self.bar.y
-	if self.data.health_length > 46 then
-		y = y + (ML.player.drowning and 18 or 10)
-	end
+	if self.data.health_length > 46 then y = y + (ML.player.drowning and 18 or 10) end
 	self:DrawVerticalBorders(y)
 	self:DrawBackGround(self.bar.x + self.bar.scale_x, y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1)
 	self:DrawExpFiller(self.bar.x + self.bar.scale_x, y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1)
@@ -313,8 +296,7 @@ end
 --- @private
 function EB:DrawExpBarOnRight()
 	self:DrawVerticalBorders(self.bar.y)
-	self:DrawBackGround(self.bar.x + self.bar.scale_x, self.bar.y + 1, self.bar.thickness * self.bar.scale_x,
-		self.bar.scale_y - 1)
+	self:DrawBackGround(self.bar.x + self.bar.scale_x, self.bar.y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1)
 	self:DrawExpFiller(self.bar.x + self.bar.scale_x, self.bar.y + 1, self.bar.thickness * self.bar.scale_x, self.bar.scale_y - 1)
 	self:AddToolTip(self.bar.x, self.bar.y, (2 + self.bar.thickness), self.bar.scale_y + 1)
 end
@@ -355,8 +337,15 @@ function EB:SetColors()
 	if MLP.get:mod_setting_boolean("exp_bar_default_bg") then
 		self:SetBackgroundColors(bg_red, bg_green, bg_blue, bg_red, bg_green, bg_blue, 1)
 	else
-		self:SetBackgroundColors(self.bar.red, self.bar.green, self.bar.blue, self.bar.red_inverted, self.bar.green_inverted, self.bar.blue_inverted,
-			0.6)
+		self:SetBackgroundColors(
+			self.bar.red,
+			self.bar.green,
+			self.bar.blue,
+			self.bar.red_inverted,
+			self.bar.green_inverted,
+			self.bar.blue_inverted,
+			0.6
+		)
 	end
 end
 
