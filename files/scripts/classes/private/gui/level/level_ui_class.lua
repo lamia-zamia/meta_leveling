@@ -1,4 +1,9 @@
-local UI_class = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") --- @type UI_class
+--- @class level_ui:UI_class
+--- @field private const LU.const
+--- @field private data LU.data
+--- @field private anim LU.anim
+--- @field private DrawWindow function?
+local LU = dofile("mods/meta_leveling/files/scripts/lib/ui_lib.lua")
 
 --- @class LU.const
 local const = {
@@ -55,12 +60,6 @@ local anim = {
 	}
 }
 
---- @class level_ui:UI_class
---- @field private const LU.const
---- @field private data LU.data
---- @field private anim LU.anim
---- @field private DrawWindow function?
-local LU = UI_class:New()
 LU.buttons.img = const.ui_9p_button
 LU.buttons.img_hl = const.ui_9p_button_hl
 LU.scroll.scroll_img = "mods/meta_leveling/files/gfx/ui/ui_9piece_scrollbar.png"

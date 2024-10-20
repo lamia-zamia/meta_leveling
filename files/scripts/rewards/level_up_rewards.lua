@@ -12,9 +12,11 @@ local reward_list = {
 		description = "$ml_extra_reward_choice_tp",
 		description_var = { "1" },
 		description2 = "$ml_extra_reward_choice_clarify",
-		description2_var = { function()
-			return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 1
-		end },
+		description2_var = {
+			function()
+				return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 1
+			end,
+		},
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.5,
 		max = 4,
@@ -24,7 +26,7 @@ local reward_list = {
 			for _ = 1, MLP.get:global_number(MLP.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
-		end
+		end,
 	},
 	{
 		id = "extra_reward_choice2",
@@ -33,9 +35,11 @@ local reward_list = {
 		description = "$ml_extra_reward_choice_tp",
 		description_var = { "2" },
 		description2 = "$ml_extra_reward_choice_clarify",
-		description2_var = { function()
-			return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 2
-		end },
+		description2_var = {
+			function()
+				return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 2
+			end,
+		},
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.2,
 		max = 2,
@@ -45,7 +49,7 @@ local reward_list = {
 			for _ = 1, MLP.get:global_number(MLP.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
-		end
+		end,
 	},
 	{
 		id = "gold_add1",
@@ -68,9 +72,9 @@ local reward_list = {
 				to_material = CellFactory_GetType("gold"),
 				is_circle = true,
 				steps_per_frame = 1,
-				radius = 10
+				radius = 10,
 			})
-		end
+		end,
 	},
 	{
 		id = "gold_add2",
@@ -96,7 +100,7 @@ local reward_list = {
 				steps_per_frame = 1,
 				radius = 15,
 			})
-		end
+		end,
 	},
 	{
 		id = "gold_add3",
@@ -121,7 +125,7 @@ local reward_list = {
 				steps_per_frame = 1,
 				radius = 20,
 			})
-		end
+		end,
 	},
 	{
 		id = "gold_bloody_money",
@@ -135,7 +139,7 @@ local reward_list = {
 			local comp_worldstate = components:get_world_state_component()
 			if not comp_worldstate then return end
 			components:add_value_to_component(comp_worldstate, "perk_hp_drop_chance", 20)
-		end
+		end,
 	},
 	{
 		id = "permanent_light1",
@@ -148,7 +152,7 @@ local reward_list = {
 		fn = function()
 			local entity_id = EntityLoad("mods/meta_leveling/files/entities/permanent_light.xml")
 			EntityAddChild(ML.player.id, entity_id)
-		end
+		end,
 	},
 	{
 		id = "permanent_light2",
@@ -166,7 +170,7 @@ local reward_list = {
 			if not comp_id then return end
 			components:add_value_to_component(comp_id, "special_scale_x", 2)
 			components:add_value_to_component(comp_id, "special_scale_y", 2)
-		end
+		end,
 	},
 	{
 		id = "permanent_light3",
@@ -183,7 +187,7 @@ local reward_list = {
 			local comp_id = EntityGetFirstComponent(entity_id, "SpriteComponent")
 			if not comp_id then return end
 			components:add_value_to_component(comp_id, "alpha", 0.1)
-		end
+		end,
 	},
 	{
 		id = "gods_peace_with_gods",
@@ -193,8 +197,7 @@ local reward_list = {
 		description = "$ml_peace_with_gods_tp",
 		probability = 0.3,
 		custom_check = function()
-			return GlobalsGetValue("TEMPLE_SPAWN_GUARDIAN", "0") ~= "0" and
-				GlobalsGetValue("TEMPLE_PEACE_WITH_GODS", "0") == "0"
+			return GlobalsGetValue("TEMPLE_SPAWN_GUARDIAN", "0") ~= "0" and GlobalsGetValue("TEMPLE_PEACE_WITH_GODS", "0") == "0"
 		end,
 		fn = function()
 			GlobalsSetValue("TEMPLE_SPAWN_GUARDIAN", "0")
@@ -205,7 +208,7 @@ local reward_list = {
 					GetGameEffectLoadTo(entity_steve, "CHARM", true)
 				end
 			end
-		end
+		end,
 	},
 	{
 		id = "gods_forgetful_gods",
@@ -220,7 +223,7 @@ local reward_list = {
 		fn = function()
 			GlobalsSetValue("STEVARI_DEATHS", "0")
 			GamePrintImportant("$ml_piece_with_gods_message1", "$ml_piece_with_gods_message2")
-		end
+		end,
 	},
 	{
 		id = "more_experience1",
@@ -233,7 +236,7 @@ local reward_list = {
 		max = 5,
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.1)
-		end
+		end,
 	},
 	{
 		id = "more_experience2",
@@ -247,7 +250,7 @@ local reward_list = {
 		limit_before = "more_experience1",
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.25)
-		end
+		end,
 	},
 	{
 		id = "more_experience3",
@@ -260,7 +263,7 @@ local reward_list = {
 		limit_before = "more_experience2",
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_multiplier, 0.5)
-		end
+		end,
 	},
 	{
 		id = "more_experience_con",
@@ -273,7 +276,7 @@ local reward_list = {
 		min_level = 5,
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_const, 1)
-		end
+		end,
 	},
 	{
 		id = "more_experience_trick1",
@@ -286,7 +289,7 @@ local reward_list = {
 		max = 3,
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 0.25)
-		end
+		end,
 	},
 	{
 		id = "more_experience_trick2",
@@ -300,7 +303,7 @@ local reward_list = {
 		limit_before = "more_experience_trick1",
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 0.5)
-		end
+		end,
 	},
 	{
 		id = "more_experience_trick3",
@@ -313,7 +316,7 @@ local reward_list = {
 		limit_before = "more_experience_trick1",
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_trick, 1.0)
-		end
+		end,
 	},
 	{
 		id = "more_experience_betray1",
@@ -325,7 +328,7 @@ local reward_list = {
 		max = 1,
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_betray, 0.25)
-		end
+		end,
 	},
 	{
 		id = "more_experience_betray2",
@@ -337,7 +340,7 @@ local reward_list = {
 		limit_before = "more_experience_betray1",
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_betray, 0.25)
-		end
+		end,
 	},
 	{
 		id = "more_love",
@@ -354,7 +357,7 @@ local reward_list = {
 			local comp_id = components:get_world_state_component()
 			if not comp_id then return end
 			components:add_value_to_component(comp_id, "global_genome_relations_modifier", 10)
-		end
+		end,
 	},
 	{
 		id = "more_hatred",
@@ -371,7 +374,7 @@ local reward_list = {
 			local comp_id = components:get_world_state_component()
 			if not comp_id then return end
 			components:add_value_to_component(comp_id, "global_genome_relations_modifier", -10)
-		end
+		end,
 	},
 	{
 		id = "buff_permanent_concentrated_mana",
@@ -382,7 +385,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_source_file", MLP.const.files.mana_regen)
 			MLP.set:add_to_global_number(MLP.const.globals.permanent_concentrated_mana, 0.25)
-		end
+		end,
 	},
 	{
 		id = "buff_damage_projectile_damage_increase",
@@ -393,7 +396,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.projectile_damage_increase, 0.1, 1)
-		end
+		end,
 	},
 	{
 		id = "buff_damage_elemental_damage_increase",
@@ -404,7 +407,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.elemental_damage_increase, 0.3, 1)
-		end
+		end,
 	},
 	{
 		id = "buff_damage_drill_damage_increase",
@@ -415,7 +418,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.drill_damage_increase, 0.4)
-		end
+		end,
 	},
 	{
 		id = "buff_damage_crit_chance_increase",
@@ -426,7 +429,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.crit_chance_increase, 15)
-		end
+		end,
 	},
 	{
 		id = "buff_damage_drill_destructibility_increase",
@@ -438,7 +441,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.drill_destructibility, 1)
-		end
+		end,
 	},
 	{
 		id = "force_fungal_shift",
@@ -448,7 +451,7 @@ local reward_list = {
 		probability = 0.1,
 		fn = function()
 			rewards:force_fungal_shift()
-		end
+		end,
 	},
 	{
 		id = "polymorph_immunity",
@@ -461,12 +464,12 @@ local reward_list = {
 		custom_check = function()
 			local player_id = EntityGetWithTag("player_unit")
 			if not player_id then return false end
-			return not get:entity_has_tag(player_id, "polymorphable_NOT")
+			return not EntityHasTag(player_id, "polymorphable_NOT")
 		end,
 		max = 1,
 		fn = function()
 			EntityAddTag(ML.player.id, "polymorphable_NOT")
-		end
+		end,
 	},
 	{
 		id = "extra_perk",
@@ -478,7 +481,7 @@ local reward_list = {
 		max = 4,
 		fn = function()
 			MLP.set:add_to_global_number("EXTRA_PERK_IN_HM", 1, 0)
-		end
+		end,
 	},
 	{
 		id = "buff_explosion_radius",
@@ -492,7 +495,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.projectile_explosion_radius, 0.10, 1)
-		end
+		end,
 	},
 	{
 		id = "buff_explosion_damage",
@@ -505,7 +508,7 @@ local reward_list = {
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.projectile_explosion_damage, 0.15, 1)
-		end
+		end,
 	},
 	{
 		id = "remove_hp_cap",
@@ -522,8 +525,8 @@ local reward_list = {
 			local dmg_comp = player:get_damagemodel()
 			if not dmg_comp then return end
 			ComponentSetValue2(dmg_comp, "max_hp_cap", 0)
-		end
-	}
+		end,
+	},
 }
 
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
