@@ -1,11 +1,10 @@
 if not load_imgui then return end
-local required_version = "1.24.0"                                                                                         -- 1.24.0 suppors vfs images now
+local required_version = "1.24.0" -- 1.24.0 suppors vfs images now
 
-local imgui = load_imgui { version = required_version, mod = "Meta Leveling" }                                            --- @type ImGui
+local imgui = load_imgui({ version = required_version, mod = "Meta Leveling" }) --- @type ImGui
 local imgui_xml_img_viewer = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/debug/xml_img_viewer.lua") --- @type imgui_xml_img_viewer
 local xml_viewer = imgui_xml_img_viewer:new(imgui)
-local ui_lib = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua")                                             --- @type UI_class
-local ui = ui_lib:New()                                                                                                   --- @class UI_class
+local ui = dofile_once("mods/meta_leveling/files/scripts/lib/ui_lib.lua") --- @class UI_class                                                                                                   --- @class UI_class
 
 --- @class ml_debug
 --- @field rewards? boolean
@@ -30,11 +29,7 @@ local debug = {
 		imgui.WindowFlags.NoScrollWithMouse,
 		imgui.WindowFlags.NoSavedSettings
 	),
-	main_flags = bit.bor(
-		imgui.WindowFlags.NoDocking,
-		imgui.WindowFlags.AlwaysAutoResize,
-		imgui.WindowFlags.NoResize
-	)
+	main_flags = bit.bor(imgui.WindowFlags.NoDocking, imgui.WindowFlags.AlwaysAutoResize, imgui.WindowFlags.NoResize),
 }
 
 --- Render icon in real gui
@@ -68,9 +63,7 @@ end
 --- Close itself
 --- @private
 --- :)
-function debug:close()
-	ModSettingSet("meta_leveling.debug_window", false)
-end
+function debug:close() ModSettingSet("meta_leveling.debug_window", false) end
 
 --- Draws image or xml
 --- @private
@@ -90,9 +83,7 @@ function debug:draw_reward_icon(size, icon)
 		end
 	else
 		local img = imgui.LoadImage(icon)
-		if img then
-			imgui.Image(img, size * self.scale, size * self.scale)
-		end
+		if img then imgui.Image(img, size * self.scale, size * self.scale) end
 	end
 end
 
@@ -132,12 +123,10 @@ function debug:ImGui9Piece(image, width, height)
 	imgui.Image(img, scaled_patch, scaled_patch, uv.top_right[1], uv.top_right[2], uv.top_right[3], uv.top_right[4]) -- Top-right
 
 	imgui.SetCursorPos(pos_x, pos_y + height - scaled_patch)
-	imgui.Image(img, scaled_patch, scaled_patch, uv.bottom_left[1], uv.bottom_left[2], uv.bottom_left[3],
-		uv.bottom_left[4]) -- Bottom-left
+	imgui.Image(img, scaled_patch, scaled_patch, uv.bottom_left[1], uv.bottom_left[2], uv.bottom_left[3], uv.bottom_left[4]) -- Bottom-left
 
 	imgui.SetCursorPos(pos_x + width - scaled_patch, pos_y + height - scaled_patch)
-	imgui.Image(img, scaled_patch, scaled_patch, uv.bottom_right[1], uv.bottom_right[2], uv.bottom_right[3],
-		uv.bottom_right[4]) -- Bottom-right
+	imgui.Image(img, scaled_patch, scaled_patch, uv.bottom_right[1], uv.bottom_right[2], uv.bottom_right[3], uv.bottom_right[4]) -- Bottom-right
 
 	-- Render borders with scaling
 	imgui.SetCursorPos(pos_x + scaled_patch, pos_y)
@@ -154,8 +143,7 @@ function debug:ImGui9Piece(image, width, height)
 
 	-- Render center with scaling
 	imgui.SetCursorPos(pos_x + scaled_patch, pos_y + scaled_patch)
-	imgui.Image(img, width - 2 * scaled_patch, height - 2 * scaled_patch, uv.center[1], uv.center[2], uv.center[3],
-		uv.center[4])
+	imgui.Image(img, width - 2 * scaled_patch, height - 2 * scaled_patch, uv.center[1], uv.center[2], uv.center[3], uv.center[4])
 end
 
 --- Draws icon with borders
@@ -181,8 +169,8 @@ function debug:draw_reward_full_icon(reward, id)
 	end
 	imgui.SetCursorPos(pos_x, pos_y)
 	local hovered = imgui.IsItemHovered()
-	local border = hovered and "mods/meta_leveling/files/gfx/ui/ui_9piece_reward_highlight.png" or
-		"mods/meta_leveling/files/gfx/ui/ui_9piece_reward.png"
+	local border = hovered and "mods/meta_leveling/files/gfx/ui/ui_9piece_reward_highlight.png"
+		or "mods/meta_leveling/files/gfx/ui/ui_9piece_reward.png"
 	self:ImGui9Piece(border, box_size, box_size)
 	return hovered
 end
@@ -216,27 +204,14 @@ end
 --- @param reward ml_single_reward_data
 function debug:reward_description(reward)
 	self:gray_normal_text("id: ", reward.id --[[@as string]])
-	self:gray_normal_text("name: ", ML.rewards_deck.FormatString(ui:Locale(reward.ui_name)),
-		" (" .. reward.ui_name .. ")")
-	if reward.description then
-		self:gray_normal_text("desk: ", ML.rewards_deck:UnpackDescription(reward.description, reward.description_var))
-	end
-	if reward.description2 then
-		self:gray_normal_text("desk2: ", ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var))
-	end
+	self:gray_normal_text("name: ", ML.rewards_deck.FormatString(ui:Locale(reward.ui_name)), " (" .. reward.ui_name .. ")")
+	if reward.description then self:gray_normal_text("desk: ", ML.rewards_deck:UnpackDescription(reward.description, reward.description_var)) end
+	if reward.description2 then self:gray_normal_text("desk2: ", ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var)) end
 	self:gray_normal_text("prob: ", ML.rewards_deck:get_probability(reward.probability)) --- @diagnostic disable-line: invisible
-	if reward.max < 1280 then
-		self:gray_normal_text("max: ", reward.max)
-	end
-	if reward.limit_before then
-		self:gray_normal_text("not before: ", reward.limit_before)
-	end
-	if reward.custom_check then
-		self:gray_normal_text("custom check: ", reward.custom_check())
-	end
-	if reward.min_level > 1 then
-		self:gray_normal_text("min level: ", reward.min_level)
-	end
+	if reward.max < 1280 then self:gray_normal_text("max: ", reward.max) end
+	if reward.limit_before then self:gray_normal_text("not before: ", reward.limit_before) end
+	if reward.custom_check then self:gray_normal_text("custom check: ", reward.custom_check()) end
+	if reward.min_level > 1 then self:gray_normal_text("min level: ", reward.min_level) end
 end
 
 --- Draws reward menu
@@ -248,9 +223,7 @@ function debug:draw_rewards()
 	local _, rewards_search = imgui.InputText("search", self.rewards_search)
 	self.rewards_search = rewards_search
 	imgui.SameLine()
-	if imgui.Button("clear") then
-		self.rewards_search = ""
-	end
+	if imgui.Button("clear") then self.rewards_search = "" end
 	for i, reward in ipairs(ML.rewards_deck.ordered_rewards_data) do
 		if self.rewards_search ~= "" and not string.find(reward.id, self.rewards_search) then --- @diagnostic disable-line: param-type-mismatch
 			goto continue
@@ -268,9 +241,7 @@ function debug:draw_rewards()
 				self:reward_description(reward)
 				imgui.EndTooltip()
 			end
-			if imgui.IsMouseClicked(imgui.MouseButton.Left) then
-				ML.rewards_deck:pick_reward(reward.id)
-			end
+			if imgui.IsMouseClicked(imgui.MouseButton.Left) then ML.rewards_deck:pick_reward(reward.id) end
 		end
 		imgui.SetCursorPos(pos_x, pos_y)
 		::continue::
@@ -282,7 +253,7 @@ end
 --- @private
 function debug:draw_deck()
 	if #ML.rewards_deck.list == 0 then ML.rewards_deck:refresh_reward_order() end --- @diagnostic disable-line: invisible
-	local list = ML.rewards_deck.list                                          --- @diagnostic disable-line: invisible
+	local list = ML.rewards_deck.list --- @diagnostic disable-line: invisible
 	local current_index = MLP.get:global_number(MLP.const.globals.draw_index, 1)
 	imgui.Text("Deck, current index: " .. current_index .. ", total number: " .. #list)
 
@@ -323,9 +294,7 @@ end
 --- @private
 --- :)
 function debug:draw_numbers()
-	if imgui.Button("Reset to current") then
-		self:fetch_current()
-	end
+	if imgui.Button("Reset to current") then self:fetch_current() end
 	local _, level = imgui.InputInt("level", self.numbers.level, 1, 10)
 	self.numbers.level = level
 	if imgui.IsItemDeactivatedAfterEdit() then
@@ -349,10 +318,10 @@ end
 function debug:add_orb()
 	local orb_e = EntityCreateNew()
 	EntityAddComponent2(orb_e, "OrbComponent", {
-		orb_id = GameGetOrbCountThisRun() + 50
+		orb_id = GameGetOrbCountThisRun() + 50,
 	})
 	EntityAddComponent2(orb_e, "ItemComponent", {
-		enable_orb_hacks = true
+		enable_orb_hacks = true,
 	})
 	GamePickUpInventoryItem(ML.player.id, orb_e, false)
 end
@@ -361,30 +330,28 @@ end
 --- @private
 --- :)
 function debug:draw_misc()
-	if imgui.Button("Add orbs") then
-		self:add_orb()
-	end
+	if imgui.Button("Add orbs") then self:add_orb() end
 	if imgui.Button("Pick Sampo") then
 		local sampo_e = EntityLoad("data/entities/animals/boss_centipede/sampo.xml", 10000, 10000)
 		GamePickUpInventoryItem(ML.player.id, sampo_e, false)
 	end
 	if imgui.Button("KYS") then
 		local gsc_id = ML.player:get_component_by_name("GameStatsComponent")
-		if gsc_id then
-			ComponentSetValue2(gsc_id, "extra_death_msg", "Killed by debug")
-		end
+		if gsc_id then ComponentSetValue2(gsc_id, "extra_death_msg", "Killed by debug") end
 		EntityKill(ML.player.id)
 	end
 	imgui.Text("Meta points")
-	imgui.Text("Speed bonus: " ..
-		string.format("%.2f", MLP.points:CalculateMetaPointsSpeedBonus()) ..
-		", minutes: " .. string.format("%.2f", GameGetFrameNum() / 60 / 60))
+	imgui.Text(
+		"Speed bonus: "
+			.. string.format("%.2f", MLP.points:CalculateMetaPointsSpeedBonus())
+			.. ", minutes: "
+			.. string.format("%.2f", GameGetFrameNum() / 60 / 60)
+	)
 	imgui.Text("Pacifist bonus: " .. MLP.points:CalculateMetaPointsPacifistBonus())
 	imgui.Text("Orb bonus: " .. MLP.points:CalculateMetaPointsOrbs())
 	imgui.Text("Damage bonus: " .. MLP.points:CalculateMetaPointsDamageTaken())
 	imgui.Text("Fungal shift bonus: " .. MLP.points:CalculateMetaPointsFungalShift())
-	imgui.Text("Streak bonus: " ..
-		MLP.points:CalculateMetaPointsWinStreakBonus() .. ", streak: " .. ModSettingGet("meta_leveling.streak_count"))
+	imgui.Text("Streak bonus: " .. MLP.points:CalculateMetaPointsWinStreakBonus() .. ", streak: " .. ModSettingGet("meta_leveling.streak_count"))
 	imgui.Text("You will be rewarded for " .. MLP:CalculateMetaPointsOnSampo() .. " points")
 end
 
@@ -437,18 +404,10 @@ function debug:draw()
 	local show, open = imgui.Begin("Meta Leveling", true, self.main_flags)
 	if show then
 		imgui.Text("Welcome to Meta Leveling Debug")
-		if imgui.Button("Rewards") then
-			self.rewards = not self.rewards
-		end
-		if imgui.Button("Deck") then
-			self.deck = not self.deck
-		end
-		if imgui.Button("Numbers") then
-			self.numbers.show = not self.numbers.show
-		end
-		if imgui.Button("Misc") then
-			self.misc = not self.misc
-		end
+		if imgui.Button("Rewards") then self.rewards = not self.rewards end
+		if imgui.Button("Deck") then self.deck = not self.deck end
+		if imgui.Button("Numbers") then self.numbers.show = not self.numbers.show end
+		if imgui.Button("Misc") then self.misc = not self.misc end
 		imgui.End()
 	end
 
@@ -461,7 +420,6 @@ function debug:draw()
 end
 
 return debug
-
 
 -- I figured out a way.
 -- For the top-left corner I use ImGui::GetCursorScreenPos().
