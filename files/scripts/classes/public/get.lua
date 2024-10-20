@@ -45,16 +45,6 @@ function ML_get:mod_setting_boolean(id, default)
 end
 
 ---@param entity entity_id
----@param tag string
----@return boolean
-function ML_get:entity_has_tag(entity, tag)
-	local tags = EntityGetTags(entity)
-	if not tags then return false end
-	if tags:find(tag) then return true end
-	return false
-end
-
----@param entity entity_id
 ---@return boolean
 function ML_get:entity_has_player_tag(entity)
 	local tags = EntityGetTags(entity)
@@ -96,9 +86,7 @@ end
 ---@return boolean
 function ML_get:entity_is_player_related(entity)
 	if not EntityGetIsAlive(entity) then return false end
-	if self:entity_has_player_tag(entity) or self:is_player_herd(entity) or self:entity_has_effect(entity, "CHARM") then
-		return true
-	end
+	if self:entity_has_player_tag(entity) or self:is_player_herd(entity) or self:entity_has_effect(entity, "CHARM") then return true end
 	return false
 end
 

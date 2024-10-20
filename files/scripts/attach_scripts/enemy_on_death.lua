@@ -1,5 +1,5 @@
-dofile_once("mods/meta_leveling/files/scripts/compatibility/experience_custom.lua")  --- importing CustomExpEntities
-dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua")         --- importing WaterMaterials
+dofile_once("mods/meta_leveling/files/scripts/compatibility/experience_custom.lua") --- importing CustomExpEntities
+dofile_once("mods/meta_leveling/files/scripts/compatibility/water_list.lua") --- importing WaterMaterials
 local MLP = dofile_once("mods/meta_leveling/files/scripts/meta_leveling_public.lua") --- @type MetaLevelingPublic
 local T = GameTextGetTranslatedOrNot
 
@@ -25,9 +25,7 @@ end
 local function damage_done_by_water(damage_message)
 	for _, water in ipairs(WaterMaterials) do
 		local text = GameTextGet("$damage_frommaterial", T(water))
-		if text == damage_message then
-			return true
-		end
+		if text == damage_message then return true end
 	end
 	return false
 end
@@ -53,8 +51,7 @@ local function betray_exp(multiplier, died_name, responsible_name)
 	if betrayal_multiplier == 0 then return 0, "" end
 
 	multiplier = multiplier * betrayal_multiplier
-	local message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") ..
-		": " .. responsible_name .. ", " .. T("$ml_gained_xp") .. ": "
+	local message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": " .. responsible_name .. ", " .. T("$ml_gained_xp") .. ": "
 
 	return multiplier, message
 end
@@ -75,8 +72,7 @@ local function trick_exp(multiplier, died_name, damage_message, damage_type_bit_
 	end
 
 	multiplier = multiplier * trick_multiplier
-	local message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": "
-		.. cause .. ", " .. T("$ml_gained_xp") .. ": "
+	local message = T("$ml_died") .. ": " .. died_name .. ", " .. T("$ml_cause") .. ": " .. cause .. ", " .. T("$ml_gained_xp") .. ": "
 
 	return multiplier, message
 end
@@ -87,14 +83,14 @@ end
 --- @return number
 local function process_boss(multiplier, died_entity)
 	-- Check for boss tag to double the experience
-	if MLP.get:entity_has_tag(died_entity, "boss") then
+	if EntityHasTag(died_entity, "boss") then
 		multiplier = multiplier * 2
 		MLP.points:add_meta_points(1)
 	end
 
 	-- Blessed beast integration
-	if MLP.get:entity_has_tag(died_entity, "blessed_beast") then multiplier = multiplier * 1.5 end
-	if MLP.get:entity_has_tag(died_entity, "blessed_miniboss") then multiplier = multiplier * 2 end
+	if EntityHasTag(died_entity, "blessed_beast") then multiplier = multiplier * 1.5 end
+	if EntityHasTag(died_entity, "blessed_miniboss") then multiplier = multiplier * 2 end
 
 	return multiplier
 end
@@ -102,9 +98,7 @@ end
 --- @type script_damage_received
 local script_damage_received = function(damage, message, entity_thats_responsible, is_fatal, projectile_thats_responsible)
 	local parent = EntityGetRootEntity(entity_thats_responsible)
-	if MLP.get:entity_is_player_related(parent) then
-		SetValueInteger("ML_damaged_by_player", GameGetFrameNum())
-	end
+	if MLP.get:entity_is_player_related(parent) then SetValueInteger("ML_damaged_by_player", GameGetFrameNum()) end
 end
 damage_received = script_damage_received
 
