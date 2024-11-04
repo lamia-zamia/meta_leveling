@@ -40,7 +40,7 @@ local U = {
 	keycodes = {},
 	keycodes_file = "data/scripts/debug/keycodes.lua",
 	waiting_for_input = false,
-	gui = nil
+	gui = nil,
 }
 do -- helpers
 	--- Checks for winstreak flag and either resets or adds
@@ -65,15 +65,11 @@ do -- helpers
 
 	--- @param setting_name setting_id
 	--- @return setting_value?
-	function U.get_setting(setting_name)
-		return ModSettingGet(mod_prfx .. setting_name)
-	end
+	function U.get_setting(setting_name) return ModSettingGet(mod_prfx .. setting_name) end
 
 	--- @param setting_name setting_id
 	--- @return setting_value?
-	function U.get_setting_next(setting_name)
-		return ModSettingGetNextValue(mod_prfx .. setting_name)
-	end
+	function U.get_setting_next(setting_name) return ModSettingGetNextValue(mod_prfx .. setting_name) end
 
 	--- @param array mod_settings_global|mod_settings
 	--- @param gui? gui
@@ -101,9 +97,7 @@ do -- helpers
 	--- @param all boolean reset all
 	function U.set_default(all)
 		for setting, value in pairs(D) do
-			if U.get_setting(setting) == nil or all then
-				U.set_setting(setting, value)
-			end
+			if U.get_setting(setting) == nil or all then U.set_setting(setting, value) end
 		end
 	end
 
@@ -120,16 +114,12 @@ do -- helpers
 
 	function U.pending_input()
 		for code, _ in pairs(U.keycodes) do
-			if InputIsKeyJustDown(code) then
-				return code
-			end
+			if InputIsKeyJustDown(code) then return code end
 		end
 	end
 
 	--- Resets settings
-	function U.reset_settings()
-		U.set_default(true)
-	end
+	function U.reset_settings() U.set_default(true) end
 
 	--- Resets progress
 	function U.reset_progress()
@@ -137,9 +127,7 @@ do -- helpers
 		local progress_list = {}
 		for i = 0, count do
 			local setting_id = ModSettingGetAtIndex(i)
-			if setting_id and setting_id:find("^meta_leveling%.reward_picked_") then
-				progress_list[#progress_list + 1] = setting_id
-			end
+			if setting_id and setting_id:find("^meta_leveling%.reward_picked_") then progress_list[#progress_list + 1] = setting_id end
 		end
 		for i = 1, #progress_list do
 			ModSettingRemove(progress_list[i])
@@ -152,9 +140,7 @@ do -- helpers
 		local meta_list = {}
 		for i = 0, count do
 			local setting_id = ModSettingGetAtIndex(i)
-			if setting_id and setting_id:find("^meta_leveling%.progress_") then
-				meta_list[#meta_list + 1] = setting_id
-			end
+			if setting_id and setting_id:find("^meta_leveling%.progress_") then meta_list[#meta_list + 1] = setting_id end
 		end
 		for i = 1, #meta_list do
 			local setting_id = meta_list[i]
@@ -169,9 +155,7 @@ end
 -- ##########		GUI Helpers		##########
 -- ###########################################
 
-local G = {
-
-}
+local G = {}
 do -- gui helpers
 	function G.button_options(gui)
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.ClickCancelsDoubleClick)
@@ -213,9 +197,7 @@ do -- gui helpers
 	--- @param value setting_value
 	--- @param default setting_value
 	function G.on_clicks(setting_name, value, default)
-		if InputIsMouseButtonJustDown(1) then
-			U.set_setting(setting_name, value)
-		end
+		if InputIsMouseButtonJustDown(1) then U.set_setting(setting_name, value) end
 		if InputIsMouseButtonJustDown(2) then
 			GamePlaySound("ui", "ui/button_click", 0, 0)
 			U.set_setting(setting_name, default)
@@ -252,9 +234,7 @@ do -- gui helpers
 			G.yellow_if_hovered(gui, hovered)
 		end
 		GuiText(gui, 0, 0, text)
-		if hovered then
-			G.on_clicks(setting_name, not value, D[setting_name])
-		end
+		if hovered then G.on_clicks(setting_name, not value, D[setting_name]) end
 	end
 
 	--- @param gui gui
@@ -267,9 +247,8 @@ do -- gui helpers
 		local w = GuiGetTextDimensions(gui, setting.ui_name)
 		local value = tonumber(ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))) or setting.value_default
 		local multiplier = setting.value_display_multiplier or 1
-		local value_new = GuiSlider(gui, id(), U.offset - w, 0, "", value, setting
-			.value_min,
-			setting.value_max, setting.value_default, multiplier, " ", 64)
+		local value_new =
+			GuiSlider(gui, id(), U.offset - w, 0, "", value, setting.value_min, setting.value_max, setting.value_default, multiplier, " ", 64)
 		GuiColorSetForNextWidget(gui, 0.81, 0.81, 0.81, 1)
 		local format = setting.format or ""
 		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)) .. format)
@@ -306,9 +285,7 @@ do -- gui helpers
 			end
 		end
 
-		if description then
-			GuiTooltip(gui, description, "")
-		end
+		if description then GuiTooltip(gui, description, "") end
 	end
 
 	--- @param gui gui
@@ -321,9 +298,7 @@ do -- gui helpers
 	function G.ImageClip(gui, x, y, width, height, fn, ...)
 		GuiText(gui, x, y, " ")
 		local _, _, _, _, prev_y = GuiGetPreviousWidgetInfo(gui)
-		if prev_y + height > U.max_y then
-			height = U.max_y - prev_y - 1
-		end
+		if prev_y + height > U.max_y then height = U.max_y - prev_y - 1 end
 		if prev_y < U.min_y then
 			height = prev_y - U.min_y + height
 			y = y + U.min_y - prev_y
@@ -374,7 +349,6 @@ end
 
 local S = {}
 do -- Settings GUI
-
 	--- Draws experience bar
 	function S.draw_bar_position(_, gui, _, _, _)
 		GuiOptionsAdd(gui, GUI_OPTION.Layout_NextSameLine)
@@ -442,27 +416,21 @@ do -- Settings GUI
 		local position = U.get_setting_next("exp_bar_position")
 		if position == "under_health" then
 			setting.value_max = 2
-			if U.get_setting_next(setting.id) > 2 then
-				U.set_setting(setting.id, 2)
-			end
+			if U.get_setting_next(setting.id) > 2 then U.set_setting(setting.id, 2) end
 		else
 			setting.value_max = 4
 		end
 		-- setting.value_max = U.get_setting_next("exp_bar_position") == "under_health" and 2 or 4
 		local value, value_new = G.mod_setting_number(gui, setting)
 		value_new = math.floor(value_new + 0.5)
-		if value ~= value_new then
-			U.set_setting(setting.id, value_new)
-		end
+		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
 	--- @param setting mod_setting_number
 	--- @param gui gui
 	function S.mod_setting_number_float(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
-		if value ~= value_new then
-			U.set_setting(setting.id, value_new)
-		end
+		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
 	--- @param setting mod_setting_number
@@ -470,9 +438,7 @@ do -- Settings GUI
 	function S.mod_setting_number_integer(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
 		value_new = math.floor(value_new + 0.5)
-		if value ~= value_new then
-			U.set_setting(setting.id, value_new)
-		end
+		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
 	function S.mod_setting_better_string(_, gui, _, _, setting)
@@ -483,9 +449,7 @@ do -- Settings GUI
 		GuiText(gui, 8, 0, "")
 		for _, button in ipairs(setting.buttons) do
 			local color = value == button and { 0.7, 0.7, 0.7 } or nil
-			if G.button(gui, 0, T[button], color) then
-				U.set_setting(setting.id, button)
-			end
+			if G.button(gui, 0, T[button], color) then U.set_setting(setting.id, button) end
 		end
 		GuiLayoutEnd(gui)
 	end
@@ -526,9 +490,7 @@ do -- Settings GUI
 		if hovered then
 			GuiColorSetForNextWidget(gui, 1, 1, 0.7, 1)
 			GuiTooltip(gui, T.open_ui_hotkey_d, GameTextGetTranslatedOrNot("$menuoptions_reset_keyboard"))
-			if InputIsMouseButtonJustDown(1) then
-				U.waiting_for_input = true
-			end
+			if InputIsMouseButtonJustDown(1) then U.waiting_for_input = true end
 			if InputIsMouseButtonJustDown(2) then
 				GamePlaySound("ui", "ui/button_click", 0, 0)
 				U.set_setting("open_ui_hotkey", 0)
@@ -546,9 +508,7 @@ do -- Settings GUI
 			GuiText(gui, mod_setting_group_x_offset, 0, "ERR")
 			return
 		end
-		if G.button(gui, mod_setting_group_x_offset, T.reset_cat, { 1, 0.4, 0.4 }) then
-			fn()
-		end
+		if G.button(gui, mod_setting_group_x_offset, T.reset_cat, { 1, 0.4, 0.4 }) then fn() end
 	end
 end
 
@@ -556,8 +516,7 @@ end
 -- ########		Translations		##########
 -- ###########################################
 
-local translations =
-{
+local translations = {
 	["English"] = {
 		show_debug = "Show debug button",
 		exp_bar_cat = "HUD", -- cat
@@ -690,17 +649,15 @@ local translations =
 		exp_bar_visual = "Вид полосы",
 		exp_bar_default_bg = "Не красить фон",
 		exp_bar_default_bg_d = "Использовать стандартный фон для полосы опыта",
-	}
+	},
 }
 
 local mt = {
 	__index = function(t, k)
 		local currentLang = GameTextGetTranslatedOrNot("$current_language")
-		if not translations[currentLang] then
-			currentLang = "English"
-		end
+		if not translations[currentLang] then currentLang = "English" end
 		return translations[currentLang][k]
-	end
+	end,
 }
 setmetatable(T, mt)
 
@@ -742,8 +699,7 @@ local function build_settings()
 			ui_description = T.exp_bar_cat_d,
 			foldable = true,
 			_folded = true,
-			settings =
-			{
+			settings = {
 				{
 					ui_fn = S.draw_bar_position,
 					not_setting = true,
@@ -804,7 +760,7 @@ local function build_settings()
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.exp_bar_misc,
 					checkboxes = { "exp_bar_show_perc", "hud_reminder_in_inventory" },
-				}
+				},
 			},
 		},
 		{
@@ -813,29 +769,28 @@ local function build_settings()
 			ui_description = T.ui_cat_d,
 			foldable = true,
 			_folded = true,
-			settings =
-			{
+			settings = {
 				{
 					not_setting = true,
 					id = "open_ui_hotkey",
 					ui_fn = S.get_input,
-					ui_name = T.open_ui_hotkey
+					ui_name = T.open_ui_hotkey,
 				},
 				{
 					not_setting = true,
 					id = "session_exp_ui_close",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_ui_close,
-					checkboxes = { "session_exp_close_ui_on_pause", "session_exp_close_ui_on_shot", "session_exp_close_ui_on_damage" }
+					checkboxes = { "session_exp_close_ui_on_pause", "session_exp_close_ui_on_shot", "session_exp_close_ui_on_damage" },
 				},
 				{
 					not_setting = true,
 					id = "session_exp_ui_open",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_ui_open,
-					checkboxes = { "session_exp_ui_open_auto", "show_ui_on_death" }
-				}
-			}
+					checkboxes = { "session_exp_ui_open_auto", "show_ui_on_death" },
+				},
+			},
 		},
 		{
 			category_id = "gameplay_cat",
@@ -843,8 +798,7 @@ local function build_settings()
 			ui_description = T.gameplay_cat_d,
 			foldable = true,
 			_folded = true,
-			settings =
-			{
+			settings = {
 				{
 					not_setting = true,
 					id = "session_exp_on_level_up",
@@ -857,7 +811,7 @@ local function build_settings()
 					id = "session_exp_on_kills",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_kills,
-					checkboxes = { "session_exp_popup", "session_exp_log" }
+					checkboxes = { "session_exp_popup", "session_exp_log" },
 				},
 				{
 					id = "session_exp_multiplier",
@@ -867,7 +821,7 @@ local function build_settings()
 					value_max = 3,
 					value_display_multiplier = 100,
 					ui_fn = S.mod_setting_number_float,
-					format = "%"
+					format = "%",
 				},
 			},
 		},
@@ -889,9 +843,9 @@ local function build_settings()
 							not_setting = true,
 							id = "reset_settings",
 							ui_fn = S.reset_stuff,
-							ui_name = T.reset_settings
-						}
-					}
+							ui_name = T.reset_settings,
+						},
+					},
 				},
 				{
 					category_id = "reset_progress",
@@ -904,9 +858,9 @@ local function build_settings()
 							not_setting = true,
 							id = "reset_progress",
 							ui_fn = S.reset_stuff,
-							ui_name = T.reset_progress
-						}
-					}
+							ui_name = T.reset_progress,
+						},
+					},
 				},
 				{
 					category_id = "reset_meta",
@@ -919,12 +873,12 @@ local function build_settings()
 							not_setting = true,
 							id = "reset_meta",
 							ui_fn = S.reset_stuff,
-							ui_name = T.reset_meta
-						}
-					}
+							ui_name = T.reset_meta,
+						},
+					},
 				},
-			}
-		}
+			},
+		},
 	}
 	U.offset = U.calculate_elements_offset(settings)
 	return settings
@@ -942,17 +896,13 @@ function ModSettingsUpdate(init_scope)
 	U.set_default(false)
 	U.waiting_for_input = false
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
-	if current_language ~= current_language_last_frame then
-		mod_settings = build_settings()
-	end
+	if current_language ~= current_language_last_frame then mod_settings = build_settings() end
 	current_language_last_frame = current_language
 	-- mod_settings_update(mod_id, mod_settings, init_scope)
 end
 
 --- @return number
-function ModSettingsGuiCount()
-	return mod_settings_gui_count(mod_id, mod_settings)
-end
+function ModSettingsGuiCount() return mod_settings_gui_count(mod_id, mod_settings) end
 
 --- @param gui gui
 --- @param in_main_menu boolean

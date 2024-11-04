@@ -10,12 +10,12 @@ local ml_stats = {
 		default = "$ml_stats_misc",
 		experience = "$ml_experience",
 		meta = "$ml_meta",
-		resistance = "$ml_stats_resistance"
+		resistance = "$ml_stats_resistance",
 	},
 	unfolded = {
 		default = true,
-		experience = true
-	}
+		experience = true,
+	},
 }
 
 ---@class ml_stats_entry
