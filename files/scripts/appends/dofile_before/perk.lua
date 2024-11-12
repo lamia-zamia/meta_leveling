@@ -13,8 +13,6 @@ end
 ---@nodiscard
 GlobalsGetValue = function(key, default_value)
 	local value = GlobalsGetValue_ML_Old(key, default_value or "")
-	if key == "TEMPLE_PERK_COUNT" then
-		return value + calculate_extra()
-	end
+	if key == "TEMPLE_PERK_COUNT" then return value + calculate_extra() end
 	return value
 end
