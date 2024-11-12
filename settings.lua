@@ -65,11 +65,15 @@ do -- helpers
 
 	--- @param setting_name setting_id
 	--- @return setting_value?
-	function U.get_setting(setting_name) return ModSettingGet(mod_prfx .. setting_name) end
+	function U.get_setting(setting_name)
+		return ModSettingGet(mod_prfx .. setting_name)
+	end
 
 	--- @param setting_name setting_id
 	--- @return setting_value?
-	function U.get_setting_next(setting_name) return ModSettingGetNextValue(mod_prfx .. setting_name) end
+	function U.get_setting_next(setting_name)
+		return ModSettingGetNextValue(mod_prfx .. setting_name)
+	end
 
 	--- @param array mod_settings_global|mod_settings
 	--- @param gui? gui
@@ -119,7 +123,9 @@ do -- helpers
 	end
 
 	--- Resets settings
-	function U.reset_settings() U.set_default(true) end
+	function U.reset_settings()
+		U.set_default(true)
+	end
 
 	--- Resets progress
 	function U.reset_progress()
@@ -426,10 +432,14 @@ do -- Settings GUI
 		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
-	--- @param setting mod_setting_number
+	--- @class mod_setting_number_snap:mod_setting_number
+	--- @field value_snap? number
+
+	--- @param setting mod_setting_number_snap
 	--- @param gui gui
 	function S.mod_setting_number_float(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
+		if setting.value_snap then value_new = math.floor(value_new / setting.value_snap + 0.5) * setting.value_snap end
 		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
@@ -817,9 +827,10 @@ local function build_settings()
 					id = "session_exp_multiplier",
 					ui_name = T.session_exp_multiplier,
 					value_default = D.session_exp_multiplier,
-					value_min = 0.1,
+					value_min = 0.05,
 					value_max = 3,
 					value_display_multiplier = 100,
+					value_snap = 0.05,
 					ui_fn = S.mod_setting_number_float,
 					format = "%",
 				},
@@ -902,7 +913,9 @@ function ModSettingsUpdate(init_scope)
 end
 
 --- @return number
-function ModSettingsGuiCount() return mod_settings_gui_count(mod_id, mod_settings) end
+function ModSettingsGuiCount()
+	return mod_settings_gui_count(mod_id, mod_settings)
+end
 
 --- @param gui gui
 --- @param in_main_menu boolean
