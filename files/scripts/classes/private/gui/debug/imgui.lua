@@ -63,7 +63,9 @@ end
 --- Close itself
 --- @private
 --- :)
-function debug:close() ModSettingSet("meta_leveling.debug_window", false) end
+function debug:close()
+	ModSettingSet("meta_leveling.debug_window", false)
+end
 
 --- Draws image or xml
 --- @private
@@ -161,7 +163,7 @@ function debug:draw_reward_full_icon(reward, id)
 	local border_img = imgui.LoadImage("mods/meta_leveling/files/gfx/ui/reward_glow.png")
 	local border_img_size = box_size * self.scale
 	local r, g, b, a = unpack(reward.border_color)
-	imgui.Image(border_img, border_img_size, border_img_size, 0, 0, 1, 1, r, g, b, a)
+	if border_img then imgui.Image(border_img, border_img_size, border_img_size, 0, 0, 1, 1, r, g, b, a) end
 	imgui.SetCursorPos(pos_x + cursor_offset, pos_y + cursor_offset)
 	if imgui.BeginChild(reward.id .. id, size * self.scale, size * self.scale, 0, self.child_flags) then --- @diagnostic disable-line: param-type-mismatch
 		self:draw_reward_icon(size, reward.ui_icon)
