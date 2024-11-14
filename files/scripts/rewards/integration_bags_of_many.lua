@@ -6,7 +6,7 @@ local sizes = { "small", "medium", "big" }
 local types = {
 	spells = 0.7,
 	potions = 0.9,
-	universal = 0.62
+	universal = 0.62,
 }
 
 for bag_type, probability in pairs(types) do
@@ -22,7 +22,7 @@ for bag_type, probability in pairs(types) do
 			fn = function()
 				ML.utils:load_entity_to_player(string.format("mods/bags_of_many/files/entities/bags/%s.xml", bag))
 			end,
-			sound = const.sounds.chest
+			sound = const.sounds.chest,
 		}
 	end
 end

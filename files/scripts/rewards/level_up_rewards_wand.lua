@@ -15,6 +15,7 @@ end
 local wand_rewards = {
 	{
 		id = "wand_faster_delay_and_recharge",
+		group_id = "wand_faster",
 		ui_name = "$ml_faster_wand",
 		description = "$ml_faster_wand_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_wand.png",
@@ -27,10 +28,11 @@ local wand_rewards = {
 			wand.castDelay = Randomf(wand.castDelay * 0.9 - 5, wand.castDelay - 2)
 			wand.rechargeTime = Randomf(wand.rechargeTime * 0.9 - 5, wand.rechargeTime - 2)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_faster_delay",
+		group_id = "wand_faster",
 		ui_name = "$ml_faster_wand",
 		description = "$ml_faster_wand_delay",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_delay.png",
@@ -42,10 +44,11 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.castDelay = Randomf(wand.castDelay * 0.80 - 5, wand.castDelay - 2)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_faster_recharge",
+		group_id = "wand_faster",
 		ui_name = "$ml_faster_wand",
 		description = "$ml_faster_wand_recharge",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/faster_recharge.png",
@@ -57,10 +60,11 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.rechargeTime = Randomf(wand.rechargeTime * 0.80 - 5, wand.rechargeTime - 2)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_more_mana",
+		group_id = "wand_mana",
 		ui_name = "$ml_wand_more_mana",
 		description = "$ml_wand_more_mana_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_mana.png",
@@ -72,10 +76,11 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.manaMax = wand.manaMax + Random(5, 10) * Random(5, 20)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_more_recharge",
+		group_id = "wand_mana",
 		ui_name = "$ml_wand_more_recharge",
 		description = "$ml_wand_more_recharge_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_recharge.png",
@@ -87,10 +92,11 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.manaChargeSpeed = wand.manaChargeSpeed + Random(1, ML:get_level() * 5) + 10
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_more_recharge_and_mana",
+		group_id = "wand_mana",
 		ui_name = "$ml_wand_more_recharge_and_mana",
 		description = "$ml_wand_more_recharge_and_mana_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_mana_and_recharge.png",
@@ -103,7 +109,7 @@ local wand_rewards = {
 			wand.manaMax = wand.manaMax + Random(2, 5) * Random(2, 10)
 			wand.manaChargeSpeed = wand.manaChargeSpeed + Random(1, ML:get_level() * 3) + 5
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_more_capacity1",
@@ -122,7 +128,7 @@ local wand_rewards = {
 			local new_capacity = math.min(26, wand.capacity + Random(1, 3))
 			wand.capacity = math.max(old_capacity, new_capacity)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_more_capacity2",
@@ -132,7 +138,6 @@ local wand_rewards = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/more_capacity.png",
 		probability = 0.3,
 		limit_before = "wand_more_capacity1",
-		min_level = 41,
 		fn = function()
 			local wand_id = MLP.get:hold_wand(true)
 			if not wand_id then return end
@@ -140,7 +145,7 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.capacity = wand.capacity + Random(1, 3)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_no_shuffle",
@@ -154,7 +159,7 @@ local wand_rewards = {
 			local wand = EZWand(wand_id)
 			wand.shuffle = false
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 	{
 		id = "wand_lower_spread",
@@ -169,7 +174,7 @@ local wand_rewards = {
 			ML.utils:random_seed()
 			wand.spread = wand.spread - Random(2, 10)
 			refresh_wand_if_in_inventory(wand_id)
-		end
+		end,
 	},
 }
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")

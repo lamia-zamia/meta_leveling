@@ -8,7 +8,7 @@ local rewards_perk = {
 		ui_icon = "data/items_gfx/perks/perks_lottery.png",
 		probability = 0.05,
 		no_sound = true,
-		min_level = 5,
+		min_level = 20,
 		custom_check = function()
 			local pickup_count = rewards:get_perk_pickup_count("PERKS_LOTTERY")
 			if pickup_count < 7 then return true end
@@ -16,7 +16,7 @@ local rewards_perk = {
 		end,
 		fn = function()
 			rewards:grant_perk("PERKS_LOTTERY")
-		end
+		end,
 	},
 	{
 		id = "perk_remove_fog_of_war",
@@ -33,7 +33,7 @@ local rewards_perk = {
 		end,
 		fn = function()
 			rewards:grant_perk("REMOVE_FOG_OF_WAR")
-		end
+		end,
 	},
 	{
 		id = "perk_edit_wands_everywhere",
@@ -50,7 +50,7 @@ local rewards_perk = {
 		end,
 		fn = function()
 			rewards:grant_perk("EDIT_WANDS_EVERYWHERE")
-		end
+		end,
 	},
 	{
 		id = "perk_respawn",
@@ -62,7 +62,7 @@ local rewards_perk = {
 		min_level = 40,
 		fn = function()
 			rewards:grant_perk("RESPAWN")
-		end
+		end,
 	},
 }
 

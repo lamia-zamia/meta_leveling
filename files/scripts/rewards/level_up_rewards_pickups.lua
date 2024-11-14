@@ -8,9 +8,10 @@ local pickups = {
 		description = "$ml_random_potion_complete_tp",
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_potion.xml",
 		probability = 0.1,
+		min_level = 20,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/potion_random_material.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_random",
@@ -21,7 +22,7 @@ local pickups = {
 		probability = 0.3,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/potion.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_random_secret",
@@ -30,9 +31,10 @@ local pickups = {
 		description = "$ml_random_potion_secret_tp",
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/random_potion.xml",
 		probability = 0.1,
+		min_level = 10,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/potion_secret.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_milk",
@@ -42,7 +44,7 @@ local pickups = {
 		probability = 0.01,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/potion_milk.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_urine",
@@ -52,7 +54,7 @@ local pickups = {
 		probability = 0.01,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/jar_of_urine.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_healthium",
@@ -63,10 +65,10 @@ local pickups = {
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/potion_hp_regen.png",
 		probability = 0.01,
 		max = 2,
-		min_level = 10,
+		min_level = 30,
 		fn = function()
 			ML.utils:load_entity_to_player("mods/meta_leveling/files/entities/potion_healthium.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_LC",
@@ -77,10 +79,10 @@ local pickups = {
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/potion_hp_regen.png",
 		probability = 0.01,
 		max = 2,
-		min_level = 30,
+		min_level = 50,
 		fn = function()
 			ML.utils:load_entity_to_player("mods/meta_leveling/files/entities/potion_LC.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_potion_mimic",
@@ -93,28 +95,30 @@ local pickups = {
 		max = 1,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/potion_mimic.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_stonestone",
+		group_id = "pickup_stones",
 		ui_name = "$item_stonestone",
 		description = "$itemdesc_stonestone",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/stonestone.xml",
 		probability = 0.1,
+		min_level = 15,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/stonestone.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_thunderstone",
+		group_id = "pickup_stones",
 		ui_name = "$item_thunderstone",
 		description = "$item_description_thunderstone",
 		ui_icon = "data/ui_gfx/items/ingredient_1.png",
 		probability = 0.2,
-
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/thunderstone.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_safe_haven",
@@ -124,7 +128,7 @@ local pickups = {
 		probability = 0.05,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/safe_haven.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_powder_stash_3",
@@ -132,20 +136,21 @@ local pickups = {
 		description = "$itemdesc_powder_stash_3",
 		ui_icon = "data/ui_gfx/items/material_pouch.png",
 		probability = 0.1,
-
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/powder_stash.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_waterstone",
+		group_id = "pickup_stones",
 		ui_name = "$item_waterstone",
 		description = "$item_description_waterstone",
 		ui_icon = "data/ui_gfx/items/waterstone.png",
 		probability = 0.05,
+		min_level = 30,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/waterstone.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_evil_eye",
@@ -155,7 +160,7 @@ local pickups = {
 		probability = 0.1,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/evil_eye.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_broken_wand",
@@ -165,17 +170,18 @@ local pickups = {
 		probability = 0.1,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/broken_wand.xml")
-		end
+		end,
 	},
 	{
 		id = "pickup_item_brimstone",
+		group_id = "pickup_stones",
 		ui_name = "$item_brimstone",
 		description = "$item_description_brimstone",
 		ui_icon = "data/ui_gfx/items/brimstone.png",
 		probability = 0.1,
 		fn = function()
 			ML.utils:load_entity_to_player("data/entities/items/pickup/brimstone.xml")
-		end
+		end,
 	},
 }
 

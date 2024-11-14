@@ -11,7 +11,7 @@ local buffs = {
 		probability = 0.7,
 		fn = function()
 			ML.gameEffect:apply_status_to_player("BERSERK", 120 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_speed",
@@ -27,10 +27,10 @@ local buffs = {
 				ui_name = "$perk_movement_faster",
 				ui_description = "$perkdesc_movement_faster",
 				ui_icon = "data/ui_gfx/status_indicators/movement_faster.png",
-				effect_entity = "data/entities/misc/effect_movement_faster.xml"
+				effect_entity = "data/entities/misc/effect_movement_faster.xml",
 			}
 			ML.gameEffect:apply_status_to_player(faster, 180 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_mana",
@@ -42,7 +42,7 @@ local buffs = {
 		probability = 0.4,
 		fn = function()
 			ML.gameEffect:apply_status_to_player("MANA_REGENERATION", 120 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_OILED",
@@ -61,7 +61,7 @@ local buffs = {
 				effect_entity = "data/entities/misc/effect_oiled.xml",
 			}
 			ML.gameEffect:apply_status_to_player(oil, 600 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_invis",
@@ -78,7 +78,7 @@ local buffs = {
 		end,
 		fn = function()
 			ML.gameEffect:apply_status_to_player("INVISIBILITY", 300 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_protect",
@@ -90,7 +90,7 @@ local buffs = {
 		probability = 0.015,
 		fn = function()
 			ML.gameEffect:apply_status_to_player("PROTECTION_ALL", 30 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_remove_fog",
@@ -111,10 +111,10 @@ local buffs = {
 				ui_name = "$perk_remove_fog_of_war",
 				ui_description = "$perkdesc_remove_fog_of_war",
 				ui_icon = "data/ui_gfx/status_indicators/nightvision.png",
-				effect_entity = "data/entities/misc/effect_remove_fog_of_war.xml"
+				effect_entity = "data/entities/misc/effect_remove_fog_of_war.xml",
 			}
 			ML.gameEffect:apply_status_to_player(fog, 60 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_regen",
@@ -130,10 +130,10 @@ local buffs = {
 				ui_name = "$status_hp_regeneration",
 				ui_description = "$statusdesc_hp_regeneration",
 				ui_icon = "data/ui_gfx/status_indicators/hp_regeneration.png",
-				effect_entity = "data/entities/misc/effect_regeneration.xml"
+				effect_entity = "data/entities/misc/effect_regeneration.xml",
 			}
 			ML.gameEffect:apply_status_to_player(regen, 5 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_twwe",
@@ -154,10 +154,10 @@ local buffs = {
 				ui_name = "$perk_edit_wands_everywhere",
 				ui_description = "$perkdesc_edit_wands_everywhere",
 				ui_icon = "mods/meta_leveling/files/gfx/ui/icons/tinker.png",
-				effect_entity = "data/entities/misc/effect_edit_wands_everywhere.xml"
+				effect_entity = "data/entities/misc/effect_edit_wands_everywhere.xml",
 			}
 			ML.gameEffect:apply_status_to_player(twwe, 60 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_homing",
@@ -178,10 +178,10 @@ local buffs = {
 				ui_name = "$perk_projectile_homing",
 				ui_description = "$perkdesc_projectile_homing",
 				ui_icon = "data/ui_gfx/status_indicators/homing.png",
-				effect_entity = "data/entities/misc/effect_projectile_homing.xml"
+				effect_entity = "data/entities/misc/effect_projectile_homing.xml",
 			}
 			ML.gameEffect:apply_status_to_player(homing, 180 * 60)
-		end
+		end,
 	},
 	{
 		id = "buff_temporary_extra_money",
@@ -197,11 +197,11 @@ local buffs = {
 				ui_name = "$perk_extra_money",
 				ui_description = "$perkdesc_extra_money",
 				ui_icon = "mods/meta_leveling/files/gfx/ui/icons/money.png",
-				effect_entity = "data/entities/misc/effect_extra_money.xml"
+				effect_entity = "data/entities/misc/effect_extra_money.xml",
 			}
 			ML.gameEffect:apply_status_to_player(money, 300 * 60)
-		end
-	}
+		end,
+	},
 }
 -- PROTECTION_POLYMORPH
 -- FRIEND_FIREMAGE

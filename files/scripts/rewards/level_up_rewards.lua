@@ -14,16 +14,16 @@ local reward_list = {
 		description2 = "$ml_extra_reward_choice_clarify",
 		description2_var = {
 			function()
-				return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 1
+				return get:global_number(MLP.const.globals.draw_amount, 0) + 1
 			end,
 		},
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
 		probability = 0.5,
 		max = 4,
-		min_level = 5,
+		min_level = 15,
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.draw_amount, 1)
-			for _ = 1, MLP.get:global_number(MLP.const.globals.draw_amount, 0) do
+			for _ = 1, get:global_number(MLP.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
 		end,
@@ -37,7 +37,7 @@ local reward_list = {
 		description2 = "$ml_extra_reward_choice_clarify",
 		description2_var = {
 			function()
-				return MLP.get:global_number(MLP.const.globals.draw_amount, 0) + 2
+				return get:global_number(MLP.const.globals.draw_amount, 0) + 2
 			end,
 		},
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/extra_reward_choice.png",
@@ -46,7 +46,7 @@ local reward_list = {
 		limit_before = "extra_reward_choice1",
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.draw_amount, 2)
-			for _ = 1, MLP.get:global_number(MLP.const.globals.draw_amount, 0) do
+			for _ = 1, get:global_number(MLP.const.globals.draw_amount, 0) do
 				ML:level_up()
 			end
 		end,
@@ -133,7 +133,7 @@ local reward_list = {
 		description = "$ml_bloody_money_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/bloody_money.xml",
 		probability = 0.01,
-		min_level = 20,
+		min_level = 40,
 		max = 3,
 		fn = function()
 			local comp_worldstate = components:get_world_state_component()
@@ -273,7 +273,7 @@ local reward_list = {
 		description_var = { "+1" },
 		probability = 0.1,
 		max = 5,
-		min_level = 5,
+		min_level = 10,
 		fn = function()
 			MLP.set:add_to_global_number(MLP.const.globals.exp_const, 1)
 		end,
@@ -382,6 +382,7 @@ local reward_list = {
 		description = "$ml_permanent_concentrated_mana_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/permanent_concentrated_mana.xml",
 		probability = 0.2,
+		min_level = 15,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_source_file", MLP.const.files.mana_regen)
 			MLP.set:add_to_global_number(MLP.const.globals.permanent_concentrated_mana, 0.25)
@@ -393,6 +394,7 @@ local reward_list = {
 		description = "$ml_projectile_damage_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/projectile_damage.xml",
 		probability = 0.2,
+		min_level = 15,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.projectile_damage_increase, 0.1, 1)
@@ -404,6 +406,7 @@ local reward_list = {
 		description = "$ml_elemental_damage_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/elemental_damage.xml",
 		probability = 0.2,
+		min_level = 15,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.elemental_damage_increase, 0.3, 1)
@@ -415,6 +418,7 @@ local reward_list = {
 		description = "$ml_drill_damage_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/drill_damage.xml",
 		probability = 0.1,
+		min_level = 15,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.drill_damage_increase, 0.4)
@@ -426,6 +430,7 @@ local reward_list = {
 		description = "$actiondesc_critical_hit",
 		ui_icon = "data/ui_gfx/gun_actions/critical_hit.png",
 		probability = 0.1,
+		min_level = 20,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
 			MLP.set:add_to_global_number(MLP.const.globals.crit_chance_increase, 15)
@@ -437,6 +442,7 @@ local reward_list = {
 		description = "$ml_drill_destructibility_increase_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/drill_destructibility.xml",
 		probability = 0.1,
+		min_level = 15,
 		max = 3,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
@@ -449,6 +455,7 @@ local reward_list = {
 		description = "$ml_force_fungal_shift_tp",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/fungal_shift.xml",
 		probability = 0.1,
+		min_level = 30,
 		fn = function()
 			rewards:force_fungal_shift()
 		end,
@@ -477,7 +484,7 @@ local reward_list = {
 		description = "$ml_slightly_more_perks_tp",
 		ui_icon = "data/items_gfx/perks/extra_perk.png",
 		probability = 0.05,
-		min_level = 5,
+		min_level = 15,
 		max = 4,
 		fn = function()
 			MLP.set:add_to_global_number("EXTRA_PERK_IN_HM", 1, 0)
@@ -491,6 +498,7 @@ local reward_list = {
 		description2 = "$ml_lag_warning",
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/explosion.xml",
 		probability = 0.2,
+		min_level = 10,
 		max = 20,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
@@ -504,6 +512,7 @@ local reward_list = {
 		description_var = { "15%" },
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/explosion_red.xml",
 		probability = 0.2,
+		min_level = 10,
 		max = 20,
 		fn = function()
 			ML.player:add_lua_component_if_none("script_shot", MLP.const.files.shot_damage)
