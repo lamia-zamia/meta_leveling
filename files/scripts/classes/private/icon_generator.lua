@@ -91,8 +91,8 @@ function IG:generate_xml(path, columns, speed)
 			frame_count = tostring(columns),
 			frame_width = "16",
 			frame_height = "16",
-			frame_wait = tostring(speed)
-		})
+			frame_wait = tostring(speed),
+		}),
 	})
 	ModTextFileSetContent(path, tostring(xml))
 end
@@ -186,12 +186,7 @@ end
 ---@param a number
 ---@return integer color
 function IG:color_abgr_merge(r, g, b, a)
-	return bit.bor(
-		bit.band(r, 0xFF),
-		bit.lshift(bit.band(g, 0xFF), 8),
-		bit.lshift(bit.band(b, 0xFF), 16),
-		bit.lshift(bit.band(a, 0xFF), 24)
-	)
+	return bit.bor(bit.band(r, 0xFF), bit.lshift(bit.band(g, 0xFF), 8), bit.lshift(bit.band(b, 0xFF), 16), bit.lshift(bit.band(a, 0xFF), 24))
 end
 
 ---Blend colors
