@@ -22,19 +22,19 @@ local guns = {
 	glimmers = {},
 	actions_data = {
 		types = {},
-		icons = {}
-	}
+		icons = {},
+	},
 }
 
 --- List of actions to ignore
 local ignore_list = {
-	"RANDOM_PROJECTILE"
+	"RANDOM_PROJECTILE",
 }
 
 --- Temporary variable for passing action types
 local buffer = {
 	xml_file = nil,
-	type = nil
+	type = nil,
 }
 
 --- Inserts action into according table
@@ -60,9 +60,7 @@ end
 local function categorizeAction(action)
 	local action_id = action.id
 	if not action.spawn_level then
-		if ModIsEnabled("component-explorer") then
-			err:print("[Gun Parser Error] There is no spawn_level for " .. action_id)
-		end
+		if ModIsEnabled("component-explorer") then err:print("[Gun Parser Error] There is no spawn_level for " .. action_id) end
 		return
 	end
 	local action_type = action.type
@@ -71,15 +69,9 @@ local function categorizeAction(action)
 	local pattern_high = ",[67],"
 	local spawn_level = "," .. action.spawn_level .. ","
 	local action_data = guns.actions_data.types[action_type]
-	if spawn_level:find(pattern_low) then
-		action_data.low[#action_data.low + 1] = action_id
-	end
-	if spawn_level:find(pattern_high) or spawn_level:find(",10,") then
-		action_data.high[#action_data.high + 1] = action_id
-	end
-	if spawn_level:find(pattern_mid) then
-		action_data.mid[#action_data.mid + 1] = action_id
-	end
+	if spawn_level:find(pattern_low) then action_data.low[#action_data.low + 1] = action_id end
+	if spawn_level:find(pattern_high) or spawn_level:find(",10,") then action_data.high[#action_data.high + 1] = action_id end
+	if spawn_level:find(pattern_mid) then action_data.mid[#action_data.mid + 1] = action_id end
 end
 
 --- Parse action
@@ -169,6 +161,19 @@ local function overwrite_functions()
 	function EntityGetTransform(...)
 		return 0, 0
 	end
+
+	--- @param ... any
+	--- @return table
+	function EntityGetAllChildren(...)
+		return {}
+	end
+
+	---@param key string
+	---@param default_value string? '""'
+	---@return any|nil global
+	function GlobalsGetValue(key, default_value)
+		return default_value or "0"
+	end
 end
 
 --- Shadows functions so they won't do anything
@@ -191,12 +196,9 @@ local function shadow_functions()
 		"GamePlaySound",
 		"GamePrint",
 		"GamePrintImportant",
-		-- "EntityGetTransform",
-		"EntityGetAllChildren",
 		"dofile_once",
 		"EntityGetRootEntity",
-		"GlobalsGetValue",
-		"tonumber"
+		"GlobalsSetValue",
 	}
 
 	for i = 1, #functions_to_shadow do
@@ -210,7 +212,7 @@ function guns:parse_actions()
 		self.actions_data.types[i] = {
 			low = {},
 			mid = {},
-			high = {}
+			high = {},
 		}
 	end
 
@@ -234,7 +236,10 @@ function guns:parse_actions()
 	shot_effects = { recoil_knockback = 0 }
 
 	for i = 1, #actions do --- @diagnostic disable-line: undefined-global
-		parse_action(actions[i])
+		local action = actions[i]
+		set_current_action(action)
+		current_action.deck_index = 1
+		parse_action(action)
 	end
 
 	buffer = nil
@@ -249,9 +254,7 @@ end
 --- @return boolean
 function guns:spell_is_valid(action_id)
 	if self.spells_no_spawn[action_id] then return false end
-	if self.locked_spells[action_id] and not HasFlagPersistent(self.locked_spells[action_id]) then
-		return false
-	end
+	if self.locked_spells[action_id] and not HasFlagPersistent(self.locked_spells[action_id]) then return false end
 	return true
 end
 
@@ -276,9 +279,7 @@ function guns:get_random_spell(level)
 	for i = 1, 1000 do
 		local action_id = GetRandomAction(ML.player.x, ML.player.y, level, i)
 		if action_id == "" then break end
-		if self:spell_is_valid(action_id) then
-			return action_id
-		end
+		if self:spell_is_valid(action_id) then return action_id end
 	end
 	return "OCARINA_A"
 end
@@ -292,9 +293,7 @@ function guns:get_random_typed_spell(level, type)
 	for i = 1, 1000 do
 		local action_id = GetRandomActionWithType(ML.player.x, ML.player.y, level, type, i)
 		if action_id == "" then break end
-		if self:spell_is_valid(action_id) then
-			return action_id
-		end
+		if self:spell_is_valid(action_id) then return action_id end
 	end
 	return "OCARINA_A"
 end
