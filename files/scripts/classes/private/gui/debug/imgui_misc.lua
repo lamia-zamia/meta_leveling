@@ -12,6 +12,14 @@ function debug:add_orb()
 	GamePickUpInventoryItem(ML.player.id, orb_e, false)
 end
 
+function debug:be_strong()
+	for _ = 1, 100 do
+		ML.rewards_deck:pick_reward("wand_faster_delay_and_recharge") ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:pick_reward("wand_more_recharge_and_mana") ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:pick_reward("buff_damage_crit_chance_increase") ---@diagnostic disable-line: param-type-mismatch
+	end
+end
+
 --- Draws some trash
 --- @private
 --- :)
@@ -26,6 +34,7 @@ function debug:draw_misc()
 		if gsc_id then ComponentSetValue2(gsc_id, "extra_death_msg", "Killed by debug") end
 		EntityKill(ML.player.id)
 	end
+	if self.imgui.Button("Be strong") then self:be_strong() end
 	self.imgui.Text("Meta points")
 	self.imgui.Text(
 		"Speed bonus: "
