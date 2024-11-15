@@ -28,7 +28,7 @@ local ML = {
 	next_exp = 0,
 	stats = dofile_once("mods/meta_leveling/files/scripts/classes/private/stats.lua"),
 	gameEffect = dofile_once("mods/meta_leveling/files/scripts/classes/private/gameEffect_parser.lua"),
-	level_up_effects = dofile_once("mods/meta_leveling/files/scripts/classes/private/level_up_effects.lua")
+	level_up_effects = dofile_once("mods/meta_leveling/files/scripts/classes/private/level_up_effects.lua"),
 }
 
 function ML:toggle_ui()
@@ -54,12 +54,8 @@ function ML:level_up()
 	MLP.set:global_number(MLP.const.globals.exp_on_levelup, MLP.exp:current())
 	MLP.set:global_number(MLP.const.globals.current_level, self:get_level() + 1)
 	local level = self:get_level()
-	if level % 5 == 0 then
-		self.rewards_deck:add_reroll(1)
-	end
-	if level % 50 == 0 then
-		MLP.points:add_meta_points(1)
-	end
+	if level % 5 == 0 then self.rewards_deck:add_reroll(1) end
+	if level % MLP.get:mod_setting_number("meta_point_per_level") == 0 then MLP.points:add_meta_points(1) end
 	self.next_exp = self:get_next()
 	self:UpdateCommonParameters()
 end

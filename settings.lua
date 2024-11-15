@@ -76,17 +76,13 @@ do -- helpers
 	end
 
 	--- @param array mod_settings_global|mod_settings
-	--- @param gui? gui
+	--- @param gui gui
 	--- @return number
-	function U.calculate_elements_offset(array, gui)
-		if not gui then
-			gui = GuiCreate()
-			GuiStartFrame(gui)
-		end
+	function U.calculate_elements_offset_get_max(array, gui)
 		local max_width = 10
 		for _, setting in ipairs(array) do
 			if setting.category_id then
-				local cat_max_width = U.calculate_elements_offset(setting.settings, gui)
+				local cat_max_width = U.calculate_elements_offset_get_max(setting.settings, gui)
 				max_width = math.max(max_width, cat_max_width)
 			end
 			if setting.ui_name then
@@ -94,6 +90,15 @@ do -- helpers
 				max_width = math.max(max_width, name_length)
 			end
 		end
+		return max_width
+	end
+
+	--- @param array mod_settings_global|mod_settings
+	--- @return number
+	function U.calculate_elements_offset(array)
+		local gui = GuiCreate()
+		GuiStartFrame(gui)
+		local max_width = U.calculate_elements_offset_get_max(array, gui)
 		GuiDestroy(gui)
 		return max_width + 3
 	end
@@ -243,8 +248,11 @@ do -- gui helpers
 		if hovered then G.on_clicks(setting_name, not value, D[setting_name]) end
 	end
 
+	--- @class mod_setting_number_snap:mod_setting_number
+	--- @field value_snap? number
+
 	--- @param gui gui
-	--- @param setting mod_setting_number
+	--- @param setting mod_setting_number_snap
 	--- @return number, number
 	function G.mod_setting_number(gui, setting)
 		GuiLayoutBeginHorizontal(gui, 0, 0, false, 0, 0)
@@ -255,6 +263,7 @@ do -- gui helpers
 		local multiplier = setting.value_display_multiplier or 1
 		local value_new =
 			GuiSlider(gui, id(), U.offset - w, 0, "", value, setting.value_min, setting.value_max, setting.value_default, multiplier, " ", 64)
+		if setting.value_snap then value_new = math.floor(value_new / setting.value_snap + 0.5) * setting.value_snap end
 		GuiColorSetForNextWidget(gui, 0.81, 0.81, 0.81, 1)
 		local format = setting.format or ""
 		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)) .. format)
@@ -416,7 +425,7 @@ do -- Settings GUI
 		GuiOptionsRemove(gui, GUI_OPTION.Layout_NextSameLine)
 	end
 
-	--- @param setting mod_setting_number
+	--- @param setting mod_setting_number_snap
 	--- @param gui gui
 	function S.draw_bar_thickness(_, gui, _, _, setting)
 		local position = U.get_setting_next("exp_bar_position")
@@ -432,18 +441,14 @@ do -- Settings GUI
 		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
-	--- @class mod_setting_number_snap:mod_setting_number
-	--- @field value_snap? number
-
 	--- @param setting mod_setting_number_snap
 	--- @param gui gui
 	function S.mod_setting_number_float(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
-		if setting.value_snap then value_new = math.floor(value_new / setting.value_snap + 0.5) * setting.value_snap end
 		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
-	--- @param setting mod_setting_number
+	--- @param setting mod_setting_number_snap
 	--- @param gui gui
 	function S.mod_setting_number_integer(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
@@ -593,6 +598,9 @@ local translations = {
 		exp_bar_visual = "Bar visual",
 		exp_bar_default_bg = "Don't color background",
 		exp_bar_default_bg_d = "Use vanilla background color for exp bar",
+		meta_point_per_level = "Meta points per",
+		meta_point_per_level_d = "How many levels you would need to gain 1 meta point",
+		levels = "levels",
 	},
 	["русский"] = {
 		show_debug = "Show debug button",
@@ -659,6 +667,9 @@ local translations = {
 		exp_bar_visual = "Вид полосы",
 		exp_bar_default_bg = "Не красить фон",
 		exp_bar_default_bg_d = "Использовать стандартный фон для полосы опыта",
+		meta_point_per_level = "Очки меты каждые",
+		meta_point_per_level_d = "Сколько уровней нужно заработать для получения одного очка меты",
+		levels = "уровней",
 	},
 }
 
@@ -698,6 +709,7 @@ D = {
 	open_ui_hotkey = 0,
 	session_exp_foot_particle = true,
 	show_ui_on_death = true,
+	meta_point_per_level = 50,
 }
 
 local function build_settings()
@@ -833,6 +845,16 @@ local function build_settings()
 					value_snap = 0.05,
 					ui_fn = S.mod_setting_number_float,
 					format = "%",
+				},
+				{
+					id = "meta_point_per_level",
+					ui_name = T.meta_point_per_level,
+					value_default = D.meta_point_per_level,
+					value_min = 10,
+					value_max = 50,
+					value_snap = 5,
+					ui_fn = S.mod_setting_number_integer,
+					format = " " .. T.levels,
 				},
 			},
 		},
