@@ -1,4 +1,4 @@
-local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
+local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua") --- @type ML_components_helper
 
 ---@type ml_progress_point[]
 local progress = {
@@ -7,16 +7,18 @@ local progress = {
 		ui_name = "$ml_meta_starting_health",
 		description = "$ml_meta_starting_health_tp",
 		fn = function(count)
-			local component_id = ML.player:get_component_by_name("DamageModelComponent")
+			local component_id = ML.player:get_damagemodel()
 			if not component_id then return end
-			local health = 0.2 * count
-			components:add_value_to_component(component_id, "max_hp", health)
-			components:add_value_to_component(component_id, "hp", health)
+			local current_max_health = ComponentGetValue2(component_id, "max_hp")
+			local additional_health = 0.2 * count
+			local health = current_max_health + additional_health + 0.01 -- rounding weird
+			ComponentSetValue2(component_id, "max_hp", health)
+			ComponentSetValue2(component_id, "hp", health)
 		end,
 		applied_bonus = function(count)
 			return "+" .. 5 * count .. " $ml_simple_extra_health"
 		end,
-		stack = 20,
+		stack = 100,
 		price_multiplier = 1.1,
 	},
 	{
@@ -30,7 +32,7 @@ local progress = {
 		applied_bonus = function(count)
 			return "+" .. 5 * count .. "%"
 		end,
-		stack = 20,
+		stack = 100,
 		price_multiplier = 1.25,
 	},
 	{
@@ -88,9 +90,9 @@ local progress = {
 		applied_bonus = function(count)
 			return "+" .. 5 * count
 		end,
-		stack = 20,
+		stack = 40,
 		price = 2,
-		price_multiplier = 1.2
+		price_multiplier = 1.2,
 	},
 	{
 		id = "extra_reward_choice",
@@ -104,7 +106,7 @@ local progress = {
 		end,
 		stack = 3,
 		price = 50,
-		price_multiplier = 2
+		price_multiplier = 2,
 	},
 	{
 		id = "extra_rerolls",
@@ -118,7 +120,7 @@ local progress = {
 		end,
 		stack = 4,
 		price = 5,
-		price_multiplier = 1.2
+		price_multiplier = 1.2,
 	},
 	{
 		id = "rare_reward_less_rare",
@@ -142,9 +144,8 @@ local progress = {
 		end,
 		stack = 5,
 		price = 10,
-		price_multiplier = 1.1
-	}
+		price_multiplier = 1.1,
+	},
 }
-
 
 ML.meta:append_points(progress)

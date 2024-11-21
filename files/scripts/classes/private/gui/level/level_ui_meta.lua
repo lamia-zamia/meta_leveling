@@ -7,8 +7,16 @@ local LU_meta = {
 			width = 90,
 			height = 5,
 			offset = 100,
-		}
-	}
+		},
+		segment_colors = {
+			{ 0.6, 0.6, 0.6 },
+			{ 0, 0.8, 0.5 },
+			{ 0, 0.7, 0.8 },
+			{ 0.6, 0.4, 0.8 },
+			{ 0.8, 0.2, 0.6 },
+			{ 0.8, 0, 0.1 },
+		},
+	},
 }
 
 --- Tooltip for text and description
@@ -22,14 +30,10 @@ function LU_meta:MetaProgressPointTooltipText(point)
 		self:ColorGray()
 		self:TextCentered(0, 0, description, 0)
 	end
-	self:TextCentered(0, 0,
-		ML.rewards_deck.FormatString(self:Locale("$ml_meta_current: " .. point.applied_bonus(point.current_value))),
-		0)
+	self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_current: " .. point.applied_bonus(point.current_value))), 0)
 	if changed then
 		self:Color(1, 1, 0.4)
-		self:TextCentered(0, 0,
-			ML.rewards_deck.FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))),
-			0)
+		self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))), 0)
 	end
 end
 
@@ -117,9 +121,14 @@ end
 --- @param x number x position
 --- @param width number width of segment
 function LU_meta:MetaDrawPointProgressBarSegment(index, current, next, x, width)
+	local index_offset = math.ceil(next / 20) - 1
+	local colors = self.meta.segment_colors
+	local color = colors[index_offset % #colors + 1]
+	local acquired_color = colors[(index_offset + 1) % #colors + 1]
+	index = index + index_offset * 20
 	if index <= math.min(current, next) then
 		-- This part will remain acquired in the next run
-		self:Color(0, 0.8, 0.5)
+		self:Color(unpack(acquired_color))
 	elseif next > current and index <= next then
 		-- This part will be acquired in the next run
 		self:Color(1, 0.7, 0.3)
@@ -128,7 +137,7 @@ function LU_meta:MetaDrawPointProgressBarSegment(index, current, next, x, width)
 		self:Color(0.1, 0.4, 1)
 	else
 		-- This part is unacquired
-		self:Color(0.6, 0.6, 0.6)
+		self:Color(unpack(color))
 	end
 	self:Image(x, self.meta.y + 4, self.c.px, 0.8, width, self.meta.bar.height - 2)
 end
@@ -149,7 +158,7 @@ end
 --- @private
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointProgressBar(point)
-	local stack = point.stack
+	local stack = math.min(point.stack, 20)
 	local segment_width = self.meta.bar.width / stack
 	for i = 1, stack do
 		local x_offset = self.meta.bar.offset + (i - 1) * segment_width
@@ -157,8 +166,7 @@ function LU_meta:MetaDrawPointProgressBar(point)
 
 		if i < stack then
 			self:SetZ(self.const.z - 5)
-			self:MetaPointProgressBarBorderColor(x_offset + segment_width - 1, self.meta.y + 4, 1,
-				self.meta.bar.height - 2)
+			self:MetaPointProgressBarBorderColor(x_offset + segment_width - 1, self.meta.y + 4, 1, self.meta.bar.height - 2)
 		end
 	end
 	GuiZSet(self.gui, self.const.z - 4)
@@ -168,12 +176,9 @@ end
 --- Draws bar background
 --- @private
 function LU_meta:MetaDrawPointProgressBarBackground()
-	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y + 2.5,
-		self.meta.bar.width + 0.75, 1)
-	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y + 3.5,
-		self.meta.bar.width + 1.75, self.meta.bar.height - 1.25)
-	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 0.25,
-		self.meta.y + self.meta.bar.height + 2.25, self.meta.bar.width + 0.75, 1)
+	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y + 2.5, self.meta.bar.width + 0.75, 1)
+	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 1.25, self.meta.y + 3.5, self.meta.bar.width + 1.75, self.meta.bar.height - 1.25)
+	self:MetaPointProgressBarBackgroundColor(self.meta.bar.offset - 0.25, self.meta.y + self.meta.bar.height + 2.25, self.meta.bar.width + 0.75, 1)
 end
 
 --- Draws progress element
@@ -184,8 +189,12 @@ function LU_meta:MetaDrawPointProgress(point)
 	self:MetaDrawPointProgressBarBackground()
 	local x = self.meta.bar.offset - 0.25
 	if self:IsElementHovered(x, self.meta.y + 3.35, self.meta.bar.width + 0.75, self.meta.bar.height) then
-		self:ShowTooltip(self.data.x + x + self.meta.bar.width / 2, self.data.y + self.meta.y + self.meta.distance * 2,
-			self.MetaProgressPointTooltipBar, point)
+		self:ShowTooltip(
+			self.data.x + x + self.meta.bar.width / 2,
+			self.data.y + self.meta.y + self.meta.distance * 2,
+			self.MetaProgressPointTooltipBar,
+			point
+		)
 	end
 	GuiZSet(self.gui, self.const.z - 3)
 	self:MetaDrawPointProgressBar(point)
@@ -211,13 +220,24 @@ function LU_meta:MetaDrawPointIncreaser(index, point)
 	local color = available and { 0.5, 0.8, 0.5 } or { 0.5, 0.5, 0.5 }
 	if self:IsElementHovered(x, y + 3, 5, 5) then
 		self.tooltip_reset = false
-		self:ShowTooltip(x + self.data.x + 2.5, y + self.data.y + self.meta.distance * 2, self.MetaProgressPointManipulatorTooltip, point, price, false)
-		self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5,
-			available and self.const.ui_9p_button_hl or self.const.ui_9p_button)
+		self:ShowTooltip(
+			x + self.data.x + 2.5,
+			y + self.data.y + self.meta.distance * 2,
+			self.MetaProgressPointManipulatorTooltip,
+			point,
+			price,
+			false
+		)
+		self:Draw9Piece(
+			x + self.data.x,
+			y + self.data.y + 3,
+			self.const.z + 2,
+			5,
+			5,
+			available and self.const.ui_9p_button_hl or self.const.ui_9p_button
+		)
 		if available then
-			if self:IsLeftClicked() then
-				ML.meta:set_next_progress(index, 1)
-			end
+			if self:IsLeftClicked() then ML.meta:set_next_progress(index, 1) end
 		end
 	end
 	self:Color(unpack(color))
@@ -236,12 +256,16 @@ function LU_meta:MetaDrawPointDecreaser(index, point)
 	local return_value = point.price[next_val]
 	if self:IsElementHovered(x, y + 3, 5, 5) then
 		self.tooltip_reset = false
-		self:ShowTooltip(x + self.data.x + 2.5, y + self.data.y + self.meta.distance * 2, self.MetaProgressPointManipulatorTooltip, point, return_value,
-			true)
+		self:ShowTooltip(
+			x + self.data.x + 2.5,
+			y + self.data.y + self.meta.distance * 2,
+			self.MetaProgressPointManipulatorTooltip,
+			point,
+			return_value,
+			true
+		)
 		self:Draw9Piece(x + self.data.x, y + self.data.y + 3, self.const.z + 2, 5, 5, self.const.ui_9p_button_hl)
-		if self:IsLeftClicked() then
-			ML.meta:set_next_progress(index, -1)
-		end
+		if self:IsLeftClicked() then ML.meta:set_next_progress(index, -1) end
 	end
 	self:Color(0.5, 0.5, 0.8)
 	self:Text(x, y, "-")
@@ -256,8 +280,7 @@ function LU_meta:MetaDrawPointProgressElement(index, point)
 	self:Text(0, self.meta.y, progress_name .. ":")
 	local text_dim = self:GetTextDimension(progress_name)
 	if self:IsElementHovered(0, self.meta.y, text_dim, 10, true) then
-		self:ShowTooltip(self.data.x + text_dim / 2, self.data.y + self.meta.y + self.meta.distance * 2,
-			self.MetaProgressPointTooltipText, point)
+		self:ShowTooltip(self.data.x + text_dim / 2, self.data.y + self.meta.y + self.meta.distance * 2, self.MetaProgressPointTooltipText, point)
 	end
 	self:MetaDrawPointProgress(point)
 	self:MetaDrawPointDecreaser(index, point)

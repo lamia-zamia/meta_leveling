@@ -21,7 +21,7 @@ local meta = {
 ---@field applied_bonus? applied_bonus_fn function that returns a string value that describes current bonus
 ---@field description? string description
 ---@field description_var? reward_description variable for description
----@field stack? number max number of time you can upgrade it
+---@field stack number max number of time you can upgrade it
 ---@field price? number price of point
 ---@field price_multiplier? number multiplier of price to apply for next points
 ---@field custom_check? function custom check to perform before showing this point, should return boolean.<br>True - show, false - hide
@@ -136,21 +136,19 @@ end
 ---@return applied_bonus_fn
 function meta:verify_applied_bonus_description(progress_id, applied_bonus)
 	local success, result = pcall(applied_bonus, 1)
-	if success and type(result) == "string" then
-		return applied_bonus
-	end
+	if success and type(result) == "string" then return applied_bonus end
 	print("[Meta Leveling Error]: error during resolving description for " .. progress_id)
 	print(result)
-	return function() return "hamis" end
+	return function()
+		return "hamis"
+	end
 end
 
 ---Check and add point to progress
 ---@private
 ---@param point ml_progress_point
 function meta:initialize_point(point)
-	if point.custom_check and not point.custom_check() then
-		return
-	end
+	if point.custom_check and not point.custom_check() then return end
 	local id = point.id --[[@as progress_id]]
 	local current, next = self:get_current_progress(id)
 	self.progress[#self.progress + 1] = {
@@ -163,7 +161,7 @@ function meta:initialize_point(point)
 		stack = point.stack or 1,
 		price = self:calculate_cost(point.price or 1, point.price_multiplier or 2, point.stack or 1),
 		current_value = current,
-		next_value = next
+		next_value = next,
 	}
 end
 
