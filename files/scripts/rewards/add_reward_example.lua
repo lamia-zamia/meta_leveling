@@ -1,5 +1,5 @@
-local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua")
-local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
+local const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua") ---@type ml_const
+local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua") ---@type rewards_deck
 ---@type ml_reward
 local reward = {
 	id = "pickup_spell_refresh",
@@ -26,16 +26,22 @@ end
 
 local function spawn_chest(chance)
 	if is_near_mountain_altar() then
-		ML.utils:load_entity_to_player("data/entities/items/pickup/chest_leggy.xml")
+		EntityLoad("data/entities/items/pickup/chest_leggy.xml", ML.player.x, ML.player.y)
 		return
 	end
 
-	ML.utils:random_seed()
-	local rnd = Random(1, 2000)
-	if rnd >= chance then
-		ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random_super.xml")
-	else
-		ML.utils:load_entity_to_player("data/entities/items/pickup/chest_random.xml")
+	local add_chest_meta = ModSettingGet("meta_leveling.progress_better_chest") or 0
+	local chest_amount = add_chest_meta / 2
+	SetRandomSeed(ML.player.x, ML.player.y + GameGetFrameNum())
+	local count = math.floor(chest_amount + Randomf(0.0, 0.99))
+	for i = 1, count + 1 do
+		SetRandomSeed(ML.player.x + i, ML.player.y + GameGetFrameNum())
+		local rnd = Random(1, 2000)
+		if rnd >= chance then
+			EntityLoad("data/entities/items/pickup/chest_random_super.xml", ML.player.x + Random(-5, 5), ML.player.y + Random(-5, 5) + i)
+		else
+			EntityLoad("data/entities/items/pickup/chest_random.xml", ML.player.x + Random(-5, 5), ML.player.y + Random(-5, 5) + i)
+		end
 	end
 end
 

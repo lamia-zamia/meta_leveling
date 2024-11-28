@@ -95,6 +95,22 @@ local progress = {
 		price_multiplier = 1.2,
 	},
 	{
+		id = "hover_energy",
+		ui_name = "$perk_hover_boost",
+		description = "$ml_hover_energy_tp",
+		fn = function(count)
+			local component_id = ML.player:get_component_by_name("CharacterDataComponent")
+			if not component_id then return end
+			components:add_value_to_component(component_id, "fly_time_max", 0.5 * count)
+		end,
+		applied_bonus = function(count)
+			return "+" .. 0.5 * count
+		end,
+		stack = 20,
+		price = 3,
+		price_multiplier = 1.25,
+	},
+	{
 		id = "extra_reward_choice",
 		ui_name = "$ml_extra_reward_choice",
 		description = "$ml_meta_extra_reward_choice_tp",
@@ -145,6 +161,18 @@ local progress = {
 		stack = 5,
 		price = 10,
 		price_multiplier = 1.1,
+	},
+	{
+		id = "better_chest",
+		ui_name = "$ml_meta_better_chest",
+		description = "$ml_meta_better_chest_tp",
+		fn = function(count) end,
+		applied_bonus = function(count)
+			return string.format("+%d%%", count * 50)
+		end,
+		stack = 5,
+		price = 30,
+		price_multiplier = 2,
 	},
 }
 
