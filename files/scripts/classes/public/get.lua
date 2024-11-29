@@ -47,10 +47,8 @@ end
 ---@param entity entity_id
 ---@return boolean
 function ML_get:entity_has_player_tag(entity)
-	local tags = EntityGetTags(entity)
-	if not tags then return false end
 	for _, tag in ipairs(self.const.player_tags) do
-		if tags:find(tag) then return true end
+		if EntityHasTag(entity, tag) then return true end
 	end
 	return false
 end
