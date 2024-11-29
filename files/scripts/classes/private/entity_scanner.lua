@@ -11,16 +11,18 @@ local entity_scanner = {
 function entity_scanner:add_lua_component_if_none(entity)
 	self.processed_entities[entity] = true
 	local components = EntityGetComponent(entity, "LuaComponent") or {}
-	for _, component in ipairs(components) do
+	local component_id = nil
+	for i = 1, #components do
+		local component = components[i]
 		if ComponentGetValue2(component, "script_death") == "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua" then
-			return
+			component_id = component
+			break
 		end
 	end
-	EntityAddComponent2(entity, "LuaComponent", {
-		execute_every_n_frame = -1,
-		script_death = "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua",
-		script_damage_received = "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua",
-	})
+	component_id = component_id or EntityAddComponent2(entity, "LuaComponent")
+	ComponentSetValue2(component_id, "execute_every_n_frame", -1)
+	ComponentSetValue2(component_id, "script_death", "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua")
+	ComponentSetValue2(component_id, "script_damage_received", "mods/meta_leveling/files/scripts/attach_scripts/enemy_on_death.lua")
 end
 
 --- scan entities and add death script if none
@@ -29,9 +31,7 @@ function entity_scanner:check_entities()
 	for _, tag in ipairs(self.tags) do
 		local entities = EntityGetWithTag(tag)
 		for _, entity in ipairs(entities) do
-			if not self.processed_entities[entity] then
-				unprocessed_entities[entity] = true
-			end
+			if not self.processed_entities[entity] then unprocessed_entities[entity] = true end
 		end
 	end
 	for entity, _ in pairs(unprocessed_entities) do
