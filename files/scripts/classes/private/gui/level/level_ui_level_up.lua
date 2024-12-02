@@ -5,9 +5,23 @@ local LU_level_up = {
 		x = 0,
 		y = 0,
 		x_center = 0,
-		y_center = 0
-	}
+		y_center = 0,
+		show_new = false,
+	},
 }
+
+--- Draws "new" text
+--- @private
+--- @param reward_id ml_reward_id
+function LU_level_up:LevelUpDrawNewIcon(reward_id)
+	if GameGetFrameNum() % 120 < 60 then return end
+	local count = ML.rewards_deck:reward_picked_up_count_all_time(reward_id)
+	if count < 1 then
+		self:SetZ(self.const.z - 2)
+		self:Color(1, 0.8, 0.4)
+		GuiText(self.gui, self.level_up.x + 13, self.level_up.y - 9, "new!", 0.8, "data/fonts/font_pixel.xml")
+	end
+end
 
 ---tooltip render for rewards
 ---@private
@@ -16,7 +30,7 @@ function LU_level_up:LevelUpRewardsTooltip(reward)
 	local texts = {
 		name = ML.rewards_deck.FormatString(self:Locale(reward.ui_name)),
 		description = ML.rewards_deck:UnpackDescription(reward.description, reward.description_var),
-		description2 = ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var)
+		description2 = ML.rewards_deck:UnpackDescription(reward.description2, reward.description2_var),
 	}
 	self:TextCentered(0, 0, texts.name, 0)
 	if texts.description then self:TextCentered(0, 0, texts.description, 0) end
@@ -59,17 +73,14 @@ end
 function LU_level_up:LevelUpDrawButton(name, tp, fn, check, longest)
 	self:AddOptionForNext(self.c.options.ForceFocusable)
 	if check then
-		self:Draw9Piece(self.level_up.x - 1, self.level_up.y, self.const.z + 1, longest + 1, 10, self.const.ui_9p_button,
-			self.const.ui_9p_button_hl)
+		self:Draw9Piece(self.level_up.x - 1, self.level_up.y, self.const.z + 1, longest + 1, 10, self.const.ui_9p_button, self.const.ui_9p_button_hl)
 	else
 		self:Draw9Piece(self.level_up.x - 1, self.level_up.y, self.const.z + 1, longest + 1, 10, self.const.ui_9p_button)
 		self:ColorGray()
 	end
 	if self:IsHovered() then
 		self:ShowTooltipTextCenteredX(0, 22, tp)
-		if check and self:IsMouseClicked() then
-			fn(self)
-		end
+		if check and self:IsMouseClicked() then fn(self) end
 	end
 	self:TextCentered(self.level_up.x, self.level_up.y, name, longest)
 	self.level_up.x = self.level_up.x + longest + 10
@@ -83,16 +94,13 @@ function LU_level_up:LevelUpDrawButtonsCentered()
 	local reroll = self:Locale("$ml_reroll")
 	local reroll_count = math.floor(ML.rewards_deck:get_reroll_count())
 	local is_reroll_available = reroll_count > 0
-	if is_reroll_available then
-		reroll = reroll .. " [" .. reroll_count .. "]"
-	end
+	if is_reroll_available then reroll = reroll .. " [" .. reroll_count .. "]" end
 	local longest = self:GetLongestText({ skip, close, reroll }, "LevelUpButtons_" .. reroll_count)
 	local total_width = 3 * (longest + 10) - 10
 	self.level_up.x = self:CalculateCenterInScreen(total_width, self.const.reward_box_size)
 
 	self:LevelUpDrawButton(skip, self:Locale("$ml_skip_tp"), self.LevelUpSkipReward, true, longest)
-	self:LevelUpDrawButton(reroll, self:Locale("$ml_reroll_tp: ") .. reroll_count, self.LevelUpReroll,
-		is_reroll_available, longest)
+	self:LevelUpDrawButton(reroll, self:Locale("$ml_reroll_tp: ") .. reroll_count, self.LevelUpReroll, is_reroll_available, longest)
 	self:LevelUpDrawButton(close, self:Locale("$ml_close_tp"), self.CloseMenu, true, longest)
 end
 
@@ -102,16 +110,15 @@ end
 ---@return boolean
 function LU_level_up:LevelUpDrawPointSpenderReward(reward_id)
 	local reward = ML.rewards_deck.reward_data[reward_id]
+	if self.level_up.show_new then self:LevelUpDrawNewIcon(reward_id) end
 	self:DrawRewardRarity(self.level_up.x - 3, self.level_up.y - 3, self.const.z + 4, reward.border_color)
 	self:DrawRewardIcon(self.level_up.x + 1, self.level_up.y + 1, reward.ui_icon)
 	self:AddOptionForNext(self.c.options.ForceFocusable)
-	self:Draw9Piece(self.level_up.x, self.level_up.y, self.const.z + 1, 18, 18, self.const.ui_9p_reward,
-		self.const.ui_9p_reward_hl)
+	self:Draw9Piece(self.level_up.x, self.level_up.y, self.const.z + 1, 18, 18, self.const.ui_9p_reward, self.const.ui_9p_reward_hl)
 	if self:IsHovered() then
 		self.tooltip_img = self.const.tooltip_img_levelup
 		local cache = self:GetTooltipData(0, 0, self.LevelUpRewardsTooltip, reward)
 		self:ShowTooltip(self.dim.x / 2, self.level_up.y_center - cache.height - 10, self.LevelUpRewardsTooltip, reward)
-		-- self:ShowTooltip(self.level_up.x + 9, self.level_up.y + 36, self.LevelUpRewardsTooltip, reward)
 		self.tooltip_img = self.const.tooltip_img
 		if self:IsLeftClicked() then return true end
 	end

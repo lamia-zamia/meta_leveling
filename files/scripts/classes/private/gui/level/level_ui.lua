@@ -8,7 +8,7 @@ local modules = {
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_stats.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_meta.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_list.lua",
-	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_menu.lua"
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_menu.lua",
 }
 
 for _, module_name in ipairs(modules) do
@@ -28,9 +28,7 @@ end
 --- @return boolean
 function LU:PointSpenderCheck()
 	if not ML.player.id then return false end
-	if self.data.SkipMenuOnPending and ML.pending_levels > 0 then
-		GameAddFlagRun(MLP.const.flags.leveling_up)
-	end
+	if self.data.SkipMenuOnPending and ML.pending_levels > 0 then GameAddFlagRun(MLP.const.flags.leveling_up) end
 	if GameHasFlagRun(MLP.const.flags.leveling_up) then
 		self:LevelUpDrawPointSpender()
 		return true
@@ -69,7 +67,15 @@ end
 --- @private
 function LU:BlockInputOnPrevious()
 	local prev = self:GetPrevious()
-	if self:IsHoverBoxHovered(prev.x - self.const.sprite_offset / 2, prev.y - self.const.sprite_offset / 2, prev.w + self.const.sprite_offset, prev.h + self.const.sprite_offset, true) then
+	if
+		self:IsHoverBoxHovered(
+			prev.x - self.const.sprite_offset / 2,
+			prev.y - self.const.sprite_offset / 2,
+			prev.w + self.const.sprite_offset,
+			prev.h + self.const.sprite_offset,
+			true
+		)
+	then
 		self:BlockInput()
 	end
 end
@@ -86,9 +92,7 @@ end
 function LU:CheckForAnim()
 	for key, _ in pairs(self.anim) do
 		if self.anim[key].reset then
-			if GameGetFrameNum() - self.anim[key].frame > 1 then
-				self.anim[key].reset = false
-			end
+			if GameGetFrameNum() - self.anim[key].frame > 1 then self.anim[key].reset = false end
 		end
 	end
 end
@@ -216,9 +220,7 @@ function LU:DrawMainHeader()
 	local third_width = self.const.width * 0.33
 	local section = 10
 	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current())
-	if MLP.exp:current() < 10^21 then
-		experience = experience .. "/" .. MLP.exp:format(ML.next_exp)
-	end
+	if MLP.exp:current() < 10 ^ 21 then experience = experience .. "/" .. MLP.exp:format(ML.next_exp) end
 	local level = self:Locale("$ml_level: ") .. ML:get_level()
 	self.data.y = self.data.y + self.const.sprite_offset
 	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)
@@ -237,8 +239,7 @@ function LU:DrawMenuConnector()
 	self:AnimateB()
 	self:AnimateAlpha(0.08, 0.1, self.anim["window"].reset)
 	self:SetZ(5)
-	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, 0,
-		"mods/meta_leveling/files/gfx/ui/ui_9piece_connector.png")
+	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, 0, "mods/meta_leveling/files/gfx/ui/ui_9piece_connector.png")
 	self:BlockInputOnPrevious()
 	self:AnimateE()
 end
@@ -275,6 +276,7 @@ function LU:GetSetting()
 	self.data.SkipMenuOnPending = MLP.get:mod_setting_boolean("session_exp_ui_open_auto")
 	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
 	self.data.on_death = MLP.get:mod_setting_boolean("show_ui_on_death")
+	self.level_up.show_new = MLP.get:mod_setting_boolean("show_new_text")
 	self:MetaCalculateProgressOffset()
 	self:StatsFindLongest()
 end
@@ -282,9 +284,7 @@ end
 --- main logic
 --- @private
 function LU:DrawLevelUI()
-	if not self:PointSpenderCheck() then
-		self:DrawMainMenu()
-	end
+	if not self:PointSpenderCheck() then self:DrawMainMenu() end
 end
 
 --- main loop
@@ -304,9 +304,7 @@ function LU:loop()
 
 	if InputIsKeyJustDown(self.data.hotkey) then
 		self:OpenMenu()
-		if InputIsKeyDown(self.c.codes.keyboard.lshift) then
-			ML.gui_em_exit = false
-		end
+		if InputIsKeyDown(self.c.codes.keyboard.lshift) then ML.gui_em_exit = false end
 	end
 	self:CheckForAnim()
 end
