@@ -9,7 +9,6 @@ local gui = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/gu
 
 dofile_once("mods/meta_leveling/files/scripts/on_init/load_file_into_vfs.lua")
 
-
 ---On mod init
 function OnModInit()
 	dofile_once("mods/meta_leveling/files/scripts/on_init/appends.lua")

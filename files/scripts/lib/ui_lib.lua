@@ -121,19 +121,25 @@ end
 --- @protected
 --- @return boolean
 --- @nodiscard
-function ui_class:IsLeftClicked() return InputIsMouseButtonJustDown(self.c.codes.mouse.lc) end
+function ui_class:IsLeftClicked()
+	return InputIsMouseButtonJustDown(self.c.codes.mouse.lc)
+end
 
 --- Returns true if right mouse was clicked
 --- @protected
 --- @return boolean
 --- @nodiscard
-function ui_class:IsRightClicked() return InputIsMouseButtonJustDown(self.c.codes.mouse.rc) end
+function ui_class:IsRightClicked()
+	return InputIsMouseButtonJustDown(self.c.codes.mouse.rc)
+end
 
 --- Returns true if right or left mouse was clicked
 --- @protected
 --- @return boolean
 --- @nodiscard
-function ui_class:IsMouseClicked() return self:IsLeftClicked() or self:IsRightClicked() end
+function ui_class:IsMouseClicked()
+	return self:IsLeftClicked() or self:IsRightClicked()
+end
 
 --- Returns true if enter, escape or space was pressed
 --- @protected
@@ -271,7 +277,7 @@ function ui_class:DrawTooltipOffScreen(x, y, ui_fn, key, ...)
 	GuiLayoutBeginVertical(self.gui, x + offscreen_offset, y + offscreen_offset, true)
 	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
-	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img)
+	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img, self.tooltip_img)
 	self:SetTooltipCache(x, y, key)
 	self.gui, self.gui_id, self.animation_id = orig_gui, orig_id, anim_id
 end
@@ -327,7 +333,7 @@ function ui_class:DrawToolTip(x, y, ui_fn, ...)
 	ui_fn(self, ...)
 	GuiLayoutEnd(self.gui)
 	GuiZSet(self.gui, self.tooltip_z + 1)
-	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img)
+	GuiEndAutoBoxNinePiece(self.gui, self.tooltip_margin, 0, 0, false, 0, self.tooltip_img, self.tooltip_img)
 	self:AnimateE()
 	GuiZSet(self.gui, 0)
 	self.gui, self.gui_id, self.animation_id = orig_gui, orig_id, anim_id
@@ -366,7 +372,9 @@ end
 --- @param x number offset
 --- @param y number offset
 --- @param text string text to show
-function ui_class:ShowTooltipTextCenteredX(x, y, text) self:ShowTooltipCenteredX(x, y, self.TooltipText, text) end
+function ui_class:ShowTooltipTextCenteredX(x, y, text)
+	self:ShowTooltipCenteredX(x, y, self.TooltipText, text)
+end
 
 --- Custom tooltip with hovered check.
 --- @protected
@@ -382,7 +390,9 @@ end
 --- draw text at 0
 --- @private
 --- @param text string
-function ui_class:TooltipText(text) self:Text(0, 0, text) end
+function ui_class:TooltipText(text)
+	self:Text(0, 0, text)
+end
 
 -- ############################################
 -- #########		SCROLLBOX		###########
@@ -608,7 +618,9 @@ end
 --- @param text string
 --- @param font? string
 --- @return number, number
-function ui_class:GetTextDimension(text, font) return GuiGetTextDimensions(self.gui, text, 1, 2, font or "") end
+function ui_class:GetTextDimension(text, font)
+	return GuiGetTextDimensions(self.gui, text, 1, 2, font or "")
+end
 
 --- Function to calculate the longest string in array
 --- @private
@@ -654,7 +666,9 @@ end
 --- @param font? string
 --- @param x number
 --- @param y number
-function ui_class:Text(x, y, text, font) GuiText(self.gui, x, y, text, 1, font or "") end
+function ui_class:Text(x, y, text, font)
+	GuiText(self.gui, x, y, text, 1, font or "")
+end
 
 --- GuiText with borders
 --- @param x number
@@ -738,7 +752,9 @@ end
 --- Set Z for next widget
 --- @protected
 --- @param number number
-function ui_class:SetZ(number) GuiZSetForNextWidget(self.gui, number) end
+function ui_class:SetZ(number)
+	GuiZSetForNextWidget(self.gui, number)
+end
 
 --- set color for next widget
 --- @protected
@@ -752,22 +768,30 @@ function ui_class:Color(r, g, b, a)
 end
 
 --- @protected
-function ui_class:ColorGray() self:Color(0.6, 0.6, 0.6) end
+function ui_class:ColorGray()
+	self:Color(0.6, 0.6, 0.6)
+end
 
 --- set option for all next widgets
 --- @protected
 --- @param option ui_options
-function ui_class:AddOption(option) GuiOptionsAdd(self.gui, option) end
+function ui_class:AddOption(option)
+	GuiOptionsAdd(self.gui, option)
+end
 
 --- set option for next widget
 --- @protected
 --- @param option ui_options
-function ui_class:AddOptionForNext(option) GuiOptionsAddForNextWidget(self.gui, option) end
+function ui_class:AddOptionForNext(option)
+	GuiOptionsAddForNextWidget(self.gui, option)
+end
 
 --- remove option for all next widgets
 --- @protected
 --- @param option gui_options_number
-function ui_class:RemoveOption(option) GuiOptionsRemove(self.gui, option) end
+function ui_class:RemoveOption(option)
+	GuiOptionsRemove(self.gui, option)
+end
 
 -- ############################################
 -- ############		IMAGES		###############
@@ -842,11 +866,15 @@ end
 
 --- Ends an animation
 --- @protected
-function ui_class:AnimateE() GuiAnimateEnd(self.gui) end
+function ui_class:AnimateE()
+	GuiAnimateEnd(self.gui)
+end
 
 --- Begins an animation
 --- @protected
-function ui_class:AnimateB() GuiAnimateBegin(self.gui) end
+function ui_class:AnimateB()
+	GuiAnimateBegin(self.gui)
+end
 
 -- ############################################
 -- #############		MISC		###########

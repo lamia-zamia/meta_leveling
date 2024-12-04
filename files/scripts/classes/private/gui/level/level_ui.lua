@@ -9,6 +9,7 @@ local modules = {
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_meta.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_list.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_menu.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_header.lua",
 }
 
 for _, module_name in ipairs(modules) do
@@ -209,30 +210,6 @@ function LU:DrawRewardIcon(x, y, icon, scale)
 	self:Image(x + x_offset, y + y_offset, icon, 1, scale, scale)
 end
 
--- ############################################
--- ############		MAIN MENU		###########
--- ############################################
-
---- draw header
---- @private
-function LU:DrawMainHeader()
-	self:MenuAnimS("header")
-	local third_width = self.const.width * 0.33
-	local section = 10
-	local experience = self:Locale("$ml_experience: ") .. MLP.exp:format(MLP.exp:current())
-	if MLP.exp:current() < 10 ^ 21 then experience = experience .. "/" .. MLP.exp:format(ML.next_exp) end
-	local level = self:Locale("$ml_level: ") .. ML:get_level()
-	self.data.y = self.data.y + self.const.sprite_offset
-	self:Draw9Piece(self.data.x, self.data.y, self.const.z + 1, self.const.width, section, self.const.ui_9piece)
-	self:BlockInputOnPrevious()
-	self:TextCentered(self.data.x, self.data.y, experience, third_width)
-	self:TextCentered(self.data.x + third_width, self.data.y, "META LEVELING", third_width)
-	self:TextCentered(self.data.x + third_width * 2, self.data.y, level, third_width)
-	self:AnimateE()
-
-	self.data.y = self.data.y + section + self.const.sprite_offset
-end
-
 --- draw connector between header and window
 --- @private
 function LU:DrawMenuConnector()
@@ -279,6 +256,7 @@ function LU:GetSetting()
 	self.level_up.show_new = MLP.get:mod_setting_boolean("show_new_text")
 	self:MetaCalculateProgressOffset()
 	self:StatsFindLongest()
+	self:GetPosition()
 end
 
 --- main logic
@@ -293,7 +271,7 @@ function LU:loop()
 	self:StartFrame()
 
 	GuiZSet(self.gui, self.const.z - 2)
-	self.data.x, self.data.y = self:CalculateCenterInScreen(self.const.width, self.const.height)
+	self.data.x, self.data.y = self.position.x, self.position.y
 
 	if self:IsDead() then
 		if self:DeathIsCreditsPlaying() then return end
