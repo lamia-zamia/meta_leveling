@@ -186,6 +186,21 @@ local progress = {
 		price = 30,
 		price_multiplier = 2,
 	},
+	{
+		id = "random_perk",
+		ui_name = "$ml_meta_random_perk",
+		description = "$ml_meta_random_perk_tp",
+		fn = function(count)
+			local entity = EntityLoad("mods/meta_leveling/files/entities/perk_picker/reward.xml")
+			EntityAddChild(ML.player.id, entity)
+		end,
+		applied_bonus = function(count)
+			return string.format("$ml_meta_random_perk_value - %d", count)
+		end,
+		stack = 10,
+		price = 50,
+		price_multiplier = 2,
+	},
 }
 
 ML.meta:append_points(progress)

@@ -59,8 +59,8 @@ end
 
 --- Tooltip for available points
 --- @private
---- @param text string
-function LU_meta:MetaProgressDisplayAvailablePointsTooltip(text)
+function LU_meta:MetaProgressDisplayAvailablePointsTooltip()
+	local text = self:Locale("$ml_meta_available: ") .. MLP.points:get_current_currency()
 	self:TextCentered(0, 0, text, 0)
 	self:ColorGray()
 	self:TextCentered(0, 0, self:Locale("$ml_meta_available_tp"), 0)
@@ -69,10 +69,10 @@ end
 --- Display available points
 --- @private
 function LU_meta:MetaProgressDisplayAvailablePoints()
-	local text = self:Locale("$ml_meta_available: ") .. MLP.points:get_current_currency()
+	local text = self:Locale("$ml_meta_points: ") .. MLP.points:get_current_currency()
 	local text_dim = self:GetTextDimension(text)
 	self:Text(self.const.width - text_dim, 0, text)
-	self:AddTooltip(text_dim / 2, self.meta.distance * 2, self.MetaProgressDisplayAvailablePointsTooltip, text)
+	self:AddTooltip(text_dim / 2, self.meta.distance * 2, self.MetaProgressDisplayAvailablePointsTooltip)
 end
 
 --- Color for bar border
@@ -277,8 +277,9 @@ end
 --- @param point ml_progress_point_run
 function LU_meta:MetaDrawPointProgressElement(index, point)
 	local progress_name = ML.rewards_deck.FormatString(self:Locale(point.ui_name))
+	self:SetZ(self.const.z + 5)
 	self:Text(0, self.meta.y, progress_name .. ":")
-	local text_dim = self:GetTextDimension(progress_name)
+	local text_dim = math.min(self:GetTextDimension(progress_name), 145)
 	if self:IsElementHovered(0, self.meta.y, text_dim, 10, true) then
 		self:ShowTooltip(self.data.x + text_dim / 2, self.data.y + self.meta.y + self.meta.distance * 2, self.MetaProgressPointTooltipText, point)
 	end
@@ -306,7 +307,7 @@ function LU_meta:MetaCalculateProgressOffset()
 	for _, point in ipairs(ML.meta.progress) do
 		texts[#texts + 1] = self:Locale(point.ui_name)
 	end
-	self.meta.bar.offset = self:GetLongestText(texts, "meta_progress_offset") + 20
+	self.meta.bar.offset = math.min(self:GetLongestText(texts, "meta_progress_offset") + 20, 158)
 end
 
 --- Scrollbox window
