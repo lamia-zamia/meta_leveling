@@ -37,7 +37,6 @@ local data = {
 	SkipMenuOnPending = true,
 	hotkey = 0,
 	on_death = true,
-	credits_frame = 0
 }
 
 --- @class LU.anim
@@ -52,12 +51,12 @@ local anim = {
 	},
 	window = {
 		reset = false,
-		frame = 0
+		frame = 0,
 	},
 	buttons = {
 		reset = false,
-		frame = 0
-	}
+		frame = 0,
+	},
 }
 
 LU.buttons.img = const.ui_9p_button
