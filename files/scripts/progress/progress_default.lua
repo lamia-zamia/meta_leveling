@@ -77,6 +77,18 @@ local progress = {
 		price_multiplier = 1.5,
 	},
 	{
+		id = "ascension",
+		ui_name = "$ml_meta_ascension",
+		description = "$ml_meta_ascension_tp",
+		fn = function(count) end,
+		applied_bonus = function(count)
+			return string.format("$ml_meta_ascension_times - %d", count)
+		end,
+		stack = 10,
+		price = 30,
+		price_multiplier = 1.3,
+	},
+	{
 		id = "movement_speed",
 		ui_name = "$perk_movement_faster",
 		description = "$perkdesc_movement_faster",

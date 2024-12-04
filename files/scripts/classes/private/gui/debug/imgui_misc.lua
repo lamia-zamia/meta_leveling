@@ -1,3 +1,5 @@
+local ascend = dofile_once("mods/meta_leveling/files/scripts/classes/private/ascend.lua") --- @type ml_ascend
+
 --- @class ml_debug
 local debug = {}
 
@@ -35,6 +37,7 @@ function debug:draw_misc()
 		EntityKill(ML.player.id)
 	end
 	if self.imgui.Button("Be strong") then self:be_strong() end
+	if self.imgui.Button("Ascend") then ascend:ascend() end
 	self.imgui.Text("Meta points")
 	self.imgui.Text(
 		"Speed bonus: "

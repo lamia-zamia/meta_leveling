@@ -14,7 +14,7 @@ local LUE = {
 	play_sound = true,
 	play_fx = true,
 	create_particles = true,
-	particle_step = 0
+	particle_step = 0,
 }
 
 ---Returns a emitter component variable
@@ -63,8 +63,7 @@ end
 function LUE:create_emitter_core(color)
 	local entity = EntityCreateNew()
 	EntityAddComponent2(entity, "LifetimeComponent", { lifetime = 260 })
-	self:add_attractor_component(entity, "mods/meta_leveling/files/gfx/emitters/levelup_core.png", 5, 0, 2, 2,
-		color)
+	self:add_attractor_component(entity, "mods/meta_leveling/files/gfx/emitters/levelup_core.png", 5, 0, 2, 2, color)
 	EntitySetTransform(entity, ML.player.x, ML.player.y - 30)
 end
 
@@ -75,10 +74,9 @@ function LUE:create_emitter(level)
 	local index = math.floor(level / 10) + 1
 	local entity = EntityCreateNew()
 	EntityAddComponent2(entity, "LifetimeComponent", { lifetime = 260 })
-	self:add_attractor_component(entity, self:decide_emitter_image(level, index), 3 + math.min(5, index), 0.1, 1, 2,
-		self.color1)
+	self:add_attractor_component(entity, self:decide_emitter_image(level, index), 3 + math.min(5, index), 0.1, 1, 2, self.color1)
 	EntityAddComponent2(entity, "LuaComponent", {
-		script_source_file = "mods/meta_leveling/files/scripts/attach_scripts/level_up_effect.lua"
+		script_source_file = "mods/meta_leveling/files/scripts/attach_scripts/level_up_effect.lua",
 	})
 	if self.play_sound then
 		local audio = EntityAddComponent2(entity, "AudioLoopComponent", {
@@ -97,10 +95,23 @@ end
 function LUE:reminder_particle(pending)
 	self.particle_step = self.particle_step + pending / 10
 	if self.particle_step >= 1 then
-		GameCreateCosmeticParticle("spark_green", ML.player.x, ML.player.y + 3, math.floor(self.particle_step),
-			10, 5, self.color1, 0.5, 1, ---@diagnostic disable-line: param-type-mismatch
-			true, false, false,
-			true, 0, -30)
+		GameCreateCosmeticParticle(
+			"spark_green",
+			ML.player.x,
+			ML.player.y + 3,
+			math.floor(self.particle_step),
+			10,
+			5,
+			self.color1,
+			0.5,
+			1, ---@diagnostic disable-line: param-type-mismatch
+			true,
+			false,
+			false,
+			true,
+			0,
+			-30
+		)
 		self.particle_step = 0
 	end
 end
@@ -146,18 +157,16 @@ end
 
 ---Init fx
 function LUE:init()
-	self.last_level = MLP.get:global_number(MLP.const.globals.fx_played, 1)
 	self:update_settings()
 end
 
 ---Check and play effects
 function LUE:update()
-	if not self.last_level then return end
 	if not ML.player.id then return end
 	local pending = ML.pending_levels
 	local max_level = ML:get_level() + pending
-	if max_level > self.last_level then
-		self.last_level = max_level
+	if max_level > MLP.get:global_number(MLP.const.globals.fx_played, 1) then
+		MLP.set:global_number(MLP.const.globals.fx_played, max_level)
 		MLP.set:global_number(MLP.const.globals.fx_played, max_level)
 		local _, exp_inverted = ML:get_percentage()
 		if exp_inverted then
@@ -171,9 +180,7 @@ function LUE:update()
 			end
 		end
 	end
-	if pending > 0 and self.create_particles then
-		self:reminder_particle(pending)
-	end
+	if pending > 0 and self.create_particles then self:reminder_particle(pending) end
 end
 
 return LUE

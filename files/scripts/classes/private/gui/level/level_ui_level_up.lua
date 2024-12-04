@@ -1,3 +1,5 @@
+local ascend = dofile_once("mods/meta_leveling/files/scripts/classes/private/ascend.lua") --- @type ml_ascend
+
 ---@class (exact) level_ui
 ---@field private level_up any
 local LU_level_up = {
@@ -86,6 +88,64 @@ function LU_level_up:LevelUpDrawButton(name, tp, fn, check, longest)
 	self.level_up.x = self.level_up.x + longest + 10
 end
 
+--- Tooltip for ascend button
+--- @private
+--- @param can_ascend boolean
+function LU_level_up:LevelUpDrawAscendButtonTooltip(can_ascend)
+	local title = can_ascend and self:Locale("$ml_ascend_available") or self:Locale("$ml_ascend_required_level: " .. ascend:get_required_level())
+	local texts = {
+		title,
+		self:Locale("$ml_ascend_description1"),
+		self:Locale("$ml_ascend_description2"),
+	}
+	local longest = self:GetLongestText(texts, "ascend_" .. ML:get_level())
+	self:TextCentered(0, 0, texts[1], longest)
+	for i = 2, #texts do
+		self:ColorGray()
+		self:TextCentered(0, 0, texts[i], longest)
+	end
+end
+
+--- Draws ascend button
+--- @private
+function LU_level_up:LevelUpDrawAscendButton()
+	if not ascend:is_available() then return end
+	local can_ascend = ascend:can_ascend()
+	local ascend_text = self:Locale("$ml_ascend")
+	local ascend_text_width = self:GetTextDimension(ascend_text)
+	local total_width = 15 + ascend_text_width
+	self.level_up.x = self:CalculateCenterInScreen(total_width, self.const.reward_box_size)
+	self.level_up.y = self.level_up.y + 19
+	local r, g, b = MLP.get:exp_color()
+
+	local highlight = can_ascend and self.const.ui_9p_button_hl or self.const.ui_9p_button
+	self:AddOptionForNext(self.c.options.ForceFocusable)
+	self:Draw9Piece(self.level_up.x - 1, self.level_up.y, self.const.z + 1, total_width + 1, 10, self.const.ui_9p_button, highlight)
+	if self:IsHovered() then
+		self:ShowTooltipCenteredX(0, 22, self.LevelUpDrawAscendButtonTooltip, can_ascend)
+		if can_ascend and self:IsLeftClicked() then
+			ascend:ascend()
+			GameRemoveFlagRun(MLP.const.flags.leveling_up)
+			self.data.reward_list = nil
+		end
+	end
+
+	if can_ascend then
+		if GameGetFrameNum() % 120 < 60 then
+			self:Color(r, g, b)
+			self:SetZ(self.const.z - 10)
+			self:Image(self.level_up.x - 0.5, self.level_up.y + 0.5, "mods/meta_leveling/files/gfx/ui/ascend_color.png", 0.7)
+		end
+	else
+		self:ColorGray()
+	end
+	self:Image(self.level_up.x - 0.5, self.level_up.y + 0.5, "mods/meta_leveling/files/gfx/ui/ascend.png")
+	self.level_up.x = self.level_up.x + 15
+
+	if not can_ascend then self:ColorGray() end
+	self:Text(self.level_up.x, self.level_up.y, ascend_text)
+end
+
 ---draw level up buttons
 ---@private
 function LU_level_up:LevelUpDrawButtonsCentered()
@@ -102,6 +162,7 @@ function LU_level_up:LevelUpDrawButtonsCentered()
 	self:LevelUpDrawButton(skip, self:Locale("$ml_skip_tp"), self.LevelUpSkipReward, true, longest)
 	self:LevelUpDrawButton(reroll, self:Locale("$ml_reroll_tp: ") .. reroll_count, self.LevelUpReroll, is_reroll_available, longest)
 	self:LevelUpDrawButton(close, self:Locale("$ml_close_tp"), self.CloseMenu, true, longest)
+	self:LevelUpDrawAscendButton()
 end
 
 ---Draws rewards
@@ -167,6 +228,7 @@ function LU_level_up:LevelUpDrawPointSpender()
 		self:LevelUpDrawPointSpenderRow(1, amount)
 	end
 
+	if not self.data.reward_list then return end
 	self.level_up.y = self.level_up.y + 36
 	self:LevelUpDrawButtonsCentered()
 
