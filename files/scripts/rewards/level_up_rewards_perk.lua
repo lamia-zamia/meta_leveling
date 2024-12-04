@@ -1,4 +1,4 @@
-local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua")
+local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua") --- @type ml_rewards_util
 --- @type ml_rewards
 local rewards_perk = {
 	{
