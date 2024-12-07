@@ -79,9 +79,7 @@ function LU_d:DeathDrawTriggerEndMenu()
 	local you_are_dead_len = self:GetTextDimension(self:Locale(" $menugameover_nextbutton "))
 	local x_yad = self:CalculateCenterInScreen(you_are_dead_len, self.dim.y)
 	local hovered_cod = self:IsHoverBoxHovered(x_cod, 132, cause_of_death_len, 20, true)
-	self:Draw9Piece(x_cod, 132, -50, cause_of_death_len, 20)
 	local hovered_yad = self:IsHoverBoxHovered(x_yad, 142, you_are_dead_len, 20, true)
-	self:Draw9Piece(x_yad, 142, -50, you_are_dead_len, 20)
 	if hovered_cod or hovered_yad then
 		if self:IsMouseClicked() then self:DeathMenuInit() end
 	end
