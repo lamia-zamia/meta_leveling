@@ -56,7 +56,7 @@ local borders = {
 local spell_suffixes = {
 	["low"] = "_low.xml",
 	["mid"] = "_mid.xml",
-	["high"] = "_high.xml"
+	["high"] = "_high.xml",
 }
 
 --- Icons to generate, manually specified
@@ -66,80 +66,80 @@ local icons_to_generate = {
 		path = "mods/meta_leveling/vfs/rewards/spell_teleport_bolt.png",
 		layers = {
 			{
-				IG.spell_background.projectile
+				IG.spell_background.projectile,
 			},
 			{
-				"data/ui_gfx/gun_actions/teleport_projectile_short.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/teleport_projectile_short.png",
+			},
+		},
 	},
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_nolla.png",
 		layers = {
 			{
-				IG.spell_background.modifier
+				IG.spell_background.modifier,
 			},
 			{
-				"data/ui_gfx/gun_actions/nolla.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/nolla.png",
+			},
+		},
 	},
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_add_mana.png",
 		layers = {
 			{
-				IG.spell_background.modifier
+				IG.spell_background.modifier,
 			},
 			{
-				"data/ui_gfx/gun_actions/mana.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/mana.png",
+			},
+		},
 	},
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_blood_magic.png",
 		layers = {
 			{
-				IG.spell_background.utility
+				IG.spell_background.utility,
 			},
 			{
-				"data/ui_gfx/gun_actions/blood_magic.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/blood_magic.png",
+			},
+		},
 	},
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_cov.png",
 		layers = {
 			{
-				IG.spell_background.static_projectile
+				IG.spell_background.static_projectile,
 			},
 			{
-				"data/ui_gfx/gun_actions/regeneration_field.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/regeneration_field.png",
+			},
+		},
 	},
 	{
 		path = "mods/meta_leveling/vfs/rewards/spell_heal_spells.xml",
 		layers = {
 			{
-				IG.spell_background.projectile
+				IG.spell_background.projectile,
 			},
 			{
 				"data/ui_gfx/gun_actions/heal_bullet.png",
-				"data/ui_gfx/gun_actions/antiheal.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/antiheal.png",
+			},
+		},
 	},
 	{
 		path = "mods/meta_leveling/vfs/gfx/rewards/spell_drills.xml",
 		layers = {
 			{
-				IG.spell_background.projectile
+				IG.spell_background.projectile,
 			},
 			{
 				"data/ui_gfx/gun_actions/digger.png",
-				"data/ui_gfx/gun_actions/powerdigger.png"
-			}
-		}
+				"data/ui_gfx/gun_actions/powerdigger.png",
+			},
+		},
 	},
 }
 
@@ -152,31 +152,31 @@ local random_categorized_spells = {
 	[4] = "mods/meta_leveling/vfs/gfx/rewards/random_material_spell",
 	[5] = "mods/meta_leveling/vfs/gfx/rewards/random_other",
 	[6] = "mods/meta_leveling/vfs/gfx/rewards/random_utility",
-	[7] = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell"
+	[7] = "mods/meta_leveling/vfs/gfx/rewards/random_passive_spell",
 }
 
 local special_category_spells = {
 	{
 		list = ML.guns.trigger_hit_world,
 		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_hit_world.xml",
-		type = 0
+		type = 0,
 	},
 	{
 		list = ML.guns.trigger_death,
 		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_death.xml",
-		type = 0
+		type = 0,
 	},
 	{
 		list = ML.guns.trigger_timer,
 		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell_trigger_timer.xml",
-		type = 0
+		type = 0,
 	},
 	{
 		list = ML.guns.glimmers,
 		path = "mods/meta_leveling/vfs/gfx/rewards/spell_random_glimmer.xml",
 		type = 2,
-		speed = 0.225
-	}
+		speed = 0.225,
+	},
 }
 
 SetRandomSeed(1, 1)
@@ -188,12 +188,12 @@ for category = 0, #random_categorized_spells do --- for each category
 		if not icons then goto continue end
 		local layers = {
 			{ borders[category] },
-			icons
+			icons,
 		}
 		icons_to_generate[#icons_to_generate + 1] = {
 			path = random_categorized_spells[category] .. suffix,
 			layers = layers,
-			speed = math.max((1.8 / size), 0.45)
+			speed = math.max((1.8 / size), 0.45),
 		}
 		::continue::
 	end
@@ -213,21 +213,23 @@ for level, suffix in pairs(spell_suffixes) do
 	icons_to_generate[#icons_to_generate + 1] = {
 		path = "mods/meta_leveling/vfs/gfx/rewards/random_spell" .. suffix,
 		layers = random_spell_layers,
-		speed = 0.225
+		speed = 0.225,
 	}
 end
 
 for i = 1, #special_category_spells do
 	local icons, size = generate_spell_icon_layer(special_category_spells[i].list)
+	if not icons then goto continue end
 	local layers = {
 		{ borders[special_category_spells[i].type] },
-		icons
+		icons,
 	}
 	icons_to_generate[#icons_to_generate + 1] = {
 		path = special_category_spells[i].path,
 		layers = layers,
-		speed = special_category_spells[i].speed or math.max((1.8 / size), 0.45)
+		speed = special_category_spells[i].speed or math.max((1.8 / size), 0.45),
 	}
+	::continue::
 end
 
 for _, icon in ipairs(icons_to_generate) do
@@ -249,7 +251,7 @@ local potions_to_generate = {
 local random_potion = { --- @type ml_icon_generator_table
 	path = "mods/meta_leveling/vfs/gfx/rewards/random_potion.xml",
 	layers = { [1] = {} },
-	speed = 0.225
+	speed = 0.225,
 }
 
 for path, argb in pairs(potions_to_generate) do
