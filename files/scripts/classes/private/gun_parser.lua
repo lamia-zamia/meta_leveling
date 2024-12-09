@@ -254,7 +254,13 @@ end
 --- @return boolean
 function guns:spell_is_valid(action_id)
 	if self.spells_no_spawn[action_id] then return false end
-	if self.locked_spells[action_id] and not HasFlagPersistent(self.locked_spells[action_id]) then return false end
+	if self.locked_spells[action_id] then
+		if HasFlagPersistent(self.locked_spells[action_id]) then
+			self.locked_spells[action_id] = nil
+			return true
+		end
+		return false
+	end
 	return true
 end
 
