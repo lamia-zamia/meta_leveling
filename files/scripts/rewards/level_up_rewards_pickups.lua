@@ -87,7 +87,7 @@ local pickups = {
 	{
 		id = "pickup_potion_mimic",
 		group_id = "pickup_potion",
-		ui_name = "$mat_magic_liquid_hp_regeneration",
+		ui_name = "$mat_magic_liquid_hp_regeneration?",
 		description = "$ml_potion_static",
 		description_var = { "$mat_magic_liquid_hp_regeneration" },
 		ui_icon = "mods/meta_leveling/vfs/gfx/rewards/potion_hp_regen.png",
