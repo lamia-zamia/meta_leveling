@@ -116,6 +116,7 @@ ml_hover_recharge_tp,You gain levitation energy faster,Вы быстрее во�
 ml_bigger_lungs,Bigger lungs,Увеличенные легкие,Pulmões Maiores,Pulmones Más Grandes,Größere Lungen,Poumons Plus Grands,Polmoni Più Grandi,Większe płuca,更大的肺,大きな肺,큰 폐,,,,,,,,,,,
 ml_bigger_lungs_tp,You can hold your breath longer,Вы можете дольше задерживать дыхание,Você consegue prender a respiração por mais tempo,Puedes contener la respiración por más tiempo,Du kannst länger die Luft anhalten,Vous pouvez retenir votre souffle plus longtemps,Puoi trattenere il respiro più a lungo,Możesz dłużej wstrzymać oddech,你可以憋气更久,息を長く止められる,더 오래 숨을 참을 수 있습니다,,,,,,,,,,,
 ml_projectile_resistance,Projectile resistance,Сопротивление снарядам,Resistência a Projéteis,Resistencia a Proyectiles,Projektilresistenz,Résistance aux Projectiles,Resistenza ai Proiettili,Odporność na pociski,投射物抗性,投射物耐性,투사체 저항,,,,,,,,,,
+ml_projectile_resistance_tp,You take less damage from projectiles,Вы получаете меньше урона от снарядов,,,,,,,,,,
 ml_explosion_resistance,Explosion resistance,Сопротивление взрывам,,,,,,,,,,
 ml_explosion_resistance_tp,You take less damage from explosions,Вы получаете меньше урона от взрывов,,,,,,,,,,
 ml_melee_resistance,Melee resistance,Сопротивление рукопашной,,,,,,,,,,
