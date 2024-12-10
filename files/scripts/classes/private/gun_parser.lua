@@ -274,7 +274,7 @@ function guns:get_random_from_list(list)
 		if self:spell_is_valid(list[index]) then return list[index] end
 		index = index % length + 1
 	end
-	return "OCARINA_A"
+	return "TORCH"
 end
 
 --- return random spells of level
@@ -287,7 +287,7 @@ function guns:get_random_spell(level)
 		if action_id == "" then break end
 		if self:spell_is_valid(action_id) then return action_id end
 	end
-	return "OCARINA_A"
+	return "TORCH"
 end
 
 --- return random typed spells of level
@@ -301,7 +301,7 @@ function guns:get_random_typed_spell(level, type)
 		if action_id == "" then break end
 		if self:spell_is_valid(action_id) then return action_id end
 	end
-	return "OCARINA_A"
+	return "TORCH"
 end
 
 return guns
