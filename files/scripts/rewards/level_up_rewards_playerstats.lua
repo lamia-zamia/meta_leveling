@@ -125,6 +125,57 @@ local player_stats = {
 			components:add_value_to_component_object(component_id, "damage_multipliers", "melee", -0.1)
 		end,
 	},
+	{
+		id = "stats_electricity_resistance",
+		ui_name = "$ml_electricity_resistance",
+		description = "$ml_electricity_resistance_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/electricity_resistance.png",
+		probability = 0.2,
+		custom_check = function()
+			player:update()
+			return not player:has_effect("PROTECTION_ELECTRICITY")
+		end,
+		fn = function()
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
+			if not component_id then return end
+			components:add_value_to_component_object(component_id, "damage_multipliers", "electricity", -0.1)
+		end,
+	},
+	{
+		id = "stats_fire_resistance",
+		ui_name = "$ml_fire_resistance",
+		description = "$ml_fire_resistance_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/fire_resistance.png",
+		probability = 0.2,
+		custom_check = function()
+			player:update()
+			return not player:has_effect("PROTECTION_FIRE")
+		end,
+		fn = function()
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
+			if not component_id then return end
+			components:add_value_to_component_object(component_id, "damage_multipliers", "fire", -0.1)
+		end,
+	},
+	{
+		id = "stats_radioactive_resistance",
+		ui_name = "$ml_radioactive_resistance",
+		description = "$ml_radioactive_resistance_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/radioactive_resistance.png",
+		probability = 0.2,
+		custom_check = function()
+			player:update()
+			return not player:has_effect("PROTECTION_RADIOACTIVITY")
+		end,
+		fn = function()
+			player:update()
+			local component_id = player:get_component_by_name("DamageModelComponent")
+			if not component_id then return end
+			components:add_value_to_component_object(component_id, "damage_multipliers", "radioactive", -0.1)
+		end,
+	},
 }
 
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
