@@ -248,11 +248,8 @@ do -- gui helpers
 		if hovered then G.on_clicks(setting_name, not value, D[setting_name]) end
 	end
 
-	--- @class mod_setting_number_snap:mod_setting_number
-	--- @field value_snap? number
-
 	--- @param gui gui
-	--- @param setting mod_setting_number_snap
+	--- @param setting mod_setting_better_number
 	--- @return number, number
 	function G.mod_setting_number(gui, setting)
 		GuiLayoutBeginHorizontal(gui, 0, 0, false, 0, 0)
@@ -425,7 +422,7 @@ do -- Settings GUI
 		GuiOptionsRemove(gui, GUI_OPTION.Layout_NextSameLine)
 	end
 
-	--- @param setting mod_setting_number_snap
+	--- @param setting mod_setting_better_number
 	--- @param gui gui
 	function S.draw_bar_thickness(_, gui, _, _, setting)
 		local position = U.get_setting_next("exp_bar_position")
@@ -441,14 +438,14 @@ do -- Settings GUI
 		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
-	--- @param setting mod_setting_number_snap
+	--- @param setting mod_setting_better_number
 	--- @param gui gui
 	function S.mod_setting_number_float(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
 		if value ~= value_new then U.set_setting(setting.id, value_new) end
 	end
 
-	--- @param setting mod_setting_number_snap
+	--- @param setting mod_setting_better_number
 	--- @param gui gui
 	function S.mod_setting_number_integer(_, gui, _, _, setting)
 		local value, value_new = G.mod_setting_number(gui, setting)
@@ -744,6 +741,7 @@ local function build_settings()
 					ui_fn = S.mod_setting_better_string,
 				},
 				{
+					not_setting = true,
 					id = "exp_bar_thickness",
 					ui_name = T.exp_bar_thickness,
 					ui_description = T.exp_bar_thickness_d,
@@ -808,21 +806,18 @@ local function build_settings()
 					ui_name = T.open_ui_hotkey,
 				},
 				{
-					not_setting = true,
 					id = "level_up_ui",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.level_up_ui,
 					checkboxes = { "session_exp_ui_open_auto", "show_new_text" },
 				},
 				{
-					not_setting = true,
 					id = "session_exp_ui_close",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_ui_close,
 					checkboxes = { "session_exp_close_ui_on_pause", "session_exp_close_ui_on_shot", "session_exp_close_ui_on_damage" },
 				},
 				{
-					not_setting = true,
 					id = "session_exp_ui_open",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_ui_open,
@@ -838,14 +833,12 @@ local function build_settings()
 			_folded = true,
 			settings = {
 				{
-					not_setting = true,
 					id = "session_exp_on_level_up",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_level_up,
 					checkboxes = { "session_exp_play_sound", "session_exp_play_fx", "session_exp_foot_particle" },
 				},
 				{
-					not_setting = true,
 					id = "session_exp_on_kills",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_on_kills,
