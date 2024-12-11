@@ -54,13 +54,13 @@ local list = {
 			local minutes = math.floor((total_seconds % 3600) / 60)
 			local seconds = total_seconds % 60
 			return string.format("%02d:%02d:%02d", hours, minutes, seconds)
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_streak",
 		value = function()
 			return tostring(ModSettingGet("meta_leveling.streak_count"))
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_meta_points_on_win",
@@ -74,66 +74,85 @@ local list = {
 		category = "meta",
 		value = function()
 			return tostring(MLP.get:global_number(MLP.const.globals.meta_point_acquired, 0))
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_bonus_point_speed",
 		category = "meta",
 		value = function()
 			return tostring(math.floor(MLP.points:CalculateMetaPointsSpeedBonus()))
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_bonus_point_pacifist",
 		category = "meta",
 		value = function()
 			return tostring(math.floor(MLP.points:CalculateMetaPointsPacifistBonus()))
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_bonus_point_no_hit",
 		category = "meta",
 		value = function()
 			return tostring(math.floor(MLP.points:CalculateMetaPointsDamageTaken()))
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_bonus_point_fungal_shift",
 		category = "meta",
 		value = function()
 			return tostring(MLP.points:CalculateMetaPointsFungalShift())
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_stats_bonus_point_win_streak",
 		category = "meta",
 		value = function()
 			return tostring(MLP.points:CalculateMetaPointsWinStreakBonus())
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_projectile_resistance",
 		category = "resistance",
 		value = function()
 			return return_resistance("projectile")
-		end
+		end,
 	},
 	{
 		ui_name = "$ml_explosion_resistance",
 		category = "resistance",
 		value = function()
 			return return_resistance("explosion")
-		end
-
+		end,
 	},
 	{
 		ui_name = "$ml_melee_resistance",
 		category = "resistance",
 		value = function()
 			return return_resistance("melee")
-		end
+		end,
 	},
-
+	{
+		ui_name = "$ml_electricity_resistance",
+		category = "resistance",
+		value = function()
+			return return_resistance("electricity")
+		end,
+	},
+	{
+		ui_name = "$ml_fire_resistance",
+		category = "resistance",
+		value = function()
+			return return_resistance("fire")
+		end,
+	},
+	{
+		ui_name = "$ml_radioactive_resistance",
+		category = "resistance",
+		value = function()
+			return return_resistance("radioactive")
+		end,
+	},
 }
 
 ML.stats:add_entries(list)
