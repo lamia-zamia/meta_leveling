@@ -59,8 +59,9 @@ do -- helpers
 	--- @param setting_name setting_id
 	--- @param value setting_value
 	function U.set_setting(setting_name, value)
-		ModSettingSet(mod_prfx .. setting_name, value)
-		ModSettingSetNextValue(mod_prfx .. setting_name, value, false)
+		local full_setting_id = mod_prfx .. setting_name
+		ModSettingSet(full_setting_id, value)
+		ModSettingSetNextValue(full_setting_id, value, false)
 	end
 
 	--- @param setting_name setting_id
@@ -106,7 +107,7 @@ do -- helpers
 	--- @param all boolean reset all
 	function U.set_default(all)
 		for setting, value in pairs(D) do
-			if U.get_setting(setting) == nil or all then U.set_setting(setting, value) end
+			if U.get_setting_next(setting) == nil or all then U.set_setting(setting, value) end
 		end
 	end
 
@@ -204,24 +205,14 @@ do -- gui helpers
 		return clicked
 	end
 
-	--- @param setting_name setting_id
-	--- @param value setting_value
-	--- @param default setting_value
-	function G.on_clicks(setting_name, value, default)
-		if InputIsMouseButtonJustDown(1) then U.set_setting(setting_name, value) end
-		if InputIsMouseButtonJustDown(2) then
-			GamePlaySound("ui", "ui/button_click", 0, 0)
-			U.set_setting(setting_name, default)
-		end
-	end
-
 	--- @param gui gui
 	--- @param setting_name setting_id
+	--- @return boolean, boolean
 	function G.toggle_checkbox_boolean(gui, setting_name)
 		local text = T[setting_name]
 		local _, _, _, prev_x, y, prev_w = GuiGetPreviousWidgetInfo(gui)
 		local x = prev_x + prev_w + 1
-		local value = U.get_setting_next(setting_name)
+		local value = U.get_setting_next(setting_name) ---@cast value boolean
 		local offset_w = GuiGetTextDimensions(gui, text) + 8
 
 		GuiZSetForNextWidget(gui, -1)
@@ -245,7 +236,7 @@ do -- gui helpers
 			G.yellow_if_hovered(gui, hovered)
 		end
 		GuiText(gui, 0, 0, text)
-		if hovered then G.on_clicks(setting_name, not value, D[setting_name]) end
+		return hovered, value
 	end
 
 	--- @param gui gui
@@ -256,14 +247,16 @@ do -- gui helpers
 		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
 		local _, _, _, x_start, y_start = GuiGetPreviousWidgetInfo(gui)
 		local w = GuiGetTextDimensions(gui, setting.ui_name)
-		local value = tonumber(ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))) or setting.value_default
+		local default = D[setting.id]
+		local value = tonumber(ModSettingGetNextValue(mod_setting_get_id(mod_id, setting))) or default
 		local multiplier = setting.value_display_multiplier or 1
-		local value_new =
-			GuiSlider(gui, id(), U.offset - w, 0, "", value, setting.value_min, setting.value_max, setting.value_default, multiplier, " ", 64)
+		local value_new = GuiSlider(gui, id(), U.offset - w, 0, "", value, setting.value_min, setting.value_max, default, multiplier, " ", 64)
 		if setting.value_snap then value_new = math.floor(value_new / setting.value_snap + 0.5) * setting.value_snap end
 		GuiColorSetForNextWidget(gui, 0.81, 0.81, 0.81, 1)
 		local format = setting.format or ""
-		GuiText(gui, 3, 0, tostring(math.floor(value * multiplier)) .. format)
+		local display_value = value * multiplier
+		local text = display_value < 1 and string.format("%.2f%s", display_value, format) or string.format("%.0f%s", display_value, format)
+		GuiText(gui, 3, 0, text)
 		GuiLayoutEnd(gui)
 		local _, _, _, x_end, _, t_w = GuiGetPreviousWidgetInfo(gui)
 		GuiImageNinePiece(gui, id(), x_start, y_start, x_end - x_start + t_w, 8, 0, U.empty, U.empty)
@@ -473,13 +466,20 @@ do -- Settings GUI
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 7, 0, "")
 		for _, setting_id in ipairs(setting.checkboxes) do
-			G.toggle_checkbox_boolean(gui, setting_id)
+			local hovered, value = G.toggle_checkbox_boolean(gui, setting_id)
+			if hovered then
+				if InputIsMouseButtonJustDown(1) then U.set_setting(setting_id, not value) end
+				if InputIsMouseButtonJustDown(2) then
+					GamePlaySound("ui", "ui/button_click", 0, 0)
+					U.set_setting(setting_id, D[setting_id])
+				end
+			end
 		end
 		GuiLayoutEnd(gui)
 	end
 
 	function S.get_input(_, gui, _, _, setting)
-		local current_key = "[" .. U.keycodes[U.get_setting("open_ui_hotkey")] .. "]"
+		local current_key = "[" .. U.keycodes[U.get_setting_next("open_ui_hotkey")] .. "]"
 		if U.waiting_for_input then
 			current_key = GameTextGetTranslatedOrNot("$menuoptions_configurecontrols_pressakey")
 			local new_key = U.pending_input()
@@ -521,6 +521,36 @@ do -- Settings GUI
 			return
 		end
 		if G.button(gui, mod_setting_group_x_offset, T.reset_cat, { 1, 0.4, 0.4 }) then fn() end
+	end
+
+	function S.hardmode(_, gui, _, _, setting)
+		GuiColorSetForNextWidget(gui, 0.7, 0.7, 0.7, 1)
+		GuiText(gui, mod_setting_group_x_offset - 2, 0, "This is fairly experimental, but should be working.")
+		GuiColorSetForNextWidget(gui, 0.7, 0.7, 0.7, 1)
+		GuiText(gui, mod_setting_group_x_offset - 2, 0, "All the next settings applies on new game only.")
+		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
+		GuiText(gui, mod_setting_group_x_offset, 0, T.hardmode)
+		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
+		GuiText(gui, 7, 0, "")
+		local hovered, enabled = G.toggle_checkbox_boolean(gui, "hardmode_enabled")
+		if hovered then
+			local full_setting_id = mod_prfx .. "hardmode_enabled"
+			if InputIsMouseButtonJustDown(1) then ModSettingSetNextValue(full_setting_id, not enabled, false) end
+			if InputIsMouseButtonJustDown(2) then
+				GamePlaySound("ui", "ui/button_click", 0, 0)
+				ModSettingSetNextValue(full_setting_id, D["hardmode_enabled"], false)
+			end
+		end
+		GuiLayoutEnd(gui)
+		if not enabled then return end
+		S.mod_setting_number_float(_, gui, _, _, { id = "hardmode_level_curve", ui_name = T.hardmode_level_curve, value_min = 0.05, value_max = 0.5 })
+		S.mod_setting_better_boolean(
+			_,
+			gui,
+			_,
+			_,
+			{ id = "hardmode_nerf", ui_name = T.hardmode_nerf, checkboxes = { "hardmode_nerf_perks", "hardmode_nerf_rewards" } }
+		)
 	end
 end
 
@@ -602,6 +632,17 @@ local translations = {
 		meta_point_per_level = "Meta points per",
 		meta_point_per_level_d = "How many levels you would need to gain 1 meta point",
 		levels = "levels",
+		hardmode = "Hardmode", --cat
+		hardmode_d = "Settings related to hardmode",
+		hardmode_enabled = "Enabled",
+		hardmode_level_curve = "Level curve",
+		hardmode_level_curve_d = "How much harder it is to get more levels",
+		hardmode_nerf = "Nerf",
+		hardmode_nerf_d = "Nerf these things since this mod has analogues",
+		hardmode_nerf_perks = "Perks",
+		hardmode_nerf_perks_d = "Remove and rework some perks",
+		hardmode_nerf_rewards = "Rewards",
+		hardmode_nerf_rewards_d = "Nerf rewards",
 	},
 	["русский"] = {
 		show_debug = "Show debug button",
@@ -675,6 +716,17 @@ local translations = {
 		meta_point_per_level = "Очки меты каждые",
 		meta_point_per_level_d = "Сколько уровней нужно заработать для получения одного очка меты",
 		levels = "уровней",
+		hardmode = "Хардмод", --cat
+		hardmode_d = "Настройки связанные с хардмодом",
+		hardmode_enabled = "Включено",
+		hardmode_level_curve = "Кривая уровня",
+		hardmode_level_curve_d = "Насколько сложнее получать следующие уровни",
+		hardmode_nerf = "Нерфы",
+		hardmode_nerf_d = "Занерфить следующее поскольку этот мод имеет аналоги",
+		hardmode_nerf_perks = "Перки",
+		hardmode_nerf_perks_d = "Убирает и перерабатывает некоторые перки",
+		hardmode_nerf_rewards = "Награды",
+		hardmode_nerf_rewards_d = "Занерфить награды",
 	},
 }
 
@@ -716,6 +768,10 @@ D = {
 	session_exp_foot_particle = true,
 	show_ui_on_death = true,
 	meta_point_per_level = 50,
+	hardmode_enabled = false,
+	hardmode_level_curve = 0.1,
+	hardmode_nerf_perks = true,
+	hardmode_nerf_rewards = true,
 }
 
 local function build_settings()
@@ -736,7 +792,6 @@ local function build_settings()
 					id = "exp_bar_position",
 					ui_name = T.exp_bar_position,
 					ui_description = T.exp_bar_position_d,
-					value_default = D.exp_bar_position,
 					buttons = { "under_health", "on_left", "on_right", "on_top" },
 					ui_fn = S.mod_setting_better_string,
 				},
@@ -745,14 +800,12 @@ local function build_settings()
 					id = "exp_bar_thickness",
 					ui_name = T.exp_bar_thickness,
 					ui_description = T.exp_bar_thickness_d,
-					value_default = D.exp_bar_thickness,
 					value_min = 1,
 					ui_fn = S.draw_bar_thickness,
 				},
 				{
 					id = "exp_bar_red",
 					ui_name = T.exp_bar_red,
-					value_default = D.exp_bar_red,
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
@@ -761,7 +814,6 @@ local function build_settings()
 				{
 					id = "exp_bar_green",
 					ui_name = T.exp_bar_green,
-					value_default = D.exp_bar_green,
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
@@ -770,7 +822,6 @@ local function build_settings()
 				{
 					id = "exp_bar_blue",
 					ui_name = T.exp_bar_blue,
-					value_default = D.exp_bar_blue,
 					value_min = 0,
 					value_max = 1,
 					value_display_multiplier = 255,
@@ -847,7 +898,6 @@ local function build_settings()
 				{
 					id = "session_exp_multiplier",
 					ui_name = T.session_exp_multiplier,
-					value_default = D.session_exp_multiplier,
 					value_min = 0.05,
 					value_max = 3,
 					value_display_multiplier = 100,
@@ -858,12 +908,26 @@ local function build_settings()
 				{
 					id = "meta_point_per_level",
 					ui_name = T.meta_point_per_level,
-					value_default = D.meta_point_per_level,
 					value_min = 10,
 					value_max = 50,
 					value_snap = 5,
 					ui_fn = S.mod_setting_number_integer,
 					format = " " .. T.levels,
+				},
+			},
+		},
+		{
+			category_id = "hardmode_cat",
+			ui_name = T.hardmode,
+			ui_description = T.hardmode_d,
+			foldable = true,
+			_folded = true,
+			settings = {
+				{
+					not_setting = true,
+					id = "hardmode_settings",
+					ui_fn = S.hardmode,
+					ui_name = T.hardmode,
 				},
 			},
 		},
@@ -940,7 +1004,6 @@ function ModSettingsUpdate(init_scope)
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
 	if current_language ~= current_language_last_frame then mod_settings = build_settings() end
 	current_language_last_frame = current_language
-	-- mod_settings_update(mod_id, mod_settings, init_scope)
 end
 
 --- @return number

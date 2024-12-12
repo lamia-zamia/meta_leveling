@@ -25,7 +25,6 @@ mod_setting_group_x_offset = 0 --increases automatically
 
 ---@class mod_setting
 ---@field _version? number used to track setting version, not used in vanilla
----@field value_default setting_value default value
 ---@field id setting_id
 ---@field ui_name? string
 ---@field ui_description? string
@@ -39,7 +38,6 @@ mod_setting_group_x_offset = 0 --increases automatically
 ---@field [string] any
 
 ---@class (exact) mod_setting_better_number:mod_setting
----@field value_default number
 ---@field value_min number
 ---@field value_max number
 ---@field value_display_multiplier? number
@@ -47,15 +45,12 @@ mod_setting_group_x_offset = 0 --increases automatically
 ---@field value_snap? number
 
 ---@class (exact) mod_setting_better_boolean:mod_setting
----@field value_default nil
 ---@field checkboxes string[]
 
 ---@class (exact) mod_setting_better_string:mod_setting
----@field value_default string
 ---@field buttons string[]
 
----@class mod_settings
----@field [number] mod_setting_better_boolean|mod_setting_better_number|mod_setting_category|not_a_setting|mod_setting_better_string
+---@alias mod_settings mod_setting_better_boolean|mod_setting_better_number|mod_setting_category|not_a_setting|mod_setting_better_string
 
 ---@class mod_setting_category
 ---@field category_id mod_category_id
@@ -63,10 +58,9 @@ mod_setting_group_x_offset = 0 --increases automatically
 ---@field ui_description? string
 ---@field foldable boolean
 ---@field _folded boolean
----@field settings mod_settings
+---@field settings mod_settings[]
 
----@class mod_settings_global
----@field [number] mod_setting|mod_setting_category|{}
+---@alias mod_settings_global mod_setting_category[]|mod_settings[]
 
 ---@param mod_id mod_id
 ---@param setting mod_setting
