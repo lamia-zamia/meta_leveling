@@ -53,10 +53,10 @@ end
 ---Parse status file
 function status:parse()
 	---@type ML_sandbox
-	local sandbox = dofile_once("mods/meta_leveling/files/scripts/classes/private/sandbox.lua")
+	local sandbox = dofile("mods/meta_leveling/files/scripts/classes/private/sandbox.lua")
 	sandbox:start_sandbox()
 
-	dofile_once("data/scripts/status_effects/status_list.lua")
+	dofile("data/scripts/status_effects/status_list.lua")
 	for i = 1, #status_effects do ---@diagnostic disable-line: undefined-global
 		parse_status(status_effects[i]) ---@diagnostic disable-line: undefined-global
 	end

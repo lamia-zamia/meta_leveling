@@ -217,7 +217,7 @@ function guns:parse_actions()
 	end
 
 	--- @type ML_sandbox
-	local sandbox = dofile_once("mods/meta_leveling/files/scripts/classes/private/sandbox.lua")
+	local sandbox = dofile("mods/meta_leveling/files/scripts/classes/private/sandbox.lua")
 	sandbox:start_sandbox()
 	-- ###############################################################
 	-- #################		SANDBOX START		##################
