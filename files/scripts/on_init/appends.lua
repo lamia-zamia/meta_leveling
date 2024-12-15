@@ -4,8 +4,8 @@ dofile_once("mods/meta_leveling/files/scripts/appends/strmanip_append_dofile_bef
 dofile_once("mods/meta_leveling/files/scripts/appends/strmanip_insert_before_line.lua")
 
 --- Progress
-ModLuaFileAppend("mods/meta_leveling/files/for_modders/progress_appends.lua",
-	"mods/meta_leveling/files/scripts/progress/progress_default.lua")
+ModLuaFileAppend("mods/meta_leveling/files/for_modders/progress_appends.lua", "mods/meta_leveling/files/scripts/progress/progress_default.lua")
 
-ModLuaFileAppend("mods/component-explorer/menu_extensions.lua",
-	"mods/meta_leveling/files/scripts/appends/component_explorer.lua")
+ModLuaFileAppend("mods/component-explorer/menu_extensions.lua", "mods/meta_leveling/files/scripts/appends/component_explorer.lua")
+
+ModLuaFileAppend("data/scripts/status_effects/status_list.lua", "mods/meta_leveling/files/scripts/appends/effects.lua")
