@@ -96,7 +96,7 @@ function status:add_effect(entity, effect, duration)
 end
 
 ---Apply status to player, extend current if already have or add new
----@param effect game_effect|ML_gameEffect
+---@param effect game_effect|ML_gameEffect|string
 ---@param duration number in frames
 function status:apply_status_to_player(effect, duration)
 	local player_id = EntityGetWithTag("player_unit")[1]

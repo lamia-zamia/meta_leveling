@@ -204,6 +204,18 @@ local buffs = {
 			game_effect:apply_status_to_player(money, 300 * 60)
 		end,
 	},
+	{
+		id = "buff_temporary_more_exp",
+		ui_name = "$ml_more_experience",
+		description = "$ml_buff_temporary_tp",
+		description_var = { "$ml_more_experience", "300" },
+		description2 = "$ml_more_experience_2x_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_more_exp.png",
+		probability = 0.1,
+		fn = function()
+			game_effect:apply_status_to_player("META_LEVELING_MORE_EXP", 300 * 60)
+		end,
+	},
 }
 -- PROTECTION_POLYMORPH
 -- FRIEND_FIREMAGE
