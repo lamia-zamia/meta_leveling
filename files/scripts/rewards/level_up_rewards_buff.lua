@@ -1,4 +1,6 @@
-local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua")
+local rewards = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards.lua") --- @type ml_rewards_util
+local game_effect = dofile_once("mods/meta_leveling/files/scripts/classes/private/gameEffect_parser.lua") --- @type ML_gameEffect_parser
+
 ---@type ml_rewards
 local buffs = {
 	{
@@ -10,7 +12,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_berserk.png",
 		probability = 0.7,
 		fn = function()
-			ML.gameEffect:apply_status_to_player("BERSERK", 120 * 60)
+			game_effect:apply_status_to_player("BERSERK", 120 * 60)
 		end,
 	},
 	{
@@ -29,7 +31,7 @@ local buffs = {
 				ui_icon = "data/ui_gfx/status_indicators/movement_faster.png",
 				effect_entity = "data/entities/misc/effect_movement_faster.xml",
 			}
-			ML.gameEffect:apply_status_to_player(faster, 180 * 60)
+			game_effect:apply_status_to_player(faster, 180 * 60)
 		end,
 	},
 	{
@@ -41,7 +43,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_mana.png",
 		probability = 0.4,
 		fn = function()
-			ML.gameEffect:apply_status_to_player("MANA_REGENERATION", 120 * 60)
+			game_effect:apply_status_to_player("MANA_REGENERATION", 120 * 60)
 		end,
 	},
 	{
@@ -60,7 +62,7 @@ local buffs = {
 				ui_icon = "data/ui_gfx/status_indicators/oiled.png",
 				effect_entity = "data/entities/misc/effect_oiled.xml",
 			}
-			ML.gameEffect:apply_status_to_player(oil, 600 * 60)
+			game_effect:apply_status_to_player(oil, 600 * 60)
 		end,
 	},
 	{
@@ -77,7 +79,7 @@ local buffs = {
 			return false
 		end,
 		fn = function()
-			ML.gameEffect:apply_status_to_player("INVISIBILITY", 300 * 60)
+			game_effect:apply_status_to_player("INVISIBILITY", 300 * 60)
 		end,
 	},
 	{
@@ -89,7 +91,7 @@ local buffs = {
 		ui_icon = "mods/meta_leveling/files/gfx/rewards/buff_protec.png",
 		probability = 0.015,
 		fn = function()
-			ML.gameEffect:apply_status_to_player("PROTECTION_ALL", 30 * 60)
+			game_effect:apply_status_to_player("PROTECTION_ALL", 30 * 60)
 		end,
 	},
 	{
@@ -113,7 +115,7 @@ local buffs = {
 				ui_icon = "data/ui_gfx/status_indicators/nightvision.png",
 				effect_entity = "data/entities/misc/effect_remove_fog_of_war.xml",
 			}
-			ML.gameEffect:apply_status_to_player(fog, 60 * 60)
+			game_effect:apply_status_to_player(fog, 60 * 60)
 		end,
 	},
 	{
@@ -132,7 +134,7 @@ local buffs = {
 				ui_icon = "data/ui_gfx/status_indicators/hp_regeneration.png",
 				effect_entity = "data/entities/misc/effect_regeneration.xml",
 			}
-			ML.gameEffect:apply_status_to_player(regen, 5 * 60)
+			game_effect:apply_status_to_player(regen, 5 * 60)
 		end,
 	},
 	{
@@ -156,7 +158,7 @@ local buffs = {
 				ui_icon = "mods/meta_leveling/files/gfx/ui/icons/tinker.png",
 				effect_entity = "data/entities/misc/effect_edit_wands_everywhere.xml",
 			}
-			ML.gameEffect:apply_status_to_player(twwe, 60 * 60)
+			game_effect:apply_status_to_player(twwe, 60 * 60)
 		end,
 	},
 	{
@@ -180,7 +182,7 @@ local buffs = {
 				ui_icon = "data/ui_gfx/status_indicators/homing.png",
 				effect_entity = "data/entities/misc/effect_projectile_homing.xml",
 			}
-			ML.gameEffect:apply_status_to_player(homing, 180 * 60)
+			game_effect:apply_status_to_player(homing, 180 * 60)
 		end,
 	},
 	{
@@ -199,7 +201,7 @@ local buffs = {
 				ui_icon = "mods/meta_leveling/files/gfx/ui/icons/money.png",
 				effect_entity = "data/entities/misc/effect_extra_money.xml",
 			}
-			ML.gameEffect:apply_status_to_player(money, 300 * 60)
+			game_effect:apply_status_to_player(money, 300 * 60)
 		end,
 	},
 }

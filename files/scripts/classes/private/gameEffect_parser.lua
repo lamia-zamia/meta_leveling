@@ -9,7 +9,7 @@
 ---@class (exact) ML_gameEffect_parser
 ---@field list ML_gameEffect[]
 local status = {
-	list = {}
+	list = {},
 }
 
 local force_load = { "BERSERK" }
@@ -46,7 +46,7 @@ local function parse_status(status_effect)
 		ui_name = status_effect.ui_name,
 		ui_description = status_effect.ui_description,
 		ui_icon = status_effect.ui_icon,
-		effect_entity = status_effect.effect_entity
+		effect_entity = status_effect.effect_entity,
 	}
 end
 
@@ -85,19 +85,12 @@ function status:add_effect(entity, effect, duration)
 	local effect_entity = EntityCreateNew("META_LEVELING_BUFF_" .. id)
 	EntityLoadToEntity(effect.effect_entity, effect_entity)
 	local effect_component = EntityGetFirstComponent(effect_entity, "GameEffectComponent")
-	if effect_component then
-		ComponentSetValue2(effect_component, "frames", duration)
-	end
-	-- EntityAddComponent2(effect_entity, "InheritTransformComponent")
-	-- EntityAddComponent2(effect_entity, "GameEffectComponent", {
-	-- 	effect = id,
-	-- 	frames = duration
-	-- })
+	if effect_component then ComponentSetValue2(effect_component, "frames", duration) end
 	EntityAddComponent2(effect_entity, "UIIconComponent", {
 		icon_sprite_file = effect.ui_icon,
 		name = effect.ui_name or "",
 		description = "[Meta Leveling]\n" .. (effect.ui_description or ""),
-		is_perk = false
+		is_perk = false,
 	})
 	EntityAddChild(entity, effect_entity)
 end
@@ -106,7 +99,7 @@ end
 ---@param effect game_effect|ML_gameEffect
 ---@param duration number in frames
 function status:apply_status_to_player(effect, duration)
-	local player_id = ML.player.id
+	local player_id = EntityGetWithTag("player_unit")[1]
 	if not player_id then return end
 	local effect_data = self.list[effect] or effect ---@type ML_gameEffect
 	local effect_id = effect_data.id ---@type game_effect
@@ -119,5 +112,7 @@ function status:apply_status_to_player(effect, duration)
 		self:extend_effect(entity_id, duration * multiplier)
 	end
 end
+
+status:parse()
 
 return status

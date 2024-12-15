@@ -12,7 +12,6 @@
 ---@field pending_levels number
 ---@field next_exp number
 ---@field stats ml_stats
----@field gameEffect ML_gameEffect_parser
 ---@field level_up_effects ml_level_up_effects
 local ML = {
 	meta = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta.lua"),
@@ -27,7 +26,6 @@ local ML = {
 	pending_levels = 0,
 	next_exp = 0,
 	stats = dofile_once("mods/meta_leveling/files/scripts/classes/private/stats.lua"),
-	gameEffect = dofile_once("mods/meta_leveling/files/scripts/classes/private/gameEffect_parser.lua"),
 	level_up_effects = dofile_once("mods/meta_leveling/files/scripts/classes/private/level_up_effects.lua"),
 }
 
@@ -79,7 +77,6 @@ function ML:StartUp()
 	self.rewards_deck:GatherData()
 	self.rewards_deck:get_reroll_count()
 	self.stats:gather_list()
-	self.gameEffect:parse()
 end
 
 function ML:OnSpawn()
