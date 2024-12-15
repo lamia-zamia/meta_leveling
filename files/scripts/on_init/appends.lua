@@ -9,3 +9,4 @@ ModLuaFileAppend("mods/meta_leveling/files/for_modders/progress_appends.lua", "m
 ModLuaFileAppend("mods/component-explorer/menu_extensions.lua", "mods/meta_leveling/files/scripts/appends/component_explorer.lua")
 
 ModLuaFileAppend("data/scripts/status_effects/status_list.lua", "mods/meta_leveling/files/scripts/appends/effects.lua")
+ModLuaFileAppend("data/scripts/streaming_integration/event_list.lua", "mods/meta_leveling/files/scripts/appends/twitch/event_list.lua")
