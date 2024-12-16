@@ -3,6 +3,7 @@ local mod_translation_files = {
 	"mods/meta_leveling/files/translation/translation_ui.csv",
 	"mods/meta_leveling/files/translation/translation_rewards.csv",
 	"mods/meta_leveling/files/translation/translation_meta.csv",
+	"mods/meta_leveling/files/translation/translation_general.csv",
 }
 local translations = ModTextFileGetContent(game_translation_file)
 local ml_translation = ""
@@ -18,8 +19,8 @@ local custom_languages = {
 			"русский(Neonomi)",
 			"русский(Сообщество)",
 		},
-		csv_column = 3
-	}
+		csv_column = 3,
+	},
 }
 
 ---returns translation key at column
@@ -30,8 +31,8 @@ local custom_languages = {
 local function csv_get_value(line, column, iteration)
 	iteration = iteration or 1
 	local pattern = ""
-	if line:sub(1, 1) == "\"" then
-		pattern = "%b\"\""
+	if line:sub(1, 1) == '"' then
+		pattern = '%b""'
 	else
 		pattern = "(.-),"
 	end
@@ -50,17 +51,14 @@ local function apply_to_custom_language(csv_column)
 		local locale_key = csv_get_value(line, 1)
 		local custom_language = csv_get_value(line, csv_column)
 		local english = csv_get_value(line, 2)
-		append_translation = append_translation ..
-			locale_key .. "," .. custom_language .. "," .. english .. ",,,,,,,,,,\n"
+		append_translation = append_translation .. locale_key .. "," .. custom_language .. "," .. english .. ",,,,,,,,,,\n"
 	end
 end
 
 ---check if language at init is modded
 for _, language in ipairs(custom_languages) do
 	for _, language_translated in ipairs(language.translated) do
-		if current_language == language_translated then
-			apply_to_custom_language(language.csv_column)
-		end
+		if current_language == language_translated then apply_to_custom_language(language.csv_column) end
 	end
 end
 append_translation = append_translation or ml_translation
