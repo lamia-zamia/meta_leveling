@@ -83,6 +83,7 @@ function ML:OnSpawn()
 	self.player:update()
 	self.meta:apply_if_new_run()
 	self.level_up_effects:init()
+	GameRemoveFlagRun(MLP.const.flags.dead) --- for people who likes to save scam
 end
 
 ---Gets the experience points required for the next level.
