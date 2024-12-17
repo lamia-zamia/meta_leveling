@@ -4,6 +4,8 @@ mods/meta_leveling/files/scripts/rewards/add_reward_example.lua
 
 Use rewards_deck:add_rewards(rewards) for multiple rewards or rewards_deck:add_reward(reward) for single rewards
 
+you can pass a string as a second parameter to add credits to yourself, e.g. rewards_deck:add_rewards(rewards, "great me")
+
 Don't forget to do dofile:
 local rewards_deck = dofile_once("mods/meta_leveling/files/scripts/classes/private/rewards_deck.lua")
 
