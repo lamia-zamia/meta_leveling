@@ -35,6 +35,8 @@ function LU_meta:MetaProgressPointTooltipText(point)
 		self:Color(1, 1, 0.4)
 		self:TextCentered(0, 0, ML.rewards_deck.FormatString(self:Locale("$ml_meta_next: " .. point.applied_bonus(point.next_value))), 0)
 	end
+	local added_by = ML.meta.added_by[point.id]
+	if added_by then self:TextCentered(0, 0, self:Locale("$ml_rewards_added_by: " .. added_by), 0) end
 end
 
 --- Tooltip for bar

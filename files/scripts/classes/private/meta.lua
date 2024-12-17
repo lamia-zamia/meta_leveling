@@ -5,9 +5,11 @@ local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_
 ---@field private progress_list ml_progress_point[]
 ---@field private flag string
 ---@field progress ml_progress_point_run[]
+---@field added_by string[]
 local meta = {
 	progress_list = {},
 	progress = {},
+	added_by = {},
 	flag = "META_LEVELING_PROGRESS_APPLIED",
 }
 
@@ -167,15 +169,18 @@ end
 
 ---Append to progress list
 ---@param point ml_progress_point
-function meta:append_point(point)
+---@param added_by? string
+function meta:append_point(point, added_by)
 	self.progress_list[#self.progress_list + 1] = point
+	if added_by then self.added_by[point.id] = added_by end
 end
 
 ---Append an array to progress list
 ---@param points ml_progress_point[]
-function meta:append_points(points)
+---@param added_by? string
+function meta:append_points(points, added_by)
 	for _, point in ipairs(points) do
-		self:append_point(point)
+		self:append_point(point, added_by)
 	end
 end
 
