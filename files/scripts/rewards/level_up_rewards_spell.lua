@@ -542,7 +542,6 @@ for i = 1, #reward_spells do
 		if not is_reward_checked[reward_id] then
 			is_reward_checked[reward_id] = {}
 			local result = not not reward.fn(true)
-			print("result (" .. tostring(result) .. ":" .. type(result) .. ")")
 			is_reward_checked[reward_id].valid = not not reward.fn(true)
 		end
 		if not is_reward_checked[reward_id].valid then return false end
