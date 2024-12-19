@@ -266,7 +266,7 @@ end
 
 --- returns a valid spell from list
 --- @param list string[]
---- @return string action_id
+--- @return string? action_id
 function guns:get_random_from_list(list)
 	local length = #list
 	local index = Random(1, length)
@@ -274,12 +274,11 @@ function guns:get_random_from_list(list)
 		if self:spell_is_valid(list[index]) then return list[index] end
 		index = index % length + 1
 	end
-	return "TORCH"
 end
 
 --- return random spells of level
 --- @param level number
---- @return string action_id
+--- @return string? action_id
 function guns:get_random_spell(level)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
@@ -287,13 +286,12 @@ function guns:get_random_spell(level)
 		if action_id == "" then break end
 		if self:spell_is_valid(action_id) then return action_id end
 	end
-	return "TORCH"
 end
 
 --- return random typed spells of level
 --- @param level number
 --- @param type number
---- @return string action_id
+--- @return string? action_id
 function guns:get_random_typed_spell(level, type)
 	if level > 6 then level = 10 end
 	for i = 1, 1000 do
@@ -301,7 +299,6 @@ function guns:get_random_typed_spell(level, type)
 		if action_id == "" then break end
 		if self:spell_is_valid(action_id) then return action_id end
 	end
-	return "TORCH"
 end
 
 return guns

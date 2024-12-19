@@ -8,7 +8,6 @@ function utils:weighted_random(pool)
 	for _, item in ipairs(pool) do
 		pool_size = pool_size + item.weight
 	end
-	self:random_seed()
 	local selection = Random(1, pool_size)
 	for _, item in ipairs(pool) do
 		selection = selection - item.weight
@@ -16,11 +15,19 @@ function utils:weighted_random(pool)
 	end
 end
 
-function utils:spawn_spell(action_id) CreateItemActionEntity(action_id, ML.player.x, ML.player.y) end
+--- Creates spell at player location
+--- @param action_id string
+function utils:spawn_spell(action_id)
+	CreateItemActionEntity(action_id, ML.player.x, ML.player.y)
+end
 
-function utils:random_seed() SetRandomSeed(ML.player.x, ML.player.y + GameGetFrameNum()) end
+function utils:random_seed()
+	SetRandomSeed(ML.player.x, ML.player.y + GameGetFrameNum())
+end
 
-function utils:load_entity_to_player(file) EntityLoad(file, ML.player.x, ML.player.y) end
+function utils:load_entity_to_player(file)
+	EntityLoad(file, ML.player.x, ML.player.y)
+end
 
 function utils:merge_tables(table1, table2)
 	for _, element in ipairs(table2) do
