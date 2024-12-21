@@ -1,3 +1,28 @@
+local colors_normal = {
+	acquired = {
+		{ 0.6, 0.6, 0.6 },
+		{ 0, 0.8, 0.5 },
+		{ 0, 0.7, 0.8 },
+		{ 0.6, 0.4, 0.8 },
+		{ 0.8, 0.2, 0.6 },
+		{ 0.8, 0, 0.1 },
+	},
+	next = { 1, 0.7, 0.3 },
+	lost = { 0.1, 0.4, 1 },
+}
+local colors_high_contrast = {
+	acquired = {
+		{ 0.8, 0.8, 0.8 },
+		{ 0, 0.8, 0.5 },
+		{ 0, 0.4, 0.9 },
+		{ 0.6, 0.4, 0.8 },
+		{ 0.4, 0.2, 0.6 },
+		{ 0.7, 0, 0.1 },
+	},
+	next = { 1, 0.6, 0.3 },
+	lost = { 0.1, 0.2, 1 },
+}
+
 --- @class level_ui
 local LU_meta = {
 	meta = {
@@ -8,14 +33,7 @@ local LU_meta = {
 			height = 5,
 			offset = 100,
 		},
-		segment_colors = {
-			{ 0.6, 0.6, 0.6 },
-			{ 0, 0.8, 0.5 },
-			{ 0, 0.7, 0.8 },
-			{ 0.6, 0.4, 0.8 },
-			{ 0.8, 0.2, 0.6 },
-			{ 0.8, 0, 0.1 },
-		},
+		segment_colors = colors_high_contrast,
 	},
 }
 
@@ -124,7 +142,7 @@ end
 --- @param width number width of segment
 function LU_meta:MetaDrawPointProgressBarSegment(index, current, next, x, width)
 	local index_offset = math.ceil(next / 20) - 1
-	local colors = self.meta.segment_colors
+	local colors = self.meta.segment_colors.acquired
 	local color = colors[index_offset % #colors + 1]
 	local acquired_color = colors[(index_offset + 1) % #colors + 1]
 	index = index + index_offset * 20
@@ -133,10 +151,10 @@ function LU_meta:MetaDrawPointProgressBarSegment(index, current, next, x, width)
 		self:Color(unpack(acquired_color))
 	elseif next > current and index <= next then
 		-- This part will be acquired in the next run
-		self:Color(1, 0.7, 0.3)
+		self:Color(unpack(self.meta.segment_colors.next))
 	elseif next < current and index <= current then
 		-- This part will be lost in the next run
-		self:Color(0.1, 0.4, 1)
+		self:Color(unpack(self.meta.segment_colors.lost))
 	else
 		-- This part is unacquired
 		self:Color(unpack(color))
@@ -290,6 +308,26 @@ function LU_meta:MetaDrawPointProgressElement(index, point)
 	self:MetaDrawPointIncreaser(index, point)
 end
 
+--- Toggles display mode
+--- @private
+--- :)
+function LU_meta:MetaDrawChangeButton()
+	local button = self:Locale("$menuoptions_contrast")
+	local button_width = self:GetTextDimension(button)
+	local text_x = self.scroll.width - button_width - 15
+	local text_y = self.meta.y - self.meta.distance - 1
+
+	GuiZSet(self.gui, self.const.z - 5)
+	if self:IsCheckboxInScrollBoxHovered(text_x, text_y, button, self.meta.meta_window_contrast) then
+		self:ShowTooltipTextCenteredX(-button_width / 2, 20, self:Locale("$ml_current_change_display"))
+		if self:IsLeftClicked() then
+			self.meta.meta_window_contrast = not self.meta.meta_window_contrast
+			self:MetaSetColors()
+			ModSettingSet("meta_leveling.meta_window_contrast", self.meta.meta_window_contrast)
+		end
+	end
+end
+
 --- Window inside scrollbox
 --- @private
 function LU_meta:MetaDrawMetaWindow()
@@ -299,6 +337,7 @@ function LU_meta:MetaDrawMetaWindow()
 		self:MetaDrawPointProgressElement(i, progress)
 		self.meta.y = self.meta.y + self.meta.distance
 	end
+	self:MetaDrawChangeButton()
 	self:Text(0, self.meta.y + self.scroll.y, "") -- set height for scrollbar, 9piece works weird
 end
 
@@ -310,6 +349,20 @@ function LU_meta:MetaCalculateProgressOffset()
 		texts[#texts + 1] = self:Locale(point.ui_name)
 	end
 	self.meta.bar.offset = math.min(self:GetLongestText(texts, "meta_progress_offset") + 20, 158)
+end
+
+--- Sets colors for meta bars
+--- @private
+function LU_meta:MetaSetColors()
+	self.meta.segment_colors = self.meta.meta_window_contrast and colors_high_contrast or colors_normal
+end
+
+--- Gets setting for meta window
+--- @private
+function LU_meta:MetaGetSettings()
+	self:MetaCalculateProgressOffset()
+	self.meta.meta_window_contrast = MLP.get:mod_setting_boolean("meta_window_contrast", false)
+	self:MetaSetColors()
 end
 
 --- Scrollbox window

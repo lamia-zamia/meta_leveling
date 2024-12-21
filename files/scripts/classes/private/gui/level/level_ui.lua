@@ -254,7 +254,7 @@ function LU:GetSetting()
 	self.data.hotkey = MLP.get:mod_setting_number("open_ui_hotkey")
 	self.data.on_death = MLP.get:mod_setting_boolean("show_ui_on_death")
 	self.level_up.show_new = MLP.get:mod_setting_boolean("show_new_text")
-	self:MetaCalculateProgressOffset()
+	self:MetaGetSettings()
 	self:StatsFindLongest()
 	self:GetPosition()
 end
