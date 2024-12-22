@@ -2,7 +2,13 @@
 local component = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua")
 
 local elemental = {
-	"electricity", "fire", "ice", "radioactive", "poison", "curse", "holy"
+	"electricity",
+	"fire",
+	"ice",
+	"radioactive",
+	"poison",
+	"curse",
+	"holy",
 }
 
 ---@class ml_projectile_on_shot
@@ -63,26 +69,21 @@ end
 ---Increase destructability of drills
 ---@param value number
 function POS:drill_increase_destruction(value)
-	component:add_value_to_component_object(self.proj_comp, "config_explosion",
-		"max_durability_to_destroy", value)
-	component:add_value_to_component_object(self.proj_comp, "config_explosion", "ray_energy",
-		100000 * value)
-	component:add_value_to_component_object(self.proj_comp, "config_explosion", "explosion_radius",
-		value)
+	component:add_value_to_component_object(self.proj_comp, "config_explosion", "max_durability_to_destroy", value)
+	component:add_value_to_component_object(self.proj_comp, "config_explosion", "ray_energy", 100000 * value)
+	component:add_value_to_component_object(self.proj_comp, "config_explosion", "explosion_radius", value)
 end
 
 ---Increase explosion radius
 ---@param value number
 function POS:increase_explosion_radius(value)
-	component:multiply_value_in_component_object(self.proj_comp, "config_explosion", "explosion_radius",
-		value)
+	component:multiply_value_in_component_object(self.proj_comp, "config_explosion", "explosion_radius", value)
 end
 
 ---Increase explosion damage
 ---@param value number
 function POS:increase_explosion_damage(value)
-	component:multiply_value_in_component_object(self.proj_comp, "config_explosion", "damage",
-		value)
+	component:multiply_value_in_component_object(self.proj_comp, "config_explosion", "damage", value)
 end
 
 ---Destroys the current instance by clearing its fields.

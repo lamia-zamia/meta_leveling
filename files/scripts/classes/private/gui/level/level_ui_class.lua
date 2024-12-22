@@ -23,6 +23,14 @@ local const = {
 	z = -10000,
 }
 
+if not ModSettingGet("meta_leveling.ignore_holiday") then
+	local _, month, day = GameGetDateAndTimeLocal()
+	if month == 12 and day >= 20 then
+		const.ui_9piece = "mods/meta_leveling/files/gfx/ui/ui_9piece_christmas.png"
+		const.ui_9piece_gray = "mods/meta_leveling/files/gfx/ui/ui_9piece_gray_christmas.png"
+	end
+end
+
 --- @class LU.data
 --- @field reward_list? ml_reward_id[]
 local data = {

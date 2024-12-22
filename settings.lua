@@ -643,6 +643,8 @@ local translations = {
 		hardmode_nerf_perks_d = "Remove and rework some perks",
 		hardmode_nerf_rewards = "Rewards",
 		hardmode_nerf_rewards_d = "Nerf rewards",
+		ignore_holiday = "Ignore Holiday",
+		ignore_holiday_d = "Remove Holiday decorations from UI",
 	},
 	["русский"] = {
 		show_debug = "Show debug button",
@@ -727,6 +729,8 @@ local translations = {
 		hardmode_nerf_perks_d = "Убирает и перерабатывает некоторые перки",
 		hardmode_nerf_rewards = "Награды",
 		hardmode_nerf_rewards_d = "Занерфить награды",
+		ignore_holiday = "Выкл праздники",
+		ignore_holiday_d = "Убрать праздничные украшения из UI",
 	},
 }
 
@@ -772,6 +776,7 @@ D = {
 	hardmode_level_curve = 0.1,
 	hardmode_nerf_perks = true,
 	hardmode_nerf_rewards = true,
+	ignore_holiday = false,
 }
 
 local function build_settings()
@@ -872,7 +877,7 @@ local function build_settings()
 					id = "session_exp_ui_open",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.session_exp_ui_open,
-					checkboxes = { "show_ui_on_death" },
+					checkboxes = { "show_ui_on_death", "ignore_holiday" },
 				},
 			},
 		},
