@@ -155,11 +155,6 @@ function LUE:update_settings()
 	self.create_particles = MLP.get:mod_setting_boolean("session_exp_foot_particle", true)
 end
 
----Init fx
-function LUE:init()
-	self:update_settings()
-end
-
 ---Check and play effects
 function LUE:update()
 	if not ML.player.id then return end
