@@ -25,11 +25,9 @@
 			render_on_grid="1"
 			draw_as_long="1"
 			friction="-3"
-			probability="0.05">
-		</ParticleEffect>
+			probability="0.05" />
 		<Graphics
-			color="8099E585">
-		</Graphics>
+			color="8099E585" />
 		<StatusEffects>
 			<Ingestion>
 				<StatusEffect type="META_LEVELING_MORE_EXP" amount="0.1" />
@@ -39,6 +37,5 @@
 
 	<Reaction probability="13"
 		input_cell1="[ml_experium]" input_cell2="[blood]"
-		output_cell1="[ml_experium]" output_cell2="[ml_experium]">
-	</Reaction>
+		output_cell1="[ml_experium]" output_cell2="[ml_experium]" />
 </Materials>
