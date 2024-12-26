@@ -538,10 +538,10 @@ for i = 1, #reward_spells do
 	reward.sound = const.sounds.chest
 	local old_check = reward.custom_check
 	reward.custom_check = function()
+		if not ML then return false end
 		local reward_id = reward.id
 		if not is_reward_checked[reward_id] then
 			is_reward_checked[reward_id] = {}
-			local result = not not reward.fn(true)
 			is_reward_checked[reward_id].valid = not not reward.fn(true)
 		end
 		if not is_reward_checked[reward_id].valid then return false end
