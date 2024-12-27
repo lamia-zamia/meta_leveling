@@ -222,7 +222,6 @@ function guns:parse_actions()
 	-- ###############################################################
 	-- #################		SANDBOX START		##################
 	-- ###############################################################
-	dofile_once = dofile
 	dofile("data/scripts/gun/gunaction_generated.lua")
 	dofile("data/scripts/gun/gun_generated.lua")
 	dofile("data/scripts/gun/gunshoteffects_generated.lua")
