@@ -12,24 +12,35 @@ local function is_in_modify_description_pool(line)
 	return false
 end
 
----returns translation key at column
----@param line string line to parse
----@param column number target column
----@param iteration? number current column
----@return string
-local function csv_get_value(line, column, iteration)
-	iteration = iteration or 1
-	local pattern = ""
-	if line:sub(1, 1) == '"' then
-		pattern = '%b""'
-	else
-		pattern = "(.-),"
+--- Returns the value at the specified column in a CSV line
+---@param line string The CSV line to parse
+---@param column number The target column to extract
+---@return string The value at the specified column, or nil if not found
+local function csv_get_value(line, column)
+	local current_column = 1
+	local start_index = 1
+	local in_quotes = false
+
+	for i = 1, #line do
+		local char = line:sub(i, i)
+
+		-- Handle quoted fields
+		if char == '"' and not in_quotes then
+			in_quotes = true
+		elseif char == '"' and in_quotes then
+			in_quotes = false
+		elseif char == "," and not in_quotes then
+			-- End of a field
+			if current_column == column then return line:sub(start_index, i - 1) end
+			current_column = current_column + 1
+			start_index = i + 1
+		end
 	end
-	if iteration == column then
-		return line:match(pattern)
-	else
-		return csv_get_value(line:gsub(pattern, "", 1), column, iteration + 1)
-	end
+
+	-- Handle the last field
+	if current_column == column then return line:sub(start_index) end
+
+	return "parse_error" -- Column not found
 end
 
 local game_translation_file = "data/translations/common.csv"
