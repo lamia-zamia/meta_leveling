@@ -30,18 +30,33 @@ function ascend:can_ascend()
 	return level >= required_level
 end
 
---- Ascend
-function ascend:ascend()
-	local player = EntityGetWithTag("player_unit")[1]
-	if not player then return end
-
+--- Sets globals
+--- @private
+function ascend:set_globals()
 	self.set:global_number(self.const.globals.current_exp, 0)
 	self.set:global_number(self.const.globals.current_level, 1)
 	self.set:global_number(self.const.globals.exp_on_levelup, 0)
 	self.set:global_number(self.const.globals.fx_played, 1)
 
+	GlobalsSetValue("TEMPLE_SPAWN_GUARDIAN", "0")
+	GlobalsSetValue("STEVARI_DEATHS", "0")
+
+	if not ModSettingGet("meta_leveling.hardmode_enabled") then
+		GlobalsSetValue("TEMPLE_PERK_REROLL_COUNT", "0")
+	else
+		GlobalsSetValue("BOSS_MEAT_DEAD", "0")
+	end
+
 	local ascend_count = self.get:global_number("ASCEND", 0)
 	self.set:global_number("ASCEND", ascend_count + 1)
+end
+
+--- Ascend
+function ascend:ascend()
+	local player = EntityGetWithTag("player_unit")[1]
+	if not player then return end
+
+	self:set_globals()
 
 	local map = SessionNumbersGetValue("BIOME_MAP")
 	local map_script = SessionNumbersGetValue("BIOME_MAP_PIXEL_SCENES")
