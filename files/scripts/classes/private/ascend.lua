@@ -41,10 +41,10 @@ function ascend:set_globals()
 	GlobalsSetValue("TEMPLE_SPAWN_GUARDIAN", "0")
 	GlobalsSetValue("STEVARI_DEATHS", "0")
 
-	if not ModSettingGet("meta_leveling.hardmode_enabled") then
-		GlobalsSetValue("TEMPLE_PERK_REROLL_COUNT", "0")
-	else
+	if ModSettingGet("meta_leveling.hardmode_enabled") then
 		GlobalsSetValue("BOSS_MEAT_DEAD", "0")
+	else
+		GlobalsSetValue("TEMPLE_PERK_REROLL_COUNT", "0")
 	end
 
 	local ascend_count = self.get:global_number("ASCEND", 0)
