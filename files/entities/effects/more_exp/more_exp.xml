@@ -2,20 +2,5 @@
 	<GameEffectComponent
 		effect="CUSTOM"
 		custom_effect_id="META_LEVELING_MORE_EXP"
-		frames="300">
-	</GameEffectComponent>
-
-	<LuaComponent
-		script_source_file="mods/meta_leveling/files/entities/effects/more_exp/more_exp_add.lua"
-		execute_every_n_frame="-1"
-		execute_on_added="1"
-		remove_after_executed="1">
-	</LuaComponent>
-
-	<LuaComponent
-		script_source_file="mods/meta_leveling/files/entities/effects/more_exp/more_exp_remove.lua"
-		execute_every_n_frame="-1"
-		execute_on_removed="1"
-		remove_after_executed="1">
-	</LuaComponent>
+		frames="300" />
 </Entity>

@@ -28,14 +28,12 @@ end
 --- @param value number The value to be formatted.
 --- @return string The formatted string with appropriate magnitude suffix.
 function exp:format(value)
-	if value < 1 then
-		return (string.format("%.2f", value):gsub("%.?0+$", ""))
-	end
+	if value < 1 then return (string.format("%.2f", value):gsub("%.?0+$", "")) end
 
 	local units = { "K", "M", "B", "T", "Q", "P" } -- Extendable list of units
 	local magnitude = math.floor(math.log10(value)) -- Determine the order of magnitude of the number
 	local unit_index = math.floor(magnitude / 3) -- Determine the index for the units array
-	local divisor = 10^(unit_index * 3)          -- Calculate the divisor based on the unit index
+	local divisor = 10 ^ (unit_index * 3) -- Calculate the divisor based on the unit index
 
 	-- Handle values that don't need shortening
 	if unit_index == 0 then
@@ -56,12 +54,31 @@ function exp:current()
 	return math.floor(experience * 100) / 100
 end
 
+--- Returns true if player has effect_id
+---@private
+---@param effect_id string
+---@param entity? entity_id
+---@return boolean
+function exp:has_effect(effect_id, entity)
+	entity = entity or EntityGetWithTag("player_unit")[1]
+	if not entity then return false end
+	local effects = EntityGetComponent(entity, "GameEffectComponent") or {}
+	for _, effect in ipairs(effects) do
+		if ComponentGetValue2(effect, "custom_effect_id") == effect_id then return true end
+	end
+	local children = EntityGetAllChildren(entity) or {}
+	for _, child in ipairs(children) do
+		if self:has_effect(effect_id, child) then return true end
+	end
+	return false
+end
+
 --- Applies experience multiplier to a given value.
 --- @param value number The base experience value.
 --- @return number experience The experience value after applying the multiplier and constants.
 function exp:apply_multiplier(value)
-	local multiplier = self.get:mod_setting_number("session_exp_multiplier", 1) +
-		self.get:global_number(self.const.globals.exp_multiplier, 0)
+	local multiplier = self.get:mod_setting_number("session_exp_multiplier", 1) + self.get:global_number(self.const.globals.exp_multiplier, 0)
+	if self:has_effect("META_LEVELING_MORE_EXP") then multiplier = multiplier + 1 end
 	value = (value * multiplier) + self.get:global_number(self.const.globals.exp_const, 0)
 	return value
 end
