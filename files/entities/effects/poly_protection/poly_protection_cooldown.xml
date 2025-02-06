@@ -1,0 +1,8 @@
+<Entity>
+	<InheritTransformComponent />
+
+	<GameEffectComponent
+		effect="CUSTOM"
+		custom_effect_id="META_LEVELING_POLYMORPH_PROTECTION_COOLDOWN"
+		frames="1800" />
+</Entity>

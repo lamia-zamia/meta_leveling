@@ -6,6 +6,13 @@ local new_effects = {
 		ui_icon = "mods/meta_leveling/files/gfx/more_exp_status.png",
 		effect_entity = "mods/meta_leveling/files/entities/effects/more_exp/more_exp.xml",
 	},
+	{
+		id = "META_LEVELING_POLYMORPH_PROTECTION_COOLDOWN",
+		ui_name = "$ml_polymorph_immunity_cooldown",
+		ui_description = "$ml_polymorph_immunity_cooldown_tp",
+		ui_icon = "mods/meta_leveling/files/gfx/poly_protection_cooldown.png",
+		effect_entity = "mods/meta_leveling/files/entities/effects/poly_protection/poly_protection_cooldown.xml",
+	},
 }
 
 local game_effects_count = #status_effects
