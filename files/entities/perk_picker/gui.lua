@@ -6,6 +6,9 @@ gui.tooltip_img = "mods/meta_leveling/files/gfx/ui/ui_9piece_tp.png"
 gui.picked = {}
 gui.picked_count = 0
 local perk_picker = dofile_once("mods/meta_leveling/files/entities/perk_picker/perk_picker.lua") --- @type ml_random_perk_picker
+local picker_opened = false
+local scale_step = 1
+local scale_direction = 1
 
 --- invisible 9piece to block inputs on gui
 --- @private
@@ -69,11 +72,10 @@ function gui:DrawRow(from, to)
 	end
 end
 
---- Draws gui
+--- Draws main picker gui
+--- @private
 --- @return boolean
-function gui:Draw()
-	self:StartFrame()
-	self.dim.x, self.dim.y = GuiGetScreenDimensions(self.gui)
+function gui:DrawPicker()
 	local amount = #perk_picker.perks
 	local split_rows = amount > 6
 	local rows = split_rows and 2 or 1
@@ -118,6 +120,44 @@ function gui:Draw()
 		return true
 	end
 	return false
+end
+
+--- Draws perk picker notification
+--- @private
+function gui:DrawNotification()
+	local x = self.dim.x - 14.5
+	local y = 92
+
+	-- GuiText(self.gui, x, y, "+1", 0.75)
+	if scale_step > 1.3 or scale_step < 1 then scale_direction = -scale_direction end
+	scale_step = scale_step + 0.005 * scale_direction
+
+	local img_w, img_h = GuiGetImageDimensions(self.gui, "data/ui_gfx/perk_icons/extra_perk.png", scale_step)
+
+	self:AddOptionForNext(self.c.options.NonInteractive)
+	self:SetZ(-1001)
+	self:Image(x - img_w / 2, y - img_h / 2, "data/ui_gfx/perk_icons/extra_perk.png", 1, scale_step)
+
+	if self:IsHoverBoxHovered(x - 10, y - 10, 20, 20) then
+		self:ShowTooltipTextCenteredX(0, 5, self:Locale("$ml_picked_perks_open_tp"))
+		if self:IsMouseClicked() then
+			GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", 0, 0)
+			picker_opened = true
+		end
+	end
+end
+
+--- Draws gui
+--- @return boolean
+function gui:Draw()
+	self:StartFrame()
+	self.dim.x, self.dim.y = GuiGetScreenDimensions(self.gui)
+	if picker_opened then
+		return self:DrawPicker()
+	else
+		self:DrawNotification()
+		return false
+	end
 end
 
 return gui
