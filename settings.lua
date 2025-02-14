@@ -5,6 +5,7 @@ local mod_prfx = mod_id .. "."
 local T = {}
 local D = {}
 local current_language_last_frame = nil
+local in_main_menu = false
 
 local mod_id_hash = 0
 for c in mod_id:gmatch(".") do
@@ -17,15 +18,23 @@ local function id()
 	return gui_id
 end
 
-local bg_alpha = 0.7098039215686275
-local bg_red = 0.47513812154696133
-local bg_green = 0.2762430939226519
-local bg_blue = 0.22099447513812157
-
-local border_alpha = 0.8509803921568627
-local border_red = 0.47465437788018433
-local border_green = 0.2764976958525346
-local border_blue = 0.22119815668202766
+local const = {
+	colors = {
+		bg = {
+			alpha = 0.7098039215686275,
+			red = 0.47513812154696133,
+			green = 0.2762430939226519,
+			blue = 0.22099447513812157,
+		},
+		border = {
+			alpha = 0.8509803921568627,
+			red = 0.47465437788018433,
+			green = 0.2764976958525346,
+			blue = 0.22119815668202766,
+		},
+	},
+	keycodes_file = "data/scripts/debug/keycodes.lua",
+}
 
 -- ###########################################
 -- ############		Helpers		##############
@@ -38,9 +47,7 @@ local U = {
 	max_y = 300,
 	min_y = 50,
 	keycodes = {},
-	keycodes_file = "data/scripts/debug/keycodes.lua",
 	waiting_for_input = false,
-	gui = nil,
 }
 do -- helpers
 	--- Checks for winstreak flag and either resets or adds
@@ -59,9 +66,14 @@ do -- helpers
 	--- @param setting_name setting_id
 	--- @param value setting_value
 	function U.set_setting(setting_name, value)
-		local full_setting_id = mod_prfx .. setting_name
-		ModSettingSet(full_setting_id, value)
-		ModSettingSetNextValue(full_setting_id, value, false)
+		ModSettingSetNextValue(mod_prfx .. setting_name, value, false)
+	end
+
+	--- @param setting_name setting_id
+	--- @param value setting_value
+	function U.set_setting_force(setting_name, value)
+		ModSettingSetNextValue(mod_prfx .. setting_name, value, false)
+		ModSettingSet(mod_prfx .. setting_name, value)
 	end
 
 	--- @param setting_name setting_id
@@ -107,7 +119,7 @@ do -- helpers
 	--- @param all boolean reset all
 	function U.set_default(all)
 		for setting, value in pairs(D) do
-			if U.get_setting_next(setting) == nil or all then U.set_setting(setting, value) end
+			if U.get_setting_next(setting) == nil or all then U.set_setting_force(setting, value) end
 		end
 	end
 
@@ -115,16 +127,10 @@ do -- helpers
 	function U.gather_key_codes()
 		U.keycodes = {}
 		U.keycodes[0] = GameTextGetTranslatedOrNot("$menuoptions_configurecontrols_action_unbound")
-		local keycodes_all = ModTextFileGetContent(U.keycodes_file)
+		local keycodes_all = ModTextFileGetContent(const.keycodes_file)
 		for line in keycodes_all:gmatch("Key_.-\n") do
 			local _, key, code = line:match("(Key_)(.+) = (%d+)")
 			U.keycodes[code] = key:upper()
-		end
-	end
-
-	function U.pending_input()
-		for code, _ in pairs(U.keycodes) do
-			if InputIsKeyJustDown(code) then return code end
 		end
 	end
 
@@ -161,6 +167,41 @@ do -- helpers
 			ModSettingRemove(setting_id)
 		end
 		ModSettingRemove("meta_leveling.currency_progress")
+	end
+
+	--- Updates setting scope
+	--- @param setting_id setting_id
+	function U.mod_setting_update(setting_id)
+		local next_value = U.get_setting_next(setting_id)
+		if next_value ~= nil then ModSettingSet(mod_prfx .. setting_id, next_value) end
+	end
+
+	--- Checks mod settings
+	--- @param setting mod_settings
+	--- @param init_scope mod_setting_scopes
+	function U.mod_setting_check(setting, init_scope)
+		if setting.scope == nil or setting.scope >= init_scope then
+			if setting.checkboxes then
+				for i = 1, #setting.checkboxes do
+					U.mod_setting_update(setting.checkboxes[i])
+				end
+			else
+				U.mod_setting_update(setting.id)
+			end
+		end
+	end
+
+	--- Updates setting scope
+	--- @param settings mod_settings_global
+	--- @param init_scope mod_setting_scopes
+	function U.mod_settings_update(settings, init_scope)
+		for _, setting in ipairs(settings) do
+			if setting.category_id then
+				U.mod_settings_update(setting.settings, init_scope)
+			elseif setting.id and not setting.not_setting then
+				U.mod_setting_check(setting, init_scope)
+			end
+		end
 	end
 end
 -- ###########################################
@@ -207,8 +248,9 @@ do -- gui helpers
 
 	--- @param gui gui
 	--- @param setting_name setting_id
+	--- @param setting_scope mod_setting_scopes
 	--- @return boolean, boolean
-	function G.toggle_checkbox_boolean(gui, setting_name)
+	function G.toggle_checkbox_boolean(gui, setting_name, setting_scope)
 		local text = T[setting_name]
 		local _, _, _, prev_x, y, prev_w = GuiGetPreviousWidgetInfo(gui)
 		local x = prev_x + prev_w + 1
@@ -218,7 +260,7 @@ do -- gui helpers
 		GuiZSetForNextWidget(gui, -1)
 		G.button_options(gui)
 		GuiImageNinePiece(gui, id(), x + 2, y, offset_w, 10, 10, U.empty, U.empty) -- hover box
-		G.tooltip(gui, setting_name)
+		G.tooltip(gui, setting_name, setting_scope)
 		local _, _, hovered = GuiGetPreviousWidgetInfo(gui)
 		GuiZSetForNextWidget(gui, 1)
 		GuiImageNinePiece(gui, id(), x + 2, y + 2, 6, 6) -- check box
@@ -272,7 +314,7 @@ do -- gui helpers
 		local value = U.get_setting_next(setting_name)
 		local value_now = U.get_setting(setting_name)
 
-		if value ~= value_now then
+		if value ~= value_now and not in_main_menu then
 			if scope == MOD_SETTING_SCOPE_RUNTIME_RESTART then
 				if description then
 					GuiTooltip(gui, description, "$menu_modsettings_changes_restart")
@@ -328,9 +370,9 @@ do -- gui helpers
 	--- @param width number
 	--- @param height number
 	function G.draw_outline(gui, width, height)
-		GuiColorSetForNextWidget(gui, border_red, border_green, border_blue, 1)
+		GuiColorSetForNextWidget(gui, const.colors.border.red, const.colors.border.green, const.colors.border.blue, 1)
 		GuiZSetForNextWidget(gui, 4)
-		GuiImage(gui, id(), 0, 0, U.whitebox, border_alpha, width / 20, height / 20)
+		GuiImage(gui, id(), 0, 0, U.whitebox, const.colors.border.alpha, width / 20, height / 20)
 	end
 
 	--- Draw bar
@@ -366,6 +408,10 @@ do -- Settings GUI
 		local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
 		local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
 		local no_bg = U.get_setting_next("exp_bar_default_bg")
+		local bg_red = no_bg and const.colors.bg.red or r * 0.6
+		local bg_green = no_bg and const.colors.bg.green or g * 0.6
+		local bg_blue = no_bg and const.colors.bg.blue or b * 0.6
+		local bg_alpha = no_bg and const.colors.bg.alpha or 1
 
 		GuiText(gui, x, y + 5, " ")
 		local _, _, _, x_no_layout, y_no_layout = GuiGetPreviousWidgetInfo(gui)
@@ -380,35 +426,19 @@ do -- Settings GUI
 		if position == "under_health" then
 			G.ImageClip(gui, x + 15, y + 20.5, 44, thickness + 1, G.draw_outline)
 			G.ImageClip(gui, x + 16, y + 20.5, 15, thickness, G.draw_bar_color, 2, r, g, b, 1)
-			if no_bg then
-				G.ImageClip(gui, x + 16, y + 20.5, 42, thickness, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
-			else
-				G.ImageClip(gui, x + 16, y + 20.5, 42, thickness, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
-			end
+			G.ImageClip(gui, x + 16, y + 20.5, 42, thickness, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
 		elseif position == "on_top" then
 			G.ImageClip(gui, x + 15, y + 7, 44, thickness + 2, G.draw_outline)
 			G.ImageClip(gui, x + 16, y + 8, 15, thickness, G.draw_bar_color, 2, r, g, b, 1)
-			if no_bg then
-				G.ImageClip(gui, x + 16, y + 8, 42, thickness, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
-			else
-				G.ImageClip(gui, x + 16, y + 8, 42, thickness, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
-			end
+			G.ImageClip(gui, x + 16, y + 8, 42, thickness, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
 		elseif position == "on_left" then
 			G.ImageClip(gui, x + 2, y + 14, thickness + 2, 29.25, G.draw_outline)
 			G.ImageClip(gui, x + 3, y + 32, thickness, 10.25, G.draw_bar_color, 2, r, g, b, 1)
-			if no_bg then
-				G.ImageClip(gui, x + 3, y + 15, thickness, 27.25, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
-			else
-				G.ImageClip(gui, x + 3, y + 15, thickness, 27.25, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
-			end
+			G.ImageClip(gui, x + 3, y + 15, thickness, 27.25, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
 		else
 			G.ImageClip(gui, x + 66, y + 14, thickness + 2, 29.25, G.draw_outline)
 			G.ImageClip(gui, x + 67, y + 32, thickness, 10.25, G.draw_bar_color, 2, r, g, b, 1)
-			if no_bg then
-				G.ImageClip(gui, x + 67, y + 15, thickness, 27.25, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
-			else
-				G.ImageClip(gui, x + 67, y + 15, thickness, 27.25, G.draw_bar_color, 3, r * 0.6, g * 0.6, b * 0.6, 1)
-			end
+			G.ImageClip(gui, x + 67, y + 15, thickness, 27.25, G.draw_bar_color, 3, bg_red, bg_green, bg_blue, bg_alpha)
 		end
 
 		if U.get_setting_next("exp_bar_show_perc") then GuiText(gui, x + 66, y + 5, "%") end
@@ -421,14 +451,13 @@ do -- Settings GUI
 		local position = U.get_setting_next("exp_bar_position")
 		if position == "under_health" then
 			setting.value_max = 2
-			if U.get_setting_next(setting.id) > 2 then U.set_setting(setting.id, 2) end
+			if U.get_setting_next(setting.id) > 2 then U.set_setting_force(setting.id, 2) end
 		else
 			setting.value_max = 4
 		end
-		-- setting.value_max = U.get_setting_next("exp_bar_position") == "under_health" and 2 or 4
 		local value, value_new = G.mod_setting_number(gui, setting)
 		value_new = math.floor(value_new + 0.5)
-		if value ~= value_new then U.set_setting(setting.id, value_new) end
+		if value ~= value_new then U.set_setting_force(setting.id, value_new) end
 	end
 
 	--- @param setting mod_setting_better_number
@@ -466,7 +495,7 @@ do -- Settings GUI
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 7, 0, "")
 		for _, setting_id in ipairs(setting.checkboxes) do
-			local hovered, value = G.toggle_checkbox_boolean(gui, setting_id)
+			local hovered, value = G.toggle_checkbox_boolean(gui, setting_id, setting.scope)
 			if hovered then
 				if InputIsMouseButtonJustDown(1) then U.set_setting(setting_id, not value) end
 				if InputIsMouseButtonJustDown(2) then
@@ -482,10 +511,11 @@ do -- Settings GUI
 		local current_key = "[" .. U.keycodes[U.get_setting_next("open_ui_hotkey")] .. "]"
 		if U.waiting_for_input then
 			current_key = GameTextGetTranslatedOrNot("$menuoptions_configurecontrols_pressakey")
-			local new_key = U.pending_input()
-			if new_key then
-				U.set_setting("open_ui_hotkey", new_key)
-				U.waiting_for_input = false
+			for code, _ in pairs(U.keycodes) do
+				if InputIsKeyJustDown(code) then
+					U.set_setting_force("open_ui_hotkey", code)
+					U.waiting_for_input = false
+				end
 			end
 		end
 
@@ -505,7 +535,7 @@ do -- Settings GUI
 			if InputIsMouseButtonJustDown(1) then U.waiting_for_input = true end
 			if InputIsMouseButtonJustDown(2) then
 				GamePlaySound("ui", "ui/button_click", 0, 0)
-				U.set_setting("open_ui_hotkey", 0)
+				U.set_setting_force("open_ui_hotkey", 0)
 				U.waiting_for_input = false
 			end
 		end
@@ -523,34 +553,11 @@ do -- Settings GUI
 		if G.button(gui, mod_setting_group_x_offset, T.reset_cat, { 1, 0.4, 0.4 }) then fn() end
 	end
 
-	function S.hardmode(_, gui, _, _, setting)
+	function S.hardmode(_, gui, _, _, _)
 		GuiColorSetForNextWidget(gui, 0.7, 0.7, 0.7, 1)
 		GuiText(gui, mod_setting_group_x_offset - 2, 0, "This is fairly experimental, but should be working.")
 		GuiColorSetForNextWidget(gui, 0.7, 0.7, 0.7, 1)
 		GuiText(gui, mod_setting_group_x_offset - 2, 0, "All the next settings applies on new game only.")
-		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
-		GuiText(gui, mod_setting_group_x_offset, 0, T.hardmode)
-		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
-		GuiText(gui, 7, 0, "")
-		local hovered, enabled = G.toggle_checkbox_boolean(gui, "hardmode_enabled")
-		if hovered then
-			local full_setting_id = mod_prfx .. "hardmode_enabled"
-			if InputIsMouseButtonJustDown(1) then ModSettingSetNextValue(full_setting_id, not enabled, false) end
-			if InputIsMouseButtonJustDown(2) then
-				GamePlaySound("ui", "ui/button_click", 0, 0)
-				ModSettingSetNextValue(full_setting_id, D["hardmode_enabled"], false)
-			end
-		end
-		GuiLayoutEnd(gui)
-		if not enabled then return end
-		S.mod_setting_number_float(_, gui, _, _, { id = "hardmode_level_curve", ui_name = T.hardmode_level_curve, value_min = 0.05, value_max = 0.5 })
-		S.mod_setting_better_boolean(
-			_,
-			gui,
-			_,
-			_,
-			{ id = "hardmode_nerf", ui_name = T.hardmode_nerf, checkboxes = { "hardmode_nerf_perks", "hardmode_nerf_rewards" } }
-		)
 	end
 end
 
@@ -733,15 +740,7 @@ local translations = {
 		ignore_holiday_d = "Убрать праздничные украшения из UI",
 	},
 }
-
-local mt = {
-	__index = function(t, k)
-		local currentLang = GameTextGetTranslatedOrNot("$current_language")
-		if not translations[currentLang] then currentLang = "English" end
-		return translations[currentLang][k]
-	end,
-}
-setmetatable(T, mt)
+T = translations["English"]
 
 -- ###########################################
 -- #########		Settings		##########
@@ -833,14 +832,12 @@ local function build_settings()
 					ui_fn = S.mod_setting_number_float,
 				},
 				{
-					not_setting = true,
 					id = "exp_bar_visual",
 					ui_name = T.exp_bar_visual,
 					ui_fn = S.mod_setting_better_boolean,
 					checkboxes = { "session_exp_animate_bar", "exp_bar_default_bg" },
 				},
 				{
-					not_setting = true,
 					id = "exp_bar_misc",
 					ui_fn = S.mod_setting_better_boolean,
 					ui_name = T.exp_bar_misc,
@@ -934,6 +931,28 @@ local function build_settings()
 					ui_fn = S.hardmode,
 					ui_name = T.hardmode,
 				},
+				{
+					id = "hardmode",
+					ui_fn = S.mod_setting_better_boolean,
+					ui_name = T.hardmode,
+					checkboxes = { "hardmode_enabled" },
+					scope = MOD_SETTING_SCOPE_NEW_GAME,
+				},
+				{
+					id = "hardmode_level_curve",
+					ui_fn = S.mod_setting_number_float,
+					ui_name = T.hardmode_level_curve,
+					value_min = 0.01,
+					value_max = 0.1,
+					scope = MOD_SETTING_SCOPE_NEW_GAME,
+				},
+				{
+					id = "hardmode_nerf",
+					ui_fn = S.mod_setting_better_boolean,
+					ui_name = T.hardmode_nerf,
+					checkboxes = { "hardmode_nerf_perks", "hardmode_nerf_rewards" },
+					scope = MOD_SETTING_SCOPE_NEW_GAME,
+				},
 			},
 		},
 		{
@@ -999,15 +1018,19 @@ end
 -- #############		Meh		##############
 -- ###########################################
 
---- @param init_scope number
+--- @param init_scope mod_setting_scopes
 function ModSettingsUpdate(init_scope)
 	if init_scope == 0 then -- On new game
 		U.check_for_winstreak()
 	end
 	U.set_default(false)
 	U.waiting_for_input = false
+	U.mod_settings_update(mod_settings, init_scope)
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
-	if current_language ~= current_language_last_frame then mod_settings = build_settings() end
+	if current_language ~= current_language_last_frame then
+		T = translations[current_language]
+		mod_settings = build_settings()
+	end
 	current_language_last_frame = current_language
 end
 
@@ -1017,9 +1040,10 @@ function ModSettingsGuiCount()
 end
 
 --- @param gui gui
---- @param in_main_menu boolean
-function ModSettingsGui(gui, in_main_menu)
+--- @param _in_main_menu boolean
+function ModSettingsGui(gui, _in_main_menu)
 	gui_id = mod_id_hash * 1000
+	in_main_menu = _in_main_menu
 	GuiIdPushString(gui, mod_prfx)
 	mod_settings_gui(mod_id, mod_settings, gui, in_main_menu)
 	GuiIdPop(gui)
