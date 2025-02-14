@@ -1,13 +1,7 @@
-local sandbox = dofile_once("mods/meta_leveling/files/scripts/classes/private/sandbox.lua") --- @type ML_sandbox
-
---- Checking for settings
-if SessionNumbersGetValue("is_biome_map_initialized") == "0" then
-	local is_hardmode_enabled = ModSettingGetNextValue("meta_leveling.hardmode_enabled") or false
-	ModSettingSet("meta_leveling.hardmode_enabled", is_hardmode_enabled)
-end
-
 --- Exit from this file if hardmode is not enabled
 if not ModSettingGet("meta_leveling.hardmode_enabled") then return end
+
+local sandbox = dofile_once("mods/meta_leveling/files/scripts/classes/private/sandbox.lua") --- @type ML_sandbox
 
 if ModSettingGet("meta_leveling.hardmode_nerf_perks") then
 	ModLuaFileAppend("data/scripts/perks/perk_list.lua", "mods/meta_leveling/files/scripts/hardmode/nerf_perks.lua")
