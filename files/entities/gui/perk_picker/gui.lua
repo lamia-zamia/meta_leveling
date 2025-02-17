@@ -112,9 +112,10 @@ function gui:DrawPicker()
 		local x, y = EntityGetTransform(self.player)
 		for k, _ in pairs(self.picked) do
 			local perk = perk_picker.perks[k]
-			perk_pickup(0, player, perk.id, false, false, true) ---@diagnostic disable-line: undefined-global
+			perk_pickup(0, self.player, perk.id, false, false, true) ---@diagnostic disable-line: undefined-global
 		end
 		GamePlaySound("data/audio/Desktop/event_cues.bank", "event_cues/perk/create", x, y)
+		helper:set_closed()
 		return true
 	end
 	return false

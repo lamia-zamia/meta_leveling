@@ -1,5 +1,9 @@
 <Entity name="ML perk picker">
 	<LuaComponent
-		script_source_file="mods/meta_leveling/files/entities/gui/perk_picker/reward.lua" />
+		script_source_file="mods/meta_leveling/files/entities/gui/perk_picker/reward.lua"
+		vm_type="ONE_PER_COMPONENT_INSTANCE" />
 	<InheritTransformComponent />
+	<VariableStorageComponent
+		name="ML_extra_gui"
+		value_int="1" />
 </Entity>
