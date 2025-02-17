@@ -5,10 +5,10 @@ gui.buttons.img_hl = "mods/meta_leveling/files/gfx/ui/ui_9piece_button_highlight
 gui.tooltip_img = "mods/meta_leveling/files/gfx/ui/ui_9piece_tp.png"
 gui.picked = {}
 gui.picked_count = 0
+gui.lifetime = 99999
 local perk_picker = dofile_once("mods/meta_leveling/files/entities/gui/perk_picker/perk_picker.lua") --- @type ml_random_perk_picker
 
 local helper_lib = dofile_once("mods/meta_leveling/files/entities/gui/gui_entity_helper.lua") ---@type ML_gui_entity_helper
-local helper = helper_lib:new(gui, "data/ui_gfx/perk_icons/extra_perk.png", "$ml_picked_perks_open_tp")
 
 --- invisible 9piece to block inputs on gui
 --- @private
@@ -72,6 +72,17 @@ function gui:DrawRow(from, to)
 	end
 end
 
+---Renders tooltip content
+---@private
+function gui:ExtraGuiTooltip()
+	self:Text(0, 0, self:Locale("$ml_picked_perks_open_tp"))
+	self:Text(0, 0, self:Locale("$ml_notification_close"))
+	self:ColorGray()
+	self:Text(0, 0, self:Locale("$ml_notification_close_time ") .. self.lifetime)
+end
+
+local helper = helper_lib:new(gui, "data/ui_gfx/perk_icons/extra_perk.png", gui.ExtraGuiTooltip)
+
 --- Draws main picker gui
 --- @private
 --- @return boolean
@@ -118,6 +129,15 @@ function gui:DrawPicker()
 		helper:set_closed()
 		return true
 	end
+
+	local close_text = self:Locale(string.format("$ml_close (%d)", self.lifetime))
+	local close_x = self:CalculateCenterInScreen(self:GetTextDimension(close_text))
+	if self:IsButtonClicked(close_x, self.y + 55, 150, close_text, "$ml_close_tp") then
+		GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", 0, 0)
+		helper:set_closed()
+		return false
+	end
+
 	return false
 end
 
@@ -125,14 +145,15 @@ end
 --- @return boolean
 function gui:Draw()
 	self:StartFrame()
+	self.lifetime = helper:get_duration()
+	if self.lifetime < 0 then return true end
 	self.player = EntityGetWithTag("player_unit")[1]
 	if not self.player then return false end
 	self.dim.x, self.dim.y = GuiGetScreenDimensions(self.gui)
 	if helper.opened then
 		return self:DrawPicker()
 	else
-		helper:draw_notification()
-		return false
+		return helper:draw_notification()
 	end
 end
 

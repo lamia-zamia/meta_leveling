@@ -5,11 +5,12 @@
 ---@field private scale_direction number
 ---@field private gui_lib UI_class
 ---@field private icon string
----@field private tooltip string
+---@field private tooltip_fn function
 ---@field private gui_count number
 ---@field private order number
 ---@field private __index ML_gui_entity_helper
 ---@field private wait_frame number
+---@field private kill_frame number
 ---@field opened boolean
 local helper = {
 	scale = 1,
@@ -83,6 +84,20 @@ function helper:advance_scale()
 	self.scale = self.scale + 0.005 * self.scale_direction
 end
 
+---Gets lifetime
+---@return number
+function helper:get_duration()
+	if not self.kill_frame then
+		local children = EntityGetAllChildren(GetUpdatedEntityID())
+		if not children then return 0 end
+		local lifetime_component = EntityGetFirstComponent(children[1], "LifetimeComponent")
+		if not lifetime_component then return 0 end
+		self.kill_frame = ComponentGetValue2(lifetime_component, "kill_frame")
+	end
+	local diff = self.kill_frame - GameGetFrameNum()
+	return math.floor(diff / 60)
+end
+
 ---Sets this ui as opened
 function helper:set_opened()
 	self.opened = true
@@ -96,15 +111,16 @@ function helper:set_closed()
 end
 
 ---Draws notification icon
+---@return boolean
 function helper:draw_notification()
 	if GameHasFlagRun("META_LEVELING_EXTRA_GUI_OPENED") then
 		self.wait_frame = GameGetFrameNum() + 2
-		return
+		return false
 	end
 	if GameGetFrameNum() < self.wait_frame then
 		self.scale = 1
 		self.scale_direction = 1
-		return
+		return false
 	end
 
 	local x = self.gui_lib.dim.x - 14.5
@@ -119,25 +135,30 @@ function helper:draw_notification()
 	self.gui_lib:Image(x - img_w / 2, y - img_h / 2, self.icon, 1, self.scale)
 
 	if self.gui_lib:IsHoverBoxHovered(x - 10, y - 10, 20, 20) then
-		self.gui_lib:ShowTooltipTextCenteredX(0, 5, self.gui_lib:Locale(self.tooltip))
-		if self.gui_lib:IsMouseClicked() then
+		self.gui_lib:ShowTooltipCenteredX(0, 5, self.tooltip_fn)
+		if self.gui_lib:IsLeftClicked() then
 			GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", 0, 0)
 			self:set_opened()
 		end
+		if self.gui_lib:IsRightClicked() then
+			GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", 0, 0)
+			return true
+		end
 	end
+	return false
 end
 
 ---Creates new icon
 ---@param gui_lib UI_class
 ---@param icon string
----@param tooltip string
+---@param tooltip_fn function
 ---@return ML_gui_entity_helper
-function helper:new(gui_lib, icon, tooltip)
+function helper:new(gui_lib, icon, tooltip_fn)
 	GameRemoveFlagRun("META_LEVELING_EXTRA_GUI_OPENED")
 	local o = {
 		gui_lib = gui_lib,
 		icon = icon,
-		tooltip = tooltip,
+		tooltip_fn = tooltip_fn,
 	}
 	setmetatable(o, self)
 	return o

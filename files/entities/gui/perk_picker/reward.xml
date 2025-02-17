@@ -6,4 +6,10 @@
 	<VariableStorageComponent
 		name="ML_extra_gui"
 		value_int="1" />
+
+	<Entity>
+		<LifetimeComponent
+			lifetime="10800"
+			serialize_duration="1" />
+	</Entity>
 </Entity>
