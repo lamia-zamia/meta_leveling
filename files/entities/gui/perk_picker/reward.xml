@@ -1,0 +1,5 @@
+<Entity name="ML perk picker">
+	<LuaComponent
+		script_source_file="mods/meta_leveling/files/entities/gui/perk_picker/reward.lua" />
+	<InheritTransformComponent />
+</Entity>

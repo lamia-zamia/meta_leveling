@@ -5,10 +5,10 @@ gui.buttons.img_hl = "mods/meta_leveling/files/gfx/ui/ui_9piece_button_highlight
 gui.tooltip_img = "mods/meta_leveling/files/gfx/ui/ui_9piece_tp.png"
 gui.picked = {}
 gui.picked_count = 0
-local perk_picker = dofile_once("mods/meta_leveling/files/entities/perk_picker/perk_picker.lua") --- @type ml_random_perk_picker
-local picker_opened = false
-local scale_step = 1
-local scale_direction = 1
+local perk_picker = dofile_once("mods/meta_leveling/files/entities/gui/perk_picker/perk_picker.lua") --- @type ml_random_perk_picker
+
+local helper_lib = dofile_once("mods/meta_leveling/files/entities/gui/gui_entity_helper.lua") ---@type ML_gui_entity_helper
+local helper = helper_lib:new(gui, "data/ui_gfx/perk_icons/extra_perk.png", "$ml_picked_perks_open_tp")
 
 --- invisible 9piece to block inputs on gui
 --- @private
@@ -109,9 +109,7 @@ function gui:DrawPicker()
 	if self:IsButtonClicked(button_x, self.y + 36, 150, button_text, "$ml_picked_perks_apply_tp") then
 		GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", 0, 0)
 		dofile("data/scripts/perks/perk.lua")
-		local player = EntityGetWithTag("player_unit")[1]
-		if not player then return false end
-		local x, y = EntityGetTransform(player)
+		local x, y = EntityGetTransform(self.player)
 		for k, _ in pairs(self.picked) do
 			local perk = perk_picker.perks[k]
 			perk_pickup(0, player, perk.id, false, false, true) ---@diagnostic disable-line: undefined-global
@@ -122,40 +120,17 @@ function gui:DrawPicker()
 	return false
 end
 
---- Draws perk picker notification
---- @private
-function gui:DrawNotification()
-	local x = self.dim.x - 14.5
-	local y = 92
-
-	-- GuiText(self.gui, x, y, "+1", 0.75)
-	if scale_step > 1.3 or scale_step < 1 then scale_direction = -scale_direction end
-	scale_step = scale_step + 0.005 * scale_direction
-
-	local img_w, img_h = GuiGetImageDimensions(self.gui, "data/ui_gfx/perk_icons/extra_perk.png", scale_step)
-
-	self:AddOptionForNext(self.c.options.NonInteractive)
-	self:SetZ(-1001)
-	self:Image(x - img_w / 2, y - img_h / 2, "data/ui_gfx/perk_icons/extra_perk.png", 1, scale_step)
-
-	if self:IsHoverBoxHovered(x - 10, y - 10, 20, 20) then
-		self:ShowTooltipTextCenteredX(0, 5, self:Locale("$ml_picked_perks_open_tp"))
-		if self:IsMouseClicked() then
-			GamePlaySound("data/audio/Desktop/ui.bank", "ui/button_click", 0, 0)
-			picker_opened = true
-		end
-	end
-end
-
 --- Draws gui
 --- @return boolean
 function gui:Draw()
 	self:StartFrame()
+	self.player = EntityGetWithTag("player_unit")[1]
+	if not self.player then return false end
 	self.dim.x, self.dim.y = GuiGetScreenDimensions(self.gui)
-	if picker_opened then
+	if helper.opened then
 		return self:DrawPicker()
 	else
-		self:DrawNotification()
+		helper:draw_notification()
 		return false
 	end
 end
