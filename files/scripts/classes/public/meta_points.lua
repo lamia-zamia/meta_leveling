@@ -7,9 +7,19 @@ local ML_points = {
 	const = dofile_once("mods/meta_leveling/files/scripts/classes/public/const.lua"),
 }
 
+--- Multiplies value by meta progress
+--- @param value number
+--- @return number
+--- @nodiscard
+function ML_points:multiply_by_meta(value)
+	local meta_multiplier = tonumber(ModSettingGet("meta_leveling.progress_more_meta_points")) or 0
+	return value * (1 + meta_multiplier)
+end
+
 --- Adds meta point to player and writes it to global for stats
 --- @param value number
 function ML_points:add_meta_points(value)
+	value = self:multiply_by_meta(value)
 	self.set:add_to_global_number(self.const.globals.meta_point_acquired, value, 0)
 	local current = self:get_current_currency()
 	ModSettingSet("meta_leveling.currency_progress", current + value)
@@ -58,8 +68,8 @@ function ML_points:CalculateMetaPointsOrbs()
 	--- Points for basic win, orbs and NG
 	local newgame_n = tonumber(SessionNumbersGetValue("NEW_GAME_PLUS_COUNT"))
 	local orb_count = GameGetOrbCountThisRun()
-	local exponent = orb_count + newgame_n^0.5
-	return 1.15^exponent
+	local exponent = orb_count + newgame_n ^ 0.5
+	return 1.15 ^ exponent
 end
 
 --- Calculates bonus points for speedruns
@@ -76,7 +86,7 @@ end
 function ML_points:CalculateMetaPointsWinStreakBonus()
 	local streaks = ModSettingGet("meta_leveling.streak_count")
 	if streaks < 1 then return 0 end
-	return math.min(1.4^streaks, 200)
+	return math.min(1.4 ^ streaks, 200)
 end
 
 --- Calculates points for pacifist run

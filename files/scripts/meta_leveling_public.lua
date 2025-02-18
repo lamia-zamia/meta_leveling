@@ -54,7 +54,7 @@ function MLP:CalculateMetaPointsOnSampo()
 	points = points + self.points:CalculateMetaPointsDamageTaken()
 	points = points + self.points:CalculateMetaPointsFungalShift()
 	points = points + self.points:CalculateMetaPointsWinStreakBonus()
-	return math.floor(points)
+	return math.floor(self.points:multiply_by_meta(points))
 end
 
 return MLP

@@ -77,6 +77,18 @@ local progress = {
 		price_multiplier = 1.5,
 	},
 	{
+		id = "more_meta_points",
+		ui_name = "$ml_meta_points_more",
+		description = "$ml_meta_points_more_tp",
+		fn = function(count) end,
+		applied_bonus = function(count)
+			return "+" .. 100 * count .. "%"
+		end,
+		stack = 5,
+		price = 100,
+		price_multiplier = 4,
+	},
+	{
 		id = "ascension",
 		ui_name = "$ml_meta_ascension",
 		description = "$ml_meta_ascension_tp",
