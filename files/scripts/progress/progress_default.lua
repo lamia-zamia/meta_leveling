@@ -213,6 +213,21 @@ local progress = {
 		price = 50,
 		price_multiplier = 2,
 	},
+	{
+		id = "tinker_at_start",
+		ui_name = "$ml_tinkering",
+		description = "$ml_tinkering_tp",
+		fn = function(count)
+			local entity = EntityLoad("mods/meta_leveling/files/entities/gui/tinkering/reward.xml")
+			EntityAddChild(ML.player.id, entity)
+		end,
+		applied_bonus = function(count)
+			return GameTextGet("$inventory_seconds", tostring(count * 60))
+		end,
+		stack = 5,
+		price = 30,
+		price_multiplier = 2,
+	},
 }
 
 local meta = dofile_once("mods/meta_leveling/files/scripts/classes/private/meta.lua") --- @type ml_meta

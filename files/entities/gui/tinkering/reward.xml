@@ -1,0 +1,15 @@
+<Entity name="ML tinkering">
+	<LuaComponent
+		script_source_file="mods/meta_leveling/files/entities/gui/tinkering/reward.lua"
+		vm_type="ONE_PER_COMPONENT_INSTANCE" />
+	<InheritTransformComponent />
+	<VariableStorageComponent
+		name="ML_extra_gui"
+		value_int="3" />
+
+	<Entity>
+		<LifetimeComponent
+			lifetime="7200"
+			serialize_duration="1" />
+	</Entity>
+</Entity>
