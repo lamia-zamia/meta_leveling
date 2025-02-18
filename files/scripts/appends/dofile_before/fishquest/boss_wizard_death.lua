@@ -4,9 +4,8 @@ local CreateItemActionEntity_ML_Old = CreateItemActionEntity
 
 ---@param action_id string
 ---@param ... any
+---@return entity_id
 CreateItemActionEntity = function(action_id, ...)
-	if action_id == "HOMING_WAND" then
-		MLP:QuestCompleted(2000)
-	end
-	CreateItemActionEntity_ML_Old(action_id, ...)
+	if action_id == "HOMING_WAND" then MLP:QuestCompleted(2000) end
+	return CreateItemActionEntity_ML_Old(action_id, ...)
 end

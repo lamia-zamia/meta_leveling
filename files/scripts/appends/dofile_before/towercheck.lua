@@ -11,8 +11,9 @@ local values = {
 
 ---@param action_id string
 ---@param ... any
+---@return entity_id
 CreateItemActionEntity = function(action_id, ...)
 	local exp = values[action_id] or 10
 	MLP:QuestCompleted(exp)
-	CreateItemActionEntity_ML_Old(action_id, ...)
+	return CreateItemActionEntity_ML_Old(action_id, ...)
 end
