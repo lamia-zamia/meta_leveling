@@ -214,6 +214,32 @@ local progress = {
 		price_multiplier = 2,
 	},
 	{
+		id = "random_spell",
+		ui_name = "$ml_starting_spells",
+		description = "$ml_starting_spells_tp",
+		fn = function(count)
+			for i = 1, count do
+				SetRandomSeed(1, i)
+				local spell_level = Random(0, 5)
+				for j = 1, 1000 do
+					local action_id = GetRandomAction(1, i, spell_level, j)
+					if action_id == "" then break end
+					if ML.guns:spell_is_valid(action_id) then
+						local entity = CreateItemActionEntity(action_id, 0, 0)
+						GamePickUpInventoryItem(ML.player.id, entity, false)
+						break
+					end
+				end
+			end
+		end,
+		applied_bonus = function(count)
+			return ML.player.id and GameTextGet("$ml_starting_spells_count", tostring(count)) or ""
+		end,
+		stack = 10,
+		price = 7,
+		price_multiplier = 1.5,
+	},
+	{
 		id = "tinker_at_start",
 		ui_name = "$ml_tinkering",
 		description = "$ml_tinkering_tp",
