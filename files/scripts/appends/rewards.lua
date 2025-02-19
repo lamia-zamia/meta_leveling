@@ -18,6 +18,7 @@ end
 local integration = {
 	bags_of_many = "mods/meta_leveling/files/scripts/rewards/integration_bags_of_many.lua",
 	anvil_of_destiny = "mods/meta_leveling/files/scripts/rewards/integration_anvil_of_destiny.lua",
+	Apotheosis = "mods/meta_leveling/files/scripts/rewards/integration_apotheosis.lua",
 }
 
 for mod, file in pairs(integration) do
