@@ -1,3 +1,6 @@
+local world_state = GameGetWorldStateEntity()
+if world_state == 0 then return end
+
 local set_random_seed = SetRandomSeed
 
 --- Sets random seed and adds offset for ascension
