@@ -218,8 +218,12 @@ local progress = {
 		ui_name = "$ml_starting_spells",
 		description = "$ml_starting_spells_tp",
 		fn = function(count)
+			local x, y = 0, 0
+			if ModIsEnabled("quant.ew") then
+				x, y = CrossCall("ew_per_peer_seed")
+			end
 			for i = 1, count do
-				SetRandomSeed(1, i)
+				SetRandomSeed(x + 1, y + i)
 				local spell_level = Random(0, 5)
 				for j = 1, 1000 do
 					local action_id = GetRandomAction(1, i, spell_level, j)

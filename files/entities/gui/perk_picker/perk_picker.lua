@@ -18,7 +18,11 @@ local function generate_unique_random_numbers(n, min, max)
 end
 
 local function get_random_perks(count)
-	SetRandomSeed(1, 1)
+	local x, y = 0, 0
+	if ModIsEnabled("quant.ew") then
+		x, y = CrossCall("ew_per_peer_seed")
+	end
+	SetRandomSeed(x + 1, y + 1)
 	local perk_indexes = generate_unique_random_numbers(count, 1, #perk_list)
 	local perks = {}
 	for i = 1, count do

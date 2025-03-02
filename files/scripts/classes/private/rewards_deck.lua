@@ -48,14 +48,14 @@ local rewards_deck = {
 		rare = { 0, 1, 1, 0.6 },
 		epic = { 1, 0, 1, 0.7 },
 		legendary = { 1, 0.5, 0, 1 },
-		relic = { 1, 0, 0, 1 }
+		relic = { 1, 0, 0, 1 },
 	},
 	max_probability = 1,
 	min_probability = 0.01,
 	list = {},
 	distance = 4,
 	picked_count = 0,
-	reward_appended_by = {}
+	reward_appended_by = {},
 }
 
 --- beautiful rewards name
@@ -102,9 +102,7 @@ function rewards_deck.ordered_pairs(tbl)
 	local i = 0
 	local function iter()
 		i = i + 1
-		if keys[i] then
-			return keys[i], tbl[keys[i]]
-		end
+		if keys[i] then return keys[i], tbl[keys[i]] end
 	end
 
 	return iter, tbl
@@ -202,7 +200,7 @@ function rewards_deck:initialize_reward_data(reward)
 		custom_check = reward.custom_check or nil,
 		sound = reward.sound or self.const.sounds.perk,
 		no_sound = reward.no_sound,
-		min_level = reward.min_level or 1
+		min_level = reward.min_level or 1,
 	}
 	reward_entry.border_color = self:set_borders(reward_id, reward_entry.probability, reward.border_color)
 	self.picked_count = self.picked_count + reward_entry.pick_count
@@ -216,15 +214,11 @@ end
 function rewards_deck:initialize_group_data(reward_entry)
 	local group_id = reward_entry.group_id
 
-	if not self.groups_data[group_id] then
-		self.groups_data[group_id] = { rewards = {}, picked = false }
-	end
+	if not self.groups_data[group_id] then self.groups_data[group_id] = { rewards = {}, picked = false } end
 
 	self.groups_data[group_id].rewards[#self.groups_data[group_id].rewards + 1] = reward_entry.id
 
-	if reward_entry.pick_count > 0 then
-		self.groups_data[group_id].picked = true
-	end
+	if reward_entry.pick_count > 0 then self.groups_data[group_id].picked = true end
 end
 
 --- Sets the probability of a reward, normalizing it if necessary.
@@ -271,9 +265,7 @@ end
 --- @nodiscard
 function rewards_deck:set_borders(id, probability, border)
 	if border then return border end
-	if type(probability) == "function" then
-		probability = probability()
-	end
+	if type(probability) == "function" then probability = probability() end
 	if probability < 0.03 then
 		return self.borders.relic
 	elseif probability < 0.1 then
@@ -314,12 +306,8 @@ end
 function rewards_deck:checks_before_add(reward)
 	local pass = reward.pick_count < reward.max
 	pass = pass and ML:get_level() >= reward.min_level
-	if reward.limit_before then
-		pass = pass and self.reward_data[reward.limit_before].pick_count >= self.reward_data[reward.limit_before].max
-	end
-	if reward.custom_check then
-		pass = pass and reward.custom_check()
-	end
+	if reward.limit_before then pass = pass and self.reward_data[reward.limit_before].pick_count >= self.reward_data[reward.limit_before].max end
+	if reward.custom_check then pass = pass and reward.custom_check() end
 	return pass
 end
 
@@ -345,9 +333,7 @@ function rewards_deck:ensure_distance()
 		if not self.list[i] then goto continue end
 		if i + self.distance > #self.list then break end
 		for j = i + 1, i + self.distance do
-			if self.reward_data[self.list[i]].group_id == self.reward_data[self.list[j]].group_id then
-				goto continue
-			end
+			if self.reward_data[self.list[i]].group_id == self.reward_data[self.list[j]].group_id then goto continue end
 		end
 		temp_new[#temp_new + 1] = self.list[i]
 		::continue::
@@ -359,7 +345,11 @@ end
 --- Refreshes the order of rewards in the list.
 --- @private
 function rewards_deck:refresh_reward_order()
-	SetRandomSeed(1, 2)
+	local x, y = 0, 0
+	if ModIsEnabled("quant.ew") then
+		x, y = CrossCall("ew_per_peer_seed")
+	end
+	SetRandomSeed(x + 1, y + 2)
 	self:get_from_list()
 	self:shuffle()
 	self:ensure_distance()
@@ -431,8 +421,7 @@ end
 function rewards_deck:add_specific_reward_pickup_amount(reward_id)
 	self.reward_data[reward_id].pick_count = self.reward_data[reward_id].pick_count + 1
 	self.groups_data[self.reward_data[reward_id].group_id].picked = true
-	self.set:global_number(self.const.globals_prefix .. reward_id .. "_PICKUP_COUNT",
-		self.reward_data[reward_id].pick_count)
+	self.set:global_number(self.const.globals_prefix .. reward_id .. "_PICKUP_COUNT", self.reward_data[reward_id].pick_count)
 	self.picked_count = self.picked_count + 1
 	self:add_to_progress(reward_id)
 end
