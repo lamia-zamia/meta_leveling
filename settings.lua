@@ -1028,7 +1028,7 @@ function ModSettingsUpdate(init_scope)
 	U.mod_settings_update(mod_settings, init_scope)
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
 	if current_language ~= current_language_last_frame then
-		T = translations[current_language]
+		T = translations[current_language] or translations["English"]
 		mod_settings = build_settings()
 	end
 	current_language_last_frame = current_language
