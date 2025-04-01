@@ -63,3 +63,6 @@ Special thanks to the following people for their invaluable contributions:
 - Spriting advice and thumbnail:
 
   Copi
+- Translations:
+
+  LeinaX and Kattfisk for German translation

@@ -46,6 +46,7 @@ local U = {
 	offset = 0,
 	max_y = 300,
 	min_y = 50,
+	max_width = 330,
 	keycodes = {},
 	waiting_for_input = false,
 }
@@ -403,7 +404,7 @@ do -- Settings GUI
 		local thickness = 1 + tonumber(U.get_setting_next("exp_bar_thickness")) or D.exp_bar_thickness
 		local position = U.get_setting_next("exp_bar_position")
 		local x = mod_setting_group_x_offset + U.offset + 92
-		local y = 8
+		local y = -3
 		local r = tonumber(U.get_setting_next("exp_bar_red")) or D.exp_bar_red
 		local g = tonumber(U.get_setting_next("exp_bar_green")) or D.exp_bar_green
 		local b = tonumber(U.get_setting_next("exp_bar_blue")) or D.exp_bar_blue
@@ -479,12 +480,20 @@ do -- Settings GUI
 		local value = tostring(U.get_setting_next(setting.id))
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
 		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
-		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
-		GuiText(gui, 8, 0, "")
+		GuiLayoutBeginHorizontal(gui, U.offset + 8, 0, true, 0, 0)
+		local total_length = U.offset + 8 + mod_setting_group_x_offset
 		for _, button in ipairs(setting.buttons) do
 			local color = value == button and { 0.7, 0.7, 0.7 } or nil
-			if G.button(gui, 0, T[button], color) then U.set_setting(setting.id, button) end
+			local button_text = T[button]
+			local length = GuiGetTextDimensions(gui, button_text)
+			total_length = total_length + length
+			if total_length > U.max_width then
+				GuiLayoutEnd(gui)
+				GuiLayoutBeginHorizontal(gui, U.offset + 8, 0, true, 0, 0)
+			end
+			if G.button(gui, 0, button_text, color) then U.set_setting(setting.id, button) end
 		end
+		GuiText(gui, 8, 0, "")
 		GuiLayoutEnd(gui)
 	end
 
@@ -494,7 +503,15 @@ do -- Settings GUI
 		G.tooltip(gui, setting.id)
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 7, 0, "")
+		local total_length = U.offset + 7 + mod_setting_group_x_offset
 		for _, setting_id in ipairs(setting.checkboxes) do
+			local length = GuiGetTextDimensions(gui, T[setting_id])
+			total_length = total_length + length + 15
+			if total_length > U.max_width then
+				GuiLayoutEnd(gui)
+				GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
+				GuiText(gui, 7, 0, "")
+			end
 			local hovered, value = G.toggle_checkbox_boolean(gui, setting_id, setting.scope)
 			if hovered then
 				if InputIsMouseButtonJustDown(1) then U.set_setting(setting_id, not value) end
@@ -567,7 +584,6 @@ end
 
 local translations = {
 	["English"] = {
-		show_debug = "Show debug button",
 		exp_bar_cat = "HUD", -- cat
 		exp_bar_cat_d = "Settings for experience bar and misc",
 		exp_bar_position = "Position",
@@ -654,7 +670,6 @@ local translations = {
 		ignore_holiday_d = "Remove Holiday decorations from UI",
 	},
 	["русский"] = {
-		show_debug = "Show debug button",
 		exp_bar_cat = "HUD",
 		exp_bar_cat_d = "Настройки для полосы опыта и прочее",
 		exp_bar_position = "Позиция",
@@ -739,6 +754,92 @@ local translations = {
 		ignore_holiday = "Выкл праздники",
 		ignore_holiday_d = "Убрать праздничные украшения из UI",
 	},
+	["Deutsch"] = {
+		exp_bar_cat = "HUD", -- cat
+		exp_bar_cat_d = "Einstellungen für Erfahrungsleiste und Versch.",
+		exp_bar_position = "Position",
+		exp_bar_position_d = "Position der Erfahrungsleiste",
+		under_health = "Unter dem Lebensbalken",
+		on_left = "Links",
+		on_right = "Rechts",
+		on_top = "Auf dem Lebensbalken",
+		exp_bar_thickness = "Dicke der Leiste",
+		exp_bar_red = "Rot",
+		exp_bar_green = "Grün",
+		exp_bar_blue = "Blau",
+		exp_bar_misc = "Verschiedenes",
+		exp_bar_show_perc = "Zeige Erfahrung in Prozent",
+		exp_bar_show_perc_d = "Zeigt Erfahrung in Prozent und ausstehende Stufen",
+		session_exp_animate_bar = "Animierter Balken",
+		session_exp_animate_bar_d = "Animierter Balken bei ausstehenden Stufen",
+		hud_reminder_in_inventory = "Erinnerung im Inventar",
+		hud_reminder_in_inventory_d = "Erinnert im Inventar an ausstehendeStufen",
+		ui_cat = "Menü", -- cat
+		ui_cat_d = "Menü-Einstellungen",
+		open_ui_hotkey = "Hotkey",
+		open_ui_hotkey_d = "Taste für schnellen Zugriff auf das Stufenmenü",
+		level_up_ui = "Belohnungen",
+		level_up_ui_d = "Einstellungen zum Belohnungsmenü",
+		session_exp_ui_open_auto = "Aufleveln wenn verfügbar",
+		session_exp_ui_open_auto_d = "Automatisch aufleveln bei geöffnetem Menü",
+		show_new_text = "Neue Belohnungen markieren",
+		show_new_text_d = "Markiert von dir bisher unentdeckte Belohnungen",
+		session_exp_ui_close = "Menü schliessen bei",
+		session_exp_ui_close_d = "Mit rechtsklick kannst du das Menü erzwingen",
+		session_exp_close_ui_on_pause = "Pause",
+		session_exp_close_ui_on_pause_d = "Menü schliessen wenn du pausierst",
+		session_exp_close_ui_on_shot = "Schuss",
+		session_exp_close_ui_on_shot_d = "Menü schliessen wenn du schiesst",
+		session_exp_close_ui_on_damage = "Schaden",
+		session_exp_close_ui_on_damage_d = "Menü schliessen wenn du Schaden nimmst",
+		session_exp_ui_open = "Verschiedenes",
+		show_ui_on_death = "Menü beim Tod anzeigen",
+		show_ui_on_death_d = "Zeigt die Menüschaltfläche beim Tod",
+		gameplay_cat = "Gameplay", -- cat
+		gameplay_cat_d = "Gameplay-Einstellungen",
+		session_exp_on_level_up = "Bei Stufenaufstieg",
+		session_exp_play_sound = "Sound",
+		session_exp_play_sound_d = "Spiele einen Sound ab, wenn du eine neue Stufe erreicht hast",
+		session_exp_play_fx = "Effekt",
+		session_exp_play_fx_d = "Visuelle Effekte bei Stufenaufstieg anzeigen",
+		session_exp_foot_particle = "Partikel",
+		session_exp_foot_particle_d = "Partikeleffekte für noch ausstehende Stufen anzeigen",
+		session_exp_on_kills = "Bei Kills",
+		session_exp_on_kills_d = "Wenn du etwas tötest",
+		session_exp_popup = "Erfahrung anzeigen",
+		session_exp_popup_d = "Zeige Erfahrungsmenge über dem besiegten Gegner",
+		session_exp_log = "Erfahrund und Name anzeigen",
+		session_exp_log_d = "Zeige erhaltene Erfahrung und den Namen des besiegten Gegners",
+		session_exp_multiplier = "Erfahrungs-Multiplikator",
+		session_exp_multiplier_d = "Wenn dir Standard zu unbefriedigend ist",
+		reset_cat = "Zurücksetzen",
+		reset_cat_d = "Verschiedene Bereiche zurücksetzen",
+		reset_settings = "Einstellungen zurücksetzen",
+		reset_settings_d = "Stellt alle Einstellungen zurück auf Standard",
+		reset_progress = "Fortschritt zurücksetzen",
+		reset_progress_d = "Setzt entdeckte Belohnungen zurück",
+		reset_meta = "Meta zurücksetzen",
+		reset_meta_d = "Setzt die Meta-Punkte und ihren Fortschritt zurück",
+		exp_bar_visual = "Balkenoptik",
+		exp_bar_default_bg = "Hintergrund nicht einfärben",
+		exp_bar_default_bg_d = "Benutze die Standard-Hintergrundfarbe für den Balken",
+		meta_point_per_level = "Meta-Punkte für",
+		meta_point_per_level_d = "Ab welcher Stufe es Meta-Punkte gibt",
+		levels = "Level",
+		hardmode = "Hardmode", --cat
+		hardmode_d = "Einstellungen für den Hardmode",
+		hardmode_enabled = "Aktiviert",
+		hardmode_level_curve = "Steigerung",
+		hardmode_level_curve_d = "Wie viel schwieriger der Stufenaufstieg wird",
+		hardmode_nerf = "Anpassungen",
+		hardmode_nerf_d = "Reduziert die Stärke dieser Elemente, weil diese Mod Alternativen bietet",
+		hardmode_nerf_perks = "Talente",
+		hardmode_nerf_perks_d = "Entferne und überarbeite einige Talente",
+		hardmode_nerf_rewards = "Belohnungen",
+		hardmode_nerf_rewards_d = "Passe Belohnungen an",
+		ignore_holiday = "Feiertage ignorieren",
+		ignore_holiday_d = "Entferne Saisonale-/Feiertagsdekorationen",
+	},
 }
 T = translations["English"]
 
@@ -789,15 +890,15 @@ local function build_settings()
 			_folded = true,
 			settings = {
 				{
-					ui_fn = S.draw_bar_position,
-					not_setting = true,
-				},
-				{
 					id = "exp_bar_position",
 					ui_name = T.exp_bar_position,
 					ui_description = T.exp_bar_position_d,
 					buttons = { "under_health", "on_left", "on_right", "on_top" },
 					ui_fn = S.mod_setting_better_string,
+				},
+				{
+					ui_fn = S.draw_bar_position,
+					not_setting = true,
 				},
 				{
 					not_setting = true,
