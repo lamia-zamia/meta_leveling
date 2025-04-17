@@ -11,6 +11,7 @@ local modules = {
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_list.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_menu.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_header.lua",
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_itembox.lua",
 }
 
 for _, module_name in ipairs(modules) do
@@ -257,7 +258,13 @@ function LU:GetSetting()
 	self.level_up.show_new = MLP.get:mod_setting_boolean("show_new_text")
 	self:MetaGetSettings()
 	self:StatsFindLongest()
+end
+
+---Initializes data
+function LU:Init()
 	self:header_update_data()
+	self:itembox_update_data()
+	self:stash_get()
 end
 
 --- main logic
@@ -272,6 +279,8 @@ function LU:loop()
 	self:StartFrame()
 
 	GuiZSet(self.gui, self.const.z - 2)
+	-- print("self.header_position.x (" .. tostring(self.header_position.x) .. ":" .. type(self.header_position.x) .. ")")
+	-- print("self.header_position.y (" .. tostring(self.header_position.y) .. ":" .. type(self.header_position.y) .. ")")
 	self.data.x, self.data.y = self.header_position.x, self.header_position.y
 
 	if self:IsDead() then

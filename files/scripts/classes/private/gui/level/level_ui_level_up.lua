@@ -2,6 +2,7 @@ local ascend = dofile_once("mods/meta_leveling/files/scripts/classes/private/asc
 
 ---@class (exact) level_ui
 ---@field private level_up any
+---@field private stash_chosen boolean
 local LU_level_up = {
 	level_up = {
 		x = 0,
@@ -10,6 +11,7 @@ local LU_level_up = {
 		y_center = 0,
 		show_new = false,
 	},
+	stash_chosen = false,
 }
 
 --- Draws "new" text
@@ -62,6 +64,15 @@ end
 ---@param reward_id ml_reward_id
 function LU_level_up:LevelUpPickReward(reward_id)
 	ML.rewards_deck:pick_reward(reward_id)
+	self:LevelUpCloseRewardUI()
+end
+
+---Stash reward
+---@private
+---@param reward_id ml_reward_id
+function LU_level_up:LevelUpStashReward(reward_id)
+	ML.rewards_deck:set_reward_as_picked(reward_id)
+	self:stash_add(reward_id)
 	self:LevelUpCloseRewardUI()
 end
 
@@ -146,6 +157,30 @@ function LU_level_up:LevelUpDrawAscendButton()
 	self:Text(self.level_up.x, self.level_up.y, ascend_text)
 end
 
+---Draws stash button
+---@private
+function LU_level_up:LevelUpDrawStashButton()
+	if not self:can_stash() then
+		self.stash_chosen = false
+		return
+	end
+	local text = self:Locale("$ml_stash")
+	local text_width = self:GetTextDimension(text)
+	self.level_up.x = self:CalculateCenterInScreen(text_width, self.const.reward_box_size)
+	self.level_up.y = self.level_up.y + 19
+
+	local button = self.stash_chosen and self.const.ui_9p_button_important or self.const.ui_9p_button
+	local highlight = self.stash_chosen and self.const.ui_9p_button_important or self.const.ui_9p_button_hl
+
+	self:AddOptionForNext(self.c.options.ForceFocusable)
+	self:Draw9Piece(self.level_up.x - 1, self.level_up.y, self.const.z + 1, text_width + 1, 10, button, highlight)
+	if self:IsHovered() then
+		self:ShowTooltipTextCenteredX(0, 22, "$ml_stash_tp")
+		if self:IsLeftClicked() then self.stash_chosen = not self.stash_chosen end
+	end
+	self:Text(self.level_up.x, self.level_up.y, text)
+end
+
 ---draw level up buttons
 ---@private
 function LU_level_up:LevelUpDrawButtonsCentered()
@@ -162,6 +197,7 @@ function LU_level_up:LevelUpDrawButtonsCentered()
 	self:LevelUpDrawButton(skip, self:Locale("$ml_skip_tp"), self.LevelUpSkipReward, true, longest)
 	self:LevelUpDrawButton(reroll, self:Locale("$ml_reroll_tp: ") .. reroll_count, self.LevelUpReroll, is_reroll_available, longest)
 	self:LevelUpDrawButton(close, self:Locale("$ml_close_tp"), self.CloseMenu, true, longest)
+	self:LevelUpDrawStashButton()
 	self:LevelUpDrawAscendButton()
 end
 
@@ -196,7 +232,11 @@ function LU_level_up:LevelUpDrawPointSpenderRow(from, to)
 		if not self.data.reward_list then return end
 		local reward_id = self.data.reward_list[i]
 		if self:LevelUpDrawPointSpenderReward(reward_id) then
-			self:LevelUpPickReward(reward_id)
+			if self.stash_chosen then
+				self:LevelUpStashReward(reward_id)
+			else
+				self:LevelUpPickReward(reward_id)
+			end
 			return
 		end
 	end
@@ -254,6 +294,7 @@ function LU_level_up:LevelUpOpenLevelUpMenu()
 	GamePlaySound(MLP.const.sounds.click.bank, MLP.const.sounds.click.event, 0, 0)
 	GameAddFlagRun(MLP.const.flags.leveling_up)
 	self:AnimReset("rewards")
+	self.stash_chosen = false
 end
 
 return LU_level_up

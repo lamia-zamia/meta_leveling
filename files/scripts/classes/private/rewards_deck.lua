@@ -444,17 +444,32 @@ function rewards_deck:play_sound(draw_id)
 	end
 end
 
---- Executes actions when a reward is picked.
---- @param draw_id ml_reward_id
-function rewards_deck:pick_reward(draw_id)
+---Says the reward was chosen to the system
+---@param draw_id ml_reward_id
+function rewards_deck:set_reward_as_picked(draw_id)
+	rewards_deck:set_draw_index()
+	rewards_deck:add_specific_reward_pickup_amount(draw_id)
+end
+
+---Applies reward if no errors
+---@param draw_id ml_reward_id
+---@param ignore_sound boolean?
+---@return boolean
+function rewards_deck:apply_reward(draw_id, ignore_sound)
 	local success, error = pcall(rewards_deck.reward_data[draw_id].fn)
 	if success then
-		rewards_deck:set_draw_index()
-		rewards_deck:play_sound(draw_id)
-		rewards_deck:add_specific_reward_pickup_amount(draw_id)
+		if not ignore_sound then rewards_deck:play_sound(draw_id) end
 	else
 		err:print("function of " .. draw_id .. " throw an error, error: " .. error)
 	end
+	return success
+end
+
+--- Executes actions when a reward is picked.
+--- @param draw_id ml_reward_id
+function rewards_deck:pick_reward(draw_id)
+	self:apply_reward(draw_id)
+	self:set_reward_as_picked(draw_id)
 end
 
 --- Retrieves the current reroll count.

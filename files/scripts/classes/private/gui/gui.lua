@@ -10,7 +10,7 @@ local debug = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/
 --- @field private LU level_ui
 local gui = {
 	EB = experience_bar,
-	LU = level_ui
+	LU = level_ui,
 }
 
 --- update settings
@@ -19,15 +19,18 @@ function gui:UpdateSettings()
 	self.LU:GetSetting()
 end
 
+---Initializes data
+function gui:Init()
+	self.LU:Init()
+end
+
 --- draw gui
 function gui:Draw()
 	if ML then
 		self.EB:loop()
 		self.LU:loop()
 	end
-	if debug and ModSettingGet("meta_leveling.debug_window") then
-		debug:draw()
-	end
+	if debug and ModSettingGet("meta_leveling.debug_window") then debug:draw() end
 end
 
 return gui

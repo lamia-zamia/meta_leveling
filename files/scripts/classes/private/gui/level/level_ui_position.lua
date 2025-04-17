@@ -7,18 +7,21 @@
 ---@field moving_start_y number
 ---@field default_x number
 ---@field default_y number
+---@field max_x number
+---@field max_y number
 
 ---@class level_ui
 local LU = {}
 
---- Clamps position so it won't go over the window
---- @private
---- @param x number
---- @param y number
---- @return number x, number y
-function LU:ClampPosition(x, y)
-	x = math.max(0, math.min(x, self.dim.x - self.const.width))
-	y = math.max(-10, math.min(y, self.dim.y - 110))
+---Clamps position so it won't go over the window
+---@private
+---@param position position_data
+---@param x number
+---@param y number
+---@return number x, number y
+function LU:ClampPosition(position, x, y)
+	x = math.max(0, math.min(x, position.max_x))
+	y = math.max(-10, math.min(y, position.max_y))
 	return x, y
 end
 
@@ -47,10 +50,10 @@ function LU:GetPosition(position)
 	local y = ModSettingGet(position.prefix .. ".y") ---@cast y integer
 	if not x or not y then
 		self:SetPositionDefault(position)
+		position.x, position.y = position.default_x, position.default_y
 	else
-		position.x, position.y = self:ClampPosition(x, y)
+		position.x, position.y = self:ClampPosition(position, x, y)
 	end
-	-- self.scroll.height_max = self.dim.y - position.y - 90
 end
 
 ---Moves window
@@ -68,7 +71,7 @@ function LU:IsHandlingPositionMovement(position)
 	local mouse_x, mouse_y = self:get_mouse_pos()
 	local x = position.x + mouse_x - position.moving_start_x
 	local y = position.y + mouse_y - position.moving_start_y
-	position.x, position.y = self:ClampPosition(x, y)
+	position.x, position.y = self:ClampPosition(position, x, y)
 	position.moving_start_x, position.moving_start_y = mouse_x, mouse_y
 	return true
 end
@@ -77,11 +80,11 @@ end
 ---@private
 ---@param position position_data
 function LU:TriggerPositionMovement(position)
-	if self:IsLeftClicked() then
+	if InputIsMouseButtonDown(self.c.codes.mouse.lc) then
 		position.moving = true
 		position.moving_start_x, position.moving_start_y = self:get_mouse_pos()
 	end
-	if self:IsRightClicked() then
+	if InputIsMouseButtonDown(self.c.codes.mouse.rc) then
 		self:SetPositionDefault(position)
 		self:GetPosition(position)
 	end

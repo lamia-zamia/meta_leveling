@@ -29,12 +29,13 @@ end
 ---World actually loaded
 function OnWorldInitialized()
 	ML:StartUp()
+	gui:UpdateSettings()
+	gui:Init()
 end
 
 ---?
 function OnPlayerSpawned()
 	ML:OnSpawn()
-	gui:UpdateSettings()
 end
 
 ---Update settings when paused

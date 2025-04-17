@@ -163,6 +163,18 @@ local progress = {
 		price_multiplier = 1.2,
 	},
 	{
+		id = "extra_stash",
+		ui_name = "$ml_meta_stash",
+		description = "$ml_meta_stash_tp",
+		fn = function(count) end,
+		applied_bonus = function(count)
+			return string.format("$ml_meta_stash_amount - %d", count + 1)
+		end,
+		stack = 9,
+		price = 5,
+		price_multiplier = 1.15,
+	},
+	{
 		id = "rare_reward_less_rare",
 		ui_name = "$ml_meta_rare_reward_less_rare",
 		description = "$ml_meta_rare_reward_less_rare_tp",

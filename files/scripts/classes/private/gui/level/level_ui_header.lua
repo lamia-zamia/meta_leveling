@@ -10,7 +10,9 @@ local LU = {
 		moving_start_x = 0,
 		moving_start_y = 0,
 		default_x = 0,
-		default_y = 0,
+		default_y = 200,
+		max_x = 640,
+		max_y = 360,
 	},
 	header_hovered_frames = 0,
 }
@@ -71,7 +73,10 @@ end
 
 ---Updates header data
 function LU:header_update_data()
+	self.header_position.max_x = self.dim.x - self.const.width
+	self.header_position.max_y = self.dim.y - 110
 	self.header_position.default_x, self.header_position.default_y = self:CalculateCenterInScreen(self.const.width, self.const.height)
+
 	self:GetPosition(self.header_position)
 	self.scroll.height_max = self.dim.y - self.header_position.y - 90
 end

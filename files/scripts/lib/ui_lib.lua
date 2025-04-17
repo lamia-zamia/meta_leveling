@@ -821,8 +821,9 @@ end
 --- @param alpha? number
 --- @param scale_x? number
 --- @param scale_y? number
-function ui_class:Image(x, y, sprite, alpha, scale_x, scale_y)
-	GuiImage(self.gui, self:id(), x, y, sprite, alpha or 1, scale_x or 1, scale_y or scale_x or 1, 0, 2)
+--- @param rotation? number
+function ui_class:Image(x, y, sprite, alpha, scale_x, scale_y, rotation)
+	GuiImage(self.gui, self:id(), x, y, sprite, alpha or 1, scale_x or 1, scale_y or scale_x or 1, rotation or 0, 2)
 end
 
 --- draw 9piece

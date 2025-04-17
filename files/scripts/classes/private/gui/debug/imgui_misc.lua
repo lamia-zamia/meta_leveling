@@ -16,11 +16,11 @@ end
 
 function debug:be_strong()
 	for _ = 1, 100 do
-		ML.rewards_deck:pick_reward("wand_faster_delay_and_recharge") ---@diagnostic disable-line: param-type-mismatch
-		ML.rewards_deck:pick_reward("wand_more_recharge_and_mana") ---@diagnostic disable-line: param-type-mismatch
-		ML.rewards_deck:pick_reward("buff_damage_crit_chance_increase") ---@diagnostic disable-line: param-type-mismatch
-		ML.rewards_deck:pick_reward("health_extra_health_perc2") ---@diagnostic disable-line: param-type-mismatch
-		ML.rewards_deck:pick_reward("health_heal_perc2") ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:apply_reward("wand_faster_delay_and_recharge", true) ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:apply_reward("wand_more_recharge_and_mana", true) ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:apply_reward("buff_damage_crit_chance_increase", true) ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:apply_reward("health_extra_health_perc2", true) ---@diagnostic disable-line: param-type-mismatch
+		ML.rewards_deck:apply_reward("health_heal_perc2", true) ---@diagnostic disable-line: param-type-mismatch
 	end
 end
 
