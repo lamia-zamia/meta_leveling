@@ -2,6 +2,7 @@
 local LU = dofile_once("mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_class.lua")
 
 local modules = {
+	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_position.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_death.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_level_up.lua",
 	"mods/meta_leveling/files/scripts/classes/private/gui/level/level_ui_current.lua",
@@ -256,7 +257,7 @@ function LU:GetSetting()
 	self.level_up.show_new = MLP.get:mod_setting_boolean("show_new_text")
 	self:MetaGetSettings()
 	self:StatsFindLongest()
-	self:GetPosition()
+	self:header_update_data()
 end
 
 --- main logic
@@ -271,13 +272,14 @@ function LU:loop()
 	self:StartFrame()
 
 	GuiZSet(self.gui, self.const.z - 2)
-	self.data.x, self.data.y = self.position.x, self.position.y
+	self.data.x, self.data.y = self.header_position.x, self.header_position.y
 
 	if self:IsDead() then
 		if self:DeathIsCreditsPlaying() then return end
 		self:DeathDrawMenu()
-	elseif ML.gui then
-		self:DrawLevelUI()
+	else
+		self:draw_itembox()
+		if ML.gui then self:DrawLevelUI() end
 	end
 
 	if InputIsKeyJustDown(self.data.hotkey) then

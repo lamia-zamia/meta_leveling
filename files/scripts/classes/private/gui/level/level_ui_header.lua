@@ -1,84 +1,19 @@
---- @class level_ui
+---@class level_ui
+---@field header_position position_data
+---@field header_hovered_frames number
 local LU = {
-	position = {
+	header_position = {
+		prefix = "meta_leveling.ui_position",
 		x = 0,
 		y = 0,
 		moving = false,
 		moving_start_x = 0,
 		moving_start_y = 0,
-		hovered_frames = 0,
+		default_x = 0,
+		default_y = 0,
 	},
+	header_hovered_frames = 0,
 }
-
---- Clamps position so it won't go over the window
---- @private
---- @param x number
---- @param y number
---- @return number x, number y
-function LU:ClampPosition(x, y)
-	x = math.max(0, math.min(x, self.dim.x - self.const.width))
-	y = math.max(-10, math.min(y, self.dim.y - 110))
-	return x, y
-end
-
---- Sets default position for UI
---- @private
-function LU:SetPositionDefault()
-	self.position.x, self.position.y = self:CalculateCenterInScreen(self.const.width, self.const.height)
-	self:WritePosition(self.position.x, self.position.y)
-end
-
---- Sets position for UI
---- @private
---- @param x number
---- @param y number
-function LU:WritePosition(x, y)
-	ModSettingSet("meta_leveling.ui_position.x", x)
-	ModSettingSet("meta_leveling.ui_position.y", y)
-end
-
---- Gets position from settings or sets default
---- @private
-function LU:GetPosition()
-	local x = ModSettingGet("meta_leveling.ui_position.x") ---@cast x integer
-	local y = ModSettingGet("meta_leveling.ui_position.y") ---@cast y integer
-	if not x or not y then
-		self:SetPositionDefault()
-	else
-		self.position.x, self.position.y = self:ClampPosition(x, y)
-	end
-	self.scroll.height_max = self.dim.y - self.position.y - 90
-end
-
---- Moves window
---- @private
-function LU:HandlePositionMovement()
-	if not InputIsMouseButtonDown(self.c.codes.mouse.lc) then
-		self.position.moving = false
-		self:WritePosition(self.position.x, self.position.y)
-		self:GetPosition()
-		return
-	end
-	local mouse_x, mouse_y = self:get_mouse_pos()
-	local x = self.position.x + mouse_x - self.position.moving_start_x
-	local y = self.position.y + mouse_y - self.position.moving_start_y
-	self.position.x, self.position.y = self:ClampPosition(x, y)
-	self.scroll.height_max = self.dim.y - self.position.y - 90
-	self.position.moving_start_x, self.position.moving_start_y = mouse_x, mouse_y
-end
-
---- Starts moving
---- @private
-function LU:TriggerPositionMovement()
-	if self:IsLeftClicked() then
-		self.position.moving = true
-		self.position.moving_start_x, self.position.moving_start_y = self:get_mouse_pos()
-	end
-	if self:IsRightClicked() then
-		self:SetPositionDefault()
-		self:GetPosition()
-	end
-end
 
 function LU:MainHeaderTooltip()
 	self:TextCentered(0, 0, "Meta Leveling", 0)
@@ -90,28 +25,25 @@ function LU:MainHeaderTooltip()
 	self:TextCentered(0, 0, self:Locale("$ml_position_reset"), 0)
 end
 
---- Do stuff if header is hovered
---- @private
+---Do stuff if header is hovered
+---@private
 function LU:HeaderHovered()
-	if self.position.moving then
-		self:HandlePositionMovement()
+	if self:IsHandlingPositionMovement(self.header_position) then
+		self.scroll.height_max = self.dim.y - self.header_position.y - 90
 		return
 	end
-	if
-		self:IsHoverBoxHovered(
-			self.data.x - self.const.sprite_offset / 2,
-			self.data.y - self.const.sprite_offset / 2,
-			self.const.width + self.const.sprite_offset,
-			10 + self.const.sprite_offset,
-			true
-		)
-	then
-		self.position.hovered_frames = self.position.hovered_frames + 1
-		if self.position.hovered_frames > 45 then self:ShowTooltip(self.data.x + self.const.width / 2, self.data.y + 30, self.MainHeaderTooltip) end
+
+	local sprite_off = self.const.sprite_offset
+	local half_sprite = sprite_off / 2
+	local hovered = self:IsHoverBoxHovered(self.data.x - half_sprite, self.data.y - half_sprite, self.const.width + sprite_off, 10 + sprite_off, true)
+
+	if hovered then
+		self.header_hovered_frames = self.header_hovered_frames + 1
+		if self.header_hovered_frames > 45 then self:ShowTooltip(self.data.x + self.const.width / 2, self.data.y + 30, self.MainHeaderTooltip) end
 		self:BlockInput()
-		if InputIsKeyDown(self.c.codes.keyboard.lshift) then self:TriggerPositionMovement() end
+		if InputIsKeyDown(self.c.codes.keyboard.lshift) then self:TriggerPositionMovement(self.header_position) end
 	else
-		self.position.hovered_frames = 0
+		self.header_hovered_frames = 0
 	end
 end
 
@@ -135,6 +67,13 @@ function LU:DrawMainHeader()
 	self:AnimateE()
 
 	self.data.y = self.data.y + section + self.const.sprite_offset
+end
+
+---Updates header data
+function LU:header_update_data()
+	self.header_position.default_x, self.header_position.default_y = self:CalculateCenterInScreen(self.const.width, self.const.height)
+	self:GetPosition(self.header_position)
+	self.scroll.height_max = self.dim.y - self.header_position.y - 90
 end
 
 return LU

@@ -38,7 +38,9 @@ function OnPlayerSpawned()
 end
 
 ---Update settings when paused
-function OnPausedChanged()
+---@param is_paused boolean
+function OnPausedChanged(is_paused)
+	if not is_paused then return end
 	ML:UpdateSettings()
 	gui:UpdateSettings()
 	if MLP.get:mod_setting_boolean("session_exp_close_ui_on_pause") then ML.gui = false end
