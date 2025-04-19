@@ -279,8 +279,6 @@ function LU:loop()
 	self:StartFrame()
 
 	GuiZSet(self.gui, self.const.z - 2)
-	-- print("self.header_position.x (" .. tostring(self.header_position.x) .. ":" .. type(self.header_position.x) .. ")")
-	-- print("self.header_position.y (" .. tostring(self.header_position.y) .. ":" .. type(self.header_position.y) .. ")")
 	self.data.x, self.data.y = self.header_position.x, self.header_position.y
 
 	if self:IsDead() then

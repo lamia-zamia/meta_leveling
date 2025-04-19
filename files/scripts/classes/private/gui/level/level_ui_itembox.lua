@@ -30,7 +30,6 @@ end
 
 function itembox:stash_set()
 	local stash_string = self.stashed and table.concat(self.stashed, ",") or ""
-	print(stash_string)
 	GlobalsSetValue("META_LEVELING_STASHED_REWARDS", stash_string)
 end
 
@@ -39,7 +38,6 @@ function itembox:stash_get()
 	local stash_string = GlobalsGetValue("META_LEVELING_STASHED_REWARDS", "")
 	for reward in stash_string:gmatch("([^,]+)") do
 		stash_arr[#stash_arr + 1] = reward
-		print(reward)
 	end
 	if #stash_arr > 0 then self.stashed = stash_arr end
 end
