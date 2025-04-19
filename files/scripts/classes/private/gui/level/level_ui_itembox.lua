@@ -2,6 +2,7 @@
 ---@field itembox_position position_data
 ---@field stashed ml_reward_id[]|nil
 ---@field itembox_index number
+---@field itembox_hotkey number
 local itembox = {
 	itembox = {
 		x = 50,
@@ -20,6 +21,7 @@ local itembox = {
 		max_y = 360,
 	},
 	itembox_index = 1,
+	itembox_hotkey = 0,
 }
 
 function itembox:can_stash()
@@ -134,6 +136,8 @@ function itembox:draw_itembox()
 		self:ShowTooltip(x + 9, y + 30, self.itembox_tooltip, reward)
 		if self:IsMouseClicked() then self:stash_use(reward_id) end
 	end
+
+	if InputIsKeyJustDown(self.itembox_hotkey) then self:stash_use(reward_id) end
 end
 
 ---Updates itembox data

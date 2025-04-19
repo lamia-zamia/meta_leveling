@@ -48,7 +48,7 @@ local U = {
 	min_y = 50,
 	max_width = 330,
 	keycodes = {},
-	waiting_for_input = false,
+	waiting_for_input = "",
 }
 do -- helpers
 	--- Checks for winstreak flag and either resets or adds
@@ -525,19 +525,23 @@ do -- Settings GUI
 	end
 
 	function S.get_input(_, gui, _, _, setting)
-		local current_key = "[" .. U.keycodes[U.get_setting_next("open_ui_hotkey")] .. "]"
-		if U.waiting_for_input then
+		local setting_id = setting.id
+		local ui_name = T[setting_id]
+		local description = T[setting_id .. "_d"]
+		local current_key = "[" .. U.keycodes[U.get_setting_next(setting_id)] .. "]"
+		if U.waiting_for_input == setting_id then
 			current_key = GameTextGetTranslatedOrNot("$menuoptions_configurecontrols_pressakey")
 			for code, _ in pairs(U.keycodes) do
 				if InputIsKeyJustDown(code) then
-					U.set_setting_force("open_ui_hotkey", code)
-					U.waiting_for_input = false
+					U.set_setting_force(setting_id, code)
+					U.waiting_for_input = ""
 				end
 			end
 		end
 
 		GuiOptionsAddForNextWidget(gui, GUI_OPTION.Layout_NextSameLine)
-		GuiText(gui, mod_setting_group_x_offset, 0, setting.ui_name)
+		GuiText(gui, mod_setting_group_x_offset, 0, ui_name)
+		G.tooltip(gui, setting_id)
 
 		GuiLayoutBeginHorizontal(gui, U.offset, 0, true, 0, 0)
 		GuiText(gui, 8, 0, "")
@@ -548,12 +552,12 @@ do -- Settings GUI
 		local _, _, hovered = GuiGetPreviousWidgetInfo(gui)
 		if hovered then
 			GuiColorSetForNextWidget(gui, 1, 1, 0.7, 1)
-			GuiTooltip(gui, T.open_ui_hotkey_d, GameTextGetTranslatedOrNot("$menuoptions_reset_keyboard"))
-			if InputIsMouseButtonJustDown(1) then U.waiting_for_input = true end
+			GuiTooltip(gui, description, GameTextGetTranslatedOrNot("$menuoptions_reset_keyboard"))
+			if InputIsMouseButtonJustDown(1) then U.waiting_for_input = setting_id end
 			if InputIsMouseButtonJustDown(2) then
 				GamePlaySound("ui", "ui/button_click", 0, 0)
-				U.set_setting_force("open_ui_hotkey", 0)
-				U.waiting_for_input = false
+				U.set_setting_force(setting_id, 0)
+				U.waiting_for_input = ""
 			end
 		end
 		GuiText(gui, 0, 0, current_key)
@@ -605,8 +609,10 @@ local translations = {
 		hud_reminder_in_inventory_d = "Notifies you about pending levels in inventory",
 		ui_cat = "UI", -- cat
 		ui_cat_d = "Settings related to UI",
-		open_ui_hotkey = "Hotkey",
+		open_ui_hotkey = "Open UI",
 		open_ui_hotkey_d = "Key for quick access to UI",
+		use_stash_hotkey = "Use stashed",
+		use_stash_hotkey_d = "Key for using stashed reward",
 		level_up_ui = "Rewards",
 		level_up_ui_d = "Settings related to reward picking UI",
 		session_exp_ui_open_auto = "Level-up when available",
@@ -692,8 +698,10 @@ local translations = {
 		hud_reminder_in_inventory_d = "Напоминать о доступных уровнях в инвентаре",
 		ui_cat = "UI", -- cat
 		ui_cat_d = "Настройки связанные с интерфейсом",
-		open_ui_hotkey = "Горячая клавиша",
+		open_ui_hotkey = "Открыть UI",
 		open_ui_hotkey_d = "Клавиша для быстрого открытия меню",
+		use_stash_hotkey = "Прим. сложенное",
+		use_stash_hotkey_d = "Клавиша для использования сложенной награды",
 		level_up_ui = "Награды",
 		level_up_ui_d = "Настройки связанные с интерфейсом выбора наград",
 		session_exp_ui_open_auto = "Сразу открывать меню",
@@ -778,8 +786,10 @@ local translations = {
 		hud_reminder_in_inventory_d = "Erinnert im Inventar an ausstehende Stufen",
 		ui_cat = "Menü", -- cat
 		ui_cat_d = "Menü-Einstellungen",
-		open_ui_hotkey = "Hotkey",
+		open_ui_hotkey = "Menü öffnen",
 		open_ui_hotkey_d = "Taste für schnellen Zugriff auf das Stufenmenü",
+		use_stash_hotkey = "Use stashed",
+		use_stash_hotkey_d = "Key for using stashed reward",
 		level_up_ui = "Belohnungen",
 		level_up_ui_d = "Einstellungen zum Belohnungsmenü",
 		session_exp_ui_open_auto = "Aufleveln wenn verfügbar",
@@ -872,6 +882,7 @@ D = {
 	session_exp_ui_open_auto = true,
 	show_new_text = false,
 	open_ui_hotkey = 0,
+	use_stash_hotkey = 0,
 	session_exp_foot_particle = true,
 	show_ui_on_death = true,
 	meta_point_per_level = 50,
@@ -961,6 +972,12 @@ local function build_settings()
 					id = "open_ui_hotkey",
 					ui_fn = S.get_input,
 					ui_name = T.open_ui_hotkey,
+				},
+				{
+					not_setting = true,
+					id = "use_stash_hotkey",
+					ui_fn = S.get_input,
+					ui_name = T.use_stash_hotkey,
 				},
 				{
 					id = "level_up_ui",
@@ -1128,7 +1145,7 @@ function ModSettingsUpdate(init_scope)
 		U.check_for_winstreak()
 	end
 	U.set_default(false)
-	U.waiting_for_input = false
+	U.waiting_for_input = ""
 	U.mod_settings_update(mod_settings, init_scope)
 	local current_language = GameTextGetTranslatedOrNot("$current_language")
 	if current_language ~= current_language_last_frame then
