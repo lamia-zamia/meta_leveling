@@ -4,4 +4,5 @@ CustomExpEntities = {
 	["data/entities/animals/mudman_friendly.xml"] = 0.1,
 	["data/entities/animals/twig.xml"] = 0.5,
 	["data/entities/animals/doom_bringer.xml"] = 50,
+	["data/entities/misc/worm_big_worm_rain.xml"] = 20,
 }
