@@ -43,7 +43,7 @@ end
 --- @private
 --- @return boolean
 function LU:IsDead()
-	return StatsGetValue("dead") == "1"
+	return GameHasFlagRun("player_died")
 end
 
 --- Open menu

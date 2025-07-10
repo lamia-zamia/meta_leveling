@@ -38,6 +38,12 @@ function OnPlayerSpawned()
 	ML:OnSpawn()
 end
 
+---On player death
+---@param player_unit entity_id
+function OnPlayerDied(player_unit)
+	GameAddFlagRun("player_died")
+end
+
 ---Update settings when paused
 ---@param is_paused boolean
 function OnPausedChanged(is_paused)
