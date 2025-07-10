@@ -11,3 +11,11 @@ ModLuaFileAppend("mods/component-explorer/menu_extensions.lua", "mods/meta_level
 
 ModLuaFileAppend("data/scripts/status_effects/status_list.lua", "mods/meta_leveling/files/scripts/appends/effects.lua")
 ModLuaFileAppend("data/scripts/streaming_integration/event_list.lua", "mods/meta_leveling/files/scripts/appends/twitch/event_list.lua")
+
+--- Nerf
+if ModSettingGet("meta_leveling.nerf_statue") then
+	ModLuaFileAppend(
+		"mods/meta_leveling/files/scripts/compatibility/experience_custom.lua",
+		"mods/meta_leveling/files/scripts/hardmode/exp_amount_nerf.lua"
+	)
+end
