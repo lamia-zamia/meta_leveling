@@ -174,6 +174,18 @@ local function overwrite_functions()
 	function GlobalsGetValue(key, default_value)
 		return default_value or "0"
 	end
+
+	---@param number number
+	---@return number
+	function tonumber(number)
+		return 0
+	end
+
+	---@param type string
+	---@return number, boolean
+	function GetSoulsCount(type)
+		return 0, false
+	end
 end
 
 --- Shadows functions so they won't do anything

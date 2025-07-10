@@ -33,7 +33,7 @@
 ---@field player ml_player
 local rewards = {
 	get = dofile_once("mods/meta_leveling/files/scripts/classes/public/get.lua"),
-	player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua")
+	player = dofile_once("mods/meta_leveling/files/scripts/classes/private/player.lua"),
 }
 
 ---get reward_id picked count
@@ -68,7 +68,10 @@ end
 function rewards:grant_perk(perk_id)
 	dofile_once("data/scripts/perks/perk.lua")
 	self.player:update()
-	perk_pickup(0, self.player.id, perk_id, true, false, true) ---@diagnostic disable-line: undefined-global
+	-- perk_pickup(0, self.player.id, perk_id, true, false, true) ---@diagnostic disable-line: undefined-global
+
+	local perk_entity = perk_spawn(self.player.x, self.player.y - 8, perk_id)
+	perk_pickup(perk_entity, self.player.id, nil, true, false)
 end
 
 function rewards:force_fungal_shift()
