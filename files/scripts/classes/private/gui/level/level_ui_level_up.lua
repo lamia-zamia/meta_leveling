@@ -286,6 +286,7 @@ function LU_level_up:LevelUpCloseRewardUI()
 		self:AnimReset("rewards")
 	end
 	self.data.reward_list = nil
+	self.stash_chosen = false
 end
 
 ---toggle level up menu, adds flag to run so you can't close it
