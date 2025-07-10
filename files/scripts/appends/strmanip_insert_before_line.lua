@@ -5,12 +5,17 @@ local inserts = {
 	{
 		file = "data/scripts/magic/altar_tablet_magic.lua",
 		search_line = "if (tablets_eaten > 2) then",
-		insert_line = "MetaLevelingDoTabletExp()"
+		insert_line = "MetaLevelingDoTabletExp()",
+	},
+	{
+		file = "data/scripts/magic/altar_tablet_magic.lua",
+		search_line = [[local chests = EntityGetWithTag( "chest" )]],
+		insert_line = "\tMetaLevelingCheckForChestCheese()",
 	},
 	{
 		file = "data/scripts/buildings/teleport_snowcave_buried_eye.lua",
 		search_line = "local teleport_back_y = from_y",
-		insert_line = "MetaLevelingBuriedEye()"
+		insert_line = "MetaLevelingBuriedEye()",
 	},
 }
 

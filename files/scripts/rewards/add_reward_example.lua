@@ -15,21 +15,7 @@ local reward = {
 
 rewards_deck:add_reward(reward)
 
-local function is_near_mountain_altar()
-	local mountain = EntityGetWithTag("ending_sampo_spot_mountain")[1]
-	if mountain and ML.player.y < -1000 then
-		local x = EntityGetTransform(mountain)
-		if ML.player.x > x - 150 and ML.player.x < x + 150 then return true end
-	end
-	return false
-end
-
 local function spawn_chest(chance)
-	if is_near_mountain_altar() then
-		EntityLoad("data/entities/items/pickup/chest_leggy.xml", ML.player.x, ML.player.y)
-		return
-	end
-
 	local add_chest_meta = ModSettingGet("meta_leveling.progress_better_chest") or 0
 	local chest_amount = add_chest_meta / 2
 	SetRandomSeed(ML.player.x, ML.player.y + GameGetFrameNum())
@@ -37,11 +23,15 @@ local function spawn_chest(chance)
 	for i = 1, count + 1 do
 		SetRandomSeed(ML.player.x + i, ML.player.y + GameGetFrameNum())
 		local rnd = Random(1, 2000)
+		local chest = "data/entities/items/pickup/chest_random.xml"
 		if rnd >= chance then
+			chest = "data/entities/items/pickup/chest_random_super.xml"
 			EntityLoad("data/entities/items/pickup/chest_random_super.xml", ML.player.x + Random(-5, 5), ML.player.y + Random(-5, 5) + i)
-		else
-			EntityLoad("data/entities/items/pickup/chest_random.xml", ML.player.x + Random(-5, 5), ML.player.y + Random(-5, 5) + i)
 		end
+		local e = EntityLoad(chest, ML.player.x + Random(-5, 5), ML.player.y + Random(-5, 5) + i)
+		EntityAddComponent2(e, "VariableStorageComponent", {
+			name = "meta_leveling_chest",
+		})
 	end
 end
 
