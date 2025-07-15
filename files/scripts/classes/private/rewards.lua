@@ -70,8 +70,8 @@ function rewards:grant_perk(perk_id)
 	self.player:update()
 	-- perk_pickup(0, self.player.id, perk_id, true, false, true) ---@diagnostic disable-line: undefined-global
 
-	local perk_entity = perk_spawn(self.player.x, self.player.y - 8, perk_id)
-	perk_pickup(perk_entity, self.player.id, nil, true, false)
+	local perk_entity = perk_spawn(self.player.x, self.player.y - 8, perk_id) ---@diagnostic disable-line: undefined-global
+	perk_pickup(perk_entity, self.player.id, nil, true, false) ---@diagnostic disable-line: undefined-global
 end
 
 function rewards:force_fungal_shift()
