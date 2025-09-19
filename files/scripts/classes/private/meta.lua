@@ -2,7 +2,7 @@
 local err = dofile_once("mods/meta_leveling/files/scripts/classes/private/error_printer.lua")
 
 ---@class (exact) ml_meta
----@field private progress_list ml_progress_point[]
+---@field progress_list ml_progress_point[]
 ---@field private flag string
 ---@field progress ml_progress_point_run[]
 ---@field added_by string[]
@@ -16,6 +16,8 @@ local meta = {
 ---@alias progress_fn fun(count: number)
 ---@alias applied_bonus_fn fun(count: number):string
 
+---@alias ml_meta_progress_price_scaling fun(price:number, multiplier:number, max:number):number[]
+
 ---@class (exact) ml_progress_point
 ---@field id string id of progress
 ---@field ui_name string name to display in game
@@ -27,6 +29,7 @@ local meta = {
 ---@field price? number price of point
 ---@field price_multiplier? number multiplier of price to apply for next points
 ---@field custom_check? function custom check to perform before showing this point, should return boolean.<br>True - show, false - hide
+---@field custom_scaling? ml_meta_progress_price_scaling custom scaling function, should return a full list of prices
 
 ---@class progress_id
 
@@ -72,12 +75,8 @@ function meta:apply_if_new_run()
 	GameAddFlagRun(self.flag)
 end
 
----Calculate costs for progress
----@param price number
----@param multiplier number
----@param max number
----@return number[]
-function meta:calculate_cost(price, multiplier, max)
+---@type ml_meta_progress_price_scaling
+local function default_cost_scale(price, multiplier, max)
 	local prices = {}
 	local real_price = price
 	for i = 1, max do
@@ -87,9 +86,21 @@ function meta:calculate_cost(price, multiplier, max)
 	return prices
 end
 
+---Calculate costs for progress
+---@param price number
+---@param multiplier number
+---@param max number
+---@param custom_fn? ml_meta_progress_price_scaling
+---@return number[]
+function meta:calculate_cost(price, multiplier, max, custom_fn)
+	local fn = custom_fn or default_cost_scale
+	return fn(price, multiplier, max)
+end
+
 ---Initialize progress list
 function meta:initialize()
 	dofile_once("mods/meta_leveling/files/for_modders/progress_appends.lua")
+	dofile_once("mods/meta_leveling/files/for_modders/progress_modify.lua")
 	self:apply_settings_if_new_run()
 	for _, point in ipairs(self.progress_list) do
 		self:initialize_point(point --[[@as ml_progress_point_run]])
@@ -161,7 +172,7 @@ function meta:initialize_point(point)
 		description_var = point.description_var,
 		applied_bonus = self:verify_applied_bonus_description(id, point.applied_bonus),
 		stack = point.stack or 1,
-		price = self:calculate_cost(point.price or 1, point.price_multiplier or 2, point.stack or 1),
+		price = self:calculate_cost(point.price or 1, point.price_multiplier or 2, point.stack or 1, point.custom_scaling),
 		current_value = current,
 		next_value = next,
 	}

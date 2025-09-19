@@ -1,5 +1,32 @@
 local components = dofile_once("mods/meta_leveling/files/scripts/classes/private/components.lua") --- @type ML_components_helper
 
+---@type ml_meta_progress_price_scaling
+local function quadratic_scaling(price, multiplier, max)
+	local prices = { price }
+	for i = 2, max do
+		prices[i] = math.floor(price + (i ^ 2) * multiplier)
+	end
+	return prices
+end
+
+---@type ml_meta_progress_price_scaling
+local function subquadratic_scaling(price, multiplier, max)
+	local prices = { price }
+	for i = 2, max do
+		prices[i] = math.floor(price + multiplier * (i ^ 1.3))
+	end
+	return prices
+end
+
+---@type ml_meta_progress_price_scaling
+local function log_scaling(price, multiplier, max)
+	local prices = { price }
+	for i = 2, max do
+		prices[i] = math.floor(price * math.log(i + 1) * multiplier)
+	end
+	return prices
+end
+
 ---@type ml_progress_point[]
 local progress = {
 	{
@@ -20,6 +47,7 @@ local progress = {
 		end,
 		stack = 100,
 		price_multiplier = 1.1,
+		custom_scaling = subquadratic_scaling,
 	},
 	{
 		id = "exp_multiplier",
@@ -34,6 +62,7 @@ local progress = {
 		end,
 		stack = 100,
 		price_multiplier = 1.25,
+		custom_scaling = subquadratic_scaling,
 	},
 	{
 		id = "exp_trick_experience",
@@ -49,6 +78,7 @@ local progress = {
 		stack = 15,
 		price = 3,
 		price_multiplier = 1.25,
+		custom_scaling = subquadratic_scaling,
 	},
 	{
 		id = "exp_trick_betray",
@@ -63,6 +93,7 @@ local progress = {
 		stack = 15,
 		price = 5,
 		price_multiplier = 1.5,
+		custom_scaling = subquadratic_scaling,
 	},
 	{
 		id = "exp_slower_curve",
@@ -117,6 +148,7 @@ local progress = {
 		stack = 40,
 		price = 2,
 		price_multiplier = 1.2,
+		custom_scaling = subquadratic_scaling,
 	},
 	{
 		id = "hover_energy",
@@ -133,6 +165,7 @@ local progress = {
 		stack = 20,
 		price = 3,
 		price_multiplier = 1.25,
+		custom_scaling = subquadratic_scaling,
 	},
 	{
 		id = "extra_reward_choice",
