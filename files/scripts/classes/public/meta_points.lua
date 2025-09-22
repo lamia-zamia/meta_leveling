@@ -48,7 +48,11 @@ end
 
 --- Calculates bonus points for fungal shift
 function ML_points:CalculateMetaPointsFungalShift()
-	return tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) / 2
+	local shift_iteration = tonumber(GlobalsGetValue("fungal_shift_iteration", "0")) or 0
+	local minutes = (GameGetFrameNum() / 3600) + 5
+	local shift_amount = math.floor(math.min(minutes / 5, shift_iteration))
+	local sum = math.min(20, shift_amount) + (math.max(0, shift_amount - 20)) ^ 0.65
+	return sum
 end
 
 --- Calculates bonus points for no hit
