@@ -143,7 +143,8 @@ end
 ---Updates itembox data
 function itembox:itembox_update_data()
 	self.itembox_position.default_x, self.itembox_position.default_y = self.dim.x - 22, self.dim.y - 21
-	self.header_position.max_x, self.header_position.max_y = self.itembox_position.default_x, self.itembox_position.default_y
+	self.itembox_position.max_x = self.dim.x - 20
+	self.itembox_position.max_y = self.dim.y - 20
 
 	self:GetPosition(self.itembox_position)
 end
